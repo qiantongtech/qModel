@@ -89,11 +89,11 @@ dm8:
   # JDBC驱动类名
   driver-class-name: dm.jdbc.driver.DmDriver
   # 主库JDBC连接URL
-  url: jdbc:dm://110.42.38.62:40013/QMODEL_DEV?STU&zeroDateTimeBehavior=convertToNull&useUnicode=true&characterEncoding=utf-8&schema=QMODEL_DEV&serverTimezone=Asia/Shanghai
+  url: jdbc:dm://127.0.0.1:40013/QMODEL_DEV?STU&zeroDateTimeBehavior=convertToNull&useUnicode=true&characterEncoding=utf-8&schema=QMODEL_DEV&serverTimezone=Asia/Shanghai
   # 主库用户名
-  username: QMODEL_DEV
+  username:
   # 主库密码
-  password: 0Uj*_smk
+  password:
 
 # 人大金仓配置文件
 kingbase8:
