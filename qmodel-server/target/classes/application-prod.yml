@@ -1,0 +1,136 @@
+# 主数据源选择
+datasource:
+  type: dm8
+
+# Spring配置
+spring:
+  # redis 配置
+  redis:
+    # 地址
+    host: 127.0.0.1
+    # 端口，默认为6379
+    port: 6379
+    # 数据库索引
+    database: 13
+    # 密码
+    password: J98%FHF#9h@e88h9fre0
+    # 连接超时时间
+    timeout: 10s
+    lettuce:
+      pool:
+        # 连接池中的最小空闲连接
+        min-idle: 0
+        # 连接池中的最大空闲连接
+        max-idle: 8
+        # 连接池的最大数据库连接数
+        max-active: 8
+        # #连接池最大阻塞等待时间（使用负值表示没有限制）
+        max-wait: -1ms
+
+  datasource:
+    druid:
+      stat-view-servlet:
+        # 是否启用Druid的监控统计功能
+        enabled: true
+        # 访问Druid监控页面的用户名
+        loginUsername: anivia
+        # 访问Druid监控页面的密码
+        loginPassword: 123456
+    dynamic:
+      druid:
+        # 连接池初始化时创建的连接数量
+        initial-size: 5
+        # 连接池中最小空闲连接数
+        min-idle: 5
+        # 连接池中最大活动连接数
+        maxActive: 20
+        # 连接池等待连接的最长时间（毫秒）
+        maxWait: 60000
+        # 数据库连接超时时间（毫秒）
+        connectTimeout: 30000
+        # Socket超时时间（毫秒）
+        socketTimeout: 60000
+        # 空闲连接的检测周期（毫秒）
+        timeBetweenEvictionRunsMillis: 60000
+        # 最小空闲连接的存活时间（毫秒）
+        minEvictableIdleTimeMillis: 300000
+        # 用于检测连接是否有效的SQL语句
+        validationQuery: SELECT 1 FROM DUAL
+        # 是否在空闲时检测连接的有效性
+        testWhileIdle: true
+        # 借用连接时是否测试连接的有效性
+        testOnBorrow: false
+        # 归还连接时是否测试连接的有效性
+        testOnReturn: false
+        # 是否打开连接池的PreparedStatement缓存
+        poolPreparedStatements: true
+        # 每个连接池的PreparedStatement缓存上限
+        maxPoolPreparedStatementPerConnectionSize: 20
+        # 配置Druid的过滤器
+        filters: stat,slf4j
+        # Druid连接属性配置
+        connectionProperties: druid.stat.mergeSql\=true;druid.stat.slowSqlMillis\=5000
+      datasource:
+        # 主库数据源配置
+        master:
+          # 动态加载的配置属性
+          driver-class-name: ${${datasource.type}.driver-class-name}
+          url: ${${datasource.type}.url}
+          username: ${${datasource.type}.username}
+          password: ${${datasource.type}.password}
+#        test:
+#          driver-class-name: dm.jdbc.driver.DmDriver
+#          url: jdbc:dm://127.0.0.1:5236/MOON?STU&zeroDateTimeBehavior=convertToNull&useUnicode=true&characterEncoding=utf-8&schema=MOON&serverTimezone=Asia/Shanghai
+#          username: MOON
+#          password: 1234567890
+
+# 达梦配置文件
+dm8:
+  # JDBC驱动类名
+  driver-class-name: dm.jdbc.driver.DmDriver
+  # 主库JDBC连接URL
+  url: jdbc:dm://110.42.38.62:40013/QMODEL_DEV?STU&zeroDateTimeBehavior=convertToNull&useUnicode=true&characterEncoding=utf-8&schema=QMODEL_DEV&serverTimezone=Asia/Shanghai
+  # 主库用户名
+  username: QMODEL_DEV
+  # 主库密码
+  password: 0Uj*_smk
+
+# 人大金仓配置文件
+kingbase8:
+  # JDBC驱动类名
+  driver-class-name: com.kingbase8.Driver
+  # 主库JDBC连接URL
+  url: jdbc:kingbase8://127.0.0.1:54321/anivia_plus_dev?characterEncoding=utf8&connectTimeout=1000&socketTimeout=3000&autoReconnect=true&useUnicode=true&useSSL=false&serverTimezone=UTC&currentSchema=anivia
+  # 主库用户名
+  username: kingbase
+  # 主库密码
+  password: 123456
+
+# Oracle12c 配置文件
+oracle:
+  # JDBC驱动类名
+  driver-class-name: oracle.jdbc.OracleDriver
+  # 主库JDBC连接URL
+  url: jdbc:oracle:thin:@127.0.0.1:1521:xe?oracle.jdbc.timezoneAsRegion=true&oracle.jdbc.defaultTimezone=Asia/Shanghai&currentSchema=ANIVIA
+  # 主库用户名
+  username: ANIVIA
+  # 主库密码
+  password: ANIVIA
+
+## 工作流模块的访问地址
+flow:
+  enable: false
+  url: http://127.0.0.1:26859/
+
+
+
+#模型
+modelUrl: "http://192.168.200.206:8000"
+modelUrl2: "http://192.168.200.182:8821"
+
+model:
+  hydrodynamicModel: D:\model\chengxuhuizong11.5
+  newHydrodynamicModel: C:\Users\yuexin\Downloads\1.31exe\1.31exe
+  filePath: D:\nami\data\model
+  location: D:\nami\data\modelFile\
+  accessUrl: D:/nami/data/modelFile

@@ -1,0 +1,48 @@
+import request from '../../utils/request';
+import { AxiosPromise } from 'axios';
+import { FileInfo } from './types';
+
+/**
+ * 上传文件
+ *
+ * @param file
+ */
+export function uploadFileApi(file: File): AxiosPromise<FileInfo> {
+  const formData = new FormData();
+  formData.append('file', file);
+  return request({
+    url: 'file/upload',
+    method: 'post',
+    data: formData,
+    headers: {
+      'Content-Type': 'multipart/form-data'
+    }
+  });
+}
+
+/**
+ * 删除文件
+ *
+ * @param filePath 文件完整路径
+ */
+export function deleteFileApi(filePath?: string) {
+  return request({
+    url: '/api/v1/files',
+    method: 'delete',
+    params: { filePath: filePath }
+  });
+}
+
+
+/**
+ * pdf转图片
+ *
+ * @param filePath 文件完整路径
+ */
+export function pdfToImgList(filePath?: string,page,count) {
+  return request({
+    url: '/file/pdfToImgList',
+    method: 'get',
+    params: { url: filePath,page:page,count:count }
+  });
+}

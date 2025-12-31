@@ -1,0 +1,97 @@
+import { login, logout, getInfo } from '@/api/system/login.js'
+import { getToken, setToken, removeToken } from '@/utils/auth'
+import defAva from '@/assets/system/images/profile.jpg'
+
+// 状态管理依赖
+import {useUserStore as useFlyFlowStore} from "@/views/flyflow/stores/user";
+
+const useUserStore = defineStore(
+  'user',
+  {
+    state: () => ({
+      token: getToken(),
+      id: '',
+      name: '',
+      nickName: '',
+      avatar: '',
+      roles: [],
+      permissions: []
+    }),
+    actions: {
+      // 登录
+      login(userInfo) {
+        const username = userInfo.username.trim()
+        const password = userInfo.password
+        const code = userInfo.code
+        const uuid = userInfo.uuid
+        return new Promise((resolve, reject) => {
+          login(username, password, code, uuid).then(res => {
+            setToken(res.token)
+
+            this.token = res.token
+            const userFlyFlowStore = useFlyFlowStore()
+            userFlyFlowStore.token=res.token
+
+            this.token = res.token
+            resolve()
+          }).catch(error => {
+            reject(error)
+          })
+        })
+      },
+      // 获取用户信息
+      getInfo() {
+        return new Promise((resolve, reject) => {
+          getInfo().then(res => {
+            const user = res.user
+            const avatar = (user.avatar == "" || user.avatar == null) ? defAva : import.meta.env.VITE_APP_BASE_API + user.avatar;
+
+            if (res.roles && res.roles.length > 0) { // 验证返回的roles是否是一个非空数组
+              this.roles = res.roles
+              this.permissions = res.permissions
+            } else {
+              this.roles = ['ROLE_DEFAULT']
+            }
+            this.id = user.userId
+            this.name = user.userName
+            this.avatar = avatar
+            this.nickName = user.nickName
+
+            const userFlyFlowStore = useFlyFlowStore();
+            userFlyFlowStore.userId=user.userId
+            userFlyFlowStore.nickname=user.nickName;
+
+            resolve(res)
+          }).catch(error => {
+            reject(error)
+          })
+        })
+      },
+      // 退出系统
+      logOut() {
+        return new Promise((resolve, reject) => {
+          logout(this.token).then(() => {
+            this.token = ''
+            this.roles = []
+            this.permissions = []
+            removeToken()
+            resolve()
+          }).catch(error => {
+            reject(error)
+          })
+        })
+      },
+      // 设置 Token
+      setToken(token) {
+        return new Promise((resolve, reject) => {
+          setToken(token)
+          this.token = token
+          const userFlyFlowStore = useFlyFlowStore()
+          userFlyFlowStore.token= token
+          resolve()
+        })
+      },
+    }
+  })
+
+export default useUserStore

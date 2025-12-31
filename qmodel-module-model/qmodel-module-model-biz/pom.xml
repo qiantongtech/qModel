@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>qmodel-module-model</artifactId>
+        <groupId>tech.qiantong</groupId>
+        <version>3.8.8</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>qmodel-module-model-biz</artifactId>
+
+    <description>
+        system系统模块
+    </description>
+
+    <dependencies>
+        <!-- 核心模块 config-->
+        <dependency>
+            <groupId>tech.qiantong</groupId>
+            <artifactId>qmodel-config</artifactId>
+            <version>3.8.8</version>
+        </dependency>
+
+        <!-- 系統模块 websocket-->
+        <dependency>
+            <groupId>tech.qiantong</groupId>
+            <artifactId>qmodel-websocket</artifactId>
+            <version>3.8.8</version>
+        </dependency>
+
+        <!-- 系统模块 anivia-security -->
+        <dependency>
+            <groupId>tech.qiantong</groupId>
+            <artifactId>qmodel-security</artifactId>
+            <version>3.8.8</version>
+        </dependency>
+
+        <!-- 系统模块 mybatis -->
+        <dependency>
+            <groupId>tech.qiantong</groupId>
+            <artifactId>qmodel-mybatis</artifactId>
+            <version>3.8.8</version>
+        </dependency>
+
+        <!-- 系统模块 redis -->
+        <dependency>
+            <groupId>tech.qiantong</groupId>
+            <artifactId>qmodel-redis</artifactId>
+            <version>3.8.8</version>
+        </dependency>
+
+        <!-- 通用工具-->
+        <dependency>
+            <groupId>tech.qiantong</groupId>
+            <artifactId>qmodel-common</artifactId>
+        </dependency>
+
+        <!-- 文件上传-->
+        <dependency>
+            <groupId>tech.qiantong</groupId>
+            <artifactId>qmodel-file</artifactId>
+            <version>3.8.8</version>
+        </dependency>
+
+        <!-- es-->
+        <dependency>
+            <groupId>tech.qiantong</groupId>
+            <artifactId>qmodel-es</artifactId>
+            <version>3.8.8</version>
+        </dependency>
+
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+    </dependencies>
+
+</project>

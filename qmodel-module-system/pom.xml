@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>qModel</artifactId>
+        <groupId>tech.qiantong</groupId>
+        <version>3.8.8</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <modules>
+        <module>qmodel-module-system-api</module>
+        <module>qmodel-module-system-biz</module>
+    </modules>
+
+    <packaging>pom</packaging>
+
+    <artifactId>qmodel-module-system</artifactId>
+
+    <description>
+        anivia-module-system模块
+    </description>
+
+</project>
