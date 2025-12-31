@@ -89,11 +89,11 @@ mysql:
   # JDBC驱动类名
   driver-class-name: com.mysql.cj.jdbc.Driver
   # 主库JDBC连接URL
-  url: jdbc:mysql://8.136.153.124:3306/anivia_plus_dev?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8
+  url: jdbc:mysql://127.0.0.1:3306/anivia_plus_dev?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8
   # 主库用户名
-  username: anivia_plus_dev
+  username:
   # 主库密码
-  password: anivia_plus_dev0213.
+  password:
 
 # 达梦配置文件
 dm8:
@@ -113,9 +113,9 @@ kingbase8:
   # 主库JDBC连接URL
   url: jdbc:kingbase8://127.0.0.1:54321/anivia_dev?characterEncoding=utf8&connectTimeout=1000&socketTimeout=3000&autoReconnect=true&useUnicode=true&useSSL=false&serverTimezone=UTC&currentSchema=anivia
   # 主库用户名
-  username: kingbase
+  username:
   # 主库密码
-  password: 123456
+  password:
 
 # Oracle12c 配置文件
 oracle:
@@ -124,9 +124,9 @@ oracle:
   # 主库JDBC连接URL
   url: jdbc:oracle:thin:@127.0.0.1:1521:xe?oracle.jdbc.timezoneAsRegion=true&oracle.jdbc.defaultTimezone=Asia/Shanghai&currentSchema=ANIVIA
   # 主库用户名
-  username: ANIVIA
+  username:
   # 主库密码
-  password: ANIVIA
+  password:
 
 ## 工作流模块的访问地址
 flow:
