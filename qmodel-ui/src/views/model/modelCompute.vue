@@ -101,7 +101,7 @@
                 v-model="open"
                 width="800px"
                 :close-on-click-modal="false"
-                :append-to="proxy.$refs['app-container']"
+                :append-to="dialogAppendTo"
                 draggable
         >
             <template #header="{ close, titleId, titleClass }">
@@ -341,6 +341,12 @@ export default {
             immediate: true
         }
     },
+    computed: {
+        dialogAppendTo() {
+            return this.$refs.appContainer || 'body';
+        }
+    },
+
     methods: {
         // 获取输入参数
         getInputList(param) {

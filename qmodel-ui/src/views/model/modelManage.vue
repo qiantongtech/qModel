@@ -826,9 +826,6 @@ export default {
         // 详情
         handleView(row) {
 
-            this.$message.warning(`模型详情正在开发中，敬请期待～`);
-            return;
-
             const modelId = row.id;
             const modelName = row.name;
             this.$router.push({
