@@ -78,28 +78,28 @@
     <el-tabs v-model="activeName" @tab-click="handleClick">
         <el-tab-pane name="one">
           <template #label>版本管理</template>
-          <VersionManage @refresh="getModelById" :model="viewInfo" style="margin: 0; padding: 0" />
+          <VersionManage v-if="activeName === 'one'" @refresh="getModelById" :model="viewInfo" style="margin: 0; padding: 0" />
         </el-tab-pane>
         <el-tab-pane name="two" v-if="viewInfo.accessMode === 1">
           <template #label>接口地址管理</template>
-          <ModelInterfaceAddress :model="viewInfo" style="margin: 0; padding: 0" />
+          <ModelInterfaceAddress v-if="activeName === 'two' && viewInfo.accessMode === 1" :model="viewInfo" style="margin: 0; padding: 0" />
         </el-tab-pane>
         <el-tab-pane name="five" v-if="viewInfo.accessMode == 0">
           <template #label>模型输入管理</template>
-          <ModelInput style="margin: 0; padding: 0" :model="viewInfo" />
+          <ModelInput v-if="activeName === 'five' && viewInfo.accessMode == 0" style="margin: 0; padding: 0" :model="viewInfo" />
         </el-tab-pane>
         <el-tab-pane name="six" v-if="viewInfo.accessMode == 0">
           <template #label>模型输出管理</template>
-          <ModelOutput style="margin: 0; padding: 0" :model="viewInfo" />
+          <ModelOutput v-if="activeName === 'six' && viewInfo.accessMode == 0" style="margin: 0; padding: 0" :model="viewInfo" />
         </el-tab-pane>
         <el-tab-pane name="three">
                 <template #label>模型计算</template>
-                <ModelCompute :model="viewInfo" style="margin: 0; padding: 0"/>
+                <ModelCompute v-if="activeName === 'three'" :model="viewInfo" style="margin: 0; padding: 0"/>
         <!--        <ModelFileCompute :model="viewInfo" style="margin: 0; padding: 0" v-if="viewInfo.accessMode == 0"/>-->
           </el-tab-pane>
           <el-tab-pane name="four">
             <template #label>操作历史</template>
-            <ActionHistory ref="actionHistory" :model="viewInfo"/>
+            <ActionHistory v-if="activeName === 'four'" ref="actionHistory" :model="viewInfo"/>
           </el-tab-pane>
         <!--      <el-tab-pane name="five" v-if="viewInfo.accessMode == 0">
                 <template #label>当前版本文件</template>
@@ -346,8 +346,49 @@ export default {
       });
       this.reset();
     },
-    handleClick() {
-      // 在这里执行你想要的操作
+    handleClick(tab, event) {
+      this.activeName = tab.paneName;
+        console.log(this.activeName, "activeName")
+    },
+    // 设置默认激活的tab
+    setDefaultActiveTab() {
+      // 根据接入方式设置默认激活的tab
+      if (this.viewInfo.accessMode === 1) {
+        // API接口模式：默认显示版本管理
+        this.activeName = "one";
+      } else if (this.viewInfo.accessMode === 0) {
+        // 单机程序模式：默认显示版本管理
+        this.activeName = "one";
+      } else {
+        // 默认显示版本管理
+        this.activeName = "one";
+      }
+    },
+    // 根据模型信息更新可用的tab
+    updateAvailableTabs() {
+      // 模型信息更新后，确保激活的tab是有效的
+      const availableTabs = ["one"]; // 版本管理始终可用
+
+      if (this.viewInfo.accessMode === 1) {
+        availableTabs.push("two"); // API接口模式下接口地址管理可用
+      }
+
+      if (this.viewInfo.accessMode === 0) {
+        availableTabs.push("five", "six"); // 单机程序模式下输入输出管理可用
+      }
+
+      availableTabs.push("three", "four"); // 模型计算和操作历史始终可用
+
+      // 如果当前激活的tab不可用，则切换到第一个可用的tab
+      if (!availableTabs.includes(this.activeName)) {
+        this.activeName = availableTabs[0];
+      }
+    },
+    // 切换到指定tab
+    switchToTab(tabName) {
+      if (this.activeName !== tabName) {
+        this.activeName = tabName;
+      }
     },
     // 取消按钮
     cancel() {
