@@ -17,7 +17,6 @@ import tech.qiantong.qmodel.common.core.page.*;
 import tech.qiantong.qmodel.common.enums.*;
 import tech.qiantong.qmodel.common.utils.*;
 import tech.qiantong.qmodel.common.utils.poi.*;
-import tech.qiantong.qmodel.module.model.waterResource.*;
 import tech.qiantong.qmodel.module.modelReconstitution.domain.*;
 import tech.qiantong.qmodel.module.modelReconstitution.service.*;
 
@@ -37,8 +36,6 @@ public class ModelCaclReconstitutionController extends BaseController {
     @Autowired
     private IModelCaclReconstitutionService modelCaclService;
 
-    @Autowired
-    private IWaterResourceService waterResourceService;
 
     @Autowired
     private IModelReconstitutionService modelReconstitutionService;
@@ -427,30 +424,4 @@ public class ModelCaclReconstitutionController extends BaseController {
         return AjaxResult.success(resultMap);
     }
 
-    class OneThread extends Thread {
-        private Long id;
-
-        public OneThread(Long id){
-            this.id = id;
-        }
-
-        @Override
-        public void run() {
-            try {
-                ModelCaclReconstitution modelCacl = modelCaclService.selectModelCaclById(id);
-                ModelReconstitution modelReconstitution = modelReconstitutionService.selectModelReconstitutionById(modelCacl.getModelId());
-                String url = modelReconstitution.getInterfaceorfileAddress().substring(0, modelReconstitution.getInterfaceorfileAddress().lastIndexOf("/")) + "/" + modelReconstitution.getFileName();
-                waterResourceService.runProcess(null,url);
-                ModelCaclReconstitution modelCaclReconstitution = new ModelCaclReconstitution();
-                modelCaclReconstitution.setId(id);
-                modelCaclReconstitution.setStatus(2);
-                modelCaclReconstitution.setEndTime(DateUtils.getNowDate());
-                modelCaclService.updateModelCacl(modelCaclReconstitution);
-                logger.info("执行完毕");
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-        }
-
-    }
 }
