@@ -1,156 +1,166 @@
 <template>
-    <div class="app-container">
-        <el-container>
-            <!-- 左侧可调整的部分 -->
-            <el-aside
-                    :style="{ width: `${leftWidth}px` }"
-                    class="left-pane"
+  <div class="app-container">
+    <el-container>
+      <!-- 左侧可调整的部分 -->
+      <el-aside :style="{ width: `${leftWidth}px` }" class="left-pane">
+        <div class="left-tree">
+          <div class="head-container">
+            <el-input
+              v-model="classifyName"
+              placeholder="请输入分类名称"
+              clearable
+              prefix-icon="Search"
+              style="margin-bottom: 20px"
+            />
+          </div>
+          <div class="head-container">
+            <el-tree
+              :data="classifyOptions"
+              :props="defaultProps"
+              :expand-on-click-node="false"
+              :filter-node-method="filterNode"
+              ref="treeRef"
+              node-key="id"
+              default-expand-all
+              highlight-current
+              @node-click="handleNodeClick"
+            />
+          </div>
+        </div>
+      </el-aside>
+      <!-- 拖拽条 -->
+      <div class="resize-bar" @mousedown="startResize">
+        <div class="resize-handle-sx">
+          <span class="zjsx"></span>
+        </div>
+      </div>
+
+      <el-main>
+        <!--用户数据-->
+        <div class="pagecont-top" v-show="showSearch">
+          <el-form
+            :model="queryParams"
+            ref="queryFormRef"
+            :inline="true"
+            v-show="showSearch"
+            class="btn-style"
+          >
+            <el-form-item label="模型名称：" prop="name">
+              <el-input
+                v-model="queryParams.name"
+                placeholder="请输入模型名称"
+                clearable
+                @keyup.enter="handleQuery"
+                style="width: 180px"
+              />
+            </el-form-item>
+            <el-form-item label="模型接入方式：" prop="accessMode">
+              <el-select
+                v-model="queryParams.accessMode"
+                placeholder="请选择模型类别"
+                clearable
+                class="el-form-input-width"
+              >
+                <el-option key="0" label="单机程序（exe）" value="0" />
+                <el-option key="1" label="api接口" value="1" />
+              </el-select>
+            </el-form-item>
+            <el-form-item label="模型类别：" prop="type">
+              <el-select
+                v-model="queryParams.type"
+                placeholder="请选择模型类别"
+                clearable
+                class="el-form-input-width"
+              >
+                <el-option
+                  v-for="dict in model_type"
+                  :key="dict.value"
+                  :label="dict.label"
+                  :value="dict.value"
+                ></el-option>
+              </el-select>
+            </el-form-item>
+
+            <el-form-item>
+              <el-button
+                plain
+                type="primary"
+                @click="handleQuery"
+                @mousedown="(e) => e.preventDefault()"
+              >
+                <i class="iconfont-mini icon-a-zu22377 mr5"></i>查询
+              </el-button>
+              <el-button
+                @click="resetQuery"
+                @mousedown="(e) => e.preventDefault()"
+              >
+                <i class="iconfont-mini icon-a-zu22378 mr5"></i>重置
+              </el-button>
+            </el-form-item>
+          </el-form>
+        </div>
+        <div class="pagecont-bottom">
+          <div class="justify-between mb15">
+            <el-row :gutter="10" class="btn-style">
+              <el-col :span="1.5">
+                <el-button
+                  type="primary"
+                  plain
+                  @click="handleAdd"
+                  v-hasPermi="['model:model:add']"
+                >
+                  <i class="iconfont-mini icon-xinzeng"></i>新增
+                </el-button>
+              </el-col>
+              <el-col :span="1.5"></el-col>
+            </el-row>
+            <right-toolbar
+              v-model:showSearch="showSearch"
+              @queryTable="getList"
+            ></right-toolbar>
+          </div>
+          <el-row :gutter="20" v-loading="loading">
+            <el-col
+              :sm="12"
+              :md="12"
+              :lg="8"
+              :xl="6"
+              style="margin-bottom: 20px"
+              :key="index"
+              v-for="(item, index) in modelList"
             >
-                <div class="left-tree">
-                    <div class="head-container">
-                        <el-input
-                                v-model="classifyName"
-                                placeholder="请输入分类名称"
-                                clearable
-                                prefix-icon="Search"
-                                style="margin-bottom: 20px"
-                        />
+              <el-card
+                style="border-radius: 8px"
+                :body-style="{ padding: '16px 16px 0' }"
+                shadow="never"
+              >
+                <div class="card-item">
+                  <div class="item-top">
+                    <div class="top-title ellipsis">
+                      <i class="el-icon-s-tools" /><span>{{ item.name }}</span>
                     </div>
-                    <div class="head-container">
-                        <el-tree
-                                :data="classifyOptions"
-                                :props="defaultProps"
-                                :expand-on-click-node="false"
-                                :filter-node-method="filterNode"
-                                ref="tree"
-                                node-key="id"
-                                default-expand-all
-                                highlight-current
-                                @node-click="handleNodeClick"
-                        />
-                    </div>
-                </div>
-            </el-aside>
-            <!-- 拖拽条 -->
-            <div class="resize-bar" @mousedown="startResize">
-                <div class="resize-handle-sx">
-                    <span class="zjsx"></span>
-                </div>
-            </div>
-
-            <el-main>
-                <!--用户数据-->
-                <div class="pagecont-top" v-show="showSearch">
-                    <el-form
-                            :model="queryParams"
-                            ref="queryForm"
-                            :inline="true"
-                            v-show="showSearch"
-                            class="btn-style"
-                    >
-                        <el-form-item label="模型名称：" prop="name">
-                            <el-input
-                                    v-model="queryParams.name"
-                                    placeholder="请输入模型名称"
-                                    clearable
-                                    @keyup.enter="handleQuery"
-                                    style="width: 180px"
-                            />
-                        </el-form-item>
-                        <el-form-item label="模型接入方式：" prop="accessMode">
-                            <el-select
-                                    v-model="queryParams.accessMode"
-                                    placeholder="请选择模型类别"
-                                    clearable
-                                    class="el-form-input-width"
-                            >
-                                <el-option key="0" label="单机程序（exe）" value="0"/>
-                                <el-option key="1" label="api接口" value="1"/>
-                            </el-select>
-                        </el-form-item>
-                        <el-form-item label="模型类别：" prop="type">
-                            <el-select
-                                    v-model="queryParams.type"
-                                    placeholder="请选择模型类别"
-                                    clearable
-                                    class="el-form-input-width"
-                            >
-                                <el-option
-                                        v-for="dict in model_type"
-                                        :key="dict.value"
-                                        :label="dict.label"
-                                        :value="dict.value"
-                                ></el-option>
-                            </el-select>
-                        </el-form-item>
-
-                        <el-form-item>
-                            <el-button plain type="primary" @click="handleQuery" @mousedown="(e) => e.preventDefault()">
-                                <i class="iconfont-mini icon-a-zu22377 mr5"></i>查询
-                            </el-button>
-                            <el-button @click="resetQuery" @mousedown="(e) => e.preventDefault()">
-                                <i class="iconfont-mini icon-a-zu22378 mr5"></i>重置
-                            </el-button>
-                        </el-form-item>
-
-                    </el-form>
-                </div>
-                <div class="pagecont-bottom">
-                    <div class="justify-between mb15">
-
-                        <el-row :gutter="10" class="btn-style">
-                            <el-col :span="1.5">
-                                <el-button
-                                        type="primary"
-                                        plain
-                                        @click="handleAdd"
-                                        v-hasPermi="['model:model:add']"
-                                >
-                                    <i class="iconfont-mini icon-xinzeng"></i>新增
-                                </el-button>
-                            </el-col>
-                            <el-col :span="1.5"></el-col>
-                        </el-row>
-                        <right-toolbar
-                                v-model:showSearch="showSearch"
-                                @queryTable="getList"
-                        ></right-toolbar>
-                    </div>
-                    <el-row :gutter="20" v-loading="loading">
-                        <el-col
-                                :sm="12" :md="12" :lg="8" :xl="6" style="margin-bottom: 20px"
-                                :key="index" v-for="(item, index) in modelList"
+                  </div>
+                  <div
+                    v-if="false"
+                    class="item-desc ellipsis-3"
+                    :title="item.description"
+                  >
+                    {{ item.description }}
+                  </div>
+                  <div class="item-con">
+                    <div class="con-l">
+                      <div class="con-view">
+                        <div class="con-view-title">版本号：</div>
+                        <el-tag size="small" type="info"
+                          >Version {{ item.version }}</el-tag
                         >
-                            <el-card
-                                    style="border-radius: 8px"
-                                    :body-style="{ padding: '16px 16px 0' }"
-                                    shadow="never"
-                            >
-                                <div class="card-item">
-                                    <div class="item-top">
-                                        <div class="top-title ellipsis">
-                                            <i class="el-icon-s-tools"/><span>{{ item.name }}</span>
-                                        </div>
-                                    </div>
-                                    <div
-                                            v-if="false"
-                                            class="item-desc ellipsis-3"
-                                            :title="item.description"
-                                    >
-                                        {{ item.description }}
-                                    </div>
-                                    <div class="item-con">
-                                        <div class="con-l">
-                                            <div class="con-view">
-                                                <div class="con-view-title">版本号：</div>
-                                                <el-tag size="small" type="info">Version {{ item.version }}</el-tag>
-                                            </div>
-                                            <div class="con-view">
-                                                <div class="con-view-title">接入方式：</div>
-                                                <span v-if="item.accessMode == 1">API接口</span>
-                                                <span v-else>单机程序（exe）</span>
-                                            </div>
-                                            <!--                      <div class="con-view">
+                      </div>
+                      <div class="con-view">
+                        <div class="con-view-title">接入方式：</div>
+                        <span v-if="item.accessMode == 1">API接口</span>
+                        <span v-else>单机程序（exe）</span>
+                      </div>
+                      <!--                      <div class="con-view">
                                                                     <div class="con-view-title">接入方式：</div>
                                                                     <dict-tag
                                                                       style="height: 17px;line-height: 15px"
@@ -158,184 +168,232 @@
                                                                       :value="item.requestMethod"
                                                                     />
                                                                   </div>-->
-                                            <div class="con-view">
-                                                <div class="con-view-title">发布时间：</div>
-                                                <span v-if="item.publishTime == null">-,-</span>
-                                                <span v-else>{{ item.publishTime }}</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="card-btns">
-                                        <el-button
-                                                type="primary"
-                                                style="padding-right: 8px; padding-left: 8px"
-                                                title="编辑"
-                                                @click="handleUpdate(item)"
-                                        >
-                                            <i class="iconfont-mini icon-a-xiugaixianxing mr5"></i>
-                                        </el-button>
-                                        <el-button
-                                                type="warning"
-                                                style="padding-right: 8px; padding-left: 8px"
-                                                title="详情"
-                                                @click="handleView(item)"
-                                        >
-                                            <i class="iconfont-mini icon-a-yincangxianxing mr5"></i>
-                                        </el-button>
-                                        <el-button
-                                                type="danger"
-                                                style="padding-right: 8px; padding-left: 8px"
-                                                title="删除"
-                                                @click="handleDelete(item)"
-                                        >
-                                            <i class="iconfont-mini icon-a-shanchuxianxing mr5"></i>
-                                        </el-button>
-                                    </div>
-                                </div>
-                            </el-card>
-                        </el-col>
-                    </el-row>
-
-                    <el-empty
-                            description="暂无数据，请添加模型"
-                            v-if="total == 0"
-                    ></el-empty>
-
-                    <pagination
-                            :pageSizes="[12, 24, 36, 48]"
-                            v-show="total > 0"
-                            :total="total"
-                            v-model:page="queryParams.pageNum"
-                            v-model:limit="queryParams.pageSize"
-                            @pagination="getList"
-                    />
+                      <div class="con-view">
+                        <div class="con-view-title">发布时间：</div>
+                        <span v-if="item.publishTime == null">-,-</span>
+                        <span v-else>{{ item.publishTime }}</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="card-btns">
+                    <el-button
+                      type="primary"
+                      style="padding-right: 8px; padding-left: 8px"
+                      title="编辑"
+                      @click="handleUpdate(item)"
+                    >
+                      <i class="iconfont-mini icon-a-xiugaixianxing mr5"></i>
+                    </el-button>
+                    <el-button
+                      type="warning"
+                      style="padding-right: 8px; padding-left: 8px"
+                      title="详情"
+                      @click="handleView(item)"
+                    >
+                      <i class="iconfont-mini icon-a-yincangxianxing mr5"></i>
+                    </el-button>
+                    <el-button
+                      type="danger"
+                      style="padding-right: 8px; padding-left: 8px"
+                      title="删除"
+                      @click="handleDelete(item)"
+                    >
+                      <i class="iconfont-mini icon-a-shanchuxianxing mr5"></i>
+                    </el-button>
+                  </div>
                 </div>
-            </el-main>
-        </el-container>
+              </el-card>
+            </el-col>
+          </el-row>
 
-        <el-dialog :title="title" v-model="open" width="800px" :append-to="$refs['app-container']" draggable>
-            <template #header="{ close, titleId, titleClass }">
-                <span role="heading" aria-level="2" class="el-dialog__title">
-                  {{ title }}
-                </span>
+          <el-empty
+            description="暂无数据，请添加模型"
+            v-if="total == 0"
+          ></el-empty>
+
+          <pagination
+            :pageSizes="[12, 24, 36, 48]"
+            v-show="total > 0"
+            :total="total"
+            v-model:page="queryParams.pageNum"
+            v-model:limit="queryParams.pageSize"
+            @pagination="getList"
+          />
+        </div>
+      </el-main>
+    </el-container>
+
+    <el-dialog
+      :title="title"
+      v-model="open"
+      width="800px"
+      append-to="body"
+      draggable
+    >
+      <template #header="{ close, titleId, titleClass }">
+        <span role="heading" aria-level="2" class="el-dialog__title">
+          {{ title }}
+        </span>
+      </template>
+      <el-form ref="formRef" :model="form" :rules="rules" label-width="130px">
+        <el-form-item label="模型名称：" prop="name">
+          <el-input
+            clearable
+            v-model="form.name"
+            placeholder="请输入模型名称"
+          />
+        </el-form-item>
+        <el-form-item label="模型分类：" prop="classifyId" class="formClass">
+          <el-tree-select
+            v-model="form.classifyId"
+            :data="classifyOptions"
+            :props="{ value: 'id', label: 'name', children: 'children' }"
+            :show-count="true"
+            placeholder="请选择模型分类"
+            noResultsText="暂无数据"
+            :disabled="isEdit"
+          />
+        </el-form-item>
+        <el-form-item label="是否预置：" prop="builtin">
+          <el-radio :disabled="isEdit" v-model="form.builtin" :label="Number(1)"
+            >是</el-radio
+          >
+          <el-radio :disabled="isEdit" v-model="form.builtin" :label="Number(0)"
+            >否</el-radio
+          >
+          <el-tooltip
+            class="item"
+            effect="dark"
+            content="选择是之后则不可去设置修改输入参数"
+            placement="right"
+          >
+            <i class="el-icon-question"></i>
+          </el-tooltip>
+        </el-form-item>
+        <el-form-item label="接入方式：" prop="accessMode">
+          <el-radio :disabled="isEdit" v-model="form.accessMode" :value="0"
+            >单机程序(exe)
+          </el-radio>
+          <el-radio :disabled="isEdit" v-model="form.accessMode" :value="1"
+            >API接口</el-radio
+          >
+          <el-tooltip placement="top" v-if="mess">
+            <template #content>
+              Tips: 核心信息请在详情页版本控制里面修改
             </template>
-            <el-form ref="form" :model="form" :rules="rules" label-width="130px" >
-                <el-form-item label="模型名称：" prop="name">
-                    <el-input
-                        clearable
-                        v-model="form.name"
-                        placeholder="请输入模型名称"
-                    />
-                </el-form-item>
-                <el-form-item label="模型分类：" prop="classifyId" class="formClass">
-                    <el-tree-select
-                        v-model="form.classifyId"
-                        :data="classifyOptions"
-                        :props="{ value: 'id', label: 'name', children: 'children' }"
-                        :show-count="true"
-                        placeholder="请选择模型分类"
-                        noResultsText="暂无数据"
-                        :disabled="isEdit"
-                    />
-                </el-form-item>
-                <el-form-item label="是否预置：" prop="builtin">
-                    <el-radio :disabled="isEdit" v-model="form.builtin" :label="Number(1)">是</el-radio>
-                    <el-radio :disabled="isEdit" v-model="form.builtin" :label="Number(0)">否</el-radio>
-                    <el-tooltip class="item" effect="dark" content="选择是之后则不可去设置修改输入参数"
-                                placement="right">
-                        <i class="el-icon-question"></i>
-                    </el-tooltip>
-                </el-form-item>
-                <el-form-item label="接入方式：" prop="accessMode">
-                    <el-radio :disabled="isEdit" v-model="form.accessMode" :value="0">单机程序(exe)
-                    </el-radio>
-                    <el-radio :disabled="isEdit" v-model="form.accessMode" :value="1">API接口</el-radio>
-                    <el-tooltip placement="top" v-if="mess">
-                        <template #content>
-                            Tips: 核心信息请在详情页版本控制里面修改
-                        </template>
-                        <!-- elementui图标库：显示黑色的问号图标   -->
-                        <el-icon>
-                            <QuestionFilled/>
-                        </el-icon>
-                    </el-tooltip>
-                </el-form-item>
-                <el-form-item label="上传文件：" prop="fileName" v-if="form.accessMode == 0">
-                    <file-name-upload :disabled="isEdit" :fileType="['zip']"
-                                      v-model="form.interfaceorfileAddress"
-                                      :limit="1"
-                                      :fileSize="200" :editName="form.fileName" :style="'width: 420px'"
-                                      :upload-success="uploadSuccess"
-                                      :delete-success="() => form.runnableFileAddress = null"
-                    />
-                </el-form-item>
-                <el-form-item label="可执行文件：" prop="runnableFileAddress" v-if="form.accessMode == 0">
-                    <el-input v-model="form.runnableFileAddress"
-                              placeholder="请上传压缩包后在文件列表处选择运行模型的文件"
-                              disabled/>
-                </el-form-item>
-                <el-form-item label="API地址：" prop="interfaceorfileAddress" v-if="form.accessMode == 1">
-                    <el-input
-                        clearable
-                        :disabled="isEdit"
-                        v-model="form.interfaceorfileAddress"
-                        placeholder="请输入API接口"
-                    />
-                </el-form-item>
-                <el-form-item label="端口号：" prop="port" v-if="form.accessMode == 1">
-                    <el-input
-                        clearable
-                        :disabled="isEdit"
-                        v-model="form.port"
-                        placeholder="请输入接口端口号"
-                    />
-                </el-form-item>
-                <el-form-item label="版本号：" prop="version" v-if="form.id == null">
-                    <el-input :disabled="isEdit" v-model="form.version" placeholder="请输入版本号">
-                        <template #append>Version</template>
-                    </el-input>
-                </el-form-item>
-                <el-form-item label="版本发布说明：" prop="description">
-                    <el-input
-                        :disabled="isEdit"
-                        v-model="form.description"
-                        :rows="3"
-                        type="textarea"
-                        placeholder="请输入版本发布说明"
-                    />
-                </el-form-item>
+            <!-- elementui图标库：显示黑色的问号图标   -->
+            <el-icon>
+              <QuestionFilled />
+            </el-icon>
+          </el-tooltip>
+        </el-form-item>
+        <el-form-item
+          label="上传文件："
+          prop="fileName"
+          v-if="form.accessMode == 0"
+        >
+          <file-name-upload
+            :disabled="isEdit"
+            :fileType="['zip']"
+            v-model="form.interfaceorfileAddress"
+            :limit="1"
+            :fileSize="200"
+            :editName="form.fileName"
+            :style="'width: 420px'"
+            :upload-success="uploadSuccess"
+            :delete-success="() => (form.runnableFileAddress = null)"
+          />
+        </el-form-item>
+        <el-form-item
+          label="可执行文件："
+          prop="runnableFileAddress"
+          v-if="form.accessMode == 0"
+        >
+          <el-input
+            v-model="form.runnableFileAddress"
+            placeholder="请上传压缩包后在文件列表处选择运行模型的文件"
+            disabled
+          />
+        </el-form-item>
+        <el-form-item
+          label="API地址："
+          prop="interfaceorfileAddress"
+          v-if="form.accessMode == 1"
+        >
+          <el-input
+            clearable
+            :disabled="isEdit"
+            v-model="form.interfaceorfileAddress"
+            placeholder="请输入API接口"
+          />
+        </el-form-item>
+        <el-form-item label="端口号：" prop="port" v-if="form.accessMode == 1">
+          <el-input
+            clearable
+            :disabled="isEdit"
+            v-model="form.port"
+            placeholder="请输入接口端口号"
+          />
+        </el-form-item>
+        <el-form-item label="版本号：" prop="version" v-if="form.id == null">
+          <el-input
+            :disabled="isEdit"
+            v-model="form.version"
+            placeholder="请输入版本号"
+          >
+            <template #append>Version</template>
+          </el-input>
+        </el-form-item>
+        <el-form-item label="版本发布说明：" prop="description">
+          <el-input
+            :disabled="isEdit"
+            v-model="form.description"
+            :rows="3"
+            type="textarea"
+            placeholder="请输入版本发布说明"
+          />
+        </el-form-item>
 
-                <el-form-item label="模型介绍：" prop="remark">
-                    <el-input
-                        v-model="form.remark"
-                        :rows="3"
-                        type="textarea"
-                        placeholder="请输入内容"
-                    />
-                </el-form-item>
-            </el-form>
-            <el-tree :data="form.fileList" default-expand-all
-                     v-if="this.form.accessMode == 0 && this.form.interfaceorfileAddress && this.form.interfaceorfileAddress.length > 0"
+        <el-form-item label="模型介绍：" prop="remark">
+          <el-input
+            v-model="form.remark"
+            :rows="3"
+            type="textarea"
+            placeholder="请输入内容"
+          />
+        </el-form-item>
+      </el-form>
+      <el-tree
+        :data="form.fileList"
+        default-expand-all
+        v-if="
+          form.accessMode == 0 &&
+          form.interfaceorfileAddress &&
+          form.interfaceorfileAddress.length > 0
+        "
+      >
+        <template #default="{ data }">
+          <span class="custom-tree-node">
+            <span v-if="data.children">{{ data.fileName }}</span>
+            <el-radio
+              v-model="form.runnableFileAddress"
+              :label="data.fileName"
+              v-if="!data.children"
+              >{{ data.fileName }}</el-radio
             >
-                <template #default="{ data }">
-                      <span class="custom-tree-node">
-                        <span v-if="data.children">{{ data.fileName }}</span>
-                        <el-radio v-model="form.runnableFileAddress" :label="data.fileName" v-if="!data.children">{{
-                                data.fileName
-                            }}</el-radio>
-                      </span>
-                </template>
-            </el-tree>
-            <template #footer>
-                <div class="dialog-footer">
-                    <el-button @click="cancel">取 消</el-button>
-                    <el-button type="primary" @click="submitForm">确 定</el-button>
-                </div>
-            </template>
-        </el-dialog>
+          </span>
+        </template>
+      </el-tree>
+      <template #footer>
+        <div class="dialog-footer">
+          <el-button @click="cancel">取 消</el-button>
+          <el-button type="primary" @click="submitForm">确 定</el-button>
+        </div>
+      </template>
+    </el-dialog>
 
-        <!-- 添加或修改模型管理 对话框 -->
-<!--        <el-dialog
+    <!-- 添加或修改模型管理 对话框 -->
+    <!--        <el-dialog
                 :title="title"
                 v-model="open"
                 :width="dialogWidth"
@@ -343,7 +401,7 @@
                 append-to-body
         >
             <div style="display: flex">
-                <el-form ref="form" :model="form" :rules="rules" label-width="180px" style="width: 750px">
+                <el-form ref="formRef" :model="form" :rules="rules" label-width="180px" style="width: 750px">
                     <el-row>
                         <el-col :span="20">
                             <el-form-item label="模型名称：" prop="name">
@@ -509,397 +567,457 @@
                 </div>
             </template>
         </el-dialog>-->
-    </div>
+  </div>
 </template>
 
-<script>
+<script setup>
 import {
-    listModel,
-    getModel,
-    delModel,
-    addModel,
-    updateModel,
-    getFileList
+  ref,
+  reactive,
+  onMounted,
+  computed,
+  watch,
+  nextTick,
+  getCurrentInstance,
+} from "vue";
+import {
+  listModel,
+  getModel,
+  delModel,
+  addModel,
+  updateModel,
+  getFileList,
 } from "@/api/modelReconstitution/model";
-import {listClassify} from "@/api/modelReconstitution/classify";
-import {useDict} from "@/utils/dict.js";
+import { listClassify } from "@/api/modelReconstitution/classify";
+import { useDict } from "@/utils/dict.js";
 import FileNameUpload from "@/components/FileNameUpload/index.vue";
-import {QuestionFilled} from "@element-plus/icons-vue";
+import { QuestionFilled } from "@element-plus/icons-vue";
+import { ElMessage, ElMessageBox } from "element-plus";
 
-export default {
-    name: "Model",
-    components: {QuestionFilled, FileNameUpload},
+// Get access to the current instance to use globally registered functions
+const { proxy } = getCurrentInstance();
 
-    data() {
-        return {
-            mess: false,
-            // 遮罩层
-            loading: true,
-            // 选中数组
-            ids: [],
-            // 非单个禁用
-            single: true,
-            // 非多个禁用
-            multiple: true,
-            // 显示搜索条件
-            showSearch: true,
-            // 总条数
-            total: 0,
-            // 模型管理 表格数据
-            modelList: [],
-            //分类数据
-            projectInfo: [],
-            classifyName: undefined,
-            //分类树选项
-            classifyOptions: [],
-            // 默认选中的节点的 key 值
-            defaultSelectedKey: '',
-            // 弹出层标题
-            title: "",
-            // 是否显示弹出层
-            open: false,
-            isEdit: false, //是否编辑
-            //启用状态禁止删除
-            isStatus: false,
-            defaultProps: {
-                children: "children",
-                label: "name",
-            },
-            // 查询参数
-            queryParams: {
-                pageNum: 1,
-                pageSize: 12,
-                orderByColumn: 'create_time',
-                isAsc: 'desc',
-                companyId: null,
-                name: null,
-                classifyId: null,
-                builtin: null,
-                accessMode: null,
-                requestMethod: null,
-                interfaceorfileAddress: null,
-                versionId: null,
-                whetherPublish: null,
-                publishTime: null,
-                creatorId: null,
-                updatorId: null,
-            },
-            // 表单参数
-            form: {},
-            // 表单校验
-            rules: {
-                validFlag: [
-                    {
-                        required: true,
-                        message: "是否有效 0：无效，1：有效不能为空",
-                        trigger: "blur",
-                    },
-                ],
-                delFlag: [
-                    {
-                        required: true,
-                        message: "删除标志 1：已删除，0：未删除不能为空",
-                        trigger: "blur",
-                    },
-                ],
-                createTime: [
-                    {required: true, message: "创建时间不能为空", trigger: "blur"},
-                ],
-                updateTime: [
-                    {required: true, message: "更新时间不能为空", trigger: "blur"},
-                ],
-                classifyId: [
-                    {required: true, message: "模型分类不能为空", trigger: "blur"},
-                ],
-                name: [
-                    {required: true, message: "模型名称不能为空", trigger: "blur"},
-                ],
-                version: [
-                    {required: true, message: "版本号不能为空", trigger: "blur"},
-                ],
-                description: [
-                    {required: true, message: "版本发布说明不能为空", trigger: "blur"},
-                ],
-                interfaceorfileAddress: [
-                    {required: true, message: "地址不能为空", trigger: "blur"},
-                ],
-                port: [
-                    {required: true, message: "端口不能为空", trigger: "blur"},
-                ],
-            },
-            model_type: useDict("model_type").model_type,
+// Define refs for form elements
+const queryFormRef = ref(null);
+const formRef = ref(null);
+const treeRef = ref(null);
 
-            leftWidth: 300, isResizing: false, startX: 0,
-        };
+// Component state
+const mess = ref(false);
+// 遮罩层
+const loading = ref(true);
+// 选中数组
+const ids = ref([]);
+// 非单个禁用
+const single = ref(true);
+// 非多个禁用
+const multiple = ref(true);
+// 显示搜索条件
+const showSearch = ref(true);
+// 总条数
+const total = ref(0);
+// 模型管理 表格数据
+const modelList = ref([]);
+//分类数据
+const projectInfo = ref([]);
+const classifyName = ref(undefined);
+//分类树选项
+const classifyOptions = ref([]);
+// 默认选中的节点的 key 值
+const defaultSelectedKey = ref("");
+// 弹出层标题
+const title = ref("");
+// 是否显示弹出层
+const open = ref(false);
+const isEdit = ref(false); //是否编辑
+//启用状态禁止删除
+const isStatus = ref(false);
+
+const defaultProps = {
+  children: "children",
+  label: "name",
+};
+
+// 查询参数
+const queryParams = reactive({
+  pageNum: 1,
+  pageSize: 12,
+  orderByColumn: "create_time",
+  isAsc: "desc",
+  companyId: null,
+  name: null,
+  classifyId: null,
+  builtin: null,
+  accessMode: null,
+  requestMethod: null,
+  interfaceorfileAddress: null,
+  versionId: null,
+  whetherPublish: null,
+  publishTime: null,
+  creatorId: null,
+  updatorId: null,
+});
+
+// 表单参数
+const form = reactive({});
+
+// 表单校验
+const rules = reactive({
+  validFlag: [
+    {
+      required: true,
+      message: "是否有效 0：无效，1：有效不能为空",
+      trigger: "blur",
     },
-    created() {
-        this.getTreeselect();
+  ],
+  delFlag: [
+    {
+      required: true,
+      message: "删除标志 1：已删除，0：未删除不能为空",
+      trigger: "blur",
     },
-    computed: {
-        dialogWidth() {
-            console.log(123)
-            return this.form.accessMode == 0 && this.form.interfaceorfileAddress && this.form.interfaceorfileAddress.length > 0
-                ? "1200px" : "750px";
+  ],
+  createTime: [
+    { required: true, message: "创建时间不能为空", trigger: "blur" },
+  ],
+  updateTime: [
+    { required: true, message: "更新时间不能为空", trigger: "blur" },
+  ],
+  classifyId: [
+    { required: true, message: "模型分类不能为空", trigger: "blur" },
+  ],
+  name: [{ required: true, message: "模型名称不能为空", trigger: "blur" }],
+  version: [{ required: true, message: "版本号不能为空", trigger: "blur" }],
+  description: [
+    { required: true, message: "版本发布说明不能为空", trigger: "blur" },
+  ],
+  interfaceorfileAddress: [
+    { required: true, message: "地址不能为空", trigger: "blur" },
+  ],
+  port: [{ required: true, message: "端口不能为空", trigger: "blur" }],
+});
+
+const model_type = useDict("model_type").model_type;
+
+const leftWidth = ref(300);
+const isResizing = ref(false);
+const startX = ref(0);
+
+// Computed property for dialog width
+const dialogWidth = computed(() => {
+  console.log(123);
+  return form.accessMode == 0 &&
+    form.interfaceorfileAddress &&
+    form.interfaceorfileAddress.length > 0
+    ? "1200px"
+    : "750px";
+});
+
+// Watch for classifyName changes
+watch(classifyName, (val) => {
+  if (treeRef.value) {
+    treeRef.value.filter(val);
+  }
+});
+
+onMounted(() => {
+  getTreeselect();
+});
+
+// Methods converted to standalone functions
+const startResize = (event) => {
+  isResizing.value = true;
+  startX.value = event.clientX;
+  // 使用 requestAnimationFrame 减少重绘频率
+  document.addEventListener("mousemove", updateResize);
+  document.addEventListener("mouseup", stopResize);
+};
+
+const updateResize = (event) => {
+  if (isResizing.value) {
+    const delta = event.clientX - startX.value; // 计算鼠标移动距离
+    leftWidth.value += delta; // 修改左侧宽度
+    startX.value = event.clientX; // 更新起始位置
+    // 使用 requestAnimationFrame 来减少页面重绘频率
+    requestAnimationFrame(() => {});
+  }
+};
+
+const stopResize = () => {
+  isResizing.value = false;
+  document.removeEventListener("mousemove", updateResize);
+  document.removeEventListener("mouseup", stopResize);
+};
+
+const uploadSuccess = (val) => {
+  if (val == null || val.length == 0) {
+    form.fileList = [];
+  } else {
+    getFileList({ fileUrl: val[0].url }).then((res) => {
+      form.fileList = res.data;
+    });
+  }
+};
+
+const fileModelName = (res) => {
+  form.fileName = res.originalFilename.substring(
+    0,
+    res.originalFilename.lastIndexOf(".")
+  );
+};
+
+/** 查询模型管理 列表 */
+const getList = () => {
+  loading.value = true;
+  listModel(queryParams).then((response) => {
+    modelList.value = response.rows;
+    total.value = response.total;
+    loading.value = false;
+  });
+};
+
+/** 查询分类下拉树结构 */
+const getTreeselect = () => {
+  listClassify().then((res) => {
+    for (let i = 0; i < res.rows.length; i++) {
+      let arrTemp = [];
+      for (let j = 0; j < res.rows.length; j++) {
+        if (res.rows[i].id == res.rows[j].parentId) {
+          res.rows[i].children = arrTemp;
+          arrTemp.push(res.rows[j]);
         }
+      }
+    }
+    const result = [];
+    for (let i = 0; i < res.rows.length; i++) {
+      if (res.rows[i].parentId == 0) {
+        result.push(res.rows[i]);
+      }
+    }
+    classifyOptions.value = result;
+    nextTick(() => {
+      if (treeRef.value) {
+        treeRef.value.setCurrentKey(classifyOptions.value[0].id);
+      }
+    });
+    handleNodeClick(classifyOptions.value[0]);
+  });
+};
+
+// 筛选节点
+const filterNode = (value, data) => {
+  if (!value) return true;
+  // 使用默认的 label 属性进行比较
+  const label = data[defaultProps.label];
+  return label.indexOf(value) !== -1;
+};
+
+// 节点单击事件
+const handleNodeClick = (data) => {
+  queryParams.classifyId = data.id;
+  handleQuery();
+};
+
+// 取消按钮
+const cancel = () => {
+  open.value = false;
+  reset();
+};
+
+// 表单重置
+const reset = () => {
+  Object.assign(form, {
+    id: null,
+    companyId: null,
+    name: null,
+    classifyId: null,
+    classifyName: null,
+    builtin: null,
+    accessMode: null,
+    requestMethod: null,
+    interfaceorfileAddress: null,
+    fileList: [],
+    runnableFileAddress: null,
+    versionId: null,
+    version: null,
+    description: null,
+    whetherPublish: null,
+    publishTime: null,
+    delFlag: null,
+    createBy: null,
+    creatorId: null,
+    createTime: null,
+    updateBy: null,
+    updatorId: null,
+    updateTime: null,
+    remark: null,
+  });
+  isEdit.value = false;
+  if (formRef.value) {
+    formRef.value.clearValidate();
+  }
+  handleNodeClick(classifyOptions.value[0]);
+};
+
+/** 搜索按钮操作 */
+const handleQuery = () => {
+  queryParams.pageNum = 1;
+  getList();
+};
+
+/** 重置按钮操作 */
+const resetQuery = () => {
+  if (queryFormRef.value) {
+    queryFormRef.value.resetFields();
+  }
+  queryParams.classifyId = undefined;
+  handleNodeClick(classifyOptions.value[0]);
+  handleQuery();
+  if (treeRef.value) {
+    treeRef.value.setCurrentKey(null);
+  }
+};
+
+// 多选框选中数据
+const handleSelectionChange = (selection) => {
+  ids.value = selection.map((item) => item.id);
+  single.value = selection.length !== 1;
+  multiple.value = !selection.length;
+};
+
+/** 新增按钮操作 */
+const handleAdd = () => {
+  reset();
+  open.value = true;
+  title.value = "添加模型管理 ";
+  mess.value = false;
+};
+
+/** 修改按钮操作 */
+const handleUpdate = (row) => {
+  reset();
+  const id = row.id || ids.value;
+  getModel(id).then((response) => {
+    Object.assign(form, response.data);
+    open.value = true;
+    title.value = "修改模型管理 ";
+    if (form.type) {
+      form.type = form.type.toString();
+    }
+    if (form.dimensions) {
+      form.dimensions = form.dimensions.toString();
+    }
+    if (form.builtin) {
+      form.builtin = parseInt(form.builtin);
+    }
+    if (form.format) {
+      form.format = parseInt(form.format);
+    }
+    isEdit.value =
+      form.builtin == 1 ? true : form.whetherPublish == 1 ? true : false;
+    mess.value = true;
+    if (form.accessMode == 0) {
+      getFileList({ fileUrl: form.interfaceorfileAddress }).then((res) => {
+        form.fileList = res.data;
+      });
+    }
+  });
+};
+
+// 详情
+const handleView = (row) => {
+  ElMessage.warning(`模型详情正在开发中，敬请期待～`);
+  return;
+
+  const modelId = row.id;
+  const modelName = row.name;
+  // Assuming router is available via proxy
+  proxy.$router.push({
+    path: "/model/modelManageView",
+    query: {
+      modelId,
+      modelName,
+      pageNum: queryParams.pageNum,
     },
-    watch: {
-        // 根据名称筛选分类树
-        classifyName(val) {
-            this.$refs.tree.filter(val);
-        },
-    },
-    methods: {
-        startResize(event) {
-            this.isResizing = true;
-            this.startX = event.clientX;
-            // 使用 requestAnimationFrame 减少重绘频率
-            document.addEventListener('mousemove', this.updateResize);
-            document.addEventListener('mouseup', this.stopResize);
-        },
+  });
+};
 
-        updateResize(event) {
-            if (this.isResizing) {
-                const delta = event.clientX - this.startX; // 计算鼠标移动距离
-                this.leftWidth += delta; // 修改左侧宽度
-                this.startX = event.clientX; // 更新起始位置
-                // 使用 requestAnimationFrame 来减少页面重绘频率
-                requestAnimationFrame(() => {
+/** 提交按钮 */
+const submitForm = () => {
+  if (formRef.value) {
+    formRef.value.validate((valid) => {
+      if (valid) {
+        let formData = JSON.parse(JSON.stringify(form));
+        if (
+          formData.interfaceorfileAddress &&
+          formData.interfaceorfileAddress.length > 0
+        ) {
+          formData.fileName = formData.interfaceorfileAddress[0].name;
+          formData.interfaceorfileAddress =
+            formData.interfaceorfileAddress[0].url;
+        }
+        if (formData.id != null) {
+          updateModel(formData).then(() => {
+            ElMessage.success("修改成功");
+            open.value = false;
+            getList();
+          });
+        } else {
+          addModel(formData).then(() => {
+            ElMessage.success("新增成功");
+            open.value = false;
+            getList();
+          });
+        }
+      }
+    });
+  }
+};
 
-                });
-            }
-        },
-        stopResize() {
-            this.isResizing = false;
-            document.removeEventListener('mousemove', this.updateResize);
-            document.removeEventListener('mouseup', this.stopResize);
-        },
-        uploadSuccess(val) {
-            if (val == null || val.length == 0) {
-                this.form.fileList = []
-            } else {
-                getFileList({fileUrl: val[0].url}).then(res => {
-                    this.form.fileList = res.data
-                })
-            }
-        },
-        fileModelName(res) {
-            this.form.fileName = res.originalFilename.substring(0, res.originalFilename.lastIndexOf("."))
-        },
-        /** 查询模型管理 列表 */
-        getList() {
-            this.loading = true;
-            listModel(this.queryParams).then((response) => {
-                this.modelList = response.rows;
-                this.total = response.total;
-                this.loading = false;
-            });
-        },
-        /** 查询分类下拉树结构 */
-        getTreeselect() {
-            listClassify().then((res) => {
-                for (let i = 0; i < res.rows.length; i++) {
-                    let arrTemp = [];
-                    for (let j = 0; j < res.rows.length; j++) {
-                        if (res.rows[i].id == res.rows[j].parentId) {
-                            res.rows[i].children = arrTemp;
-                            arrTemp.push(res.rows[j]);
-                        }
-                    }
-                }
-                const result = [];
-                for (let i = 0; i < res.rows.length; i++) {
-                    if (res.rows[i].parentId == 0) {
-                        result.push(res.rows[i]);
-                    }
-                }
-                this.classifyOptions = result;
-                this.$nextTick(() => {
-                    this.$refs.tree.setCurrentKey(this.classifyOptions[0].id)
-                })
-                this.handleNodeClick(this.classifyOptions[0]);
-            });
-        },
-        // 筛选节点
-        filterNode(value, data) {
-            if (!value) return true;
-            // 使用默认的 label 属性进行比较
-            const label = data[this.defaultProps.label];
-            return label.indexOf(value) !== -1;
-        },
-        // 节点单击事件
-        handleNodeClick(data) {
-            this.queryParams.classifyId = data.id;
-            this.handleQuery();
-        },
-        // 取消按钮
-        cancel() {
-            this.open = false;
-            this.reset();
-        },
-        // 表单重置
-        reset() {
-            this.form = {
-                id: null,
-                companyId: null,
-                name: null,
-                classifyId: null,
-                classifyName: null,
-                builtin: null,
-                accessMode: null,
-                requestMethod: null,
-                interfaceorfileAddress: null,
-                fileList: [],
-                runnableFileAddress: null,
-                versionId: null,
-                version: null,
-                description: null,
-                whetherPublish: null,
-                publishTime: null,
-                delFlag: null,
-                createBy: null,
-                creatorId: null,
-                createTime: null,
-                updateBy: null,
-                updatorId: null,
-                updateTime: null,
-                remark: null
-            };
-            this.isEdit = false;
-            this.resetForm("form");
-            this.handleNodeClick(this.classifyOptions[0]);
-        },
-        /** 搜索按钮操作 */
-        handleQuery() {
-            this.queryParams.pageNum = 1;
-            this.getList();
-        },
-        /** 重置按钮操作 */
-        resetQuery() {
-            this.resetForm("queryForm");
-            this.queryParams.classifyId = undefined;
-            this.handleNodeClick(this.classifyOptions[0]);
-            this.handleQuery();
-            this.$refs.tree.setCurrentKey(null);
-        },
-        // 多选框选中数据
-        handleSelectionChange(selection) {
-            this.ids = selection.map((item) => item.id);
-            this.single = selection.length !== 1;
-            this.multiple = !selection.length;
-        },
-        /** 新增按钮操作 */
-        handleAdd() {
-            this.reset();
-            this.open = true;
-            this.title = "添加模型管理 ";
-            this.mess = false;
-        },
-        /** 修改按钮操作 */
-        handleUpdate(row) {
-            this.reset();
-            const id = row.id || this.ids;
-            getModel(id).then((response) => {
-                this.form = response.data;
-                this.open = true;
-                this.title = "修改模型管理 ";
-                if (this.form.type) {
-                    this.form.type = this.form.type.toString();
-                }
-                if (this.form.dimensions) {
-                    this.form.dimensions = this.form.dimensions.toString();
-                }
-                if (this.form.builtin) {
-                    this.form.builtin = parseInt(this.form.builtin);
-                }
-                if (this.form.format) {
-                    this.form.format = parseInt(this.form.format);
-                }
-                this.isEdit = this.form.builtin == 1 ? true : this.form.whetherPublish == 1 ? true : false;
-                this.mess = true;
-                if (this.form.accessMode == 0) {
-                    getFileList({fileUrl: this.form.interfaceorfileAddress}).then(res => {
-                        this.form.fileList = res.data
-                    })
-                }
-            });
-        },
-        // 详情
-        handleView(row) {
+/** 删除按钮操作 */
+const handleDelete = (row) => {
+  const ids = row.id || ids.value;
+  const name = row.name;
+  const uploadStatus = row.uploadStatus;
+  if (uploadStatus == 1) {
+    ElMessageBox.confirm("【" + name + "】模型已启用，请先停用！", "警告", {
+      confirmButtonText: "确定",
+      cancelButtonText: "取消",
+      type: "warning",
+    }).catch(() => {});
+  } else {
+    ElMessageBox.confirm(
+      "是否确认删除名称为【" + name + "】的模型数据吗？",
+      "警告",
+      {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning",
+      }
+    )
+      .then(() => {
+        return delModel(ids);
+      })
+      .then(() => {
+        getList();
+        ElMessage.success("删除成功");
+      })
+      .catch(() => {});
+  }
+};
 
-            this.$message.warning(`模型详情正在开发中，敬请期待～`);
-            return;
-
-            const modelId = row.id;
-            const modelName = row.name;
-            this.$router.push({
-                path: "/model/modelManageView",
-                query: {
-                    modelId,
-                    modelName,
-                    pageNum: this.queryParams.pageNum,
-                },
-            });
-        },
-        /** 提交按钮 */
-        submitForm() {
-            this.$refs["form"].validate((valid) => {
-                if (valid) {
-                    let form = JSON.parse(JSON.stringify(this.form))
-                    if (form.interfaceorfileAddress && form.interfaceorfileAddress.length > 0) {
-                        form.fileName = form.interfaceorfileAddress[0].name;
-                        form.interfaceorfileAddress = form.interfaceorfileAddress[0].url;
-                    }
-                    if (form.id != null) {
-                        updateModel(form).then(() => {
-                            this.$modal.msgSuccess("修改成功");
-                            this.open = false;
-                            this.getList();
-                        });
-                    } else {
-                        addModel(form).then(() => {
-                            this.$modal.msgSuccess("新增成功");
-                            this.open = false;
-                            this.getList();
-                        });
-                    }
-                }
-            });
-        },
-        /** 删除按钮操作 */
-        handleDelete(row) {
-            const ids = row.id || this.ids;
-            const name = row.name;
-            const uploadStatus = row.uploadStatus;
-            if (uploadStatus == 1) {
-                this.$modal
-                    .confirm("【" + name + "】模型已启用，请先停用！")
-                    .catch(() => {
-                    });
-            } else {
-                this.$modal
-                    .confirm("是否确认删除名称为【" + name + "】的模型数据吗？")
-                    .then(function () {
-                        return delModel(ids);
-                    })
-                    .then(() => {
-                        this.getList();
-                        this.$modal.msgSuccess("删除成功");
-                    })
-                    .catch(() => {
-                    });
-            }
-        },
-        /** 导出按钮操作 */
-        handleExport() {
-            this.download(
-                "modelReconstitution/model/export",
-                {
-                    ...this.queryParams,
-                },
-                `model_${new Date().getTime()}.xlsx`
-            );
-        },
-    },
+/** 导出按钮操作 */
+const handleExport = () => {
+  // Assuming download function is available via proxy
+  if (proxy && proxy.download) {
+    proxy.download(
+      "modelReconstitution/model/export",
+      {
+        ...queryParams,
+      },
+      `model_${new Date().getTime()}.xlsx`
+    );
+  }
 };
 </script>
 <style lang="scss" scoped>
@@ -914,8 +1032,8 @@ export default {
 
 ::v-deep {
   .selectlist .el-tag.el-tag--info {
-    background: #F3F8FF !important;
-    border: 0px solid #6BA7FF !important;
+    background: #f3f8ff !important;
+    border: 0px solid #6ba7ff !important;
     color: #2666fb !important;
   }
 }
@@ -985,7 +1103,6 @@ export default {
 
 .iconimg {
   font-size: 15px;
-
 }
 
 //上传附件样式调整
@@ -998,7 +1115,9 @@ export default {
     height: 25px;
   }
 
-  .el-tree--highlight-current .el-tree-node.is-current > .el-tree-node__content {
+  .el-tree--highlight-current
+    .el-tree-node.is-current
+    > .el-tree-node__content {
     background-color: var(--el-color-primary-light-9) !important;
     border-right: 2px solid var(--el-color-primary);
     color: var(--el-color-primary);
@@ -1101,9 +1220,8 @@ export default {
 }
 
 .formClass {
-
   ::v-deep .vue-treeselect--disabled .vue-treeselect__control {
-    background-color: #f5f7fa
+    background-color: #f5f7fa;
   }
 
   ::v-deep .vue-treeselect--disabled .vue-treeselect__single-value {
@@ -1112,7 +1230,10 @@ export default {
 }
 
 .head-container {
-  ::v-deep .el-tree--highlight-current .el-tree-node.is-current > .el-tree-node__content {
+  ::v-deep
+    .el-tree--highlight-current
+    .el-tree-node.is-current
+    > .el-tree-node__content {
     background-color: #cee5ff;
   }
 }
