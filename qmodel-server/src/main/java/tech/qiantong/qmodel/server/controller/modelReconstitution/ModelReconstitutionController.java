@@ -51,6 +51,8 @@ import tech.qiantong.qmodel.common.utils.*;
 import tech.qiantong.qmodel.common.utils.poi.*;
 import tech.qiantong.qmodel.common.utils.uuid.*;
 import tech.qiantong.qmodel.common.utils.uuid.UUID;
+import tech.qiantong.qmodel.module.model.dal.dataobject.classify.ModelClassifyDO;
+import tech.qiantong.qmodel.module.model.service.classify.IModelClassifyService;
 import tech.qiantong.qmodel.module.modelReconstitution.domain.*;
 import tech.qiantong.qmodel.module.modelReconstitution.service.*;
 
@@ -72,7 +74,7 @@ public class ModelReconstitutionController extends BaseController {
     private IModelReconstitutionService modelReconstitutionService;
 
     @Autowired
-    private IModelClassifyReconstitutionService modelClassifyReconstitutionService;
+    private IModelClassifyService modelClassifyService;
 
     @Autowired
     private IModelVersionReconstitutionService modelVersionReconstitutionService;
@@ -99,7 +101,9 @@ public class ModelReconstitutionController extends BaseController {
         modelVersionReconstitution.setParams(params);
         List<ModelVersionReconstitution> modelVersionReconstitutions = modelVersionReconstitutionService.selectModelVersionList(modelVersionReconstitution);
         for (ModelReconstitution reconstitution : list) {
-            if (reconstitution.getVersionId() == null) continue;
+            if (reconstitution.getVersionId() == null) {
+                continue;
+            }
             for (ModelVersionReconstitution versionReconstitution : modelVersionReconstitutions) {
                 if (reconstitution.getVersionId().equals(versionReconstitution.getId())){
                     reconstitution.setVersion(versionReconstitution.getVersion());
@@ -136,8 +140,8 @@ public class ModelReconstitutionController extends BaseController {
             modelReconstitution.setDescription(version.getDescription());
             modelReconstitution.setRunnableFileAddress(version.getRunnableFileAddress());
         }
-        ModelClassifyReconstitution modelClassifyReconstitution = modelClassifyReconstitutionService.selectModelClassifyById(modelReconstitution.getClassifyId());
-        modelReconstitution.setClassifyName(modelClassifyReconstitution.getName());
+        ModelClassifyDO modelClassify = modelClassifyService.getModelClassifyById(modelReconstitution.getClassifyId());
+        modelReconstitution.setClassifyName(modelClassify.getName());
         return AjaxResult.success(modelReconstitution);
     }
 
@@ -286,7 +290,9 @@ public class ModelReconstitutionController extends BaseController {
             String[] strings = filePath.split("/");
             for (int i = 0; i < strings.length; i++) {
                 String curPath = strings[i];
-                if (curPath.isEmpty()) continue;
+                if (curPath.isEmpty()) {
+                    continue;
+                }
                 // 如果时最后一个，则应该是文件名，直接存储展示
                 if (i == strings.length - 1) {
                     JSONObject temp = new JSONObject();

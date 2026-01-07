@@ -284,7 +284,7 @@
     const getList = () => {
         loading.value = true;
         listClassify(queryParams).then((response) => {
-            classifyList.value = proxy.handleTree(response.rows, 'id', 'parentId');
+            classifyList.value = proxy.handleTree(response.data, 'id', 'parentId');
             loading.value = false;
         });
     };
@@ -294,7 +294,7 @@
         listClassify().then((response) => {
             classifyOptions.value = [];
             const data = { id: 0, name: '顶级节点', children: [] };
-            data.children = proxy.handleTree(response.rows, 'id', 'parentId');
+            data.children = proxy.handleTree(response.data, 'id', 'parentId');
             classifyOptions.value.push(data);
         });
     };

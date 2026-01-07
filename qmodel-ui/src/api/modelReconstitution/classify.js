@@ -35,7 +35,7 @@ import request from '@/utils/request'
 // 查询模型分类列表
 export function listClassify(query) {
   return request({
-    url: '/modelReconstitution/classify/list',
+    url: '/model/classify/list',
     method: 'get',
     params: query
   })
@@ -44,7 +44,7 @@ export function listClassify(query) {
 // 查询模型分类详细
 export function getClassify(id) {
   return request({
-    url: '/modelReconstitution/classify/' + id,
+    url: '/model/classify/' + id,
     method: 'get'
   })
 }
@@ -52,7 +52,7 @@ export function getClassify(id) {
 // 新增模型分类
 export function addClassify(data) {
   return request({
-    url: '/modelReconstitution/classify',
+    url: '/model/classify',
     method: 'post',
     data: data
   })
@@ -61,7 +61,7 @@ export function addClassify(data) {
 // 修改模型分类
 export function updateClassify(data) {
   return request({
-    url: '/modelReconstitution/classify',
+    url: '/model/classify',
     method: 'put',
     data: data
   })
@@ -70,7 +70,7 @@ export function updateClassify(data) {
 // 删除模型分类
 export function delClassify(id) {
   return request({
-    url: '/modelReconstitution/classify/' + id,
+    url: '/model/classify/' + id,
     method: 'delete'
   })
 }

@@ -43,10 +43,14 @@ import tech.qiantong.qmodel.common.core.domain.AjaxResult;
 import tech.qiantong.qmodel.common.core.page.TableDataInfo;
 import tech.qiantong.qmodel.common.enums.BusinessType;
 import tech.qiantong.qmodel.common.utils.poi.ExcelUtil;
+import tech.qiantong.qmodel.module.model.controller.admin.classify.vo.ModelClassifyPageReqVO;
+import tech.qiantong.qmodel.module.model.dal.dataobject.classify.ModelClassifyDO;
 import tech.qiantong.qmodel.module.model.domain.*;
 import tech.qiantong.qmodel.module.model.service.*;
+import tech.qiantong.qmodel.module.model.service.classify.IModelClassifyService;
 import tech.qiantong.qmodel.module.system.service.ISysDictDataService;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
@@ -56,25 +60,25 @@ import java.util.List;
  * @author YWG
  * @date 2023-09-14
  */
-@RestController
-@RequestMapping("/model/model")
+//@RestController
+//@RequestMapping("/model/model")
 public class ModelController extends BaseController {
-    @Autowired
+    @Resource
     private IModelService modelService;
 
-    @Autowired
+    @Resource
     private IModelVersionService modelVersionService;
 
-    @Autowired
+    @Resource
     private IModelHistoryService modelHistoryService;
 
-    @Autowired
+    @Resource
     private IModelClassifyService modelClassifyService;
 
-    @Autowired
+    @Resource
     private ISysDictDataService sysDictDataService;
 
-    @Autowired
+    @Resource
     private IModelOperateService modelOperateService;
 
     /**
@@ -83,14 +87,14 @@ public class ModelController extends BaseController {
     @PreAuthorize("@ss.hasPermi('model:model:list')")
     @GetMapping("/list")
     public TableDataInfo list(Model model) {
-        ModelClassify classify = modelClassifyService.selectModelClassifyById(model.getClassifyId());
+        ModelClassifyDO classify = modelClassifyService.getModelClassifyById(model.getClassifyId());
         if (classify != null ) {
-            ModelClassify modelClassify = new ModelClassify();
+            ModelClassifyPageReqVO modelClassify = new ModelClassifyPageReqVO();
             modelClassify.setParentId(classify.getId());
-            List<ModelClassify> classifyList = modelClassifyService.selectModelClassifyList(modelClassify);
-            classifyList.add(classify);
-            if (CollUtil.isNotEmpty(classifyList)) {
-                model.setParamByKey("model" , classifyList);
+            List<ModelClassifyDO> modelClassifyList = modelClassifyService.getModelClassifyList(modelClassify);
+            modelClassifyList.add(classify);
+            if (CollUtil.isNotEmpty(modelClassifyList)) {
+                model.setParamByKey("model" , classify);
             }
             model.setClassifyId(null);
         }
@@ -171,7 +175,7 @@ public class ModelController extends BaseController {
             operate.setType(0);
             JSONObject object = new JSONObject();
             object.set("模型名称", model.getName());
-            object.set("模型分类", modelClassifyService.selectModelClassifyById(model.getClassifyId().longValue()).getName());
+//            object.set("模型分类", modelClassifyService.selectModelClassifyById(model.getClassifyId().longValue()).getName());
 //            object.set("所属模型类别", sysDictDataService.selectDictLabel(
 //                    "model_waterconserve_modelmanage_type", model.getType().toString()));
             object.set("模型格式", model.getFormat() == 0 ? "文件格式" : "接口格式");
@@ -211,7 +215,7 @@ public class ModelController extends BaseController {
             {
                 JSONObject object = new JSONObject();
                 object.set("模型名称", model.getName());
-                object.set("模型分类", modelClassifyService.selectModelClassifyById(model.getClassifyId()).getName());
+//                object.set("模型分类", modelClassifyService.selectModelClassifyById(model.getClassifyId()).getName());
 //                object.set("所属模型类别", sysDictDataService.selectDictLabel(
 //                        "model_waterconserve_modelmanage_type", model.getType().toString()));
                 object.set("模型介绍", model.getRemark() == null ? " -- " : model.getRemark());
@@ -220,7 +224,7 @@ public class ModelController extends BaseController {
             {
                 JSONObject object = new JSONObject();
                 object.set("模型名称", originModel.getName());
-                object.set("模型分类", modelClassifyService.selectModelClassifyById(originModel.getClassifyId()).getName());
+//                object.set("模型分类", modelClassifyService.selectModelClassifyById(originModel.getClassifyId()).getName());
 //                object.set("所属模型类别", sysDictDataService.selectDictLabel(
 //                        "model_waterconserve_modelmanage_type", originModel.getType().toString()));
                 object.set("模型介绍", model.getRemark() == null ? " -- " : originModel.getRemark());

@@ -47,16 +47,16 @@ import java.util.*;
  * @author YWG
  * @date 2023-09-14
  */
-@Service
+//@Service
 public class ModelServiceImpl implements IModelService {
     @Autowired
     private ModelMapper modelMapper;
 
     /**
-     * 查询模型管理 
+     * 查询模型管理
      *
      * @param id 模型管理 主键
-     * @return 模型管理 
+     * @return 模型管理
      */
     @Override
     public Model selectModelById(Long id) {
@@ -66,8 +66,8 @@ public class ModelServiceImpl implements IModelService {
     /**
      * 查询模型管理 列表
      *
-     * @param model 模型管理 
-     * @return 模型管理 
+     * @param model 模型管理
+     * @return 模型管理
      */
     @Override
     public List<Model> selectModelList(Model model) {
@@ -81,9 +81,9 @@ public class ModelServiceImpl implements IModelService {
     }
 
     /**
-     * 新增模型管理 
+     * 新增模型管理
      *
-     * @param model 模型管理 
+     * @param model 模型管理
      * @return 结果
      */
     @Override
@@ -93,9 +93,9 @@ public class ModelServiceImpl implements IModelService {
     }
 
     /**
-     * 修改模型管理 
+     * 修改模型管理
      *
-     * @param model 模型管理 
+     * @param model 模型管理
      * @return 结果
      */
     @Override
@@ -105,7 +105,7 @@ public class ModelServiceImpl implements IModelService {
     }
 
     /**
-     * 批量删除模型管理 
+     * 批量删除模型管理
      *
      * @param ids 需要删除的模型管理 主键
      * @return 结果

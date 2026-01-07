@@ -811,19 +811,19 @@ const getList = () => {
 /** 查询分类下拉树结构 */
 const getTreeselect = () => {
   listClassify().then((res) => {
-    for (let i = 0; i < res.rows.length; i++) {
+    for (let i = 0; i < res.data.length; i++) {
       let arrTemp = [];
-      for (let j = 0; j < res.rows.length; j++) {
-        if (res.rows[i].id == res.rows[j].parentId) {
-          res.rows[i].children = arrTemp;
-          arrTemp.push(res.rows[j]);
+      for (let j = 0; j < res.data.length; j++) {
+        if (res.data[i].id == res.data[j].parentId) {
+          res.data[i].children = arrTemp;
+          arrTemp.push(res.data[j]);
         }
       }
     }
     const result = [];
-    for (let i = 0; i < res.rows.length; i++) {
-      if (res.rows[i].parentId == 0) {
-        result.push(res.rows[i]);
+    for (let i = 0; i < res.data.length; i++) {
+      if (res.data[i].parentId == 0) {
+        result.push(res.data[i]);
       }
     }
     classifyOptions.value = result;
