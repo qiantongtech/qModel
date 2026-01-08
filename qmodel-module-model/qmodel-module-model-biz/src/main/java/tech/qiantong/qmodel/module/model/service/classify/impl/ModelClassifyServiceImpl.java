@@ -38,6 +38,7 @@ import java.util.ArrayList;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.ObjectUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -80,7 +81,7 @@ public class ModelClassifyServiceImpl extends ServiceImpl<ModelClassifyMapper, M
     }
 
     /**
-     * 获得全部获得模型分类
+     * 获得全部模型分类
      *
      * @param reqVO 模型分类信息
      * @return 获得全部获得模型分类
@@ -238,6 +239,28 @@ public class ModelClassifyServiceImpl extends ServiceImpl<ModelClassifyMapper, M
             resultMsg.append("恭喜您，数据已全部导入成功！共 ").append(successNum).append(" 条。");
         }
         return resultMsg.toString();
+    }
+
+    /**
+     * 获取模型分类ID列表
+     *
+     * @param id 模型分类ID
+     * @return 模型分类ID列表
+     */
+    @Override
+    public List<Long> getModelClassifyIds(Long id) {
+        ArrayList<Long> classifyIds = new ArrayList<>();
+        ModelClassifyDO classify = this.getModelClassifyById(id);
+        if (classify != null ) {
+            classifyIds.add(classify.getId());
+            ModelClassifyPageReqVO modelClassify = new ModelClassifyPageReqVO();
+            modelClassify.setParentId(classify.getId());
+            List<ModelClassifyDO> modelClassifyList = modelClassifyMapper.selectChildrenClassifyById(classify.getId());
+            if (CollUtil.isNotEmpty(modelClassifyList)) {
+                modelClassifyList.forEach(item -> classifyIds.add(item.getId()));
+            }
+        }
+        return classifyIds;
     }
 
     /**

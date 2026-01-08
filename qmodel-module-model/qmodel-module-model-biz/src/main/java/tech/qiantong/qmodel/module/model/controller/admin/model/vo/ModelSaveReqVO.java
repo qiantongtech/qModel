@@ -104,7 +104,7 @@ public class ModelSaveReqVO extends BaseEntity {
     private String source;
 
     @Schema(description = "上传状态", example = "")
-    private Long uploadStatus;
+    private Integer uploadStatus;
 
     @Schema(description = "上传时间", example = "")
     @JsonFormat(pattern = "yyyy-dd HH:mm:ss")

@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+  Copyright © 2026 Qiantong Technology Co., Ltd.
+  qModel Model Platform(Open Source Edition)
+   *
+  License:
+  Released under the Apache License, Version 2.0.
+  You may use, modify, and distribute this software for commercial purposes
+  under the terms of the License.
+   *
+  Special Notice:
+  All derivative versions are strictly prohibited from modifying or removing
+  the default system logo and copyright information.
+  For brand customization, please apply for brand customization authorization via official channels.
+   *
+  More information: https://qmodel.qiantong.tech/business.html
+   *
+  ============================================================================
+   *
+  版权所有 © 2026 江苏千桐科技有限公司
+  qModel 模型平台（开源版）
+   *
+  许可协议：
+  本项目基于 Apache License 2.0 开源协议发布，
+  允许在遵守协议的前提下进行商用、修改和分发。
+   *
+  特别说明：
+  所有衍生版本不得修改或移除系统默认的 LOGO 和版权信息；
+  如需定制品牌，请通过官方渠道申请品牌定制授权。
+   *
+  更多信息请访问：https://qmodel.qiantong.tech/business.html
+-->
+
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="tech.qiantong.qmodel.module.model.dal.mapper.model.ModelMapper">
+
+    <resultMap type="ModelDO" id="ModelResult">
+        <result property="id"    column="ID"    />
+        <result property="companyId"    column="COMPANY_ID"    />
+        <result property="classifyId"    column="CLASSIFY_ID"    />
+        <result property="ancestors"    column="ANCESTORS"    />
+        <result property="name"    column="NAME"    />
+        <result property="description"    column="DESCRIPTION"    />
+        <result property="type"    column="TYPE"    />
+        <result property="dimensions"    column="DIMENSIONS"    />
+        <result property="version"    column="VERSION"    />
+        <result property="interfaceAddress"    column="INTERFACE_ADDRESS"    />
+        <result property="builtIn"    column="BUILTIN"    />
+        <result property="format"    column="FORMAT"    />
+        <result property="size"    column="SIZE"    />
+        <result property="source"    column="SOURCE"    />
+        <result property="uploadStatus"    column="UPLOAD_STATUS"    />
+        <result property="uploadTime"    column="UPLOAD_TIME"    />
+        <result property="uploadInterface"    column="UPLOAD_INTERFACE"    />
+        <result property="uploadFile"    column="UPLOAD_FILE"    />
+        <result property="uploadLocation"    column="UPLOAD_LOCATION"    />
+        <result property="validFlag"    column="VALID_FLAG"    />
+        <result property="delFlag"    column="DEL_FLAG"    />
+        <result property="createBy"    column="CREATE_BY"    />
+        <result property="creatorId"    column="CREATOR_ID"    />
+        <result property="createTime"    column="CREATE_TIME"    />
+        <result property="updateBy"    column="UPDATE_BY"    />
+        <result property="updatorId"    column="UPDATOR_ID"    />
+        <result property="updateTime"    column="UPDATE_TIME"    />
+        <result property="remark"    column="REMARK"    />
+    </resultMap>
+
+    <sql id="selectModelVo">
+        select ID, COMPANY_ID, CLASSIFY_ID, ANCESTORS, NAME, DESCRIPTION, TYPE, DIMENSIONS, VERSION, INTERFACE_ADDRESS, BUILTIN, FORMAT, SIZE, SOURCE, UPLOAD_STATUS, UPLOAD_TIME, UPLOAD_INTERFACE, UPLOAD_FILE, UPLOAD_LOCATION, VALID_FLAG, DEL_FLAG, CREATE_BY, CREATOR_ID, CREATE_TIME, UPDATE_BY, UPDATOR_ID, UPDATE_TIME, REMARK from MODEL
+    </sql>
+
+    <select id="selectModelList" parameterType="ModelDO" resultMap="ModelResult">
+        <include refid="selectModelVo"/>
+        <where>
+            <if test="companyId != null "> and COMPANY_ID = #{companyId}</if>
+            <if test="classifyId != null "> and CLASSIFY_ID = #{classifyId}</if>
+            <if test="ancestors != null  and ancestors != ''"> and ANCESTORS = #{ancestors}</if>
+            <if test="name != null  and name != ''"> and NAME like concat('%', #{name}, '%')</if>
+            <if test="description != null  and description != ''"> and DESCRIPTION = #{description}</if>
+            <if test="type != null "> and TYPE = #{type}</if>
+            <if test="dimensions != null "> and DIMENSIONS = #{dimensions}</if>
+            <if test="version != null  and version != ''"> and VERSION = #{version}</if>
+            <if test="interfaceAddress != null  and interfaceAddress != ''"> and INTERFACE_ADDRESS = #{interfaceAddress}</if>
+            <if test="builtIn != null "> and BUILTIN = #{builtIn}</if>
+            <if test="format != null "> and FORMAT = #{format}</if>
+            <if test="size != null "> and SIZE = #{size}</if>
+            <if test="source != null  and source != ''"> and SOURCE = #{source}</if>
+            <if test="uploadStatus != null "> and UPLOAD_STATUS = #{uploadStatus}</if>
+            <if test="uploadTime != null "> and UPLOAD_TIME = #{uploadTime}</if>
+            <if test="uploadInterface != null  and uploadInterface != ''"> and UPLOAD_INTERFACE = #{uploadInterface}</if>
+            <if test="uploadFile != null  and uploadFile != ''"> and UPLOAD_FILE = #{uploadFile}</if>
+            <if test="uploadLocation != null  and uploadLocation != ''"> and UPLOAD_LOCATION = #{uploadLocation}</if>
+            <if test="createTime != null "> and CREATE_TIME = #{createTime}</if>
+        </where>
+    </select>
+
+    <select id="selectModelByID" parameterType="Long" resultMap="ModelResult">
+        <include refid="selectModelVo"/>
+        where ID = #{id}
+    </select>
+
+    <insert id="insertModel" parameterType="ModelDO">
+        insert into MODEL
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">ID,</if>
+            <if test="companyId != null">COMPANY_ID,</if>
+            <if test="classifyId != null">CLASSIFY_ID,</if>
+            <if test="ancestors != null">ANCESTORS,</if>
+            <if test="name != null">NAME,</if>
+            <if test="description != null">DESCRIPTION,</if>
+            <if test="type != null">TYPE,</if>
+            <if test="dimensions != null">DIMENSIONS,</if>
+            <if test="version != null">VERSION,</if>
+            <if test="interfaceAddress != null">INTERFACE_ADDRESS,</if>
+            <if test="builtIn != null">BUILTIN,</if>
+            <if test="format != null">FORMAT,</if>
+            <if test="size != null">SIZE,</if>
+            <if test="source != null">SOURCE,</if>
+            <if test="uploadStatus != null">UPLOAD_STATUS,</if>
+            <if test="uploadTime != null">UPLOAD_TIME,</if>
+            <if test="uploadInterface != null">UPLOAD_INTERFACE,</if>
+            <if test="uploadFile != null">UPLOAD_FILE,</if>
+            <if test="uploadLocation != null">UPLOAD_LOCATION,</if>
+            <if test="validFlag != null">VALID_FLAG,</if>
+            <if test="delFlag != null">DEL_FLAG,</if>
+            <if test="createBy != null">CREATE_BY,</if>
+            <if test="creatorId != null">CREATOR_ID,</if>
+            <if test="createTime != null">CREATE_TIME,</if>
+            <if test="updateBy != null">UPDATE_BY,</if>
+            <if test="updatorId != null">UPDATOR_ID,</if>
+            <if test="updateTime != null">UPDATE_TIME,</if>
+            <if test="remark != null">REMARK,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="companyId != null">#{companyId},</if>
+            <if test="classifyId != null">#{classifyId},</if>
+            <if test="ancestors != null">#{ancestors},</if>
+            <if test="name != null">#{name},</if>
+            <if test="description != null">#{description},</if>
+            <if test="type != null">#{type},</if>
+            <if test="dimensions != null">#{dimensions},</if>
+            <if test="version != null">#{version},</if>
+            <if test="interfaceAddress != null">#{interfaceAddress},</if>
+            <if test="builtIn != null">#{builtIn},</if>
+            <if test="format != null">#{format},</if>
+            <if test="size != null">#{size},</if>
+            <if test="source != null">#{source},</if>
+            <if test="uploadStatus != null">#{uploadStatus},</if>
+            <if test="uploadTime != null">#{uploadTime},</if>
+            <if test="uploadInterface != null">#{uploadInterface},</if>
+            <if test="uploadFile != null">#{uploadFile},</if>
+            <if test="uploadLocation != null">#{uploadLocation},</if>
+            <if test="validFlag != null">#{validFlag},</if>
+            <if test="delFlag != null">#{delFlag},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="creatorId != null">#{creatorId},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updatorId != null">#{updatorId},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null">#{remark},</if>
+         </trim>
+    </insert>
+
+    <update id="updateModel" parameterType="ModelDO">
+        update MODEL
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="companyId != null">COMPANY_ID = #{companyId},</if>
+            <if test="classifyId != null">CLASSIFY_ID = #{classifyId},</if>
+            <if test="ancestors != null">ANCESTORS = #{ancestors},</if>
+            <if test="name != null">NAME = #{name},</if>
+            <if test="description != null">DESCRIPTION = #{description},</if>
+            <if test="type != null">TYPE = #{type},</if>
+            <if test="dimensions != null">DIMENSIONS = #{dimensions},</if>
+            <if test="version != null">VERSION = #{version},</if>
+            <if test="interfaceAddress != null">INTERFACE_ADDRESS = #{interfaceAddress},</if>
+            <if test="builtIn != null">BUILTIN = #{builtIn},</if>
+            <if test="format != null">FORMAT = #{format},</if>
+            <if test="size != null">SIZE = #{size},</if>
+            <if test="source != null">SOURCE = #{source},</if>
+            <if test="uploadStatus != null">UPLOAD_STATUS = #{uploadStatus},</if>
+            <if test="uploadTime != null">UPLOAD_TIME = #{uploadTime},</if>
+            <if test="uploadInterface != null">UPLOAD_INTERFACE = #{uploadInterface},</if>
+            <if test="uploadFile != null">UPLOAD_FILE = #{uploadFile},</if>
+            <if test="uploadLocation != null">UPLOAD_LOCATION = #{uploadLocation},</if>
+            <if test="validFlag != null">VALID_FLAG = #{validFlag},</if>
+            <if test="delFlag != null">DEL_FLAG = #{delFlag},</if>
+            <if test="createBy != null">CREATE_BY = #{createBy},</if>
+            <if test="creatorId != null">CREATOR_ID = #{creatorId},</if>
+            <if test="createTime != null">CREATE_TIME = #{createTime},</if>
+            <if test="updateBy != null">UPDATE_BY = #{updateBy},</if>
+            <if test="updatorId != null">UPDATOR_ID = #{updatorId},</if>
+            <if test="updateTime != null">UPDATE_TIME = #{updateTime},</if>
+            <if test="remark != null">REMARK = #{remark},</if>
+        </trim>
+        where ID = #{id}
+    </update>
+
+    <delete id="deleteModelByID" parameterType="Long">
+        delete from MODEL where ID = #{id}
+    </delete>
+
+    <delete id="deleteModelByIDs" parameterType="String">
+        delete from MODEL where ID in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

@@ -58,6 +58,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         select ID, COMPANY_ID, PARENT_ID, ANCESTORS, NAME, DESCRIPTION, VALID_FLAG, DEL_FLAG, CREATE_BY, CREATOR_ID, CREATE_TIME, UPDATE_BY, UPDATOR_ID, UPDATE_TIME, REMARK from MODEL_CLASSIFY
     </sql>
 
+    <sql id="selectModelId">
+        select ID,ANCESTORS from MODEL_CLASSIFY
+    </sql>
+
     <select id="selectModelClassifyList" parameterType="ModelClassifyDO" resultMap="ModelClassifyResult">
         <include refid="selectModelClassifyVo"/>
         <where>
@@ -76,8 +80,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </select>
 
     <select id="selectChildrenClassifyById" parameterType="Long" resultMap="ModelClassifyResult">
-        <include refid="selectModelClassifyVo"/>
-        where find_in_set(#{classifyId}, ancestors)
+        <include refid="selectModelId"/>
+        where find_in_set(#{classifyId}, ancestors) and DEL_FLAG = 0
     </select>
 
     <insert id="insertModelClassify" parameterType="ModelClassifyDO">

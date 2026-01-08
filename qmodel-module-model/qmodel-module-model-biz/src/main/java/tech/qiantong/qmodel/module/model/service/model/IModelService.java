@@ -41,6 +41,8 @@ import tech.qiantong.qmodel.module.model.controller.admin.model.vo.ModelSaveReqV
 import tech.qiantong.qmodel.module.model.controller.admin.model.vo.ModelPageReqVO;
 import tech.qiantong.qmodel.module.model.controller.admin.model.vo.ModelRespVO;
 import tech.qiantong.qmodel.module.model.dal.dataobject.model.ModelDO;
+import tech.qiantong.qmodel.module.model.domain.ModelVersion;
+
 /**
  * 模型管理Service接口
  *
@@ -63,7 +65,7 @@ public interface IModelService extends IService<ModelDO> {
      * @param createReqVO 模型管理信息
      * @return 模型管理编号
      */
-    Long createModel(ModelSaveReqVO createReqVO);
+    Long createModel(ModelSaveReqVO createReqVO, ModelVersion modelVersion);
 
     /**
      * 更新模型管理
@@ -71,6 +73,8 @@ public interface IModelService extends IService<ModelDO> {
      * @param updateReqVO 模型管理信息
      */
     int updateModel(ModelSaveReqVO updateReqVO);
+
+    int updateModel(ModelSaveReqVO updateReqVO, ModelVersion modelVersion);
 
     /**
      * 删除模型管理
@@ -93,6 +97,8 @@ public interface IModelService extends IService<ModelDO> {
      * @return 模型管理列表
      */
     List<ModelDO> getModelList();
+
+    List<ModelDO> getModelList(ModelPageReqVO model);
 
     /**
      * 获得全部模型管理 Map

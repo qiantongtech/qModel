@@ -119,6 +119,13 @@ public interface IModelClassifyService extends IService<ModelClassifyDO> {
      */
     String importModelClassify(List<ModelClassifyRespVO> importExcelList, boolean isUpdateSupport, String operName);
 
+    /**
+     * 获取模型分类下的所有子孙级模型id集合
+     *
+     * @param id 模型分类id
+     * @return 模型分类下的所有子孙级模型id集合
+     */
+    List<Long> getModelClassifyIds(Long id);
 
     /**
      * 查询模型分类总数

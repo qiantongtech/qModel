@@ -32,8 +32,11 @@
 
 package tech.qiantong.qmodel.module.model.controller.admin.model.vo;
 
+
 import java.util.Date;
-import com.fasterxml.jackson.annotation.JsonFormat;
+import java.util.List;
+
+import com.baomidou.mybatisplus.annotation.TableField;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import tech.qiantong.qmodel.common.core.page.PageParam;
@@ -104,7 +107,8 @@ public class ModelPageReqVO extends PageParam {
     @Schema(description = "文件地址", example = "")
     private String uploadLocation;
 
-
+    @TableField(exist = false)
+    private List<Long> classifyIds;
 
 
 }
