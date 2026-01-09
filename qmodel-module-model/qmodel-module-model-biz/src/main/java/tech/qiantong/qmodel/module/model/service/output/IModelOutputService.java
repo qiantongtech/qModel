@@ -30,67 +30,89 @@
  * 更多信息请访问：https://qmodel.qiantong.tech/business.html
  */
 
-package tech.qiantong.qmodel.module.model.service;
+package tech.qiantong.qmodel.module.model.service.output;
 
-import com.alibaba.fastjson.*;
-import tech.qiantong.qmodel.module.model.domain.*;
+import java.util.List;
+import java.util.Map;
+import java.util.Collection;
 
-import java.util.*;
-
+import com.alibaba.fastjson.JSONObject;
+import com.baomidou.mybatisplus.extension.service.IService;
+import tech.qiantong.qmodel.common.core.page.PageResult;
+import tech.qiantong.qmodel.module.model.controller.admin.output.vo.ModelOutputSaveReqVO;
+import tech.qiantong.qmodel.module.model.controller.admin.output.vo.ModelOutputPageReqVO;
+import tech.qiantong.qmodel.module.model.controller.admin.output.vo.ModelOutputRespVO;
+import tech.qiantong.qmodel.module.model.dal.dataobject.output.ModelOutputDO;
 /**
- *  模型输出管理Service接口
+ * 模型输出管理Service接口
  *
- * @author surge
- * @date 2023-09-14
+ * @author qModel
+ * @date 2026-01-09
  */
-public interface IModelOutputService {
-    /**
-     * 查询 模型输出管理
-     *
-     * @param id  模型输出管理主键
-     * @return  模型输出管理
-     */
-    public ModelOutput selectModelOutputById(Long id);
+public interface IModelOutputService extends IService<ModelOutputDO> {
 
     /**
-     * 查询 模型输出管理列表
+     * 获得模型输出管理分页列表
      *
-     * @param modelOutput  模型输出管理
-     * @return  模型输出管理集合
+     * @param pageReqVO 分页请求
+     * @return 模型输出管理分页列表
      */
-    public List<ModelOutput> selectModelOutputList(ModelOutput modelOutput);
+    PageResult<ModelOutputDO> getModelOutputPage(ModelOutputPageReqVO pageReqVO);
 
     /**
-     * 新增 模型输出管理
+     * 创建模型输出管理
      *
-     * @param modelOutput  模型输出管理
+     * @param createReqVO 模型输出管理信息
+     * @return 模型输出管理编号
+     */
+    Long createModelOutput(ModelOutputSaveReqVO createReqVO);
+
+    /**
+     * 更新模型输出管理
+     *
+     * @param updateReqVO 模型输出管理信息
+     */
+    int updateModelOutput(ModelOutputSaveReqVO updateReqVO);
+
+    /**
+     * 删除模型输出管理
+     *
+     * @param idList 模型输出管理编号
+     */
+    int removeModelOutput(Collection<Long> idList);
+
+    /**
+     * 获得模型输出管理详情
+     *
+     * @param id 模型输出管理编号
+     * @return 模型输出管理
+     */
+    ModelOutputDO getModelOutputById(Long id);
+
+    /**
+     * 获得全部模型输出管理列表
+     *
+     * @return 模型输出管理列表
+     */
+    List<ModelOutputDO> getModelOutputList();
+
+    /**
+     * 获得全部模型输出管理 Map
+     *
+     * @return 模型输出管理 Map
+     */
+    Map<Long, ModelOutputDO> getModelOutputMap();
+
+
+    /**
+     * 导入模型输出管理数据
+     *
+     * @param importExcelList 模型输出管理数据列表
+     * @param isUpdateSupport 是否更新支持，如果已存在，则进行更新数据
+     * @param operName 操作用户
      * @return 结果
      */
-    public int insertModelOutput(ModelOutput modelOutput);
-
-    /**
-     * 修改 模型输出管理
-     *
-     * @param modelOutput  模型输出管理
-     * @return 结果
-     */
-    public int updateModelOutput(ModelOutput modelOutput);
-
-    /**
-     * 批量删除 模型输出管理
-     *
-     * @param ids 需要删除的 模型输出管理主键集合
-     * @return 结果
-     */
-    public int deleteModelOutputByIds(Long[] ids);
-
-    /**
-     * 删除 模型输出管理信息
-     *
-     * @param id  模型输出管理主键
-     * @return 结果
-     */
-    public int deleteModelOutputById(Long id);
+    String importModelOutput(List<ModelOutputRespVO> importExcelList, boolean isUpdateSupport, String operName);
 
     /**
      * out输入文件读取
@@ -135,33 +157,19 @@ public interface IModelOutputService {
      */
     Map<String, Map<String, List<String>>> waterSurfaceProfileAndQzhbMerge(Map<String, Object> stringObjectMap);
 
-    /**
-     * shuniuzhamen文件读取
-     * @param path
-     * @return
-     *
-     * |--时间
-     *    |--出库总流量(List类型)
-     *    |--各闸门开度(List类型)
-     *    |--各闸门流量(List类型)
-     *    |--北干灌溉,河道泄洪,南干灌溉(List类型)
-     */
-    JSONObject shuniuzhamen(String path);
-
-    /**
-     * shuiku文件读取
-     * @param path
-     * @return
-     * |--时间
-     *    |--第一枢纽运行状态
-     *    |--库水位
-     *    |--库容
-     *    |--小山口流量
-     */
-    JSONObject shuiku(String path);
-
-
     JSONObject readNewQzhbFile();
 
-    JSONObject readNewQzhbFile(String filePath);
+    /**
+     * 查询模型输出总数
+     *
+     * @return 模型输出总数
+     */
+    public int countModelOutput();
+
+    /**
+     * 查询上周新增的模型输出数量
+     *
+     * @return 上周新增的模型输出数量
+     */
+    public int countLastWeek();
 }

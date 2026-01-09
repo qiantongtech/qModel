@@ -50,7 +50,10 @@ import tech.qiantong.qmodel.common.enums.*;
 import tech.qiantong.qmodel.common.utils.*;
 import tech.qiantong.qmodel.common.utils.poi.*;
 import tech.qiantong.qmodel.module.model.controller.admin.history.vo.ModelHistorySaveReqVO;
+import tech.qiantong.qmodel.module.model.dal.dataobject.input.ModelInputDO;
 import tech.qiantong.qmodel.module.model.service.history.IModelHistoryService;
+import tech.qiantong.qmodel.module.model.service.input.IModelInputService;
+import tech.qiantong.qmodel.module.model.service.output.IModelOutputService;
 import tech.qiantong.qmodel.module.modelReconstitution.domain.*;
 import tech.qiantong.qmodel.module.modelReconstitution.service.*;
 
@@ -81,10 +84,10 @@ public class ModelCaclReconstitutionController extends BaseController {
     private IModelHistoryService modelHistoryService;
 
     @Autowired
-    private IModelInputReconstitutionService modelInputReconstitutionService;
+    private IModelInputService modelInputReconstitutionService;
 
     @Autowired
-    private IModelOutputReconstitutionService modelOutputReconstitutionService;
+    private IModelOutputService modelOutputReconstitutionService;
     @Autowired
     private IModelVirtualCalcService modelVirtualCalcService;
 
@@ -384,12 +387,12 @@ public class ModelCaclReconstitutionController extends BaseController {
                 resultMap.put("modelInputJson", inputJson);
                 resultMap.put("modelInputNames", inputNames);
             } else {
-                ModelInputReconstitution modelInputQo = new ModelInputReconstitution();
+                ModelInputDO modelInputQo = new ModelInputDO();
                 modelInputQo.setDelFlag(false);
                 modelInputQo.setModelId(modelCacl.getModelId());
                 modelInputQo.setModelVersion(modelCacl.getModelVersion());
                 // 所有模型输入对象
-                List<ModelInputReconstitution> modelInputList = modelInputReconstitutionService.selectModelInputList(modelInputQo);
+                List<ModelInputDO> modelInputList = modelInputReconstitutionService.selectModelInputList(modelInputQo);
                 JSONObject multipleContent = new JSONObject();
                 JSONObject inputContent = new JSONObject();
                 modelInputList.forEach((modelInput) -> {

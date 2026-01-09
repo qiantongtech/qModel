@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+  Copyright © 2026 Qiantong Technology Co., Ltd.
+  qModel Model Platform(Open Source Edition)
+   *
+  License:
+  Released under the Apache License, Version 2.0.
+  You may use, modify, and distribute this software for commercial purposes
+  under the terms of the License.
+   *
+  Special Notice:
+  All derivative versions are strictly prohibited from modifying or removing
+  the default system logo and copyright information.
+  For brand customization, please apply for brand customization authorization via official channels.
+   *
+  More information: https://qmodel.qiantong.tech/business.html
+   *
+  ============================================================================
+   *
+  版权所有 © 2026 江苏千桐科技有限公司
+  qModel 模型平台（开源版）
+   *
+  许可协议：
+  本项目基于 Apache License 2.0 开源协议发布，
+  允许在遵守协议的前提下进行商用、修改和分发。
+   *
+  特别说明：
+  所有衍生版本不得修改或移除系统默认的 LOGO 和版权信息；
+  如需定制品牌，请通过官方渠道申请品牌定制授权。
+   *
+  更多信息请访问：https://qmodel.qiantong.tech/business.html
+-->
+
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="tech.qiantong.qmodel.module.model.dal.mapper.input.ModelInputMapper">
+
+    <resultMap type="ModelInputDO" id="ModelInputResult">
+        <result property="ID"    column="ID"    />
+        <result property="companyId"    column="COMPANY_ID"    />
+        <result property="NAME"    column="NAME"    />
+        <result property="engName"    column="ENG_NAME"    />
+        <result property="TYPE"    column="TYPE"    />
+        <result property="modelId"    column="MODEL_ID"    />
+        <result property="modelName"    column="MODEL_NAME"    />
+        <result property="modelVersion"    column="MODEL_VERSION"    />
+        <result property="DESCRIPTION"    column="DESCRIPTION"    />
+        <result property="EXAMPLE"    column="EXAMPLE"    />
+        <result property="paramFile"    column="PARAM_FILE"    />
+        <result property="singleContent"    column="SINGLE_CONTENT"    />
+        <result property="multipleContent"    column="MULTIPLE_CONTENT"    />
+        <result property="validFlag"    column="VALID_FLAG"    />
+        <result property="delFlag"    column="DEL_FLAG"    />
+        <result property="createBy"    column="CREATE_BY"    />
+        <result property="creatorId"    column="CREATOR_ID"    />
+        <result property="createTime"    column="CREATE_TIME"    />
+        <result property="updateBy"    column="UPDATE_BY"    />
+        <result property="updatorId"    column="UPDATOR_ID"    />
+        <result property="updateTime"    column="UPDATE_TIME"    />
+        <result property="REMARK"    column="REMARK"    />
+        <result property="changeFlag"    column="CHANGE_FLAG"    />
+    </resultMap>
+
+    <sql id="selectModelInputVo">
+        select ID, COMPANY_ID, NAME, ENG_NAME, TYPE, MODEL_ID, MODEL_NAME, MODEL_VERSION, DESCRIPTION, EXAMPLE, PARAM_FILE, SINGLE_CONTENT, MULTIPLE_CONTENT, VALID_FLAG, DEL_FLAG, CREATE_BY, CREATOR_ID, CREATE_TIME, UPDATE_BY, UPDATOR_ID, UPDATE_TIME, REMARK, CHANGE_FLAG from MODEL_INPUT
+    </sql>
+
+    <select id="selectModelInputList" parameterType="ModelInputDO" resultMap="ModelInputResult">
+        <include refid="selectModelInputVo"/>
+        <where>
+            <if test="companyId != null "> and COMPANY_ID = #{companyId}</if>
+            <if test="NAME != null  and NAME != ''"> and NAME like concat('%', #{NAME}, '%')</if>
+            <if test="engName != null  and engName != ''"> and ENG_NAME like concat('%', #{engName}, '%')</if>
+            <if test="TYPE != null "> and TYPE = #{TYPE}</if>
+            <if test="modelId != null "> and MODEL_ID = #{modelId}</if>
+            <if test="modelName != null  and modelName != ''"> and MODEL_NAME like concat('%', #{modelName}, '%')</if>
+            <if test="modelVersion != null  and modelVersion != ''"> and MODEL_VERSION = #{modelVersion}</if>
+            <if test="DESCRIPTION != null  and DESCRIPTION != ''"> and DESCRIPTION = #{DESCRIPTION}</if>
+            <if test="EXAMPLE != null  and EXAMPLE != ''"> and EXAMPLE = #{EXAMPLE}</if>
+            <if test="paramFile != null  and paramFile != ''"> and PARAM_FILE = #{paramFile}</if>
+            <if test="singleContent != null  and singleContent != ''"> and SINGLE_CONTENT = #{singleContent}</if>
+            <if test="multipleContent != null  and multipleContent != ''"> and MULTIPLE_CONTENT = #{multipleContent}</if>
+            <if test="createTime != null "> and CREATE_TIME = #{createTime}</if>
+            <if test="changeFlag != null "> and CHANGE_FLAG = #{changeFlag}</if>
+        </where>
+    </select>
+
+    <select id="selectModelInputByID" parameterType="Long" resultMap="ModelInputResult">
+        <include refid="selectModelInputVo"/>
+        where ID = #{ID}
+    </select>
+
+    <insert id="insertModelInput" parameterType="ModelInputDO">
+        insert into MODEL_INPUT
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="ID != null">ID,</if>
+            <if test="companyId != null">COMPANY_ID,</if>
+            <if test="NAME != null">NAME,</if>
+            <if test="engName != null">ENG_NAME,</if>
+            <if test="TYPE != null">TYPE,</if>
+            <if test="modelId != null">MODEL_ID,</if>
+            <if test="modelName != null">MODEL_NAME,</if>
+            <if test="modelVersion != null">MODEL_VERSION,</if>
+            <if test="DESCRIPTION != null">DESCRIPTION,</if>
+            <if test="EXAMPLE != null">EXAMPLE,</if>
+            <if test="paramFile != null">PARAM_FILE,</if>
+            <if test="singleContent != null">SINGLE_CONTENT,</if>
+            <if test="multipleContent != null">MULTIPLE_CONTENT,</if>
+            <if test="validFlag != null">VALID_FLAG,</if>
+            <if test="delFlag != null">DEL_FLAG,</if>
+            <if test="createBy != null">CREATE_BY,</if>
+            <if test="creatorId != null">CREATOR_ID,</if>
+            <if test="createTime != null">CREATE_TIME,</if>
+            <if test="updateBy != null">UPDATE_BY,</if>
+            <if test="updatorId != null">UPDATOR_ID,</if>
+            <if test="updateTime != null">UPDATE_TIME,</if>
+            <if test="REMARK != null">REMARK,</if>
+            <if test="changeFlag != null">CHANGE_FLAG,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="ID != null">#{ID},</if>
+            <if test="companyId != null">#{companyId},</if>
+            <if test="NAME != null">#{NAME},</if>
+            <if test="engName != null">#{engName},</if>
+            <if test="TYPE != null">#{TYPE},</if>
+            <if test="modelId != null">#{modelId},</if>
+            <if test="modelName != null">#{modelName},</if>
+            <if test="modelVersion != null">#{modelVersion},</if>
+            <if test="DESCRIPTION != null">#{DESCRIPTION},</if>
+            <if test="EXAMPLE != null">#{EXAMPLE},</if>
+            <if test="paramFile != null">#{paramFile},</if>
+            <if test="singleContent != null">#{singleContent},</if>
+            <if test="multipleContent != null">#{multipleContent},</if>
+            <if test="validFlag != null">#{validFlag},</if>
+            <if test="delFlag != null">#{delFlag},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="creatorId != null">#{creatorId},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updatorId != null">#{updatorId},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="REMARK != null">#{REMARK},</if>
+            <if test="changeFlag != null">#{changeFlag},</if>
+         </trim>
+    </insert>
+
+    <update id="updateModelInput" parameterType="ModelInputDO">
+        update MODEL_INPUT
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="companyId != null">COMPANY_ID = #{companyId},</if>
+            <if test="NAME != null">NAME = #{NAME},</if>
+            <if test="engName != null">ENG_NAME = #{engName},</if>
+            <if test="TYPE != null">TYPE = #{TYPE},</if>
+            <if test="modelId != null">MODEL_ID = #{modelId},</if>
+            <if test="modelName != null">MODEL_NAME = #{modelName},</if>
+            <if test="modelVersion != null">MODEL_VERSION = #{modelVersion},</if>
+            <if test="DESCRIPTION != null">DESCRIPTION = #{DESCRIPTION},</if>
+            <if test="EXAMPLE != null">EXAMPLE = #{EXAMPLE},</if>
+            <if test="paramFile != null">PARAM_FILE = #{paramFile},</if>
+            <if test="singleContent != null">SINGLE_CONTENT = #{singleContent},</if>
+            <if test="multipleContent != null">MULTIPLE_CONTENT = #{multipleContent},</if>
+            <if test="validFlag != null">VALID_FLAG = #{validFlag},</if>
+            <if test="delFlag != null">DEL_FLAG = #{delFlag},</if>
+            <if test="createBy != null">CREATE_BY = #{createBy},</if>
+            <if test="creatorId != null">CREATOR_ID = #{creatorId},</if>
+            <if test="createTime != null">CREATE_TIME = #{createTime},</if>
+            <if test="updateBy != null">UPDATE_BY = #{updateBy},</if>
+            <if test="updatorId != null">UPDATOR_ID = #{updatorId},</if>
+            <if test="updateTime != null">UPDATE_TIME = #{updateTime},</if>
+            <if test="REMARK != null">REMARK = #{REMARK},</if>
+            <if test="changeFlag != null">CHANGE_FLAG = #{changeFlag},</if>
+        </trim>
+        where ID = #{ID}
+    </update>
+
+    <delete id="deleteModelInputByID" parameterType="Long">
+        delete from MODEL_INPUT where ID = #{ID}
+    </delete>
+
+    <delete id="deleteModelInputByIDs" parameterType="String">
+        delete from MODEL_INPUT where ID in
+        <foreach item="ID" collection="array" open="(" separator="," close=")">
+            #{ID}
+        </foreach>
+    </delete>
+</mapper>

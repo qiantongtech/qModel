@@ -35,7 +35,7 @@ import request from '@/utils/request'
 // 查询 模型输出管理列表
 export function listOutput(query) {
   return request({
-    url: '/modelReconstitution/output/list',
+    url: '/model/output/list',
     method: 'get',
     params: query
   })
@@ -44,7 +44,7 @@ export function listOutput(query) {
 // 查询 模型输出管理详细
 export function getOutput(id) {
   return request({
-    url: '/modelReconstitution/output/' + id,
+    url: '/model/output/' + id,
     method: 'get'
   })
 }
@@ -52,7 +52,7 @@ export function getOutput(id) {
 // 新增 模型输出管理
 export function addOutput(data) {
   return request({
-    url: '/modelReconstitution/output',
+    url: '/model/output',
     method: 'post',
     data: data
   })
@@ -61,7 +61,7 @@ export function addOutput(data) {
 // 修改 模型输出管理
 export function updateOutput(data) {
   return request({
-    url: '/modelReconstitution/output',
+    url: '/model/output',
     method: 'put',
     data: data
   })
@@ -70,14 +70,14 @@ export function updateOutput(data) {
 // 删除 模型输出管理
 export function delOutput(id) {
   return request({
-    url: '/modelReconstitution/output/' + id,
+    url: '/model/output/' + id,
     method: 'delete'
   })
 }
 
 export function findAllModel(data) {
   return request({
-    url: '/modelReconstitution/output/findAllModel',
+    url: '/model/output/findAllModel',
     method: 'post',
     data: data
   })
@@ -86,7 +86,7 @@ export function findAllModel(data) {
 // 所有模型版本
 export function findAllModelVersion(data) {
   return request({
-    url: '/modelReconstitution/output/findAllModelVersion',
+    url: '/model/output/findAllModelVersion',
     method: 'post',
     data: data
   })
@@ -95,7 +95,7 @@ export function findAllModelVersion(data) {
 // 文件模型数据
 export function waterSurfaceProfileAndQzhb(modelId) {
   return request({
-    url: '/modelReconstitution/output/waterSurfaceProfileAndQzhb/' + modelId,
+    url: '/model/output/waterSurfaceProfileAndQzhb/' + modelId,
     method: 'get',
   })
 }
@@ -103,7 +103,7 @@ export function waterSurfaceProfileAndQzhb(modelId) {
 // 文件模型数据数据合并起来的
 export function waterSurfaceProfileAndQzhbMerge() {
   return request({
-    url: '/modelReconstitution/output/waterSurfaceProfileAndQzhbMerge',
+    url: '/model/output/waterSurfaceProfileAndQzhbMerge',
     method: 'post',
   })
 }

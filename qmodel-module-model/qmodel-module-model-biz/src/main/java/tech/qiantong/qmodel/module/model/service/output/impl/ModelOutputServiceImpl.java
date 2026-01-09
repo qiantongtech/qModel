@@ -30,100 +30,168 @@
  * 更多信息请访问：https://qmodel.qiantong.tech/business.html
  */
 
-package tech.qiantong.qmodel.module.modelReconstitution.service.impl;
+package tech.qiantong.qmodel.module.model.service.output.impl;
 
-import cn.hutool.core.date.*;
-import cn.hutool.core.io.file.FileReader;
-import com.alibaba.fastjson.*;
-import org.springframework.beans.factory.annotation.*;
-import org.springframework.stereotype.*;
-import tech.qiantong.qmodel.common.utils.*;
-import tech.qiantong.qmodel.module.modelReconstitution.domain.*;
-import tech.qiantong.qmodel.module.modelReconstitution.mapper.*;
-import tech.qiantong.qmodel.module.modelReconstitution.service.*;
-
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.*;
-import java.util.stream.*;
+import java.util.stream.Collectors;
+
+import cn.hutool.core.io.file.FileReader;
+import com.alibaba.fastjson.JSONObject;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import lombok.extern.slf4j.Slf4j;
+
+import javax.annotation.Resource;
+
+import tech.qiantong.qmodel.common.core.page.PageResult;
+import tech.qiantong.qmodel.common.utils.DateUtils;
+import tech.qiantong.qmodel.common.utils.object.BeanUtils;
+import tech.qiantong.qmodel.common.utils.StringUtils;
+import tech.qiantong.qmodel.common.exception.ServiceException;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import tech.qiantong.qmodel.module.model.controller.admin.output.vo.ModelOutputPageReqVO;
+import tech.qiantong.qmodel.module.model.controller.admin.output.vo.ModelOutputRespVO;
+import tech.qiantong.qmodel.module.model.controller.admin.output.vo.ModelOutputSaveReqVO;
+import tech.qiantong.qmodel.module.model.dal.dataobject.output.ModelOutputDO;
+import tech.qiantong.qmodel.module.model.dal.mapper.output.ModelOutputMapper;
+import tech.qiantong.qmodel.module.model.service.output.IModelOutputService;
+import tech.qiantong.qmodel.module.modelReconstitution.domain.ModelOutputReconstitution;
 
 /**
  * 模型输出管理Service业务层处理
  *
- * @author surge
- * @date 2023-09-14
+ * @author qModel
+ * @date 2026-01-09
  */
+@Slf4j
 @Service
-public class ModelOutputReconstitutionServiceImpl implements IModelOutputReconstitutionService {
-    @Autowired
-    private ModelOutputReconstitutionMapper modelOutputReconstitutionMapper;
+@Transactional(rollbackFor = Exception.class)
+public class ModelOutputServiceImpl extends ServiceImpl<ModelOutputMapper, ModelOutputDO> implements IModelOutputService {
+    @Resource
+    private ModelOutputMapper modelOutputMapper;
 
-    /**
-     * 查询 模型输出管理
-     *
-     * @param id 模型输出管理主键
-     * @return 模型输出管理
-     */
     @Override
-    public ModelOutputReconstitution selectModelOutputById(Long id) {
-        return modelOutputReconstitutionMapper.selectModelOutputById(id);
+    public PageResult<ModelOutputDO> getModelOutputPage(ModelOutputPageReqVO pageReqVO) {
+        return modelOutputMapper.selectPage(pageReqVO);
     }
 
-    /**
-     * 查询 模型输出管理列表
-     *
-     * @param modelOutput 模型输出管理
-     * @return 模型输出管理
-     */
     @Override
-    public List<ModelOutputReconstitution> selectModelOutputList(ModelOutputReconstitution modelOutput) {
-        modelOutput.setDelFlag(false);
-        return modelOutputReconstitutionMapper.selectModelOutputList(modelOutput);
+    public Long createModelOutput(ModelOutputSaveReqVO createReqVO) {
+        ModelOutputDO dictType = BeanUtils.toBean(createReqVO, ModelOutputDO.class);
+        modelOutputMapper.insert(dictType);
+        return dictType.getId();
     }
 
+    @Override
+    public int updateModelOutput(ModelOutputSaveReqVO updateReqVO) {
+        // 相关校验
+
+        // 更新模型输出管理
+        ModelOutputDO updateObj = BeanUtils.toBean(updateReqVO, ModelOutputDO.class);
+        return modelOutputMapper.updateById(updateObj);
+    }
+
+    @Override
+    public int removeModelOutput(Collection<Long> idList) {
+        // 批量删除模型输出管理
+        return modelOutputMapper.deleteBatchIds(idList);
+    }
+
+    @Override
+    public ModelOutputDO getModelOutputById(Long id) {
+        return modelOutputMapper.selectById(id);
+    }
+
+    @Override
+    public List<ModelOutputDO> getModelOutputList() {
+        return modelOutputMapper.selectList();
+    }
+
+    @Override
+    public Map<Long, ModelOutputDO> getModelOutputMap() {
+        List<ModelOutputDO> modelOutputList = modelOutputMapper.selectList();
+        return modelOutputList.stream()
+                .collect(Collectors.toMap(
+                        ModelOutputDO::getId,
+                        modelOutputDO -> modelOutputDO,
+                        // 保留已存在的值
+                        (existing, replacement) -> existing
+                ));
+    }
+
+
     /**
-     * 新增 模型输出管理
+     * 导入模型输出管理数据
      *
-     * @param modelOutput 模型输出管理
+     * @param importExcelList 模型输出管理数据列表
+     * @param isUpdateSupport 是否更新支持，如果已存在，则进行更新数据
+     * @param operName        操作用户
      * @return 结果
      */
     @Override
-    public int insertModelOutput(ModelOutputReconstitution modelOutput) {
-        modelOutput.setCreateTime(DateUtils.getNowDate());
-        return modelOutputReconstitutionMapper.insertModelOutput(modelOutput);
-    }
+    public String importModelOutput(List<ModelOutputRespVO> importExcelList, boolean isUpdateSupport, String operName) {
+        if (StringUtils.isNull(importExcelList) || importExcelList.size() == 0) {
+            throw new ServiceException("导入数据不能为空！");
+        }
 
-    /**
-     * 修改 模型输出管理
-     *
-     * @param modelOutput 模型输出管理
-     * @return 结果
-     */
-    @Override
-    public int updateModelOutput(ModelOutputReconstitution modelOutput) {
-        modelOutput.setUpdateTime(DateUtils.getNowDate());
-        return modelOutputReconstitutionMapper.updateModelOutput(modelOutput);
-    }
+        int successNum = 0;
+        int failureNum = 0;
+        List<String> successMessages = new ArrayList<>();
+        List<String> failureMessages = new ArrayList<>();
 
-    /**
-     * 批量删除 模型输出管理
-     *
-     * @param ids 需要删除的 模型输出管理主键
-     * @return 结果
-     */
-    @Override
-    public int deleteModelOutputByIds(Long[] ids) {
-        return modelOutputReconstitutionMapper.deleteModelOutputByIds(ids);
-    }
-
-    /**
-     * 删除 模型输出管理信息
-     *
-     * @param id 模型输出管理主键
-     * @return 结果
-     */
-    @Override
-    public int deleteModelOutputById(Long id) {
-        return modelOutputReconstitutionMapper.deleteModelOutputById(id);
+        for (ModelOutputRespVO respVO : importExcelList) {
+            try {
+                ModelOutputDO modelOutputDO = BeanUtils.toBean(respVO, ModelOutputDO.class);
+                Long modelOutputId = respVO.getId();
+                if (isUpdateSupport) {
+                    if (modelOutputId != null) {
+                        ModelOutputDO existingModelOutput = modelOutputMapper.selectById(modelOutputId);
+                        if (existingModelOutput != null) {
+                            modelOutputMapper.updateById(modelOutputDO);
+                            successNum++;
+                            successMessages.add("数据更新成功，ID为 " + modelOutputId + " 的模型输出管理记录。");
+                        } else {
+                            failureNum++;
+                            failureMessages.add("数据更新失败，ID为 " + modelOutputId + " 的模型输出管理记录不存在。");
+                        }
+                    } else {
+                        failureNum++;
+                        failureMessages.add("数据更新失败，某条记录的ID不存在。");
+                    }
+                } else {
+                    QueryWrapper<ModelOutputDO> queryWrapper = new QueryWrapper<>();
+                    queryWrapper.eq("id", modelOutputId);
+                    ModelOutputDO existingModelOutput = modelOutputMapper.selectOne(queryWrapper);
+                    if (existingModelOutput == null) {
+                        modelOutputMapper.insert(modelOutputDO);
+                        successNum++;
+                        successMessages.add("数据插入成功，ID为 " + modelOutputId + " 的模型输出管理记录。");
+                    } else {
+                        failureNum++;
+                        failureMessages.add("数据插入失败，ID为 " + modelOutputId + " 的模型输出管理记录已存在。");
+                    }
+                }
+            } catch (Exception e) {
+                failureNum++;
+                String errorMsg = "数据导入失败，错误信息：" + e.getMessage();
+                failureMessages.add(errorMsg);
+                log.error(errorMsg, e);
+            }
+        }
+        StringBuilder resultMsg = new StringBuilder();
+        if (failureNum > 0) {
+            resultMsg.append("很抱歉，导入失败！共 ").append(failureNum).append(" 条数据格式不正确，错误如下：");
+            resultMsg.append("<br/>").append(String.join("<br/>", failureMessages));
+            throw new ServiceException(resultMsg.toString());
+        } else {
+            resultMsg.append("恭喜您，数据已全部导入成功！共 ").append(successNum).append(" 条。");
+        }
+        return resultMsg.toString();
     }
 
     /**
@@ -424,10 +492,10 @@ public class ModelOutputReconstitutionServiceImpl implements IModelOutputReconst
      * @return 模型输出总数
      */
     @Override
-    public int count() {
-        ModelOutputReconstitution modelOutput = new ModelOutputReconstitution();
-        modelOutput.setDelFlag(false);
-        return modelOutputReconstitutionMapper.selectModelOutputList(modelOutput).size();
+    public int countModelOutput() {
+        return Math.toIntExact(this.lambdaQuery()
+                .eq(ModelOutputDO::getDelFlag, false)
+                .count());
     }
 
     /**
@@ -437,12 +505,11 @@ public class ModelOutputReconstitutionServiceImpl implements IModelOutputReconst
      */
     @Override
     public int countLastWeek() {
-        ModelOutputReconstitution modelOutput = new ModelOutputReconstitution();
-        modelOutput.setDelFlag(false);
-        return modelOutputReconstitutionMapper.selectModelOutputList(modelOutput).stream()
+        return Math.toIntExact(this.lambdaQuery()
+                .eq(ModelOutputDO::getDelFlag, false)
+                .list().stream()
                 .filter(output -> output.getCreateTime().after(DateUtils.getLastWeekStartTime())
-                        && output.getCreateTime().before(DateUtils.getLastWeekEndTime()))
-                .collect(Collectors.toList()).size();
-    }
+                        && output.getCreateTime().before(DateUtils.getLastWeekEndTime())).count());
 
+    }
 }

@@ -39,6 +39,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import tech.qiantong.qmodel.common.core.domain.AjaxResult;
 import tech.qiantong.qmodel.module.model.service.classify.IModelClassifyService;
+import tech.qiantong.qmodel.module.model.service.input.IModelInputService;
+import tech.qiantong.qmodel.module.model.service.output.IModelOutputService;
 import tech.qiantong.qmodel.module.modelReconstitution.service.*;
 
 import javax.annotation.Resource;
@@ -62,10 +64,10 @@ public class IndexController {
     private IModelReconstitutionService modelReconstitutionService;
 
     @Autowired
-    private IModelInputReconstitutionService modelInputService;
+    private IModelInputService modelInputService;
 
     @Autowired
-    private IModelOutputReconstitutionService modelOutputReconstitutionService;
+    private IModelOutputService modelOutputReconstitutionService;
 
     @Autowired
     private IModelCaclReconstitutionService modelCaclService;
@@ -86,11 +88,11 @@ public class IndexController {
         int modelWeekCount = modelReconstitutionService.countLastWeek();
 
         //统计模型输入数量信息
-        int modelInputCount = modelInputService.count();
+        int modelInputCount = modelInputService.countModelInput();
         int modelInputWeekCount = modelInputService.countLastWeek();
 
         //统计模型输出数量信息
-        int modelOutputCount = modelOutputReconstitutionService.count();
+        int modelOutputCount = modelOutputReconstitutionService.countModelOutput();
         int modelOutputWeekCount = modelOutputReconstitutionService.countLastWeek();
 
         //统计模型计算数量信息
