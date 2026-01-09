@@ -41,6 +41,8 @@ import tech.qiantong.qmodel.common.core.domain.*;
 import tech.qiantong.qmodel.common.core.page.*;
 import tech.qiantong.qmodel.common.enums.*;
 import tech.qiantong.qmodel.common.utils.poi.*;
+import tech.qiantong.qmodel.module.model.controller.admin.history.vo.ModelHistorySaveReqVO;
+import tech.qiantong.qmodel.module.model.service.history.IModelHistoryService;
 import tech.qiantong.qmodel.module.modelReconstitution.domain.*;
 import tech.qiantong.qmodel.module.modelReconstitution.service.*;
 
@@ -64,7 +66,7 @@ public class ModelInterfaceAddressController extends BaseController {
     private IModelVersionReconstitutionService modelVersionReconstitutionService;
 
     @Autowired
-    private IModelHistoryReconstitutionService modelHistoryReconstitutionService;
+    private IModelHistoryService modelHistoryService;
 
     /**
      * 查询接口地址列表
@@ -130,7 +132,7 @@ public class ModelInterfaceAddressController extends BaseController {
         modelInterfaceAddress.setCreateBy(getNickName());
         // 添加操作历史
         if (modelInterfaceAddress !=null) {
-            ModelHistoryReconstitution modelHistory = new ModelHistoryReconstitution();
+            ModelHistorySaveReqVO modelHistory = new ModelHistorySaveReqVO();
             modelHistory.setModelId(modelInterfaceAddress.getModelId());
             modelHistory.setModelName(modelInterfaceAddress.getModelName());
             modelHistory.setContext("新增了【"+modelInterfaceAddress.getInterfaceAddress()+"】接口地址");
@@ -138,7 +140,7 @@ public class ModelInterfaceAddressController extends BaseController {
             modelHistory.setUpdatorId(getUserId());
             modelHistory.setUpdateBy(getNickName());
             modelHistory.setUpdateTime(modelInterfaceAddress.getCreateTime());
-            modelHistoryReconstitutionService.insertModelHistory(modelHistory);
+            modelHistoryService.createModelHistory(modelHistory);
         }
         return toAjax(modelInterfaceAddressService.insertModelInterfaceAddress(modelInterfaceAddress));
     }
@@ -152,7 +154,7 @@ public class ModelInterfaceAddressController extends BaseController {
     public AjaxResult edit(@RequestBody ModelInterfaceAddress modelInterfaceAddress) {
         // 添加操作历史
         if (modelInterfaceAddress !=null) {
-            ModelHistoryReconstitution modelHistory = new ModelHistoryReconstitution();
+            ModelHistorySaveReqVO modelHistory = new ModelHistorySaveReqVO();
             modelHistory.setModelId(modelInterfaceAddress.getModelId());
             modelHistory.setModelName(modelInterfaceAddress.getModelName());
             modelHistory.setContext("修改了【"+modelInterfaceAddress.getInterfaceAddress()+"】接口基本信息");
@@ -160,7 +162,7 @@ public class ModelInterfaceAddressController extends BaseController {
             modelHistory.setUpdatorId(getUserId());
             modelHistory.setUpdateBy(getNickName());
             modelHistory.setUpdateTime(modelInterfaceAddress.getCreateTime());
-            modelHistoryReconstitutionService.insertModelHistory(modelHistory);
+            modelHistoryService.createModelHistory(modelHistory);
         }
         return toAjax(modelInterfaceAddressService.updateModelInterfaceAddress(modelInterfaceAddress));
     }

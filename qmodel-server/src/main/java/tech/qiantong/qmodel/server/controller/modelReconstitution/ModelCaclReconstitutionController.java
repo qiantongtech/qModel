@@ -49,6 +49,8 @@ import tech.qiantong.qmodel.common.core.page.*;
 import tech.qiantong.qmodel.common.enums.*;
 import tech.qiantong.qmodel.common.utils.*;
 import tech.qiantong.qmodel.common.utils.poi.*;
+import tech.qiantong.qmodel.module.model.controller.admin.history.vo.ModelHistorySaveReqVO;
+import tech.qiantong.qmodel.module.model.service.history.IModelHistoryService;
 import tech.qiantong.qmodel.module.modelReconstitution.domain.*;
 import tech.qiantong.qmodel.module.modelReconstitution.service.*;
 
@@ -76,7 +78,7 @@ public class ModelCaclReconstitutionController extends BaseController {
     private IModelInterfaceAddressService modelInterfaceAddressService;
 
     @Autowired
-    private IModelHistoryReconstitutionService modelHistoryService;
+    private IModelHistoryService modelHistoryService;
 
     @Autowired
     private IModelInputReconstitutionService modelInputReconstitutionService;
@@ -135,14 +137,14 @@ public class ModelCaclReconstitutionController extends BaseController {
         modelCacl.setCreatorId(getUserId());
         modelCacl.setCreateBy(getNickName());
         if (modelCacl != null){
-            ModelHistoryReconstitution modelHistory = new ModelHistoryReconstitution();
+            ModelHistorySaveReqVO modelHistory = new ModelHistorySaveReqVO();
             modelHistory.setModelId(modelCacl.getModelId());
             modelHistory.setModelName(modelCacl.getModelName());
             modelHistory.setContext("添加了一条【" + modelCacl.getName() + "】模型计算");
             modelHistory.setModelVersion(modelCacl.getModelVersion());
             modelHistory.setUpdatorId(getUserId());
             modelHistory.setUpdateBy(getNickName());
-            modelHistoryService.insertModelHistory(modelHistory);
+            modelHistoryService.createModelHistory(modelHistory);
         }
         return toAjax(modelCaclService.insertModelCacl(modelCacl));
     }
@@ -155,14 +157,14 @@ public class ModelCaclReconstitutionController extends BaseController {
     @PutMapping
     public AjaxResult edit(@RequestBody ModelCaclReconstitution modelCacl) {
         if (modelCacl != null){
-            ModelHistoryReconstitution modelHistory = new ModelHistoryReconstitution();
+            ModelHistorySaveReqVO modelHistory = new ModelHistorySaveReqVO();
             modelHistory.setModelId(modelCacl.getModelId());
             modelHistory.setModelName(modelCacl.getModelName());
             modelHistory.setContext("修改了【" + modelCacl.getName() + "】基本信息");
             modelHistory.setModelVersion(modelCacl.getModelVersion());
             modelHistory.setUpdatorId(getUserId());
             modelHistory.setUpdateBy(getNickName());
-            modelHistoryService.insertModelHistory(modelHistory);
+            modelHistoryService.createModelHistory(modelHistory);
         }
         return toAjax(modelCaclService.updateModelCacl(modelCacl));
     }
@@ -277,14 +279,14 @@ public class ModelCaclReconstitutionController extends BaseController {
                 modelCaclService.updateModelCacl(modelCacl);
             }
         }
-        ModelHistoryReconstitution modelHistory = new ModelHistoryReconstitution();
+        ModelHistorySaveReqVO modelHistory = new ModelHistorySaveReqVO();
         modelHistory.setModelId(modelCacl.getModelId());
         modelHistory.setModelName(modelCacl.getModelName());
         modelHistory.setContext("【" + modelCacl.getName() + "】进行了模型计算");
         modelHistory.setModelVersion(modelCacl.getModelVersion());
         modelHistory.setUpdatorId(getUserId());
         modelHistory.setUpdateBy(getNickName());
-        modelHistoryService.insertModelHistory(modelHistory);
+        modelHistoryService.createModelHistory(modelHistory);
         return success();
     }
 

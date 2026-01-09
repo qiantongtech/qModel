@@ -30,44 +30,45 @@
  * 更多信息请访问：https://qmodel.qiantong.tech/business.html
  */
 
-package tech.qiantong.qmodel.module.model.api.classify.dto;
+package tech.qiantong.qmodel.module.model.controller.admin.history.vo;
 
-import lombok.*;
+import java.util.Date;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.Data;
+import tech.qiantong.qmodel.common.core.page.PageParam;
 
 /**
- * 模型分类 DTO 对象 MODEL_CLASSIFY
+ * 模型历史 Request VO 对象 MODEL_HISTORY
  *
  * @author qModel
- * @date 2026-01-07
+ * @date 2026-01-09
  */
+@Schema(description = "模型历史 Request VO")
 @Data
-public class ModelClassifyReqDTO {
+public class ModelHistoryPageReqVO extends PageParam {
 
     private static final long serialVersionUID = 1L;
 
-    /** ID */
-    private Long id;
-
-    /** 企业id */
+    @Schema(description = "企业id", example = "")
     private Long companyId;
 
-    /** 父级id */
-    private Long parentId;
+    @Schema(description = "所属模型id", example = "")
+    private Long modelId;
 
-    /** 祖籍列表 */
-    private String ancestors;
+    @Schema(description = "所属模型名称", example = "")
+    private String modelName;
 
-    /** 分类名称 */
-    private String name;
+    @Schema(description = "操作内容", example = "")
+    private String context;
 
-    /** 分类描述 */
-    private String description;
+    @Schema(description = "启用时间", example = "")
+    private Date startTime;
 
-    /** 是否有效 0：无效，1：有效 */
-    private Boolean validFlag;
+    @Schema(description = "启用版本号", example = "")
+    private String modelVersion;
 
-    /** 删除标志 1：已删除，0：未删除 */
-    private Boolean delFlag;
+
 
 
 }

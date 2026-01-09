@@ -45,6 +45,7 @@ import lombok.extern.slf4j.Slf4j;
 
 import javax.annotation.Resource;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import tech.qiantong.qmodel.common.core.page.PageResult;
 import tech.qiantong.qmodel.common.utils.object.BeanUtils;
 import tech.qiantong.qmodel.common.utils.StringUtils;
@@ -52,6 +53,7 @@ import tech.qiantong.qmodel.common.exception.ServiceException;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import tech.qiantong.qmodel.module.model.controller.admin.history.vo.ModelHistorySaveReqVO;
 import tech.qiantong.qmodel.module.model.controller.admin.model.vo.ModelPageReqVO;
 import tech.qiantong.qmodel.module.model.controller.admin.model.vo.ModelRespVO;
 import tech.qiantong.qmodel.module.model.controller.admin.model.vo.ModelSaveReqVO;
@@ -60,10 +62,11 @@ import tech.qiantong.qmodel.module.model.dal.mapper.model.ModelMapper;
 import tech.qiantong.qmodel.module.model.domain.ModelHistory;
 import tech.qiantong.qmodel.module.model.domain.ModelOperate;
 import tech.qiantong.qmodel.module.model.domain.ModelVersion;
-import tech.qiantong.qmodel.module.model.service.IModelHistoryService;
+
 import tech.qiantong.qmodel.module.model.service.IModelOperateService;
 import tech.qiantong.qmodel.module.model.service.IModelVersionService;
 import tech.qiantong.qmodel.module.model.service.classify.IModelClassifyService;
+import tech.qiantong.qmodel.module.model.service.history.IModelHistoryService;
 import tech.qiantong.qmodel.module.model.service.model.IModelService;
 
 /**
@@ -128,13 +131,13 @@ public class ModelServiceImpl extends ServiceImpl<ModelMapper, ModelDO> implemen
         modelVersionService.insertModelVersion(modelVersion);
         // 添加操作历史
         if (createReqVO !=null) {
-            ModelHistory modelHistory = new ModelHistory();
+            ModelHistorySaveReqVO modelHistory = new ModelHistorySaveReqVO();
             modelHistory.setModelId(createReqVO.getId());
             modelHistory.setModelName(createReqVO.getName());
             modelHistory.setContext("新增了"+createReqVO.getName());
             modelHistory.setModelVersion(createReqVO.getVersion());
             modelHistory.setStartTime(createReqVO.getCreateTime());
-            modelHistoryService.insertModelHistory(modelHistory);
+            modelHistoryService.createModelHistory(modelHistory);
             ModelOperate operate = new ModelOperate();
             operate.setCompanyId(createReqVO.getCompanyId());
             operate.setModuleName(createReqVO.getName());
@@ -156,12 +159,12 @@ public class ModelServiceImpl extends ServiceImpl<ModelMapper, ModelDO> implemen
 
         if (updateReqVO != null) {
             ModelDO originModel = this.getModelById(updateReqVO.getId());
-            ModelHistory modelHistory = new ModelHistory();
+            ModelHistorySaveReqVO modelHistory = new ModelHistorySaveReqVO();
             modelHistory.setModelId(updateReqVO.getId());
             modelHistory.setModelName(updateReqVO.getName());
             modelHistory.setContext("修改了"+updateReqVO.getName()+"基本信息");
             modelHistory.setModelVersion(updateReqVO.getVersion());
-            modelHistoryService.insertModelHistory(modelHistory);
+            modelHistoryService.createModelHistory(modelHistory);
 
             ModelOperate operate = new ModelOperate();
             operate.setCompanyId(updateReqVO.getCompanyId());
@@ -218,12 +221,12 @@ public class ModelServiceImpl extends ServiceImpl<ModelMapper, ModelDO> implemen
             model.setUploadFile(null);
         }
         if (model != null) {
-            ModelHistory modelHistory = new ModelHistory();
+            ModelHistorySaveReqVO modelHistory = new ModelHistorySaveReqVO();
             modelHistory.setModelId(model.getId());
             modelHistory.setModelName(model.getName());
             modelHistory.setContext("修改了"+model.getName()+"详细信息");
             modelHistory.setModelVersion(model.getVersion());
-            modelHistoryService.insertModelHistory(modelHistory);
+            modelHistoryService.createModelHistory(modelHistory);
         }
         ModelDO updateObj = BeanUtils.toBean(model, ModelDO.class);
         return modelMapper.updateById(updateObj);
@@ -234,12 +237,12 @@ public class ModelServiceImpl extends ServiceImpl<ModelMapper, ModelDO> implemen
         for (Long id : idList) {
             ModelDO model = this.getModelById(id);
             if (model != null) {
-                ModelHistory modelHistory = new ModelHistory();
+                ModelHistorySaveReqVO modelHistory = new ModelHistorySaveReqVO();
                 modelHistory.setModelId(model.getId());
                 modelHistory.setModelName(model.getName());
                 modelHistory.setContext("删除了"+model.getName());
                 modelHistory.setModelVersion(model.getVersion());
-                modelHistoryService.insertModelHistory(modelHistory);
+                modelHistoryService.createModelHistory(modelHistory);
             }
         }
         return modelMapper.deleteBatchIds(idList);

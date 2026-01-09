@@ -51,8 +51,10 @@ import tech.qiantong.qmodel.common.utils.*;
 import tech.qiantong.qmodel.common.utils.poi.*;
 import tech.qiantong.qmodel.common.utils.uuid.*;
 import tech.qiantong.qmodel.common.utils.uuid.UUID;
+import tech.qiantong.qmodel.module.model.controller.admin.history.vo.ModelHistorySaveReqVO;
 import tech.qiantong.qmodel.module.model.dal.dataobject.classify.ModelClassifyDO;
 import tech.qiantong.qmodel.module.model.service.classify.IModelClassifyService;
+import tech.qiantong.qmodel.module.model.service.history.IModelHistoryService;
 import tech.qiantong.qmodel.module.modelReconstitution.domain.*;
 import tech.qiantong.qmodel.module.modelReconstitution.service.*;
 
@@ -80,7 +82,7 @@ public class ModelReconstitutionController extends BaseController {
     private IModelVersionReconstitutionService modelVersionReconstitutionService;
 
     @Autowired
-    private IModelHistoryReconstitutionService modelHistoryReconstitutionService;
+    private IModelHistoryService modelHistoryService;
 
     /**
      * 查询模型库的重构表列表
@@ -175,7 +177,7 @@ public class ModelReconstitutionController extends BaseController {
         version.setModelId(model.getId());
         modelVersionReconstitutionService.updateModelVersion(version);
         // 添加操作历史
-        ModelHistoryReconstitution modelHistory = new ModelHistoryReconstitution();
+        ModelHistorySaveReqVO modelHistory = new ModelHistorySaveReqVO();
         modelHistory.setCompanyId(null);
         modelHistory.setModelId(model.getId());
         modelHistory.setModelName(model.getName());
@@ -184,24 +186,8 @@ public class ModelReconstitutionController extends BaseController {
         modelHistory.setUpdatorId(getUserId());
         modelHistory.setUpdateBy(getNickName());
         modelHistory.setUpdateTime(model.getCreateTime());
-        modelHistoryReconstitutionService.insertModelHistory(modelHistory);
-        /*ModelOperate operate = new ModelOperate();
-        operate.setCompanyId(model.getCompanyId());
-        operate.setCreatorId(getUserId());
-        operate.setCreateBy(getNickName());
-        operate.setModuleName(model.getName());
-        operate.setContent("新增了"+model.getName());
-        operate.setType(0);
-        JSONObject object = new JSONObject();
-        object.set("模型名称", model.getName());
-        object.set("模型分类", modelClassifyService.selectModelClassifyById(model.getClassifyId().longValue()).getName());
-        object.set("所属模型类别", sysDictDataService.selectDictLabel(
-                "model_waterconserve_modelmanage_type", model.getType().toString()));
-        object.set("模型格式", model.getFormat() == 0 ? "文件格式" : "接口格式");
-        object.set("版本发布说明", modelVersion.getDescription());
-        object.set("模型介绍", model.getRemark() == null ? " -- " : model.getRemark());
-        operate.setRespContent(object.toString());
-        modelOperateService.insertModelOperate(operate);*/
+        modelHistoryService.createModelHistory(modelHistory);
+
         AjaxResult ajax = toAjax(insert);
         return ajax;
     }
@@ -215,7 +201,7 @@ public class ModelReconstitutionController extends BaseController {
     public AjaxResult edit(@RequestBody ModelReconstitution modelReconstitution) {
         ModelReconstitution modelReconstitutionInfo = modelReconstitutionService.selectModelReconstitutionById(modelReconstitution.getId());
         if (modelReconstitution !=null) {
-            ModelHistoryReconstitution modelHistory = new ModelHistoryReconstitution();
+            ModelHistorySaveReqVO modelHistory = new ModelHistorySaveReqVO();
             modelHistory.setCompanyId(null);
             modelHistory.setModelId(modelReconstitution.getId());
             modelHistory.setModelName(modelReconstitution.getName());
@@ -224,7 +210,7 @@ public class ModelReconstitutionController extends BaseController {
             modelHistory.setUpdatorId(getUserId());
             modelHistory.setUpdateBy(getNickName());
             modelHistory.setUpdateTime(modelReconstitution.getCreateTime());
-            modelHistoryReconstitutionService.insertModelHistory(modelHistory);
+            modelHistoryService.createModelHistory(modelHistory);
             /*ModelOperate operate = new ModelOperate();
             operate.setCompanyId(modelReconstitution.getCompanyId());
             operate.setCreatorId(getUserId());

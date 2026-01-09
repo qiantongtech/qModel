@@ -59,7 +59,7 @@ public class ModelDO extends BaseEntity {
     private static final long serialVersionUID = 1L;
 
     /** ID */
-    private Long Id;
+    private Long id;
 
     /** 企业id */
     private Long companyId;

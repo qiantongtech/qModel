@@ -43,6 +43,8 @@ import tech.qiantong.qmodel.common.core.domain.*;
 import tech.qiantong.qmodel.common.core.page.*;
 import tech.qiantong.qmodel.common.enums.*;
 import tech.qiantong.qmodel.common.utils.poi.*;
+import tech.qiantong.qmodel.module.model.controller.admin.history.vo.ModelHistorySaveReqVO;
+import tech.qiantong.qmodel.module.model.service.history.IModelHistoryService;
 import tech.qiantong.qmodel.module.modelReconstitution.domain.*;
 import tech.qiantong.qmodel.module.modelReconstitution.service.*;
 
@@ -65,7 +67,7 @@ public class ModelVersionReconstitutionController extends BaseController {
     private IModelReconstitutionService modelReconstitutionService;
 
     @Autowired
-    private IModelHistoryReconstitutionService modelHistoryService;
+    private IModelHistoryService modelHistoryService;
 
     @Autowired
     private IModelOperateReconstitutionService modelOperateService;
@@ -126,7 +128,7 @@ public class ModelVersionReconstitutionController extends BaseController {
         modelVersion.setCreateBy(getNickName());
         modelVersion.setStatus(0);
         if (modelVersion != null) {
-            ModelHistoryReconstitution modelHistory = new ModelHistoryReconstitution();
+            ModelHistorySaveReqVO modelHistory = new ModelHistorySaveReqVO();
             modelHistory.setCompanyId(null);
             modelHistory.setModelId(modelVersion.getModelId());
             modelHistory.setModelName(modelVersion.getModelName());
@@ -135,7 +137,7 @@ public class ModelVersionReconstitutionController extends BaseController {
             modelHistory.setModelVersion(modelVersion.getVersion());
             modelHistory.setUpdatorId(getUserId());
             modelHistory.setUpdateBy(getNickName());
-            modelHistoryService.insertModelHistory(modelHistory);
+            modelHistoryService.createModelHistory(modelHistory);
         }
         return toAjax(modelVersionService.insertModelVersion(modelVersion));
     }
@@ -175,7 +177,7 @@ public class ModelVersionReconstitutionController extends BaseController {
             version.setId(jsonObject.getLong("afterVersionId"));
             version.setStatus(1);
             modelVersionService.updateModelVersion(version);
-            ModelHistoryReconstitution history = new ModelHistoryReconstitution();
+            ModelHistorySaveReqVO history = new ModelHistorySaveReqVO();
             history.setCompanyId(null);
             history.setModelId(jsonObject.getLong("modelId"));
             history.setModelName(jsonObject.getStr("modelName"));
@@ -183,7 +185,7 @@ public class ModelVersionReconstitutionController extends BaseController {
             history.setModelVersion(jsonObject.getStr("afterVersion"));
             history.setUpdatorId(getUserId());
             history.setUpdateBy(getNickName());
-            modelHistoryService.insertModelHistory(history);
+            modelHistoryService.createModelHistory(history);
         }
         modelReconstitutionService.updateModelReconstitution(model);
         return success();
@@ -212,7 +214,7 @@ public class ModelVersionReconstitutionController extends BaseController {
             modelReconstitution.setRemark(modelVersion.getRemark());
             modelReconstitutionService.updateModelReconstitution(modelReconstitution);
 
-            ModelHistoryReconstitution modelHistory = new ModelHistoryReconstitution();
+            ModelHistorySaveReqVO modelHistory = new ModelHistorySaveReqVO();
             modelHistory.setCompanyId(null);
             modelHistory.setModelId(modelVersion.getModelId());
             modelHistory.setModelName(modelVersion.getModelName());
@@ -221,7 +223,7 @@ public class ModelVersionReconstitutionController extends BaseController {
             modelHistory.setModelVersion(modelVersion.getVersion());
             modelHistory.setUpdatorId(getUserId());
             modelHistory.setUpdateBy(getNickName());
-            modelHistoryService.insertModelHistory(modelHistory);
+            modelHistoryService.createModelHistory(modelHistory);
 
             ModelOperateReconstitution operate = new ModelOperateReconstitution();
             operate.setCompanyId(modelReconstitution.getCompanyId());
@@ -247,7 +249,7 @@ public class ModelVersionReconstitutionController extends BaseController {
         if (isStatus) {
             modelReconstitutionService.updateModelReconstitution(modelReconstitution);
             //历史操作记录插入
-            ModelHistoryReconstitution modelHistory = new ModelHistoryReconstitution();
+            ModelHistorySaveReqVO modelHistory = new ModelHistorySaveReqVO();
             modelHistory.setCompanyId(null);
             modelHistory.setModelId(modelVersion.getModelId());
             modelHistory.setModelName(modelVersion.getModelName());
@@ -255,7 +257,7 @@ public class ModelVersionReconstitutionController extends BaseController {
             modelHistory.setModelVersion(modelVersion.getVersion());
             modelHistory.setUpdatorId(getUserId());
             modelHistory.setUpdateBy(getNickName());
-            modelHistoryService.insertModelHistory(modelHistory);
+            modelHistoryService.createModelHistory(modelHistory);
 
             ModelOperateReconstitution operate = new ModelOperateReconstitution();
             operate.setCompanyId(modelReconstitution.getCompanyId());
@@ -271,7 +273,7 @@ public class ModelVersionReconstitutionController extends BaseController {
             modelOperateService.insertModelOperate(operate);
         }else {
             //历史操作记录插入
-            ModelHistoryReconstitution modelHistory = new ModelHistoryReconstitution();
+            ModelHistorySaveReqVO modelHistory = new ModelHistorySaveReqVO();
             modelHistory.setCompanyId(null);
             modelHistory.setModelId(modelVersion.getModelId());
             modelHistory.setModelName(modelVersion.getModelName());
@@ -279,7 +281,7 @@ public class ModelVersionReconstitutionController extends BaseController {
             modelHistory.setModelVersion(modelVersion.getVersion());
             modelHistory.setUpdatorId(getUserId());
             modelHistory.setUpdateBy(getNickName());
-            modelHistoryService.insertModelHistory(modelHistory);
+            modelHistoryService.createModelHistory(modelHistory);
         }
         return toAjax(i);
     }
@@ -295,7 +297,7 @@ public class ModelVersionReconstitutionController extends BaseController {
             for (Long id : ids) {
                 ModelVersionReconstitution modelVersion = modelVersionService.selectModelVersionById(id);
                 //历史操作记录插入
-                ModelHistoryReconstitution modelHistory = new ModelHistoryReconstitution();
+                ModelHistorySaveReqVO modelHistory = new ModelHistorySaveReqVO();
                 modelHistory.setCompanyId(null);
                 modelHistory.setModelId(modelVersion.getModelId());
                 modelHistory.setModelName(modelVersion.getModelName());
@@ -303,7 +305,7 @@ public class ModelVersionReconstitutionController extends BaseController {
                 modelHistory.setModelVersion(modelVersion.getVersion());
                 modelHistory.setUpdatorId(getUserId());
                 modelHistory.setUpdateBy(getNickName());
-                modelHistoryService.insertModelHistory(modelHistory);
+                modelHistoryService.createModelHistory(modelHistory);
             }
         }
         return toAjax(modelVersionService.deleteModelVersionByIds(ids));

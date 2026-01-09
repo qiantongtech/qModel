@@ -30,19 +30,49 @@
  * 更多信息请访问：https://qmodel.qiantong.tech/business.html
  */
 
-package tech.qiantong.module.example;
+package tech.qiantong.qmodel.module.model.api.history.dto;
 
-import org.junit.jupiter.api.Test;
-import org.junit.runner.RunWith;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import java.util.Date;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import lombok.*;
 
-@RunWith(SpringJUnit4ClassRunner.class)
-// @SpringBootTest(classes = QModelApplication.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class ExampleTest {
+/**
+ * 模型历史 DTO 对象 MODEL_HISTORY
+ *
+ * @author qModel
+ * @date 2026-01-09
+ */
+@Data
+public class ModelHistoryReqDTO {
 
-    @Test
-    public void test() {
+    private static final long serialVersionUID = 1L;
 
-    }
+    /** 主键id */
+    private Long id;
+
+    /** 企业id */
+    private Long companyId;
+
+    /** 所属模型id */
+    private Long modelId;
+
+    /** 所属模型名称 */
+    private String modelName;
+
+    /** 操作内容 */
+    private String context;
+
+    /** 启用时间 */
+    private Date startTime;
+
+    /** 启用版本号 */
+    private String modelVersion;
+
+    /** 是否有效 0：无效，1：有效 */
+    private Boolean validFlag;
+
+    /** 删除标志 1：已删除，0：未删除  */
+    private Boolean delFlag;
+
 
 }

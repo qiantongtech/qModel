@@ -46,7 +46,7 @@ public class ModelClassifyRespDTO {
     private static final long serialVersionUID = 1L;
 
     /** ID */
-    private Long Id;
+    private Long id;
 
     /** 企业id */
     private Long companyId;

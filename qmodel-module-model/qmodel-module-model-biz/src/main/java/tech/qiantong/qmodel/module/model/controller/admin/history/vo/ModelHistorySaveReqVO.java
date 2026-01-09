@@ -30,85 +30,59 @@
  * 更多信息请访问：https://qmodel.qiantong.tech/business.html
  */
 
-package tech.qiantong.qmodel.module.model.api.model.dto;
+package tech.qiantong.qmodel.module.model.controller.admin.history.vo;
 
 import java.util.Date;
 import com.fasterxml.jackson.annotation.JsonFormat;
-import lombok.*;
+import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.Data;
+
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+
+import tech.qiantong.qmodel.common.core.domain.BaseEntity;
 
 /**
- * 模型管理 DTO 对象 MODEL
+ * 模型历史 创建/修改 Request VO MODEL_HISTORY
  *
  * @author qModel
- * @date 2026-01-07
+ * @date 2026-01-09
  */
+@Schema(description = "模型历史 Response VO")
 @Data
-public class ModelRespDTO {
+public class ModelHistorySaveReqVO extends BaseEntity {
 
     private static final long serialVersionUID = 1L;
 
-    /** ID */
+    @Schema(description = "ID")
     private Long id;
 
-    /** 企业id */
+    @Schema(description = "企业id", example = "")
     private Long companyId;
 
-    /** 分类id */
-    private Long classifyId;
+    @Schema(description = "所属模型id", example = "")
+    private Long modelId;
 
-    /** 父级和自己id */
-    private String ancestors;
+    @Schema(description = "所属模型名称", example = "")
+    @NotBlank(message = "所属模型名称不能为空")
+    private String modelName;
 
-    /** 模型名称 */
-    private String name;
+    @Schema(description = "操作内容", example = "")
+    @NotBlank(message = "操作内容不能为空")
+    private String context;
 
-    /** 模型介绍 */
-    private String description;
+    @Schema(description = "启用时间", example = "")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    private Date startTime;
 
-    /** 所属模型类别 0：水文，1：水动力，2：水质 */
-    private Long type;
+    @Schema(description = "启用版本号", example = "")
+    @NotBlank(message = "启用版本号不能为空")
+    private String modelVersion;
 
-    /** 所属纬度 0：一维，1：二维，2：三维 */
-    private Long dimensions;
-
-    /** 模型版本号 */
-    private String version;
-
-    /** 模型调用接口 */
-    private String interfaceAddress;
-
-    /** 是否内置 0：否，1：是 */
-    private Long builtin;
-
-    /** 模型格式 */
-    private Long format;
-
-    /** 模型大小 0：exe格式 */
-    private Long size;
-
-    /** 数据来源 */
-    private String source;
-
-    /** 上传状态 */
-    private Long uploadStatus;
-
-    /** 上传时间 */
-    private Date uploadTime;
-
-    /** 上传接口 */
-    private String uploadInterface;
-
-    /** 上传文件 */
-    private String uploadFile;
-
-    /** 文件地址 */
-    private String uploadLocation;
-
-    /** 是否有效 0：无效，1：有效 */
-    private Boolean validFlag;
-
-    /** 删除标志 1：已删除，0：未删除 */
-    private Boolean delFlag;
+    @Schema(description = "备注", example = "")
+    @NotBlank(message = "备注不能为空")
+    private String remark;
 
 
 }
