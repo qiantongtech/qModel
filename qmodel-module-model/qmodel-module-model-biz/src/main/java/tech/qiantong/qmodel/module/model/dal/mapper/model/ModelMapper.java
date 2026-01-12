@@ -65,7 +65,7 @@ public interface ModelMapper extends BaseMapperX<ModelDO> {
                 .eqIfPresent(ModelDO::getDimensions, reqVO.getDimensions())
                 .eqIfPresent(ModelDO::getVersion, reqVO.getVersion())
                 .eqIfPresent(ModelDO::getInterfaceAddress, reqVO.getInterfaceAddress())
-                .eqIfPresent(ModelDO::getBuiltIn, reqVO.getBuiltIn())
+                .eqIfPresent(ModelDO::getBuiltin, reqVO.getBuiltin())
                 .eqIfPresent(ModelDO::getFormat, reqVO.getFormat())
                 .eqIfPresent(ModelDO::getSize, reqVO.getSize())
                 .eqIfPresent(ModelDO::getSource, reqVO.getSource())

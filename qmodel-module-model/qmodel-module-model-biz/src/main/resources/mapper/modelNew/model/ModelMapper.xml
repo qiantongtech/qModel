@@ -47,7 +47,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="dimensions"    column="DIMENSIONS"    />
         <result property="version"    column="VERSION"    />
         <result property="interfaceAddress"    column="INTERFACE_ADDRESS"    />
-        <result property="builtIn"    column="BUILTIN"    />
+        <result property="builtin"    column="BUILTIN"    />
         <result property="format"    column="FORMAT"    />
         <result property="size"    column="SIZE"    />
         <result property="source"    column="SOURCE"    />
@@ -83,7 +83,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="dimensions != null "> and DIMENSIONS = #{dimensions}</if>
             <if test="version != null  and version != ''"> and VERSION = #{version}</if>
             <if test="interfaceAddress != null  and interfaceAddress != ''"> and INTERFACE_ADDRESS = #{interfaceAddress}</if>
-            <if test="builtIn != null "> and BUILTIN = #{builtIn}</if>
+            <if test="builtin != null "> and BUILTIN = #{builtin}</if>
             <if test="format != null "> and FORMAT = #{format}</if>
             <if test="size != null "> and SIZE = #{size}</if>
             <if test="source != null  and source != ''"> and SOURCE = #{source}</if>
@@ -114,7 +114,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="dimensions != null">DIMENSIONS,</if>
             <if test="version != null">VERSION,</if>
             <if test="interfaceAddress != null">INTERFACE_ADDRESS,</if>
-            <if test="builtIn != null">BUILTIN,</if>
+            <if test="builtin != null">BUILTIN,</if>
             <if test="format != null">FORMAT,</if>
             <if test="size != null">SIZE,</if>
             <if test="source != null">SOURCE,</if>
@@ -144,7 +144,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="dimensions != null">#{dimensions},</if>
             <if test="version != null">#{version},</if>
             <if test="interfaceAddress != null">#{interfaceAddress},</if>
-            <if test="builtIn != null">#{builtIn},</if>
+            <if test="builtin != null">#{builtin},</if>
             <if test="format != null">#{format},</if>
             <if test="size != null">#{size},</if>
             <if test="source != null">#{source},</if>
@@ -177,7 +177,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="dimensions != null">DIMENSIONS = #{dimensions},</if>
             <if test="version != null">VERSION = #{version},</if>
             <if test="interfaceAddress != null">INTERFACE_ADDRESS = #{interfaceAddress},</if>
-            <if test="builtIn != null">BUILTIN = #{builtIn},</if>
+            <if test="builtin != null">BUILTIN = #{builtin},</if>
             <if test="format != null">FORMAT = #{format},</if>
             <if test="size != null">SIZE = #{size},</if>
             <if test="source != null">SOURCE = #{source},</if>

@@ -30,52 +30,67 @@
  * 更多信息请访问：https://qmodel.qiantong.tech/business.html
  */
 
-package tech.qiantong.qmodel.server.controller.modelReconstitution;
+package tech.qiantong.qmodel.module.model.controller.admin.modelReconstitution;
 
-import cn.hutool.core.collection.*;
-import cn.hutool.core.io.*;
-import cn.hutool.core.util.*;
-import com.alibaba.fastjson.*;
-import org.springframework.beans.factory.annotation.*;
-import org.springframework.security.access.prepost.*;
-import org.springframework.transaction.annotation.*;
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
+import java.io.File;
+import java.util.*;
+
+import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.util.ZipUtil;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import tech.qiantong.qmodel.common.annotation.*;
-import tech.qiantong.qmodel.common.config.*;
-import tech.qiantong.qmodel.common.constant.*;
-import tech.qiantong.qmodel.common.core.controller.*;
-import tech.qiantong.qmodel.common.core.domain.*;
-import tech.qiantong.qmodel.common.core.page.*;
-import tech.qiantong.qmodel.common.enums.*;
-import tech.qiantong.qmodel.common.utils.*;
-import tech.qiantong.qmodel.common.utils.poi.*;
-import tech.qiantong.qmodel.common.utils.uuid.*;
-import tech.qiantong.qmodel.common.utils.uuid.UUID;
+import org.springframework.web.multipart.MultipartFile;
+import tech.qiantong.qmodel.common.config.AniviaConfig;
+import tech.qiantong.qmodel.common.constant.Constants;
+import tech.qiantong.qmodel.common.core.page.PageParam;
+import tech.qiantong.qmodel.common.core.domain.AjaxResult;
+import tech.qiantong.qmodel.common.annotation.Log;
+import tech.qiantong.qmodel.common.core.controller.BaseController;
+import tech.qiantong.qmodel.common.core.domain.CommonResult;
+import tech.qiantong.qmodel.common.core.page.PageResult;
+import tech.qiantong.qmodel.common.enums.BusinessType;
+import tech.qiantong.qmodel.common.utils.DateUtils;
+import tech.qiantong.qmodel.common.utils.StringUtils;
+import tech.qiantong.qmodel.common.utils.object.BeanUtils;
+import tech.qiantong.qmodel.common.utils.poi.ExcelUtil;
+import tech.qiantong.qmodel.common.exception.enums.GlobalErrorCodeConstants;
 import tech.qiantong.qmodel.module.model.controller.admin.history.vo.ModelHistorySaveReqVO;
+import tech.qiantong.qmodel.module.model.controller.admin.modelReconstitution.vo.ModelReconstitutionPageReqVO;
+import tech.qiantong.qmodel.module.model.controller.admin.modelReconstitution.vo.ModelReconstitutionRespVO;
+import tech.qiantong.qmodel.module.model.controller.admin.modelReconstitution.vo.ModelReconstitutionSaveReqVO;
 import tech.qiantong.qmodel.module.model.controller.admin.version.vo.ModelVersionSaveReqVO;
+import tech.qiantong.qmodel.module.model.convert.modelReconstitution.ModelReconstitutionConvert;
 import tech.qiantong.qmodel.module.model.dal.dataobject.classify.ModelClassifyDO;
+import tech.qiantong.qmodel.module.model.dal.dataobject.modelReconstitution.ModelReconstitutionDO;
 import tech.qiantong.qmodel.module.model.dal.dataobject.version.ModelVersionDO;
 import tech.qiantong.qmodel.module.model.service.classify.IModelClassifyService;
 import tech.qiantong.qmodel.module.model.service.history.IModelHistoryService;
+import tech.qiantong.qmodel.module.model.service.modelReconstitution.IModelReconstitutionService;
 import tech.qiantong.qmodel.module.model.service.version.IModelVersionService;
-import tech.qiantong.qmodel.module.modelReconstitution.domain.*;
-import tech.qiantong.qmodel.module.modelReconstitution.service.*;
-
-import javax.servlet.http.*;
-import java.io.*;
-import java.util.*;
+import tech.qiantong.qmodel.module.modelReconstitution.domain.ModelReconstitution;
 
 /**
- * 模型库的重构表Controller
+ * 模型库重构Controller
  *
- * @author shu
- * @date 2024-01-02
+ * @author qModel
+ * @date 2026-01-12
  */
+@Tag(name = "模型库重构")
 @RestController
-@RequestMapping("/modelReconstitution/model" )
+@RequestMapping("/model/modelReconstitution")
+@Validated
 public class ModelReconstitutionController extends BaseController {
-
-    @Autowired
+    @Resource
     private IModelReconstitutionService modelReconstitutionService;
 
     @Autowired
@@ -87,25 +102,22 @@ public class ModelReconstitutionController extends BaseController {
     @Autowired
     private IModelHistoryService modelHistoryService;
 
-    /**
-     * 查询模型库的重构表列表
-     */
-    @PreAuthorize("@ss.hasPermi('modelReconstitution:model:list')" )
-    @GetMapping("/list" )
-    public TableDataInfo list(ModelReconstitution modelReconstitution) {
-        modelReconstitution.setCompanyId(null);
-        startPage();
-        List<ModelReconstitution> list = modelReconstitutionService.selectModelReconstitutionList(modelReconstitution);
+    @Operation(summary = "查询模型库重构列表")
+    @PreAuthorize("@ss.hasPermi('model:modelReconstitution:reconstitution:list')")
+    @GetMapping("/list")
+    public CommonResult<PageResult<ModelReconstitutionRespVO>> list(ModelReconstitutionPageReqVO modelReconstitution) {
+        PageResult<ModelReconstitutionDO> page = modelReconstitutionService.getModelReconstitutionPage(modelReconstitution);
+        List<ModelReconstitutionDO> list = page.getList();
         ModelVersionDO modelVersionReconstitution = new ModelVersionDO();
         List<Long> ids = new ArrayList<>();
-        for (ModelReconstitution reconstitution : list) {
+        for (ModelReconstitutionDO reconstitution : list) {
             ids.add(reconstitution.getVersionId());
         }
         Map<String,Object> params = new HashMap<>();
         params.put("ids",ids);
         modelVersionReconstitution.setParams(params);
         List<ModelVersionDO> modelVersions = modelVersionService.selectModelVersionList(modelVersionReconstitution);
-        for (ModelReconstitution reconstitution : list) {
+        for (ModelReconstitutionDO reconstitution : list) {
             if (reconstitution.getVersionId() == null) {
                 continue;
             }
@@ -116,48 +128,53 @@ public class ModelReconstitutionController extends BaseController {
                 }
             }
         }
-        return getDataTable(list);
+        return CommonResult.success(BeanUtils.toBean(page, ModelReconstitutionRespVO.class));
     }
 
-    /**
-     * 导出模型库的重构表列表
-     */
-    @PreAuthorize("@ss.hasPermi('modelReconstitution:model:export')" )
-    @Log(title = "模型库的重构表" , businessType = BusinessType.EXPORT)
-    @PostMapping("/export" )
-    public void export(HttpServletResponse response, ModelReconstitution modelReconstitution) {
-        modelReconstitution.setCompanyId(null);
-        List<ModelReconstitution> list = modelReconstitutionService.selectModelReconstitutionList(modelReconstitution);
-        ExcelUtil<ModelReconstitution> util = new ExcelUtil<ModelReconstitution>(ModelReconstitution. class);
-        util.exportExcel(response, list, "模型库的重构表数据" );
+    @Operation(summary = "导出模型库重构列表")
+    @PreAuthorize("@ss.hasPermi('model:modelReconstitution:reconstitution:export')")
+    @Log(title = "模型库重构", businessType = BusinessType.EXPORT)
+    @PostMapping("/export")
+    public void export(HttpServletResponse response, ModelReconstitutionPageReqVO exportReqVO) {
+        exportReqVO.setPageSize(PageParam.PAGE_SIZE_NONE);
+        List<ModelReconstitutionDO> list = (List<ModelReconstitutionDO>) modelReconstitutionService.getModelReconstitutionPage(exportReqVO).getRows();
+        ExcelUtil<ModelReconstitutionRespVO> util = new ExcelUtil<>(ModelReconstitutionRespVO.class);
+        util.exportExcel(response, ModelReconstitutionConvert.INSTANCE.convertToRespVOList(list), "应用管理数据");
     }
 
-    /**
-     * 获取模型库的重构表详细信息
-     */
-    @PreAuthorize("@ss.hasPermi('modelReconstitution:model:query')" )
-    @GetMapping(value = "/{id}" )
-    public AjaxResult getInfo(@PathVariable("id" ) Long id) {
-        ModelReconstitution modelReconstitution = modelReconstitutionService.selectModelReconstitutionById(id);
-        if (modelReconstitution.getVersionId() != null) {
-            ModelVersionDO version = modelVersionService.getModelVersionById(modelReconstitution.getVersionId());
-            modelReconstitution.setVersion(version.getVersion());
-            modelReconstitution.setDescription(version.getDescription());
-            modelReconstitution.setRunnableFileAddress(version.getRunnableFileAddress());
+    @Operation(summary = "导入模型库重构列表")
+    @PreAuthorize("@ss.hasPermi('model:modelReconstitution:reconstitution:import')")
+    @Log(title = "模型库重构", businessType = BusinessType.IMPORT)
+    @PostMapping("/importData")
+    public AjaxResult importData(MultipartFile file, boolean updateSupport) throws Exception {
+        ExcelUtil<ModelReconstitutionRespVO> util = new ExcelUtil<>(ModelReconstitutionRespVO.class);
+        List<ModelReconstitutionRespVO> importExcelList = util.importExcel(file.getInputStream());
+        String operName = getUsername();
+        String message = modelReconstitutionService.importModelReconstitution(importExcelList, updateSupport, operName);
+        return success(message);
+    }
+
+    @Operation(summary = "获取模型库重构详细信息")
+    @PreAuthorize("@ss.hasPermi('model:modelReconstitution:reconstitution:query')")
+    @GetMapping(value = "/{id}")
+    public CommonResult<ModelReconstitutionRespVO> getInfo(@PathVariable("id") Long id) {
+        ModelReconstitutionDO modelReconstitutionDO = modelReconstitutionService.getModelReconstitutionById(id);
+        if (modelReconstitutionDO.getVersionId() != null) {
+            ModelVersionDO version = modelVersionService.getModelVersionById(modelReconstitutionDO.getVersionId());
+            modelReconstitutionDO.setVersion(version.getVersion());
+            modelReconstitutionDO.setDescription(version.getDescription());
+            modelReconstitutionDO.setRunnableFileAddress(version.getRunnableFileAddress());
         }
-        ModelClassifyDO modelClassify = modelClassifyService.getModelClassifyById(modelReconstitution.getClassifyId());
-        modelReconstitution.setClassifyName(modelClassify.getName());
-        return AjaxResult.success(modelReconstitution);
+        ModelClassifyDO modelClassify = modelClassifyService.getModelClassifyById(modelReconstitutionDO.getClassifyId());
+        modelReconstitutionDO.setClassifyName(modelClassify.getName());
+        return CommonResult.success(BeanUtils.toBean(modelReconstitutionDO, ModelReconstitutionRespVO.class));
     }
 
-    /**
-     * 新增模型库的重构表
-     */
-    @PreAuthorize("@ss.hasPermi('modelReconstitution:model:add')" )
-    @Log(title = "模型库的重构表" , businessType = BusinessType.INSERT)
+    @Operation(summary = "新增模型库重构")
+    @PreAuthorize("@ss.hasPermi('model:modelReconstitution:reconstitution:add')")
+    @Log(title = "模型库重构", businessType = BusinessType.INSERT)
     @PostMapping
-    @Transactional
-    public AjaxResult add(@RequestBody ModelReconstitution model) {
+    public CommonResult<Long> add(@Valid @RequestBody ModelReconstitutionSaveReqVO model) {
         model.setCompanyId(null);
         model.setCreatorId(getUserId());
         model.setCreateBy(getNickName());
@@ -176,7 +193,7 @@ public class ModelReconstitutionController extends BaseController {
         modelVersionService.createModelVersion(version);
 
         model.setVersionId(version.getId());
-        int insert = modelReconstitutionService.insertModelReconstitution(model);
+        Long modelReconstitution = modelReconstitutionService.createModelReconstitution(model);
         version.setModelId(model.getId());
         modelVersionService.updateModelVersion(version);
         // 添加操作历史
@@ -191,19 +208,16 @@ public class ModelReconstitutionController extends BaseController {
         modelHistory.setUpdateTime(model.getCreateTime());
         modelHistoryService.createModelHistory(modelHistory);
 
-        AjaxResult ajax = toAjax(insert);
-        return ajax;
+        return CommonResult.toAjax(modelReconstitution);
     }
 
-    /**
-     * 修改模型库的重构表
-     */
-    @PreAuthorize("@ss.hasPermi('modelReconstitution:model:edit')" )
-    @Log(title = "模型库的重构表" , businessType = BusinessType.UPDATE)
+    @Operation(summary = "修改模型库重构")
+    @PreAuthorize("@ss.hasPermi('model:modelReconstitution:reconstitution:edit')")
+    @Log(title = "模型库重构", businessType = BusinessType.UPDATE)
     @PutMapping
-    public AjaxResult edit(@RequestBody ModelReconstitution modelReconstitution) {
+    public CommonResult<Integer> edit(@Valid @RequestBody ModelReconstitutionSaveReqVO modelReconstitution) {
         ModelReconstitution modelReconstitutionInfo = modelReconstitutionService.selectModelReconstitutionById(modelReconstitution.getId());
-        if (modelReconstitution !=null) {
+        if (modelReconstitutionInfo !=null) {
             ModelHistorySaveReqVO modelHistory = new ModelHistorySaveReqVO();
             modelHistory.setCompanyId(null);
             modelHistory.setModelId(modelReconstitution.getId());
@@ -214,40 +228,21 @@ public class ModelReconstitutionController extends BaseController {
             modelHistory.setUpdateBy(getNickName());
             modelHistory.setUpdateTime(modelReconstitution.getCreateTime());
             modelHistoryService.createModelHistory(modelHistory);
-            /*ModelOperate operate = new ModelOperate();
-            operate.setCompanyId(modelReconstitution.getCompanyId());
-            operate.setCreatorId(getUserId());
-            operate.setCreateBy(getNickName());
-            operate.setModuleName(modelReconstitution.getName());
-            operate.setContent("新增了"+modelReconstitution.getName());
-            operate.setType(0);
-            JSONObject object = new JSONObject();
-            object.set("模型名称", modelReconstitution.getName());
-            object.set("模型分类", modelClassifyService.selectModelClassifyById(model.getClassifyId().longValue()).getName());
-            object.set("所属模型类别", sysDictDataService.selectDictLabel(
-                    "model_waterconserve_modelmanage_type", model.getType().toString()));
-            object.set("模型格式", model.getFormat() == 0 ? "文件格式" : "接口格式");
-            object.set("版本发布说明", modelVersion.getDescription());
-            object.set("模型介绍", model.getRemark() == null ? " -- " : model.getRemark());
-            operate.setRespContent(object.toString());
-            modelOperateService.insertModelOperate(operate);*/
         }
         if (modelReconstitution.getWhetherPublish() != null){
             modelReconstitution.setPublishTime(DateUtils.getNowDate());
         }
-        return toAjax(modelReconstitutionService.updateModelReconstitution(modelReconstitution));
+
+        return CommonResult.toAjax(modelReconstitutionService.updateModelReconstitution(modelReconstitution));
     }
 
-    /**
-     * 删除模型库的重构表
-     */
-    @PreAuthorize("@ss.hasPermi('modelReconstitution:model:remove')" )
-    @Log(title = "模型库的重构表" , businessType = BusinessType.DELETE)
-    @DeleteMapping("/{ids}" )
-    public AjaxResult remove(@PathVariable Long[] ids) {
-        return toAjax(modelReconstitutionService.deleteModelReconstitutionByIds(ids));
+    @Operation(summary = "删除模型库重构")
+    @PreAuthorize("@ss.hasPermi('model:modelReconstitution:reconstitution:remove')")
+    @Log(title = "模型库重构", businessType = BusinessType.DELETE)
+    @DeleteMapping("/{ids}")
+    public CommonResult<Integer> remove(@PathVariable Long[] ids) {
+        return CommonResult.toAjax(modelReconstitutionService.removeModelReconstitution(Arrays.asList(ids)));
     }
-
 
     @PostMapping("/getFileList")
     public AjaxResult getFileList(@RequestBody String reqJsonStr) {
@@ -255,10 +250,8 @@ public class ModelReconstitutionController extends BaseController {
         // 下载文件
         String localPath = AniviaConfig.getProfile();
         String downloadPath = localPath + StringUtils.substringAfter(
-          JSONObject.parseObject(reqJsonStr).getString("fileUrl"), Constants.RESOURCE_PREFIX
+                JSONObject.parseObject(reqJsonStr).getString("fileUrl"), Constants.RESOURCE_PREFIX
         );
-//        File zipFile = fileService.downloadFileFromModel(
-//        JSONObject.parseObject(reqJsonStr).getString("fileUrl"), UUID.randomUUID() + ".zip");
         // 解压文件
         File unzip = ZipUtil.unzip(downloadPath);
 
@@ -308,8 +301,7 @@ public class ModelReconstitutionController extends BaseController {
                 }
             }
         });
-//        FileUtil.del(zipFile);
-//        FileUtil.del(unzip);
         return AjaxResult.success(fileListArray);
     }
+
 }

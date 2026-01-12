@@ -30,97 +30,93 @@
  * 更多信息请访问：https://qmodel.qiantong.tech/business.html
  */
 
-package tech.qiantong.qmodel.module.model.dal.dataobject.model;
-
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableLogic;
-import com.baomidou.mybatisplus.annotation.TableName;
-import lombok.*;
-import tech.qiantong.qmodel.common.core.domain.BaseEntity;
+package tech.qiantong.qmodel.module.model.dal.dataobject.modelReconstitution;
 
 import java.util.Date;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import lombok.*;
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableLogic;
+import com.baomidou.mybatisplus.annotation.TableName;
+import tech.qiantong.qmodel.common.annotation.Excel;
+import tech.qiantong.qmodel.common.core.domain.BaseEntity;
 
 /**
- * 模型管理 DO 对象 MODEL
+ * 模型库重构 DO 对象 MODEL_RECONSTITUTION
  *
  * @author qModel
- * @date 2026-01-07
+ * @date 2026-01-12
  */
 @Data
-@TableName(value = "\"MODEL\"")
+@TableName(value = "MODEL_RECONSTITUTION")
 // 用于 Oracle、PostgreSQL、Kingbase、DB2、H2 数据库的主键自增。如果是 MySQL 等数据库，可不写。
-// @KeySequence("MODEL_seq")
+// @KeySequence("MODEL_RECONSTITUTION_seq")
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
-public class ModelDO extends BaseEntity {
+public class ModelReconstitutionDO extends BaseEntity {
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;
 
-    /** ID */
+    /** id */
     private Long id;
 
     /** 企业id */
     private Long companyId;
 
-    /** 分类id */
-    private Long classifyId;
-
-    /** 父级和自己id */
-    private String ancestors;
-
     /** 模型名称 */
     private String name;
 
-    /** 模型介绍 */
-    private String description;
+    /** 模型分类 */
+    private Long classifyId;
 
-    /** 所属模型类别 0：水文，1：水动力，2：水质 */
-    private Long type;
-
-    /** 所属纬度 0：一维，1：二维，2：三维 */
-    private Long dimensions;
-
-    /** 模型版本号 */
-    private String version;
-
-    /** 模型调用接口 */
-    private String interfaceAddress;
-
-    /** 是否内置 0：否，1：是 */
+    /** 是否预置 */
     private Long builtin;
 
-    /** 模型格式 */
-    private Long format;
+    /** 接入方式 */
+    private Long accessMode;
 
-    /** 模型大小 0：exe格式 */
-    private Long size;
+    /** 请求方式 */
+    private Long requestMethod;
 
-    /** 数据来源 */
-    private String source;
+    /** 接口和文件的地址 */
+    private String interfaceorfileAddress;
 
-    /** 上传状态 */
-    private Long uploadStatus;
+    /** 版本id */
+    private Long versionId;
 
-    /** 上传时间 */
-    private Date uploadTime;
+    /** 是否发布 */
+    private Long whetherPublish;
 
-    /** 上传接口 */
-    private String uploadInterface;
+    /** 发布时间 */
+    private Date publishTime;
 
-    /** 上传文件 */
-    private String uploadFile;
-
-    /** 文件地址 */
-    private String uploadLocation;
-
-    /** 是否有效 0：无效，1：有效 */
-    private Boolean validFlag;
-
-    /** 删除标志 1：已删除，0：未删除 */
+    /** 删除标志 */
     @TableLogic
     private Boolean delFlag;
 
+    /** 接口的端口号 */
+    private String port;
+
+    /** 文件名称 */
+    private String fileName;
+
+    /** 可执行文件相对路径 */
+    private String runnableFileAddress;
+
+
+    /** 版本号 */
+    @TableField(exist = false)
+    private String version;
+
+    /** 版本说明 */
+    @TableField(exist = false)
+    private String description;
+
+    @TableField(exist = false)
+    private String classifyName;
 
 }

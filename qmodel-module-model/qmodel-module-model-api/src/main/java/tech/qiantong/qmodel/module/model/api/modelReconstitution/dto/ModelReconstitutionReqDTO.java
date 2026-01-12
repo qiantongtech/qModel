@@ -30,64 +30,67 @@
  * 更多信息请访问：https://qmodel.qiantong.tech/business.html
  */
 
-import request from '@/utils/request'
+package tech.qiantong.qmodel.module.model.api.modelReconstitution.dto;
 
-// 查询模型管理 列表
-export function listModel(query) {
-  return request({
-    url: '/model/model/list',
-    method: 'get',
-    params: query
-  })
-}
+import java.util.Date;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import lombok.*;
 
-// 查询模型管理 详细
-export function getModel(id) {
-  return request({
-    url: '/model/model/' + id,
-    method: 'get'
-  })
-}
+/**
+ * 模型库重构 DTO 对象 MODEL_RECONSTITUTION
+ *
+ * @author qModel
+ * @date 2026-01-12
+ */
+@Data
+public class ModelReconstitutionReqDTO {
 
-// 查询模型管理 分类
-export function getmodelList(classifyId) {
-  return request({
-    url: '/model/model/list/children/' + classifyId,
-    method: 'get'
-  })
-}
+    private static final long serialVersionUID = 1L;
 
-// 新增模型管理
-export function addModel(data) {
-  return request({
-    url: '/model/model',
-    method: 'post',
-    data: data
-  })
-}
+    /** id */
+    private Long id;
 
-// 修改模型管理 基础信息
-export function updateModel(data) {
-  return request({
-    url: '/model/model',
-    method: 'put',
-    data: data
-  })
-}
+    /** 企业id */
+    private Long companyId;
 
-// 删除模型管理
-export function delModel(id) {
-  return request({
-    url: '/model/model/' + id,
-    method: 'delete'
-  })
-}
+    /** 模型名称 */
+    private String name;
 
-// 新增模型管理
-export function getFileList(data) {
-  return request({
-    url: '/model/model/getFileList',
-    method: 'post',
-    data: data
-  })
+    /** 模型分类 */
+    private Long classifyId;
+
+    /** 是否预置 */
+    private Long builtin;
+
+    /** 接入方式 */
+    private Long accessMode;
+
+    /** 请求方式 */
+    private Long requestMethod;
+
+    /** 接口和文件的地址 */
+    private String interfaceorfileAddress;
+
+    /** 版本id */
+    private Long versionId;
+
+    /** 是否发布 */
+    private Long whetherPublish;
+
+    /** 发布时间 */
+    private Date publishTime;
+
+    /** 删除标志 */
+    private Boolean delFlag;
+
+    /** 接口的端口号 */
+    private String port;
+
+    /** 文件名称 */
+    private String filename;
+
+    /** 可执行文件相对路径 */
+    private String runnableFileAddress;
+
+
 }

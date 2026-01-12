@@ -55,12 +55,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="updatorId"    column="UPDATOR_ID"    />
         <result property="updateTime"    column="UPDATE_TIME"    />
         <result property="remark"    column="REMARK"    />
-        <result property="fileName"    column="FILENAME"    />
+        <result property="fileName"    column="FILE_NAME"    />
         <result property="runnableFileAddress"    column="RUNNABLE_FILE_ADDRESS"    />
     </resultMap>
 
     <sql id="selectModelVersionVo">
-        select ID, COMPANY_ID, MODEL_ID, MODEL_NAME, VERSION, FILE_ADDRESS, INTERFACE_ADDRESS, STATUS, DESCRIPTION, VALID_FLAG, DEL_FLAG, CREATE_BY, CREATOR_ID, CREATE_TIME, UPDATE_BY, UPDATOR_ID, UPDATE_TIME, REMARK, FILENAME, RUNNABLE_FILE_ADDRESS from MODEL_VERSION
+        select ID, COMPANY_ID, MODEL_ID, MODEL_NAME, VERSION, FILE_ADDRESS, INTERFACE_ADDRESS, STATUS, DESCRIPTION, VALID_FLAG, DEL_FLAG, CREATE_BY, CREATOR_ID, CREATE_TIME, UPDATE_BY, UPDATOR_ID, UPDATE_TIME, REMARK, FILE_NAME, RUNNABLE_FILE_ADDRESS from MODEL_VERSION
     </sql>
 
     <select id="selectModelVersionList" parameterType="ModelVersionDO" resultMap="ModelVersionResult">
@@ -75,7 +75,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="status != null "> and STATUS = #{status}</if>
             <if test="description != null  and description != ''"> and DESCRIPTION = #{description}</if>
             <if test="createTime != null "> and CREATE_TIME = #{createTime}</if>
-            <if test="fileName != null  and fileName != ''"> and FILENAME like concat('%', #{fileName}, '%')</if>
+            <if test="fileName != null  and fileName != ''"> and FILE_NAME like concat('%', #{fileName}, '%')</if>
             <if test="runnableFileAddress != null  and runnableFileAddress != ''"> and RUNNABLE_FILE_ADDRESS = #{runnableFileAddress}</if>
         </where>
     </select>
@@ -106,7 +106,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="updatorId != null">UPDATOR_ID,</if>
             <if test="updateTime != null">UPDATE_TIME,</if>
             <if test="remark != null">REMARK,</if>
-            <if test="fileName != null">FILENAME,</if>
+            <if test="fileName != null">FILE_NAME,</if>
             <if test="runnableFileAddress != null">RUNNABLE_FILE_ADDRESS,</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
@@ -153,7 +153,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="updatorId != null">UPDATOR_ID = #{updatorId},</if>
             <if test="updateTime != null">UPDATE_TIME = #{updateTime},</if>
             <if test="remark != null">REMARK = #{remark},</if>
-            <if test="fileName != null">FILENAME = #{fileName},</if>
+            <if test="fileName != null">FILE_NAME = #{fileName},</if>
             <if test="runnableFileAddress != null">RUNNABLE_FILE_ADDRESS = #{runnableFileAddress},</if>
         </trim>
         where ID = #{id}

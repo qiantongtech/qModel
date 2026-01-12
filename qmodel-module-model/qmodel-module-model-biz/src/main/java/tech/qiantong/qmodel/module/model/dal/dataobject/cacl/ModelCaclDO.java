@@ -30,97 +30,131 @@
  * 更多信息请访问：https://qmodel.qiantong.tech/business.html
  */
 
-package tech.qiantong.qmodel.module.model.dal.dataobject.model;
-
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableLogic;
-import com.baomidou.mybatisplus.annotation.TableName;
-import lombok.*;
-import tech.qiantong.qmodel.common.core.domain.BaseEntity;
+package tech.qiantong.qmodel.module.model.dal.dataobject.cacl;
 
 import java.util.Date;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import lombok.*;
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableLogic;
+import com.baomidou.mybatisplus.annotation.TableName;
+import tech.qiantong.qmodel.common.core.domain.BaseEntity;
 
 /**
- * 模型管理 DO 对象 MODEL
+ * 模型计算重构 DO 对象 MODEL_CACL_RECONSTITUTION
  *
  * @author qModel
- * @date 2026-01-07
+ * @date 2026-01-12
  */
 @Data
-@TableName(value = "\"MODEL\"")
+@TableName(value = "MODEL_CACL_RECONSTITUTION")
 // 用于 Oracle、PostgreSQL、Kingbase、DB2、H2 数据库的主键自增。如果是 MySQL 等数据库，可不写。
-// @KeySequence("MODEL_seq")
+// @KeySequence("MODEL_CACL_RECONSTITUTION_seq")
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
-public class ModelDO extends BaseEntity {
+public class ModelCaclDO extends BaseEntity {
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;
 
-    /** ID */
+    /**
+     * 主键id
+     */
     private Long id;
 
-    /** 企业id */
+    /**
+     * 企业id
+     */
     private Long companyId;
 
-    /** 分类id */
-    private Long classifyId;
+    /**
+     * 计算编码
+     */
+    private String code;
 
-    /** 父级和自己id */
-    private String ancestors;
-
-    /** 模型名称 */
+    /**
+     * 计算名称
+     */
     private String name;
 
-    /** 模型介绍 */
-    private String description;
+    /**
+     * 模型id
+     */
+    private Long modelId;
 
-    /** 所属模型类别 0：水文，1：水动力，2：水质 */
-    private Long type;
+    /**
+     * 模型名称
+     */
+    private String modelName;
 
-    /** 所属纬度 0：一维，1：二维，2：三维 */
-    private Long dimensions;
+    /**
+     * 模型版本
+     */
+    private String modelVersion;
 
-    /** 模型版本号 */
-    private String version;
+    /**
+     * 开始时间
+     */
+    private Date startTime;
 
-    /** 模型调用接口 */
-    private String interfaceAddress;
+    /**
+     * 结束时间
+     */
+    private Date endTime;
 
-    /** 是否内置 0：否，1：是 */
-    private Long builtin;
+    /**
+     * 计算状态
+     */
+    private Long status;
 
-    /** 模型格式 */
-    private Long format;
+    /**
+     * 模型输入内容
+     */
+    private String inputContent;
 
-    /** 模型大小 0：exe格式 */
-    private Long size;
+    /**
+     * 模型输出内容
+     */
+    private String outputContent;
 
-    /** 数据来源 */
-    private String source;
-
-    /** 上传状态 */
-    private Long uploadStatus;
-
-    /** 上传时间 */
-    private Date uploadTime;
-
-    /** 上传接口 */
-    private String uploadInterface;
-
-    /** 上传文件 */
-    private String uploadFile;
-
-    /** 文件地址 */
-    private String uploadLocation;
-
-    /** 是否有效 0：无效，1：有效 */
+    /**
+     * 是否有效 0：无效，1：有效
+     */
     private Boolean validFlag;
 
-    /** 删除标志 1：已删除，0：未删除 */
+    /**
+     * 删除标志 1：已删除，0：未删除
+     */
     @TableLogic
     private Boolean delFlag;
 
+    /**
+     * 文件或接口地址id
+     */
+    private Long addressId;
 
+    /**
+     * 判断是文件的id还是地址的id，0:文件，1：接口
+     */
+    private Long addressType;
+
+    /**
+     * 文件计算的历史方案id
+     */
+    private Long mpProgrammeId;
+
+    /**
+     * 地址
+     */
+    @TableField(exist = false)
+    private String address;
+
+    /**
+     * 请求方式  0：get，1：post，2：put，3：delete
+     */
+    @TableField(exist = false)
+    private Integer requestMethod;
 }

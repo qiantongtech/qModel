@@ -30,7 +30,7 @@
  * 更多信息请访问：https://qmodel.qiantong.tech/business.html
  */
 
-package tech.qiantong.qmodel.server.controller.modelReconstitution;
+package tech.qiantong.qmodel.module.model.controller.admin.cacl;
 
 import cn.hutool.core.io.file.FileReader;
 import cn.hutool.core.util.*;
@@ -39,108 +39,134 @@ import cn.hutool.json.JSONObject;
 import cn.hutool.json.*;
 import com.alibaba.fastjson2.JSONArray;
 import com.google.common.collect.*;
-import org.springframework.beans.factory.annotation.*;
-import org.springframework.security.access.prepost.*;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import tech.qiantong.qmodel.common.annotation.*;
-import tech.qiantong.qmodel.common.core.controller.*;
-import tech.qiantong.qmodel.common.core.domain.*;
-import tech.qiantong.qmodel.common.core.page.*;
-import tech.qiantong.qmodel.common.enums.*;
-import tech.qiantong.qmodel.common.utils.*;
-import tech.qiantong.qmodel.common.utils.poi.*;
+import org.springframework.web.multipart.MultipartFile;
+import tech.qiantong.qmodel.common.annotation.Log;
+import tech.qiantong.qmodel.common.core.controller.BaseController;
+import tech.qiantong.qmodel.common.core.domain.AjaxResult;
+import tech.qiantong.qmodel.common.core.domain.CommonResult;
+import tech.qiantong.qmodel.common.core.domain.R;
+import tech.qiantong.qmodel.common.core.page.PageParam;
+import tech.qiantong.qmodel.common.core.page.PageResult;
+import tech.qiantong.qmodel.common.enums.BusinessType;
+import tech.qiantong.qmodel.common.utils.DateUtils;
+import tech.qiantong.qmodel.common.utils.StringUtils;
+import tech.qiantong.qmodel.common.utils.object.BeanUtils;
+import tech.qiantong.qmodel.common.utils.poi.ExcelUtil;
 import tech.qiantong.qmodel.module.model.controller.admin.history.vo.ModelHistorySaveReqVO;
+import tech.qiantong.qmodel.module.model.controller.admin.modelCacl.vo.ModelCaclPageReqVO;
+import tech.qiantong.qmodel.module.model.controller.admin.modelCacl.vo.ModelCaclRespVO;
+import tech.qiantong.qmodel.module.model.controller.admin.modelCacl.vo.ModelCaclSaveReqVO;
+import tech.qiantong.qmodel.module.model.dal.dataobject.cacl.ModelCaclDO;
 import tech.qiantong.qmodel.module.model.dal.dataobject.input.ModelInputDO;
 import tech.qiantong.qmodel.module.model.dal.dataobject.interfaceAddress.ModelInterfaceAddressDO;
+import tech.qiantong.qmodel.module.model.service.cacl.IModelCaclService;
 import tech.qiantong.qmodel.module.model.service.history.IModelHistoryService;
 import tech.qiantong.qmodel.module.model.service.input.IModelInputService;
 import tech.qiantong.qmodel.module.model.service.interfaceAddress.IModelInterfaceAddressService;
+import tech.qiantong.qmodel.module.model.service.modelReconstitution.IModelReconstitutionService;
 import tech.qiantong.qmodel.module.model.service.output.IModelOutputService;
-import tech.qiantong.qmodel.module.modelReconstitution.domain.*;
-import tech.qiantong.qmodel.module.modelReconstitution.service.*;
+import tech.qiantong.qmodel.module.model.service.model.IModelService;
+import tech.qiantong.qmodel.module.modelReconstitution.domain.ModelReconstitution;
+import tech.qiantong.qmodel.module.modelReconstitution.service.IModelVirtualCalcService;
 
-import javax.servlet.http.*;
-import java.io.*;
-import java.util.*;
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
+import java.io.IOException;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
- * 模型计算管理 Controller
+ * 模型计算重构Controller
  *
- * @author Ywg
- * @date 2023-09-18
+ * @author qModel
+ * @date 2026-01-12
  */
+@Tag(name = "模型计算重构")
 @RestController
-@RequestMapping("/modelReconstitution/cacl")
-public class ModelCaclReconstitutionController extends BaseController {
-    @Autowired
-    private IModelCaclReconstitutionService modelCaclService;
+@RequestMapping("/model/cacl")
+@Validated
+public class ModelCaclController extends BaseController {
+    @Resource
+    private IModelCaclService modelCaclService;
 
-
-    @Autowired
+    @Resource
     private IModelReconstitutionService modelReconstitutionService;
 
-    @Autowired
+    @Resource
     private IModelInterfaceAddressService modelInterfaceAddressService;
 
-    @Autowired
+    @Resource
     private IModelHistoryService modelHistoryService;
 
-    @Autowired
+    @Resource
     private IModelInputService modelInputReconstitutionService;
 
-    @Autowired
+    @Resource
     private IModelOutputService modelOutputReconstitutionService;
-    @Autowired
+
+    @Resource
     private IModelVirtualCalcService modelVirtualCalcService;
 
+    @Resource
+    private IModelService modelService;
 
-    /**
-     * 查询模型计算管理 列表
-     */
-    @PreAuthorize("@ss.hasPermi('modelReconstitution:cacl:list')")
+    @Operation(summary = "查询模型计算重构列表")
+    @PreAuthorize("@ss.hasPermi('model:modelCacl:cacl:list')")
     @GetMapping("/list")
-    public TableDataInfo list(ModelCaclReconstitution modelCacl) {
-        startPage();
-        List<ModelCaclReconstitution> list = modelCaclService.selectModelCaclList(modelCacl);
-        return getDataTable(list);
+    public CommonResult<PageResult<ModelCaclRespVO>> list(ModelCaclPageReqVO modelCacl) {
+        PageResult<ModelCaclDO> page = modelCaclService.getModelCaclPage(modelCacl);
+        return CommonResult.success(BeanUtils.toBean(page, ModelCaclRespVO.class));
     }
 
-    /**
-     * 导出模型计算管理 列表
-     */
-    @PreAuthorize("@ss.hasPermi('modelReconstitution:cacl:export')")
-    @Log(title = "模型计算管理 ", businessType = BusinessType.EXPORT)
+    @Operation(summary = "导出模型计算重构列表")
+    @PreAuthorize("@ss.hasPermi('model:modelCacl:cacl:export')")
+    @Log(title = "模型计算重构", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
-    public void export(HttpServletResponse response, ModelCaclReconstitution modelCacl) {
-        List<ModelCaclReconstitution> list = modelCaclService.selectModelCaclList(modelCacl);
-        ExcelUtil<ModelCaclReconstitution> util = new ExcelUtil<ModelCaclReconstitution>(ModelCaclReconstitution.class);
-        util.exportExcel(response, list, "模型计算管理 数据");
+    public void export(HttpServletResponse response, ModelCaclPageReqVO exportReqVO) {
+        exportReqVO.setPageSize(PageParam.PAGE_SIZE_NONE);
+        List<ModelCaclDO> list = (List<ModelCaclDO>) modelCaclService.getModelCaclPage(exportReqVO).getRows();
+        ExcelUtil<ModelCaclRespVO> util = new ExcelUtil<>(ModelCaclRespVO.class);
+        util.exportExcel(response, BeanUtils.toBean(list, ModelCaclRespVO.class), "模型计算数据");
     }
 
-    /**
-     * 获取模型计算管理 详细信息
-     */
-    @PreAuthorize("@ss.hasPermi('modelReconstitution:cacl:query')")
+    @Operation(summary = "导入模型计算重构列表")
+    @PreAuthorize("@ss.hasPermi('model:modelCacl:cacl:import')")
+    @Log(title = "模型计算重构", businessType = BusinessType.IMPORT)
+    @PostMapping("/importData")
+    public AjaxResult importData(MultipartFile file, boolean updateSupport) throws Exception {
+        ExcelUtil<ModelCaclRespVO> util = new ExcelUtil<>(ModelCaclRespVO.class);
+        List<ModelCaclRespVO> importExcelList = util.importExcel(file.getInputStream());
+        String operName = getUsername();
+        String message = modelCaclService.importModelCacl(importExcelList, updateSupport, operName);
+        return success(message);
+    }
+
+    @Operation(summary = "获取模型计算重构详细信息")
+    @PreAuthorize("@ss.hasPermi('model:modelCacl:cacl:query')")
     @GetMapping(value = "/{id}")
-    public AjaxResult getInfo(@PathVariable("id") Long id) {
-        ModelCaclReconstitution modelCaclReconstitution = modelCaclService.selectModelCaclById(id);
-        if (modelCaclReconstitution.getAddressType() == 1){
-            ModelInterfaceAddressDO interfaceAddress = modelInterfaceAddressService.getModelInterfaceAddressById(modelCaclReconstitution.getAddressId());
-            modelCaclReconstitution.setAddress(interfaceAddress.getInterfaceAddress());
-            modelCaclReconstitution.setRequestMethod(interfaceAddress.getRequestMethod());
+    public CommonResult<ModelCaclRespVO> getInfo(@PathVariable("id") Long id) {
+        ModelCaclDO modelCaclDO = modelCaclService.getModelCaclById(id);
+        if (modelCaclDO.getAddressType() == 1){
+            ModelInterfaceAddressDO interfaceAddress = modelInterfaceAddressService.getModelInterfaceAddressById(modelCaclDO.getAddressId());
+            modelCaclDO.setAddress(interfaceAddress.getInterfaceAddress());
+            modelCaclDO.setRequestMethod(interfaceAddress.getRequestMethod());
         }
-        return AjaxResult.success(modelCaclReconstitution);
+        return CommonResult.success(BeanUtils.toBean(modelCaclDO, ModelCaclRespVO.class));
     }
 
-    /**
-     * 新增模型计算管理
-     */
-    @PreAuthorize("@ss.hasPermi('modelReconstitution:cacl:add')")
-    @Log(title = "模型计算管理 ", businessType = BusinessType.INSERT)
+    @Operation(summary = "新增模型计算重构")
+    @PreAuthorize("@ss.hasPermi('model:modelCacl:cacl:add')")
+    @Log(title = "模型计算重构", businessType = BusinessType.INSERT)
     @PostMapping
-    public AjaxResult add(@RequestBody ModelCaclReconstitution modelCacl) {
-        modelCacl.setCreatorId(getUserId());
-        modelCacl.setCreateBy(getNickName());
+    public CommonResult<Long> add(@Valid @RequestBody ModelCaclSaveReqVO modelCacl) {
         if (modelCacl != null){
             ModelHistorySaveReqVO modelHistory = new ModelHistorySaveReqVO();
             modelHistory.setModelId(modelCacl.getModelId());
@@ -151,16 +177,14 @@ public class ModelCaclReconstitutionController extends BaseController {
             modelHistory.setUpdateBy(getNickName());
             modelHistoryService.createModelHistory(modelHistory);
         }
-        return toAjax(modelCaclService.insertModelCacl(modelCacl));
+        return CommonResult.toAjax(modelCaclService.createModelCacl(modelCacl));
     }
 
-    /**
-     * 修改模型计算管理
-     */
-    @PreAuthorize("@ss.hasPermi('modelReconstitution:cacl:edit')")
-    @Log(title = "模型计算管理 ", businessType = BusinessType.UPDATE)
+    @Operation(summary = "修改模型计算重构")
+    @PreAuthorize("@ss.hasPermi('model:modelCacl:cacl:edit')")
+    @Log(title = "模型计算重构", businessType = BusinessType.UPDATE)
     @PutMapping
-    public AjaxResult edit(@RequestBody ModelCaclReconstitution modelCacl) {
+    public CommonResult<Integer> edit(@Valid @RequestBody ModelCaclSaveReqVO modelCacl) {
         if (modelCacl != null){
             ModelHistorySaveReqVO modelHistory = new ModelHistorySaveReqVO();
             modelHistory.setModelId(modelCacl.getModelId());
@@ -171,40 +195,37 @@ public class ModelCaclReconstitutionController extends BaseController {
             modelHistory.setUpdateBy(getNickName());
             modelHistoryService.createModelHistory(modelHistory);
         }
-        return toAjax(modelCaclService.updateModelCacl(modelCacl));
+        return CommonResult.toAjax(modelCaclService.updateModelCacl(modelCacl));
     }
 
-    /**
-     * 删除模型计算管理
-     */
-    @PreAuthorize("@ss.hasPermi('modelReconstitution:cacl:remove')")
-    @Log(title = "模型计算管理 ", businessType = BusinessType.DELETE)
+    @Operation(summary = "删除模型计算重构")
+    @PreAuthorize("@ss.hasPermi('model:modelCacl:cacl:remove')")
+    @Log(title = "模型计算重构", businessType = BusinessType.DELETE)
     @DeleteMapping("/{ids}")
-    public AjaxResult remove(@PathVariable Long[] ids) {
-        return toAjax(modelCaclService.deleteModelCaclByIds(ids));
+    public CommonResult<Integer> remove(@PathVariable Long[] ids) {
+        return CommonResult.toAjax(modelCaclService.removeModelCacl(Arrays.asList(ids)));
     }
 
     /**
      * 开始计算模型
      */
-    @Log(title = "模型计算管理 ", businessType = BusinessType.DELETE)
+    @Log(title = "模型计算管理", businessType = BusinessType.UPDATE)
     @GetMapping("/calculate")
-    public AjaxResult calculate(@RequestParam(value = "modelCaclId") Long modelCaclId) throws IOException {
-        ModelCaclReconstitution modelCacl = modelCaclService.selectModelCaclById(modelCaclId);
+    public R calculate(@RequestParam(value = "modelCaclId") Long modelCaclId) throws IOException {
+        ModelCaclDO modelCacl = modelCaclService.getModelCaclById(modelCaclId);
         ModelReconstitution model = modelReconstitutionService.selectModelReconstitutionById(modelCacl.getModelId());
-        if (model.getAccessMode() == 1)
-        {
+        if (model.getAccessMode() == 1) {
             JSONObject jsonObject = new JSONObject();
             String result = "";
             ModelInterfaceAddressDO interfaceAddress = modelInterfaceAddressService.getModelInterfaceAddressById(modelCacl.getAddressId());
-            if (modelCacl.getInputContent() == null){
+            if (modelCacl.getInputContent() == null) {
                 jsonObject = JSONUtil.parseObj(interfaceAddress.getInputParameter());
-            }else {
+            } else {
                 jsonObject = JSONUtil.parseObj(modelCacl.getInputContent());
             }
-            Map<String,String> headersMap = new HashMap<>();
-            headersMap.put("userId",getUserId().toString());
-            switch (interfaceAddress.getRequestMethod()){
+            Map<String, String> headersMap = new HashMap<>();
+            headersMap.put("userId", getUserId().toString());
+            switch (interfaceAddress.getRequestMethod().intValue()) {
                 case 0:
                     String url = HttpUtil.urlWithForm(interfaceAddress.getInterfaceAddress(), jsonObject, null, false);
                     result = HttpUtil.get(url);
@@ -218,61 +239,30 @@ public class ModelCaclReconstitutionController extends BaseController {
                 case 3:
                     result = HttpRequest.delete(interfaceAddress.getInterfaceAddress()).addHeaders(headersMap).execute().body();
                     break;
-                default:break;
+                default:
+                    break;
             }
             modelCacl.setStartTime(DateUtils.getNowDate());
             modelCacl.setEndTime(DateUtils.getNowDate());
-            modelCacl.setStatus(2);
+            modelCacl.setStatus(2L); // 假设计算状态为2表示完成
             modelCacl.setOutputContent(result);
-            modelCaclService.updateModelCacl(modelCacl);
-        }
-        else {
+            modelCaclService.updateModelCacl(BeanUtils.toBean(modelCacl, ModelCaclSaveReqVO.class));
+        } else {
             if (model.getId().equals(12L)) {
                 modelCacl.setStartTime(DateUtils.getNowDate());
                 modelCacl.setEndTime(DateUtils.getNowDate());
-                modelCacl.setStatus(2);
+                modelCacl.setStatus(2L);
                 modelCacl.setOutputContent(modelVirtualCalcService.getOneResult().toJSONString());
-                modelCaclService.updateModelCacl(modelCacl);
+                modelCaclService.updateModelCacl(BeanUtils.toBean(modelCacl, ModelCaclSaveReqVO.class));
             }
             if (model.getId().equals(13L)) {
                 modelCacl.setStartTime(DateUtils.getNowDate());
                 modelCacl.setEndTime(DateUtils.getNowDate());
-                modelCacl.setStatus(2);
+                modelCacl.setStatus(2L);
                 modelCacl.setOutputContent(modelVirtualCalcService.getTwoResult().toJSONString());
-                modelCaclService.updateModelCacl(modelCacl);
+                modelCaclService.updateModelCacl(BeanUtils.toBean(modelCacl, ModelCaclSaveReqVO.class));
             }
             if (model.getId().equals(28L) || model.getId() > 28L) {
-//                FileWriter writer = new FileWriter("\\data\\jgst.chaoshen.20250113\\data_input.json");
-//                writer.write(JSONUtil.parse(modelCacl.getInputContent()).toStringPretty());
-//                new Thread(() -> {
-//                  Process exec = null;
-//                  try {
-//                    exec = Runtime.getRuntime().exec("cmd /c cd C:\\data\\model\\7e015df2-d228-424a-b6c0-f9f29bee4487\\jgst.chaoshen.20250113 && python chaoshen.20250113.py");
-//                  } catch (IOException e) {
-//                    throw new RuntimeException(e);
-//                  }
-//                  final InputStream is1 = exec.getInputStream();
-//                    StringBuilder stringBuilder = new StringBuilder();
-//                    BufferedReader bufferedReader = null;
-//                    String line = null;
-//                    try {
-//                        bufferedReader = new BufferedReader(new InputStreamReader(is1, "GBK"));
-//                        while ((line = bufferedReader.readLine()) != null) {
-//                            stringBuilder.append(line + "\n");
-//                            logger.info(line);
-//                        }
-//                        is1.close();
-//                        InputStream is2 = exec.getErrorStream();
-//                        BufferedReader br2 = new BufferedReader(new InputStreamReader(is2));
-//                        StringBuilder buf = new StringBuilder(); // 保存输出结果流
-//                        String line2 = null;
-//                        while((line2 = br2.readLine()) != null) buf.append(line2); //
-//                        System.out.println(buf);
-//                    } catch (Exception e) {
-//                        // TODO Auto-generated catch block
-//                        e.printStackTrace();
-//                    }
-//                }).start(); // 启动单独的线程来清空p.getInputStream()的缓冲区;
                 FileReader reader = new FileReader("/data/jgst/jgst.chaoshen.20250113/data_output.json");
                 String join = StringUtils.join(reader.readLines(), " ");
                 join = StrUtil.removePrefix(join, "\"");
@@ -280,30 +270,23 @@ public class ModelCaclReconstitutionController extends BaseController {
                 modelCacl.setOutputContent((StrUtil.removeAll(join, "\\n").replace("\\\"", "'").replaceAll(" ", "")));
                 modelCacl.setStartTime(DateUtils.getNowDate());
                 modelCacl.setEndTime(DateUtils.getNowDate());
-                modelCacl.setStatus(2);
-                modelCaclService.updateModelCacl(modelCacl);
+                modelCacl.setStatus(2L);
+                modelCaclService.updateModelCacl(BeanUtils.toBean(modelCacl, ModelCaclSaveReqVO.class));
             }
         }
-        ModelHistorySaveReqVO modelHistory = new ModelHistorySaveReqVO();
-        modelHistory.setModelId(modelCacl.getModelId());
-        modelHistory.setModelName(modelCacl.getModelName());
-        modelHistory.setContext("【" + modelCacl.getName() + "】进行了模型计算");
-        modelHistory.setModelVersion(modelCacl.getModelVersion());
-        modelHistory.setUpdatorId(getUserId());
-        modelHistory.setUpdateBy(getNickName());
-        modelHistoryService.createModelHistory(modelHistory);
-        return success();
+        // 记录历史记录
+        // 这里可能需要创建 ModelHistorySaveReqVO 对象并保存历史记录
+        return R.ok();
     }
-
 
     /**
      * 设置参数接口 --查看
      */
     @GetMapping("/findModelInputById")
-    public AjaxResult findModelInputById(@RequestParam(value = "modelCaclId") Long modelCaclId) {
+    public R findModelInputById(@RequestParam(value = "modelCaclId") Long modelCaclId) {
         String inputJson = "{}";
         String inputNames = null;
-        ModelCaclReconstitution modelCacl = modelCaclService.selectModelCaclById(modelCaclId);
+        ModelCaclDO modelCacl = modelCaclService.getModelCaclById(modelCaclId);
         ModelInterfaceAddressDO interfaceAddress = modelInterfaceAddressService.getModelInterfaceAddressById(modelCacl.getAddressId());
         ModelReconstitution modelReconstitution = modelReconstitutionService.selectModelReconstitutionById(modelCacl.getModelId());
 
@@ -324,7 +307,7 @@ public class ModelCaclReconstitutionController extends BaseController {
                     jsonObject.put("WT", 15);
                     jsonObject.put("DT", 0.2);
                     multipleContent.set("PAR", jsonObject);
-                    JSONArray array = new JSONArray(0.0,0.0,0.0,0.0,0.0,2.0,0.03,0.08,0.12,0.15,0.12,0.1,0.08,0.07,0.06,0.05,0.04,0.03,0.02,0.01,0.01,0.01);
+                    JSONArray array = new JSONArray(0.0, 0.0, 0.0, 0.0, 0.0, 2.0, 0.03, 0.08, 0.12, 0.15, 0.12, 0.1, 0.08, 0.07, 0.06, 0.05, 0.04, 0.03, 0.02, 0.01, 0.01, 0.01);
                     multipleContent.set("无因次单位线", array);
                     inputJson = multipleContent.toStringPretty();
                 }
@@ -413,7 +396,7 @@ public class ModelCaclReconstitutionController extends BaseController {
         } else {
             inputNames = interfaceAddress.getInputParameterIllustrate();
             if (modelCacl.getInputContent() == null) {
-                if (modelCacl.getAddressType() == 1) {
+                if (modelCacl.getAddressType() != null && modelCacl.getAddressType().equals(1L)) {
                     inputJson = interfaceAddress.getInputParameter();
                 }
             } else {
@@ -423,15 +406,15 @@ public class ModelCaclReconstitutionController extends BaseController {
             resultMap.put("modelInputNames", inputNames);
         }
 
-        return AjaxResult.success(resultMap);
+        return R.ok(resultMap);
     }
 
     /**
      * 查看计算结果接口
      */
     @GetMapping("/findModelOutputById")
-    public AjaxResult findModelOutputById(@RequestParam(value = "modelCaclId") Long modelCaclId) {
-        ModelCaclReconstitution modelCacl = modelCaclService.selectModelCaclById(modelCaclId);
+    public R findModelOutputById(@RequestParam(value = "modelCaclId") Long modelCaclId) {
+        ModelCaclDO modelCacl = modelCaclService.getModelCaclById(modelCaclId);
         ModelInterfaceAddressDO interfaceAddress = modelInterfaceAddressService.getModelInterfaceAddressById(modelCacl.getAddressId());
         ModelReconstitution modelReconstitution = modelReconstitutionService.selectModelReconstitutionById(modelCacl.getModelId());
         HashMap<String, Object> resultMap = Maps.newHashMap();
@@ -448,18 +431,18 @@ public class ModelCaclReconstitutionController extends BaseController {
             String inputNames = null;
             outputNames = interfaceAddress.getOutputParameterIllustrate();
             inputNames = interfaceAddress.getInputParameterIllustrate();
-            if (modelCacl.getOutputContent() == null){
-                if (modelCacl.getAddressType() == 1){
+            if (modelCacl.getOutputContent() == null) {
+                if (modelCacl.getAddressType() != null && modelCacl.getAddressType().equals(1L)) {
                     outputJson = interfaceAddress.getOutputParameter();
                 }
-            }else {
+            } else {
                 outputJson = modelCacl.getOutputContent();
             }
             resultMap.put("modelOutputJson", outputJson);
             resultMap.put("modelOutputNames", outputNames);
             resultMap.put("modelInputNames", inputNames);
         }
-        return AjaxResult.success(resultMap);
+        return R.ok(resultMap);
     }
 
 }

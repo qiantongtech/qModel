@@ -32,16 +32,16 @@
 -->
 
 <!DOCTYPE mapper
-        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="tech.qiantong.qmodel.module.modelReconstitution.mapper.ModelReconstitutionMapper">
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="tech.qiantong.qmodel.module.model.dal.mapper.modelReconstitution.ModelReconstitutionMapper">
 
-    <resultMap type="ModelReconstitution" id="ModelReconstitutionResult">
-        <result property="id"    column="ID"    />
+    <resultMap type="ModelReconstitutionDO" id="ModelReconstitutionResult">
+        <result property="ID"    column="ID"    />
         <result property="companyId"    column="COMPANY_ID"    />
-        <result property="name"    column="NAME"    />
+        <result property="NAME"    column="NAME"    />
         <result property="classifyId"    column="CLASSIFY_ID"    />
-        <result property="builtin"    column="BUILTIN"    />
+        <result property="BUILTIN"    column="BUILTIN"    />
         <result property="accessMode"    column="ACCESS_MODE"    />
         <result property="requestMethod"    column="REQUEST_METHOD"    />
         <result property="interfaceorfileAddress"    column="INTERFACEORFILE_ADDRESS"    />
@@ -55,66 +55,52 @@
         <result property="updateBy"    column="UPDATE_BY"    />
         <result property="updatorId"    column="UPDATOR_ID"    />
         <result property="updateTime"    column="UPDATE_TIME"    />
-        <result property="remark"    column="REMARK"    />
-        <result property="port"    column="PORT"    />
-        <result property="fileName"    column="FILENAME"    />
+        <result property="REMARK"    column="REMARK"    />
+        <result property="PORT"    column="PORT"    />
+        <result property="FILE_NAME"    column="FILE_NAME"    />
+        <result property="runnableFileAddress"    column="RUNNABLE_FILE_ADDRESS"    />
     </resultMap>
 
     <sql id="selectModelReconstitutionVo">
-        select ID, COMPANY_ID, NAME, CLASSIFY_ID, BUILTIN, ACCESS_MODE, REQUEST_METHOD, INTERFACEORFILE_ADDRESS,PORT,FILENAME, VERSION_ID, WHETHER_PUBLISH, PUBLISH_TIME, DEL_FLAG, CREATE_BY, CREATOR_ID, CREATE_TIME, UPDATE_BY, UPDATOR_ID, UPDATE_TIME, REMARK from MODEL_RECONSTITUTION
+        select ID, COMPANY_ID, NAME, CLASSIFY_ID, BUILTIN, ACCESS_MODE, REQUEST_METHOD, INTERFACEORFILE_ADDRESS, VERSION_ID, WHETHER_PUBLISH, PUBLISH_TIME, DEL_FLAG, CREATE_BY, CREATOR_ID, CREATE_TIME, UPDATE_BY, UPDATOR_ID, UPDATE_TIME, REMARK, PORT, FILE_NAME, RUNNABLE_FILE_ADDRESS from MODEL_RECONSTITUTION
     </sql>
 
-    <select id="selectModelReconstitutionList" parameterType="ModelReconstitution" resultMap="ModelReconstitutionResult">
+    <select id="selectModelReconstitutionList" parameterType="ModelReconstitutionDO" resultMap="ModelReconstitutionResult">
         <include refid="selectModelReconstitutionVo"/>
         <where>
             <if test="companyId != null "> and COMPANY_ID = #{companyId}</if>
-            <if test="name != null  and name != ''"> and NAME like concat('%', #{name}, '%')</if>
-            <if test="classifyId != null "> AND (CLASSIFY_ID = #{classifyId}
-                OR CLASSIFY_ID IN (
-                SELECT ID
-                FROM MODEL_CLASSIFY
-                WHERE position(#{classifyId}::text in ANCESTORS) > 0
-                ))
-            </if>
-            <if test="builtin != null "> and BUILTIN = #{builtin}</if>
+            <if test="NAME != null  and NAME != ''"> and NAME like concat('%', #{NAME}, '%')</if>
+            <if test="classifyId != null "> and CLASSIFY_ID = #{classifyId}</if>
+            <if test="BUILTIN != null "> and BUILTIN = #{BUILTIN}</if>
             <if test="accessMode != null "> and ACCESS_MODE = #{accessMode}</if>
             <if test="requestMethod != null "> and REQUEST_METHOD = #{requestMethod}</if>
             <if test="interfaceorfileAddress != null  and interfaceorfileAddress != ''"> and INTERFACEORFILE_ADDRESS = #{interfaceorfileAddress}</if>
             <if test="versionId != null "> and VERSION_ID = #{versionId}</if>
             <if test="whetherPublish != null "> and WHETHER_PUBLISH = #{whetherPublish}</if>
             <if test="publishTime != null "> and PUBLISH_TIME = #{publishTime}</if>
-            <if test="creatorId != null "> and CREATOR_ID = #{creatorId}</if>
-            <if test="updatorId != null "> and UPDATOR_ID = #{updatorId}</if>
-            <if test="port != null "> and PORT = #{port}</if>
-            <if test="fileName != null "> and FILENAME = #{fileName}</if>
-            <if test="delFlag != null "> and DEL_FLAG = #{delFlag}</if>
-            <if test="params.model != null">
-                and classify_id in
-                <foreach item="model" collection="params.model" open="(" separator="," close=")">
-                    #{model.id}
-                </foreach>
-            </if>
+            <if test="createTime != null "> and CREATE_TIME = #{createTime}</if>
+            <if test="PORT != null  and PORT != ''"> and PORT = #{PORT}</if>
+            <if test="FILE_NAME != null  and FILE_NAME != ''"> and FILE_NAME like concat('%', #{FILE_NAME}, '%')</if>
+            <if test="runnableFileAddress != null  and runnableFileAddress != ''"> and RUNNABLE_FILE_ADDRESS = #{runnableFileAddress}</if>
         </where>
     </select>
 
-    <select id="selectModelReconstitutionById" parameterType="Long" resultMap="ModelReconstitutionResult">
+    <select id="selectModelReconstitutionByID" parameterType="Long" resultMap="ModelReconstitutionResult">
         <include refid="selectModelReconstitutionVo"/>
-        where ID = #{id}
+        where ID = #{ID}
     </select>
 
-    <insert id="insertModelReconstitution" parameterType="ModelReconstitution" useGeneratedKeys="true" keyProperty="id">
+    <insert id="insertModelReconstitution" parameterType="ModelReconstitutionDO">
         insert into MODEL_RECONSTITUTION
         <trim prefix="(" suffix=")" suffixOverrides=",">
-            <if test="id != null">ID,</if>
+            <if test="ID != null">ID,</if>
             <if test="companyId != null">COMPANY_ID,</if>
-            <if test="name != null">NAME,</if>
+            <if test="NAME != null">NAME,</if>
             <if test="classifyId != null">CLASSIFY_ID,</if>
-            <if test="builtin != null">BUILTIN,</if>
+            <if test="BUILTIN != null">BUILTIN,</if>
             <if test="accessMode != null">ACCESS_MODE,</if>
             <if test="requestMethod != null">REQUEST_METHOD,</if>
             <if test="interfaceorfileAddress != null">INTERFACEORFILE_ADDRESS,</if>
-            <if test="port != null">PORT,</if>
-            <if test="fileName != null">FILENAME,</if>
             <if test="versionId != null">VERSION_ID,</if>
             <if test="whetherPublish != null">WHETHER_PUBLISH,</if>
             <if test="publishTime != null">PUBLISH_TIME,</if>
@@ -125,19 +111,20 @@
             <if test="updateBy != null">UPDATE_BY,</if>
             <if test="updatorId != null">UPDATOR_ID,</if>
             <if test="updateTime != null">UPDATE_TIME,</if>
-            <if test="remark != null">REMARK,</if>
-        </trim>
+            <if test="REMARK != null">REMARK,</if>
+            <if test="PORT != null">PORT,</if>
+            <if test="FILE_NAME != null">FILE_NAME,</if>
+            <if test="runnableFileAddress != null">RUNNABLE_FILE_ADDRESS,</if>
+         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
-            <if test="id != null">#{id},</if>
+            <if test="ID != null">#{ID},</if>
             <if test="companyId != null">#{companyId},</if>
-            <if test="name != null">#{name},</if>
+            <if test="NAME != null">#{NAME},</if>
             <if test="classifyId != null">#{classifyId},</if>
-            <if test="builtin != null">#{builtin},</if>
+            <if test="BUILTIN != null">#{BUILTIN},</if>
             <if test="accessMode != null">#{accessMode},</if>
             <if test="requestMethod != null">#{requestMethod},</if>
             <if test="interfaceorfileAddress != null">#{interfaceorfileAddress},</if>
-            <if test="port != null">#{port},</if>
-            <if test="fileName != null">#{fileName},</if>
             <if test="versionId != null">#{versionId},</if>
             <if test="whetherPublish != null">#{whetherPublish},</if>
             <if test="publishTime != null">#{publishTime},</if>
@@ -148,22 +135,23 @@
             <if test="updateBy != null">#{updateBy},</if>
             <if test="updatorId != null">#{updatorId},</if>
             <if test="updateTime != null">#{updateTime},</if>
-            <if test="remark != null">#{remark},</if>
-        </trim>
+            <if test="REMARK != null">#{REMARK},</if>
+            <if test="PORT != null">#{PORT},</if>
+            <if test="FILE_NAME != null">#{FILE_NAME},</if>
+            <if test="runnableFileAddress != null">#{runnableFileAddress},</if>
+         </trim>
     </insert>
 
-    <update id="updateModelReconstitution" parameterType="ModelReconstitution">
+    <update id="updateModelReconstitution" parameterType="ModelReconstitutionDO">
         update MODEL_RECONSTITUTION
         <trim prefix="SET" suffixOverrides=",">
             <if test="companyId != null">COMPANY_ID = #{companyId},</if>
-            <if test="name != null">NAME = #{name},</if>
+            <if test="NAME != null">NAME = #{NAME},</if>
             <if test="classifyId != null">CLASSIFY_ID = #{classifyId},</if>
-            <if test="builtin != null">BUILTIN = #{builtin},</if>
+            <if test="BUILTIN != null">BUILTIN = #{BUILTIN},</if>
             <if test="accessMode != null">ACCESS_MODE = #{accessMode},</if>
             <if test="requestMethod != null">REQUEST_METHOD = #{requestMethod},</if>
             <if test="interfaceorfileAddress != null">INTERFACEORFILE_ADDRESS = #{interfaceorfileAddress},</if>
-            <if test="port != null">PORT = #{port},</if>
-            <if test="fileName != null">FILENAME = #{fileName},</if>
             <if test="versionId != null">VERSION_ID = #{versionId},</if>
             <if test="whetherPublish != null">WHETHER_PUBLISH = #{whetherPublish},</if>
             <if test="publishTime != null">PUBLISH_TIME = #{publishTime},</if>
@@ -174,20 +162,22 @@
             <if test="updateBy != null">UPDATE_BY = #{updateBy},</if>
             <if test="updatorId != null">UPDATOR_ID = #{updatorId},</if>
             <if test="updateTime != null">UPDATE_TIME = #{updateTime},</if>
-            <if test="remark != null">REMARK = #{remark},</if>
-            <if test="params.clearVersionId != null">VERSION_ID = null</if>
+            <if test="REMARK != null">REMARK = #{REMARK},</if>
+            <if test="PORT != null">PORT = #{PORT},</if>
+            <if test="FILE_NAME != null">FILE_NAME = #{FILE_NAME},</if>
+            <if test="runnableFileAddress != null">RUNNABLE_FILE_ADDRESS = #{runnableFileAddress},</if>
         </trim>
-        where ID = #{id}
+        where ID = #{ID}
     </update>
 
-    <update id="deleteModelReconstitutionById" parameterType="Long">
-        update MODEL_RECONSTITUTION set del_flag = 1 where ID = #{id}
-    </update>
+    <delete id="deleteModelReconstitutionByID" parameterType="Long">
+        delete from MODEL_RECONSTITUTION where ID = #{ID}
+    </delete>
 
-    <update id="deleteModelReconstitutionByIds" parameterType="String">
-        update MODEL_RECONSTITUTION set del_flag = 1 where ID in
-        <foreach item="id" collection="array" open="(" separator="," close=")">
-            #{id}
+    <delete id="deleteModelReconstitutionByIDs" parameterType="String">
+        delete from MODEL_RECONSTITUTION where ID in
+        <foreach item="ID" collection="array" open="(" separator="," close=")">
+            #{ID}
         </foreach>
-    </update>
+    </delete>
 </mapper>

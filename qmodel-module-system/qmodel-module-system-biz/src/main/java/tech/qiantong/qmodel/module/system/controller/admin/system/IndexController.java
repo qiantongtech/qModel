@@ -38,8 +38,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import tech.qiantong.qmodel.common.core.domain.AjaxResult;
+import tech.qiantong.qmodel.module.model.service.cacl.IModelCaclService;
 import tech.qiantong.qmodel.module.model.service.classify.IModelClassifyService;
 import tech.qiantong.qmodel.module.model.service.input.IModelInputService;
+import tech.qiantong.qmodel.module.model.service.modelReconstitution.IModelReconstitutionService;
 import tech.qiantong.qmodel.module.model.service.output.IModelOutputService;
 import tech.qiantong.qmodel.module.modelReconstitution.service.*;
 
@@ -70,7 +72,7 @@ public class IndexController {
     private IModelOutputService modelOutputReconstitutionService;
 
     @Autowired
-    private IModelCaclReconstitutionService modelCaclService;
+    private IModelCaclService modelCaclService;
 
 
 
@@ -84,7 +86,7 @@ public class IndexController {
         int modelClassifyWeekCount = modelClassifyService.countLastWeek();
 
         //统计模型数量信息
-        int modelCount = modelReconstitutionService.count();
+        int modelCount = modelReconstitutionService.countModelReconstitution();
         int modelWeekCount = modelReconstitutionService.countLastWeek();
 
         //统计模型输入数量信息
@@ -96,7 +98,7 @@ public class IndexController {
         int modelOutputWeekCount = modelOutputReconstitutionService.countLastWeek();
 
         //统计模型计算数量信息
-        int modelCalcCount = modelCaclService.count();
+        int modelCalcCount = modelCaclService.countModelCacl();
         int modelCalcWeekCount = modelCaclService.countLastWeek();
 
         //计算周同比

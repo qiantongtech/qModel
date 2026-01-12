@@ -81,7 +81,7 @@ public class ModelPageReqVO extends PageParam {
     private String interfaceAddress;
 
     @Schema(description = "是否内置 0：否，1：是", example = "")
-    private Long builtIn;
+    private Long builtin;
 
     @Schema(description = "模型格式", example = "")
     private Long format;

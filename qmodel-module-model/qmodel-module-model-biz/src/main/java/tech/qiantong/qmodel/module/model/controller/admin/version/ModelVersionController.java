@@ -66,11 +66,12 @@ import tech.qiantong.qmodel.module.model.controller.admin.version.vo.ModelVersio
 import tech.qiantong.qmodel.module.model.convert.version.ModelVersionConvert;
 import tech.qiantong.qmodel.module.model.dal.dataobject.version.ModelVersionDO;
 import tech.qiantong.qmodel.module.model.service.history.IModelHistoryService;
+import tech.qiantong.qmodel.module.model.service.modelReconstitution.IModelReconstitutionService;
 import tech.qiantong.qmodel.module.model.service.operate.IModelOperateService;
 import tech.qiantong.qmodel.module.model.service.version.IModelVersionService;
 import tech.qiantong.qmodel.module.modelReconstitution.domain.ModelReconstitution;
 import tech.qiantong.qmodel.module.modelReconstitution.domain.ModelVersionReconstitution;
-import tech.qiantong.qmodel.module.modelReconstitution.service.IModelReconstitutionService;
+
 
 /**
  * 版本管理Controller
