@@ -32,11 +32,14 @@
 
 package tech.qiantong.qmodel.module.model.domain;
 
-import com.baomidou.mybatisplus.annotation.*;
-import lombok.*;
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableName;
+import lombok.Data;
 
-import java.math.*;
-import java.sql.*;
+import java.math.BigDecimal;
+import java.sql.Timestamp;
 
 /**
  * moxing

@@ -32,9 +32,9 @@
 
 package tech.qiantong.qmodel.module.modelReconstitution.mapper;
 
-import tech.qiantong.qmodel.module.modelReconstitution.domain.*;
+import tech.qiantong.qmodel.module.modelReconstitution.domain.ModelReconstitution;
 
-import java.util.*;
+import java.util.List;
 
 /**
  * 模型库的重构表Mapper接口

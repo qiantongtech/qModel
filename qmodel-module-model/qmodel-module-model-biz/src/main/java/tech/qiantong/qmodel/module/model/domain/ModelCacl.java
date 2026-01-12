@@ -32,11 +32,12 @@
 
 package tech.qiantong.qmodel.module.model.domain;
 
-import org.apache.commons.lang3.builder.*;
-import tech.qiantong.qmodel.common.annotation.*;
-import tech.qiantong.qmodel.common.core.domain.*;
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
+import tech.qiantong.qmodel.common.annotation.Excel;
+import tech.qiantong.qmodel.common.core.domain.BaseEntity;
 
-import java.util.*;
+import java.util.Date;
 
 /**
  * 模型计算管理 对象 model_cacl

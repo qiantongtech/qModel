@@ -32,42 +32,38 @@
 
 package tech.qiantong.qmodel.module.model.service.model.impl;
 
-import java.util.Collection;
-import java.util.List;
-import java.util.ArrayList;
-import java.util.Map;
-import java.util.stream.Collectors;
-
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.json.JSONObject;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.extern.slf4j.Slf4j;
-
-import javax.annotation.Resource;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import tech.qiantong.qmodel.common.core.page.PageResult;
-import tech.qiantong.qmodel.common.utils.object.BeanUtils;
-import tech.qiantong.qmodel.common.utils.StringUtils;
-import tech.qiantong.qmodel.common.exception.ServiceException;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import tech.qiantong.qmodel.common.core.page.PageResult;
+import tech.qiantong.qmodel.common.exception.ServiceException;
+import tech.qiantong.qmodel.common.utils.StringUtils;
+import tech.qiantong.qmodel.common.utils.object.BeanUtils;
 import tech.qiantong.qmodel.module.model.controller.admin.history.vo.ModelHistorySaveReqVO;
 import tech.qiantong.qmodel.module.model.controller.admin.model.vo.ModelPageReqVO;
 import tech.qiantong.qmodel.module.model.controller.admin.model.vo.ModelRespVO;
 import tech.qiantong.qmodel.module.model.controller.admin.model.vo.ModelSaveReqVO;
+import tech.qiantong.qmodel.module.model.controller.admin.operate.vo.ModelOperateSaveReqVO;
+import tech.qiantong.qmodel.module.model.controller.admin.version.vo.ModelVersionSaveReqVO;
 import tech.qiantong.qmodel.module.model.dal.dataobject.model.ModelDO;
 import tech.qiantong.qmodel.module.model.dal.mapper.model.ModelMapper;
-import tech.qiantong.qmodel.module.model.domain.ModelHistory;
-import tech.qiantong.qmodel.module.model.domain.ModelOperate;
 import tech.qiantong.qmodel.module.model.domain.ModelVersion;
-
-import tech.qiantong.qmodel.module.model.service.IModelOperateService;
-import tech.qiantong.qmodel.module.model.service.IModelVersionService;
 import tech.qiantong.qmodel.module.model.service.classify.IModelClassifyService;
 import tech.qiantong.qmodel.module.model.service.history.IModelHistoryService;
 import tech.qiantong.qmodel.module.model.service.model.IModelService;
+import tech.qiantong.qmodel.module.model.service.operate.IModelOperateService;
+import tech.qiantong.qmodel.module.model.service.version.IModelVersionService;
+
+import javax.annotation.Resource;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * 模型管理Service业务层处理
@@ -106,7 +102,7 @@ public class ModelServiceImpl extends ServiceImpl<ModelMapper, ModelDO> implemen
     }
 
     @Override
-    public Long createModel(ModelSaveReqVO createReqVO, ModelVersion modelVersion) {
+    public Long createModel(ModelSaveReqVO createReqVO, ModelVersionSaveReqVO modelVersion) {
         //设置初始版本
         createReqVO.setVersion("1");
         createReqVO.setUploadStatus(1);
@@ -128,7 +124,7 @@ public class ModelServiceImpl extends ServiceImpl<ModelMapper, ModelDO> implemen
         //版本设置
         modelVersion.setVersion(createReqVO.getVersion());
         //数据库插入数据
-        modelVersionService.insertModelVersion(modelVersion);
+        modelVersionService.createModelVersion(modelVersion);
         // 添加操作历史
         if (createReqVO !=null) {
             ModelHistorySaveReqVO modelHistory = new ModelHistorySaveReqVO();
@@ -138,18 +134,19 @@ public class ModelServiceImpl extends ServiceImpl<ModelMapper, ModelDO> implemen
             modelHistory.setModelVersion(createReqVO.getVersion());
             modelHistory.setStartTime(createReqVO.getCreateTime());
             modelHistoryService.createModelHistory(modelHistory);
-            ModelOperate operate = new ModelOperate();
+
+            ModelOperateSaveReqVO operate = new ModelOperateSaveReqVO();
             operate.setCompanyId(createReqVO.getCompanyId());
             operate.setModuleName(createReqVO.getName());
             operate.setContent("新增了"+createReqVO.getName());
-            operate.setType(0);
+            operate.setType(0L);
             JSONObject object = new JSONObject();
             object.set("模型名称", createReqVO.getName());
             object.set("模型格式", createReqVO.getFormat() == 0 ? "文件格式" : "接口格式");
             object.set("版本发布说明", modelVersion.getDescription());
             object.set("模型介绍", createReqVO.getRemark() == null ? " -- " : createReqVO.getRemark());
             operate.setRespContent(object.toString());
-            modelOperateService.insertModelOperate(operate);
+            modelOperateService.createModelOperate(operate);
         }
         return dictType.getId();
     }
@@ -166,11 +163,11 @@ public class ModelServiceImpl extends ServiceImpl<ModelMapper, ModelDO> implemen
             modelHistory.setModelVersion(updateReqVO.getVersion());
             modelHistoryService.createModelHistory(modelHistory);
 
-            ModelOperate operate = new ModelOperate();
+            ModelOperateSaveReqVO operate = new ModelOperateSaveReqVO();
             operate.setCompanyId(updateReqVO.getCompanyId());
             operate.setModuleName(updateReqVO.getName());
             operate.setContent("新增了"+updateReqVO.getName());
-            operate.setType(1);
+            operate.setType(1L);
             {
                 JSONObject object = new JSONObject();
                 object.set("模型名称", updateReqVO.getName());
@@ -183,14 +180,14 @@ public class ModelServiceImpl extends ServiceImpl<ModelMapper, ModelDO> implemen
                 object.set("模型介绍", updateReqVO.getRemark() == null ? " -- " : originModel.getRemark());
                 operate.setReqContent(object.toString());
             }
-            modelOperateService.insertModelOperate(operate);
+            modelOperateService.createModelOperate(operate);
         }
         ModelDO updateObj = BeanUtils.toBean(updateReqVO, ModelDO.class);
         return modelMapper.updateById(updateObj);
     }
 
     @Override
-    public int updateModel(ModelSaveReqVO model, ModelVersion modelVersion) {
+    public int updateModel(ModelSaveReqVO model, ModelVersionSaveReqVO modelVersion) {
         //设置模型id
         modelVersion.setModelId(model.getId());
         //设置模型名称
@@ -210,7 +207,7 @@ public class ModelServiceImpl extends ServiceImpl<ModelMapper, ModelDO> implemen
         int version = Integer.parseInt(model.getVersion()) + 1;
         modelVersion.setVersion(String.valueOf(version));
         //数据库插入数据
-        modelVersionService.insertModelVersion(modelVersion);
+        modelVersionService.createModelVersion(modelVersion);
         model.setVersion(String.valueOf(version));
         model.setUploadStatus(0);
         //接口格式和文件格式转换，清楚另一种的数据

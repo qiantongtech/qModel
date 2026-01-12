@@ -32,12 +32,13 @@
 
 package tech.qiantong.qmodel.module.model.domain;
 
-import com.fasterxml.jackson.annotation.*;
-import org.apache.commons.lang3.builder.*;
-import tech.qiantong.qmodel.common.annotation.*;
-import tech.qiantong.qmodel.common.core.domain.*;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
+import tech.qiantong.qmodel.common.annotation.Excel;
+import tech.qiantong.qmodel.common.core.domain.BaseEntity;
 
-import java.util.*;
+import java.util.Date;
 
 /**
  * 操作历史对象 model_history

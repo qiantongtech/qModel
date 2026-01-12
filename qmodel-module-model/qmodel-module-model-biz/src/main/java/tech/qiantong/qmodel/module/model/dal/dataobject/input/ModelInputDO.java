@@ -32,12 +32,10 @@
 
 package tech.qiantong.qmodel.module.model.dal.dataobject.input;
 
-import lombok.*;
-import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableLogic;
 import com.baomidou.mybatisplus.annotation.TableName;
+import lombok.*;
 import tech.qiantong.qmodel.common.core.domain.BaseEntity;
 
 /**

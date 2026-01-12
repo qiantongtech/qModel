@@ -52,9 +52,12 @@ import tech.qiantong.qmodel.common.utils.poi.*;
 import tech.qiantong.qmodel.common.utils.uuid.*;
 import tech.qiantong.qmodel.common.utils.uuid.UUID;
 import tech.qiantong.qmodel.module.model.controller.admin.history.vo.ModelHistorySaveReqVO;
+import tech.qiantong.qmodel.module.model.controller.admin.version.vo.ModelVersionSaveReqVO;
 import tech.qiantong.qmodel.module.model.dal.dataobject.classify.ModelClassifyDO;
+import tech.qiantong.qmodel.module.model.dal.dataobject.version.ModelVersionDO;
 import tech.qiantong.qmodel.module.model.service.classify.IModelClassifyService;
 import tech.qiantong.qmodel.module.model.service.history.IModelHistoryService;
+import tech.qiantong.qmodel.module.model.service.version.IModelVersionService;
 import tech.qiantong.qmodel.module.modelReconstitution.domain.*;
 import tech.qiantong.qmodel.module.modelReconstitution.service.*;
 
@@ -79,7 +82,7 @@ public class ModelReconstitutionController extends BaseController {
     private IModelClassifyService modelClassifyService;
 
     @Autowired
-    private IModelVersionReconstitutionService modelVersionReconstitutionService;
+    private IModelVersionService modelVersionService;
 
     @Autowired
     private IModelHistoryService modelHistoryService;
@@ -93,7 +96,7 @@ public class ModelReconstitutionController extends BaseController {
         modelReconstitution.setCompanyId(null);
         startPage();
         List<ModelReconstitution> list = modelReconstitutionService.selectModelReconstitutionList(modelReconstitution);
-        ModelVersionReconstitution modelVersionReconstitution = new ModelVersionReconstitution();
+        ModelVersionDO modelVersionReconstitution = new ModelVersionDO();
         List<Long> ids = new ArrayList<>();
         for (ModelReconstitution reconstitution : list) {
             ids.add(reconstitution.getVersionId());
@@ -101,12 +104,12 @@ public class ModelReconstitutionController extends BaseController {
         Map<String,Object> params = new HashMap<>();
         params.put("ids",ids);
         modelVersionReconstitution.setParams(params);
-        List<ModelVersionReconstitution> modelVersionReconstitutions = modelVersionReconstitutionService.selectModelVersionList(modelVersionReconstitution);
+        List<ModelVersionDO> modelVersions = modelVersionService.selectModelVersionList(modelVersionReconstitution);
         for (ModelReconstitution reconstitution : list) {
             if (reconstitution.getVersionId() == null) {
                 continue;
             }
-            for (ModelVersionReconstitution versionReconstitution : modelVersionReconstitutions) {
+            for (ModelVersionDO versionReconstitution : modelVersions) {
                 if (reconstitution.getVersionId().equals(versionReconstitution.getId())){
                     reconstitution.setVersion(versionReconstitution.getVersion());
                     reconstitution.setDescription(versionReconstitution.getDescription());
@@ -137,7 +140,7 @@ public class ModelReconstitutionController extends BaseController {
     public AjaxResult getInfo(@PathVariable("id" ) Long id) {
         ModelReconstitution modelReconstitution = modelReconstitutionService.selectModelReconstitutionById(id);
         if (modelReconstitution.getVersionId() != null) {
-            ModelVersionReconstitution version = modelVersionReconstitutionService.selectModelVersionById(modelReconstitution.getVersionId());
+            ModelVersionDO version = modelVersionService.getModelVersionById(modelReconstitution.getVersionId());
             modelReconstitution.setVersion(version.getVersion());
             modelReconstitution.setDescription(version.getDescription());
             modelReconstitution.setRunnableFileAddress(version.getRunnableFileAddress());
@@ -159,7 +162,7 @@ public class ModelReconstitutionController extends BaseController {
         model.setCreatorId(getUserId());
         model.setCreateBy(getNickName());
 
-        ModelVersionReconstitution version = new ModelVersionReconstitution();
+        ModelVersionSaveReqVO version = new ModelVersionSaveReqVO();
         version.setCompanyId(null);
         version.setCreatorId(getUserId());
         version.setCreateBy(getNickName());
@@ -170,12 +173,12 @@ public class ModelReconstitutionController extends BaseController {
         version.setFileAddress(model.getInterfaceorfileAddress());
         version.setInterfaceAddress(model.getInterfaceorfileAddress());
         version.setRunnableFileAddress(model.getRunnableFileAddress());
-        modelVersionReconstitutionService.insertModelVersion(version);
+        modelVersionService.createModelVersion(version);
 
         model.setVersionId(version.getId());
         int insert = modelReconstitutionService.insertModelReconstitution(model);
         version.setModelId(model.getId());
-        modelVersionReconstitutionService.updateModelVersion(version);
+        modelVersionService.updateModelVersion(version);
         // 添加操作历史
         ModelHistorySaveReqVO modelHistory = new ModelHistorySaveReqVO();
         modelHistory.setCompanyId(null);

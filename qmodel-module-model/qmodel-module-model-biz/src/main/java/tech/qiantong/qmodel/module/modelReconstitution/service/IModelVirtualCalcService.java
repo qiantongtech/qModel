@@ -32,7 +32,7 @@
 
 package tech.qiantong.qmodel.module.modelReconstitution.service;
 
-import com.alibaba.fastjson.*;
+import com.alibaba.fastjson.JSONObject;
 
 /**
  * 模型分类Service接口

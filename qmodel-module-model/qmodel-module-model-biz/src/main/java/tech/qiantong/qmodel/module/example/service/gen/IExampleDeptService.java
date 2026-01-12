@@ -32,14 +32,14 @@
 
 package tech.qiantong.qmodel.module.example.service.gen;
 
-import java.util.List;
-import java.util.Map;
-
 import com.baomidou.mybatisplus.extension.service.IService;
 import tech.qiantong.qmodel.common.core.page.PageResult;
-import tech.qiantong.qmodel.module.example.controller.admin.gen.vo.ExampleDeptSaveReqVO;
 import tech.qiantong.qmodel.module.example.controller.admin.gen.vo.ExampleDeptPageReqVO;
+import tech.qiantong.qmodel.module.example.controller.admin.gen.vo.ExampleDeptSaveReqVO;
 import tech.qiantong.qmodel.module.example.dal.dataobject.gen.ExampleDeptDO;
+
+import java.util.List;
+import java.util.Map;
 /**
  * 示例部门Service接口
  *

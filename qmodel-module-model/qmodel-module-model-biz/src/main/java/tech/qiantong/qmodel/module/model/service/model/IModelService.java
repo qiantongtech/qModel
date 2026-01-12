@@ -32,16 +32,18 @@
 
 package tech.qiantong.qmodel.module.model.service.model;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Collection;
 import com.baomidou.mybatisplus.extension.service.IService;
 import tech.qiantong.qmodel.common.core.page.PageResult;
-import tech.qiantong.qmodel.module.model.controller.admin.model.vo.ModelSaveReqVO;
 import tech.qiantong.qmodel.module.model.controller.admin.model.vo.ModelPageReqVO;
 import tech.qiantong.qmodel.module.model.controller.admin.model.vo.ModelRespVO;
+import tech.qiantong.qmodel.module.model.controller.admin.model.vo.ModelSaveReqVO;
+import tech.qiantong.qmodel.module.model.controller.admin.version.vo.ModelVersionSaveReqVO;
 import tech.qiantong.qmodel.module.model.dal.dataobject.model.ModelDO;
 import tech.qiantong.qmodel.module.model.domain.ModelVersion;
+
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 模型管理Service接口
@@ -65,7 +67,7 @@ public interface IModelService extends IService<ModelDO> {
      * @param createReqVO 模型管理信息
      * @return 模型管理编号
      */
-    Long createModel(ModelSaveReqVO createReqVO, ModelVersion modelVersion);
+    Long createModel(ModelSaveReqVO createReqVO, ModelVersionSaveReqVO modelVersion);
 
     /**
      * 更新模型管理
@@ -74,7 +76,7 @@ public interface IModelService extends IService<ModelDO> {
      */
     int updateModel(ModelSaveReqVO updateReqVO);
 
-    int updateModel(ModelSaveReqVO updateReqVO, ModelVersion modelVersion);
+    int updateModel(ModelSaveReqVO updateReqVO, ModelVersionSaveReqVO modelVersion);
 
     /**
      * 删除模型管理

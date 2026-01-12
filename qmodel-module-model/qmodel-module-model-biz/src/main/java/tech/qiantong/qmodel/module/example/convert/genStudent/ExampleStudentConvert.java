@@ -32,13 +32,14 @@
 
 package tech.qiantong.qmodel.module.example.convert.genStudent;
 
-import java.util.List;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 import tech.qiantong.qmodel.module.example.controller.admin.genStudent.vo.ExampleStudentPageReqVO;
 import tech.qiantong.qmodel.module.example.controller.admin.genStudent.vo.ExampleStudentRespVO;
 import tech.qiantong.qmodel.module.example.controller.admin.genStudent.vo.ExampleStudentSaveReqVO;
 import tech.qiantong.qmodel.module.example.dal.dataobject.genStudent.ExampleStudentDO;
+
+import java.util.List;
 
 /**
  * 学生 Convert

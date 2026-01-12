@@ -46,19 +46,19 @@ public class ModelInputRespDTO {
     private static final long serialVersionUID = 1L;
 
     /** ID */
-    private Long ID;
+    private Long id;
 
     /** 企业Id */
     private Long companyId;
 
     /** 参数名称 */
-    private String NAME;
+    private String name;
 
     /** 英文名称 */
     private String engName;
 
     /** 参数类型 0:单值，1：多列数值，2：文件 */
-    private Long TYPE;
+    private Long type;
 
     /** 所属模型id */
     private Long modelId;
@@ -70,10 +70,10 @@ public class ModelInputRespDTO {
     private String modelVersion;
 
     /** 参数说明(描述) */
-    private String DESCRIPTION;
+    private String description;
 
     /** 参数示例（文件上传） */
-    private String EXAMPLE;
+    private String example;
 
     /** 参数文件 */
     private String paramFile;

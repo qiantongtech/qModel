@@ -34,11 +34,10 @@ package tech.qiantong.qmodel.module.example.controller.admin.gen.vo;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
+import tech.qiantong.qmodel.common.core.domain.BaseEntity;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-
-import tech.qiantong.qmodel.common.core.domain.BaseEntity;
 
 /**
  * 示例部门 创建/修改 Request VO example_dept

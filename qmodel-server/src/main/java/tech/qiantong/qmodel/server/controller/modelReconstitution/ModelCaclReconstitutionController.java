@@ -51,8 +51,10 @@ import tech.qiantong.qmodel.common.utils.*;
 import tech.qiantong.qmodel.common.utils.poi.*;
 import tech.qiantong.qmodel.module.model.controller.admin.history.vo.ModelHistorySaveReqVO;
 import tech.qiantong.qmodel.module.model.dal.dataobject.input.ModelInputDO;
+import tech.qiantong.qmodel.module.model.dal.dataobject.interfaceAddress.ModelInterfaceAddressDO;
 import tech.qiantong.qmodel.module.model.service.history.IModelHistoryService;
 import tech.qiantong.qmodel.module.model.service.input.IModelInputService;
+import tech.qiantong.qmodel.module.model.service.interfaceAddress.IModelInterfaceAddressService;
 import tech.qiantong.qmodel.module.model.service.output.IModelOutputService;
 import tech.qiantong.qmodel.module.modelReconstitution.domain.*;
 import tech.qiantong.qmodel.module.modelReconstitution.service.*;
@@ -123,7 +125,7 @@ public class ModelCaclReconstitutionController extends BaseController {
     public AjaxResult getInfo(@PathVariable("id") Long id) {
         ModelCaclReconstitution modelCaclReconstitution = modelCaclService.selectModelCaclById(id);
         if (modelCaclReconstitution.getAddressType() == 1){
-            ModelInterfaceAddress interfaceAddress = modelInterfaceAddressService.selectModelInterfaceAddressById(modelCaclReconstitution.getAddressId());
+            ModelInterfaceAddressDO interfaceAddress = modelInterfaceAddressService.getModelInterfaceAddressById(modelCaclReconstitution.getAddressId());
             modelCaclReconstitution.setAddress(interfaceAddress.getInterfaceAddress());
             modelCaclReconstitution.setRequestMethod(interfaceAddress.getRequestMethod());
         }
@@ -194,7 +196,7 @@ public class ModelCaclReconstitutionController extends BaseController {
         {
             JSONObject jsonObject = new JSONObject();
             String result = "";
-            ModelInterfaceAddress interfaceAddress = modelInterfaceAddressService.selectModelInterfaceAddressById(modelCacl.getAddressId());
+            ModelInterfaceAddressDO interfaceAddress = modelInterfaceAddressService.getModelInterfaceAddressById(modelCacl.getAddressId());
             if (modelCacl.getInputContent() == null){
                 jsonObject = JSONUtil.parseObj(interfaceAddress.getInputParameter());
             }else {
@@ -302,10 +304,9 @@ public class ModelCaclReconstitutionController extends BaseController {
         String inputJson = "{}";
         String inputNames = null;
         ModelCaclReconstitution modelCacl = modelCaclService.selectModelCaclById(modelCaclId);
-        ModelInterfaceAddress interfaceAddress = modelInterfaceAddressService.selectModelInterfaceAddressById(modelCacl.getAddressId());
+        ModelInterfaceAddressDO interfaceAddress = modelInterfaceAddressService.getModelInterfaceAddressById(modelCacl.getAddressId());
         ModelReconstitution modelReconstitution = modelReconstitutionService.selectModelReconstitutionById(modelCacl.getModelId());
-        ModelInputReconstitution modelInputReconstitution = new ModelInputReconstitution();
-        modelInputReconstitution.setModelId(modelReconstitution.getId());
+
         HashMap<String, Object> resultMap = Maps.newHashMap();
         if (modelReconstitution.getAccessMode() == 0) {
             if (modelReconstitution.getId().equals(12L)) {
@@ -431,7 +432,7 @@ public class ModelCaclReconstitutionController extends BaseController {
     @GetMapping("/findModelOutputById")
     public AjaxResult findModelOutputById(@RequestParam(value = "modelCaclId") Long modelCaclId) {
         ModelCaclReconstitution modelCacl = modelCaclService.selectModelCaclById(modelCaclId);
-        ModelInterfaceAddress interfaceAddress = modelInterfaceAddressService.selectModelInterfaceAddressById(modelCacl.getAddressId());
+        ModelInterfaceAddressDO interfaceAddress = modelInterfaceAddressService.getModelInterfaceAddressById(modelCacl.getAddressId());
         ModelReconstitution modelReconstitution = modelReconstitutionService.selectModelReconstitutionById(modelCacl.getModelId());
         HashMap<String, Object> resultMap = Maps.newHashMap();
         if (modelReconstitution.getAccessMode() == 0) {

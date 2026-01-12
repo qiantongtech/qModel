@@ -50,6 +50,7 @@ import tech.qiantong.qmodel.common.utils.poi.ExcelUtil;
 import tech.qiantong.qmodel.module.model.controller.admin.model.vo.ModelPageReqVO;
 import tech.qiantong.qmodel.module.model.controller.admin.model.vo.ModelRespVO;
 import tech.qiantong.qmodel.module.model.controller.admin.model.vo.ModelSaveReqVO;
+import tech.qiantong.qmodel.module.model.controller.admin.version.vo.ModelVersionSaveReqVO;
 import tech.qiantong.qmodel.module.model.convert.model.ModelConvert;
 import tech.qiantong.qmodel.module.model.dal.dataobject.model.ModelDO;
 import tech.qiantong.qmodel.module.model.domain.ModelVersion;
@@ -110,7 +111,7 @@ public class ModelController extends BaseController {
     @PreAuthorize("@ss.hasPermi('model:model::add')")
     @Log(title = "模型管理", businessType = BusinessType.INSERT)
     @PostMapping
-    public CommonResult<Long> add(@Valid @RequestBody ModelSaveReqVO model, @RequestBody ModelVersion modelVersion) {
+    public CommonResult<Long> add(@Valid @RequestBody ModelSaveReqVO model, @RequestBody ModelVersionSaveReqVO modelVersion) {
         return CommonResult.toAjax(modelService.createModel(model,modelVersion));
     }
 
@@ -146,7 +147,7 @@ public class ModelController extends BaseController {
     @PreAuthorize("@ss.hasPermi('model:model:edit')")
     @Log(title = "模型管理 ", businessType = BusinessType.UPDATE)
     @PutMapping("/update")
-    public CommonResult<Integer> update(@RequestBody ModelSaveReqVO model, @RequestBody ModelVersion modelVersion) {
+    public CommonResult<Integer> update(@RequestBody ModelSaveReqVO model, @RequestBody ModelVersionSaveReqVO modelVersion) {
         return CommonResult.toAjax(modelService.updateModel(model,modelVersion));
     }
 

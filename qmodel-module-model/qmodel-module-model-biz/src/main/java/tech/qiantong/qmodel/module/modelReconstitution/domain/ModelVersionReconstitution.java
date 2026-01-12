@@ -32,10 +32,12 @@
 
 package tech.qiantong.qmodel.module.modelReconstitution.domain;
 
-import lombok.*;
-import org.apache.commons.lang3.builder.*;
-import tech.qiantong.qmodel.common.annotation.*;
-import tech.qiantong.qmodel.common.core.domain.*;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
+import tech.qiantong.qmodel.common.annotation.Excel;
+import tech.qiantong.qmodel.common.core.domain.BaseEntity;
 
 /**
  * 版本管理对象 model_version

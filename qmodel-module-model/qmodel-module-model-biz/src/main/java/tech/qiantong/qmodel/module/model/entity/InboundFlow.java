@@ -32,10 +32,10 @@
 
 package tech.qiantong.qmodel.module.model.entity;
 
-import lombok.*;
+import lombok.Data;
 
-import java.math.*;
-import java.util.*;
+import java.math.BigDecimal;
+import java.util.Date;
 
 /**
  * 入库流量计算实体

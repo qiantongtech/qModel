@@ -35,7 +35,7 @@ import request from '@/utils/request'
 // 查询接口地址列表
 export function listInterfaceAddress(query) {
   return request({
-    url: '/modelReconstitution/interfaceAddress/list',
+    url: '/model/interfaceAddress/list',
     method: 'get',
     params: query
   })
@@ -44,7 +44,7 @@ export function listInterfaceAddress(query) {
 // 查询接口地址详细
 export function getInterfaceAddress(id) {
   return request({
-    url: '/modelReconstitution/interfaceAddress/' + id,
+    url: '/model/interfaceAddress/' + id,
     method: 'get'
   })
 }
@@ -52,7 +52,7 @@ export function getInterfaceAddress(id) {
 // 新增接口地址
 export function addInterfaceAddress(data) {
   return request({
-    url: '/modelReconstitution/interfaceAddress',
+    url: '/model/interfaceAddress',
     method: 'post',
     data: data
   })
@@ -61,7 +61,7 @@ export function addInterfaceAddress(data) {
 // 修改接口地址
 export function updateInterfaceAddress(data) {
   return request({
-    url: '/modelReconstitution/interfaceAddress',
+    url: '/model/interfaceAddress',
     method: 'put',
     data: data
   })
@@ -70,7 +70,7 @@ export function updateInterfaceAddress(data) {
 // 删除接口地址
 export function delInterfaceAddress(id) {
   return request({
-    url: '/modelReconstitution/interfaceAddress/' + id,
+    url: '/model/interfaceAddress/' + id,
     method: 'delete'
   })
 }

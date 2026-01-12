@@ -32,15 +32,11 @@
 
 package tech.qiantong.qmodel.module.example.dal.dataobject.genStudent;
 
-import java.util.Date;
-
+import com.baomidou.mybatisplus.annotation.*;
 import lombok.*;
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableLogic;
-import com.baomidou.mybatisplus.annotation.TableName;
 import tech.qiantong.qmodel.common.core.domain.BaseEntity;
+
+import java.util.Date;
 
 /**
  * 学生 DO 对象 example_student

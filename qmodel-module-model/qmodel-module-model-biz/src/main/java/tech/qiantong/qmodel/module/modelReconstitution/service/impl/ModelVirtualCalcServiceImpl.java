@@ -32,19 +32,20 @@
 
 package tech.qiantong.qmodel.module.modelReconstitution.service.impl;
 
-import com.alibaba.fastjson.*;
-import com.google.common.collect.*;
-import org.springframework.beans.factory.annotation.*;
-import org.springframework.core.io.*;
-import org.springframework.stereotype.*;
-import tech.qiantong.qmodel.common.utils.*;
-import tech.qiantong.qmodel.module.modelReconstitution.domain.*;
-import tech.qiantong.qmodel.module.modelReconstitution.mapper.*;
-import tech.qiantong.qmodel.module.modelReconstitution.service.*;
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
+import com.google.common.collect.Lists;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.ResourceLoader;
+import org.springframework.stereotype.Service;
+import tech.qiantong.qmodel.module.modelReconstitution.service.IModelVirtualCalcService;
 
-import java.io.*;
-import java.security.*;
-import java.util.*;
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.security.SecureRandom;
+import java.util.List;
 
 /**
  * 模型分类Service业务层处理

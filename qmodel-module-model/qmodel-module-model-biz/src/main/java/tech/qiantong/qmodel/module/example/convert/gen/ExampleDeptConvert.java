@@ -32,13 +32,14 @@
 
 package tech.qiantong.qmodel.module.example.convert.gen;
 
-import java.util.List;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 import tech.qiantong.qmodel.module.example.controller.admin.gen.vo.ExampleDeptPageReqVO;
 import tech.qiantong.qmodel.module.example.controller.admin.gen.vo.ExampleDeptRespVO;
 import tech.qiantong.qmodel.module.example.controller.admin.gen.vo.ExampleDeptSaveReqVO;
 import tech.qiantong.qmodel.module.example.dal.dataobject.gen.ExampleDeptDO;
+
+import java.util.List;
 
 /**
  * 示例部门 Convert

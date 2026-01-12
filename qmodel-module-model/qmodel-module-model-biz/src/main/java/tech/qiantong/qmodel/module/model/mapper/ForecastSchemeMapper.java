@@ -32,8 +32,8 @@
 
 package tech.qiantong.qmodel.module.model.mapper;
 
-import com.baomidou.mybatisplus.core.mapper.*;
-import tech.qiantong.qmodel.module.model.entity.*;
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import tech.qiantong.qmodel.module.model.entity.ForecastScheme;
 
 public interface ForecastSchemeMapper extends BaseMapper<ForecastScheme> {
 }

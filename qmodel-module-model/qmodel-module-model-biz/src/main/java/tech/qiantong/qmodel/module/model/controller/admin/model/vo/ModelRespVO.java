@@ -32,14 +32,13 @@
 
 package tech.qiantong.qmodel.module.model.controller.admin.model.vo;
 
-import java.util.Date;
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonFormat;
-import lombok.*;
 import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.Data;
 import tech.qiantong.qmodel.common.annotation.Excel;
 
 import java.io.Serializable;
+import java.util.Date;
 
 /**
  * 模型管理 Response VO 对象 MODEL

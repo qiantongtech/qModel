@@ -32,22 +32,17 @@
 
 package tech.qiantong.qmodel.module.example.controller.admin.genStudent;
 
-import javax.annotation.Resource;
-import javax.servlet.http.HttpServletResponse;
-import javax.validation.Valid;
-import java.util.Arrays;
-import java.util.List;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import tech.qiantong.qmodel.common.core.page.PageParam;
-import tech.qiantong.qmodel.common.core.domain.AjaxResult;
 import tech.qiantong.qmodel.common.annotation.Log;
 import tech.qiantong.qmodel.common.core.controller.BaseController;
+import tech.qiantong.qmodel.common.core.domain.AjaxResult;
 import tech.qiantong.qmodel.common.core.domain.CommonResult;
+import tech.qiantong.qmodel.common.core.page.PageParam;
 import tech.qiantong.qmodel.common.core.page.PageResult;
 import tech.qiantong.qmodel.common.enums.BusinessType;
 import tech.qiantong.qmodel.common.utils.object.BeanUtils;
@@ -58,6 +53,12 @@ import tech.qiantong.qmodel.module.example.controller.admin.genStudent.vo.Exampl
 import tech.qiantong.qmodel.module.example.convert.genStudent.ExampleStudentConvert;
 import tech.qiantong.qmodel.module.example.dal.dataobject.genStudent.ExampleStudentDO;
 import tech.qiantong.qmodel.module.example.service.genStudent.IExampleStudentService;
+
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * 学生Controller

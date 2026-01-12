@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+  Copyright © 2026 Qiantong Technology Co., Ltd.
+  qModel Model Platform(Open Source Edition)
+   *
+  License:
+  Released under the Apache License, Version 2.0.
+  You may use, modify, and distribute this software for commercial purposes
+  under the terms of the License.
+   *
+  Special Notice:
+  All derivative versions are strictly prohibited from modifying or removing
+  the default system logo and copyright information.
+  For brand customization, please apply for brand customization authorization via official channels.
+   *
+  More information: https://qmodel.qiantong.tech/business.html
+   *
+  ============================================================================
+   *
+  版权所有 © 2026 江苏千桐科技有限公司
+  qModel 模型平台（开源版）
+   *
+  许可协议：
+  本项目基于 Apache License 2.0 开源协议发布，
+  允许在遵守协议的前提下进行商用、修改和分发。
+   *
+  特别说明：
+  所有衍生版本不得修改或移除系统默认的 LOGO 和版权信息；
+  如需定制品牌，请通过官方渠道申请品牌定制授权。
+   *
+  更多信息请访问：https://qmodel.qmodel.qiantong.tech/business.html
+-->
+
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="tech.qiantong.qmodel.module.model.dal.mapper.interfaceAddress.ModelInterfaceAddressMapper">
+
+    <resultMap type="ModelInterfaceAddressDO" id="ModelInterfaceAddressResult">
+        <result property="id"    column="ID"    />
+        <result property="companyId"    column="COMPANY_ID"    />
+        <result property="modelId"    column="MODEL_ID"    />
+        <result property="interfaceAddress"    column="INTERFACE_ADDRESS"    />
+        <result property="versionId"    column="VERSION_ID"    />
+        <result property="requestMethod"    column="REQUEST_METHOD"    />
+        <result property="inputParameter"    column="INPUT_PARAMETER"    />
+        <result property="outputParameter"    column="OUTPUT_PARAMETER"    />
+        <result property="delFlag"    column="DEL_FLAG"    />
+        <result property="createBy"    column="CREATE_BY"    />
+        <result property="creatorId"    column="CREATOR_ID"    />
+        <result property="createTime"    column="CREATE_TIME"    />
+        <result property="updateBy"    column="UPDATE_BY"    />
+        <result property="updatorId"    column="UPDATOR_ID"    />
+        <result property="updateTime"    column="UPDATE_TIME"    />
+        <result property="remark"    column="REMARK"    />
+        <result property="inputParameterIllustrate"    column="INPUT_PARAMETER_ILLUSTRATE"    />
+        <result property="outputParameterIllustrate"    column="OUTPUT_PARAMETER_ILLUSTRATE"    />
+    </resultMap>
+
+    <sql id="selectModelInterfaceAddressVo">
+        select ID, COMPANY_ID, MODEL_ID, INTERFACE_ADDRESS, VERSION_ID, REQUEST_METHOD, INPUT_PARAMETER, OUTPUT_PARAMETER, DEL_FLAG, CREATE_BY, CREATOR_ID, CREATE_TIME, UPDATE_BY, UPDATOR_ID, UPDATE_TIME, REMARK, INPUT_PARAMETER_ILLUSTRATE, OUTPUT_PARAMETER_ILLUSTRATE from MODEL_INTERFACE_ADDRESS
+    </sql>
+
+    <select id="selectModelInterfaceAddressList" parameterType="ModelInterfaceAddressDO" resultMap="ModelInterfaceAddressResult">
+        <include refid="selectModelInterfaceAddressVo"/>
+        <where>
+            <if test="companyId != null "> and COMPANY_ID = #{companyId}</if>
+            <if test="modelId != null "> and MODEL_ID = #{modelId}</if>
+            <if test="interfaceAddress != null  and interfaceAddress != ''"> and INTERFACE_ADDRESS = #{interfaceAddress}</if>
+            <if test="versionId != null "> and VERSION_ID = #{versionId}</if>
+            <if test="requestMethod != null "> and REQUEST_METHOD = #{requestMethod}</if>
+            <if test="inputParameter != null  and inputParameter != ''"> and INPUT_PARAMETER = #{inputParameter}</if>
+            <if test="outputParameter != null  and outputParameter != ''"> and OUTPUT_PARAMETER = #{outputParameter}</if>
+            <if test="createTime != null "> and CREATE_TIME = #{createTime}</if>
+            <if test="inputParameterIllustrate != null  and inputParameterIllustrate != ''"> and INPUT_PARAMETER_ILLUSTRATE = #{inputParameterIllustrate}</if>
+            <if test="outputParameterIllustrate != null  and outputParameterIllustrate != ''"> and OUTPUT_PARAMETER_ILLUSTRATE = #{outputParameterIllustrate}</if>
+        </where>
+    </select>
+
+    <select id="selectModelInterfaceAddressByID" parameterType="Long" resultMap="ModelInterfaceAddressResult">
+        <include refid="selectModelInterfaceAddressVo"/>
+        where ID = #{id}
+    </select>
+
+    <insert id="insertModelInterfaceAddress" parameterType="ModelInterfaceAddressDO">
+        insert into MODEL_INTERFACE_ADDRESS
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">ID,</if>
+            <if test="companyId != null">COMPANY_ID,</if>
+            <if test="modelId != null">MODEL_ID,</if>
+            <if test="interfaceAddress != null">INTERFACE_ADDRESS,</if>
+            <if test="versionId != null">VERSION_ID,</if>
+            <if test="requestMethod != null">REQUEST_METHOD,</if>
+            <if test="inputParameter != null">INPUT_PARAMETER,</if>
+            <if test="outputParameter != null">OUTPUT_PARAMETER,</if>
+            <if test="delFlag != null">DEL_FLAG,</if>
+            <if test="createBy != null">CREATE_BY,</if>
+            <if test="creatorId != null">CREATOR_ID,</if>
+            <if test="createTime != null">CREATE_TIME,</if>
+            <if test="updateBy != null">UPDATE_BY,</if>
+            <if test="updatorId != null">UPDATOR_ID,</if>
+            <if test="updateTime != null">UPDATE_TIME,</if>
+            <if test="remark != null">REMARK,</if>
+            <if test="inputParameterIllustrate != null">INPUT_PARAMETER_ILLUSTRATE,</if>
+            <if test="outputParameterIllustrate != null">OUTPUT_PARAMETER_ILLUSTRATE,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="companyId != null">#{companyId},</if>
+            <if test="modelId != null">#{modelId},</if>
+            <if test="interfaceAddress != null">#{interfaceAddress},</if>
+            <if test="versionId != null">#{versionId},</if>
+            <if test="requestMethod != null">#{requestMethod},</if>
+            <if test="inputParameter != null">#{inputParameter},</if>
+            <if test="outputParameter != null">#{outputParameter},</if>
+            <if test="delFlag != null">#{delFlag},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="creatorId != null">#{creatorId},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updatorId != null">#{updatorId},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null">#{remark},</if>
+            <if test="inputParameterIllustrate != null">#{inputParameterIllustrate},</if>
+            <if test="outputParameterIllustrate != null">#{outputParameterIllustrate},</if>
+         </trim>
+    </insert>
+
+    <update id="updateModelInterfaceAddress" parameterType="ModelInterfaceAddressDO">
+        update MODEL_INTERFACE_ADDRESS
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="companyId != null">COMPANY_ID = #{companyId},</if>
+            <if test="modelId != null">MODEL_ID = #{modelId},</if>
+            <if test="interfaceAddress != null">INTERFACE_ADDRESS = #{interfaceAddress},</if>
+            <if test="versionId != null">VERSION_ID = #{versionId},</if>
+            <if test="requestMethod != null">REQUEST_METHOD = #{requestMethod},</if>
+            <if test="inputParameter != null">INPUT_PARAMETER = #{inputParameter},</if>
+            <if test="outputParameter != null">OUTPUT_PARAMETER = #{outputParameter},</if>
+            <if test="delFlag != null">DEL_FLAG = #{delFlag},</if>
+            <if test="createBy != null">CREATE_BY = #{createBy},</if>
+            <if test="creatorId != null">CREATOR_ID = #{creatorId},</if>
+            <if test="createTime != null">CREATE_TIME = #{createTime},</if>
+            <if test="updateBy != null">UPDATE_BY = #{updateBy},</if>
+            <if test="updatorId != null">UPDATOR_ID = #{updatorId},</if>
+            <if test="updateTime != null">UPDATE_TIME = #{updateTime},</if>
+            <if test="remark != null">REMARK = #{remark},</if>
+            <if test="inputParameterIllustrate != null">INPUT_PARAMETER_ILLUSTRATE = #{inputParameterIllustrate},</if>
+            <if test="outputParameterIllustrate != null">OUTPUT_PARAMETER_ILLUSTRATE = #{outputParameterIllustrate},</if>
+        </trim>
+        where ID = #{id}
+    </update>
+
+    <delete id="deleteModelInterfaceAddressByID" parameterType="Long">
+        delete from MODEL_INTERFACE_ADDRESS where ID = #{id}
+    </delete>
+
+    <delete id="deleteModelInterfaceAddressByIDs" parameterType="String">
+        delete from MODEL_INTERFACE_ADDRESS where ID in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

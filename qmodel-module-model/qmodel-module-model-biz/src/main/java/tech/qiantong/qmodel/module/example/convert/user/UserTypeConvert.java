@@ -32,13 +32,14 @@
 
 package tech.qiantong.qmodel.module.example.convert.user;
 
-import java.util.List;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 import tech.qiantong.qmodel.module.example.controller.admin.user.vo.UserTypePageReqVO;
 import tech.qiantong.qmodel.module.example.controller.admin.user.vo.UserTypeRespVO;
 import tech.qiantong.qmodel.module.example.controller.admin.user.vo.UserTypeSaveReqVO;
 import tech.qiantong.qmodel.module.example.dal.dataobject.user.UserTypeDO;
+
+import java.util.List;
 
 /**
  * 用户类型 Convert

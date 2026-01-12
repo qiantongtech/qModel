@@ -32,8 +32,8 @@
 
 package tech.qiantong.qmodel.module.model.service;
 
-import com.baomidou.mybatisplus.extension.service.*;
-import tech.qiantong.qmodel.module.model.entity.*;
+import com.baomidou.mybatisplus.extension.service.IService;
+import tech.qiantong.qmodel.module.model.entity.ForecastScheme;
 
 /**
  * 预测方案 Service接口

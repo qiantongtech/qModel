@@ -32,15 +32,15 @@
 
 package tech.qiantong.qmodel.module.model.dal.mapper.history;
 
-import tech.qiantong.qmodel.module.model.dal.dataobject.history.ModelHistoryDO;
-import java.util.Arrays;
-import com.github.yulichang.base.MPJBaseMapper;
 import tech.qiantong.qmodel.common.core.page.PageResult;
-import java.util.HashSet;
-import java.util.Set;
 import tech.qiantong.qmodel.module.model.controller.admin.history.vo.ModelHistoryPageReqVO;
+import tech.qiantong.qmodel.module.model.dal.dataobject.history.ModelHistoryDO;
 import tech.qiantong.qmodel.mybatis.core.mapper.BaseMapperX;
 import tech.qiantong.qmodel.mybatis.core.query.LambdaQueryWrapperX;
+
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * 模型历史Mapper接口

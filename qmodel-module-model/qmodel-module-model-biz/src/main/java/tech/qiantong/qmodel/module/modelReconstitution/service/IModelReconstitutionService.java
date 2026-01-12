@@ -32,9 +32,9 @@
 
 package tech.qiantong.qmodel.module.modelReconstitution.service;
 
-import tech.qiantong.qmodel.module.modelReconstitution.domain.*;
+import tech.qiantong.qmodel.module.modelReconstitution.domain.ModelReconstitution;
 
-import java.util.*;
+import java.util.List;
 
 /**
  * 模型库的重构表Service接口
@@ -93,14 +93,14 @@ public interface IModelReconstitutionService {
 
     /**
      * 查询模型总数
-     * 
+     *
      * @return 模型总数
      */
     public int count();
 
     /**
      * 查询上周新增的模型数量
-     * 
+     *
      * @return 上周新增的模型数量
      */
     public int countLastWeek();

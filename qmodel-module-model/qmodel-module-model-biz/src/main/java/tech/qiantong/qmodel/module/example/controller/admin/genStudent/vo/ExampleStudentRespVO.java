@@ -32,13 +32,13 @@
 
 package tech.qiantong.qmodel.module.example.controller.admin.genStudent.vo;
 
-import java.util.Date;
 import com.fasterxml.jackson.annotation.JsonFormat;
-import lombok.*;
 import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.Data;
 import tech.qiantong.qmodel.common.annotation.Excel;
 
 import java.io.Serializable;
+import java.util.Date;
 
 /**
  * 学生 Response VO 对象 example_student

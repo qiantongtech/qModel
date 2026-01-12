@@ -32,9 +32,9 @@
 
 package tech.qiantong.qmodel.module.model.mapper;
 
-import tech.qiantong.qmodel.module.model.domain.*;
+import tech.qiantong.qmodel.module.model.domain.ModelCacl;
 
-import java.util.*;
+import java.util.List;
 
 /**
  * 模型计算管理 Mapper接口
@@ -44,39 +44,39 @@ import java.util.*;
  */
 public interface ModelCaclMapper {
     /**
-     * 查询模型计算管理 
+     * 查询模型计算管理
      *
      * @param id 模型计算管理 主键
-     * @return 模型计算管理 
+     * @return 模型计算管理
      */
     public ModelCacl selectModelCaclById(Long id);
 
     /**
      * 查询模型计算管理 列表
      *
-     * @param modelCacl 模型计算管理 
+     * @param modelCacl 模型计算管理
      * @return 模型计算管理 集合
      */
     public List<ModelCacl> selectModelCaclList(ModelCacl modelCacl);
 
     /**
-     * 新增模型计算管理 
+     * 新增模型计算管理
      *
-     * @param modelCacl 模型计算管理 
+     * @param modelCacl 模型计算管理
      * @return 结果
      */
     public int insertModelCacl(ModelCacl modelCacl);
 
     /**
-     * 修改模型计算管理 
+     * 修改模型计算管理
      *
-     * @param modelCacl 模型计算管理 
+     * @param modelCacl 模型计算管理
      * @return 结果
      */
     public int updateModelCacl(ModelCacl modelCacl);
 
     /**
-     * 删除模型计算管理 
+     * 删除模型计算管理
      *
      * @param id 模型计算管理 主键
      * @return 结果
@@ -84,7 +84,7 @@ public interface ModelCaclMapper {
     public int deleteModelCaclById(Long id);
 
     /**
-     * 批量删除模型计算管理 
+     * 批量删除模型计算管理
      *
      * @param ids 需要删除的数据主键集合
      * @return 结果

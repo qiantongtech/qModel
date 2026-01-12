@@ -53,12 +53,12 @@ import tech.qiantong.qmodel.module.model.controller.admin.output.vo.ModelOutputR
 import tech.qiantong.qmodel.module.model.controller.admin.output.vo.ModelOutputSaveReqVO;
 import tech.qiantong.qmodel.module.model.convert.output.ModelOutputConvert;
 import tech.qiantong.qmodel.module.model.dal.dataobject.output.ModelOutputDO;
+import tech.qiantong.qmodel.module.model.dal.dataobject.version.ModelVersionDO;
 import tech.qiantong.qmodel.module.model.service.output.IModelOutputService;
+import tech.qiantong.qmodel.module.model.service.version.IModelVersionService;
 import tech.qiantong.qmodel.module.modelReconstitution.domain.ModelReconstitution;
 import tech.qiantong.qmodel.module.modelReconstitution.domain.ModelVersionReconstitution;
 import tech.qiantong.qmodel.module.modelReconstitution.service.IModelReconstitutionService;
-import tech.qiantong.qmodel.module.modelReconstitution.service.IModelVersionReconstitutionService;
-
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
@@ -85,7 +85,7 @@ public class ModelOutputController extends BaseController {
     private IModelReconstitutionService modelReconstitutionService;
 
     @Autowired
-    private IModelVersionReconstitutionService modelVersionService;
+    private IModelVersionService modelVersionService;
 
 
     //    @Value("${model.filePathRoot}")
@@ -168,7 +168,7 @@ public class ModelOutputController extends BaseController {
      * 查询所有模型版本
      */
     @PostMapping("/findAllModelVersion")
-    public AjaxResult findAllModelVersion(@RequestBody ModelVersionReconstitution modelVersion) {
+    public AjaxResult findAllModelVersion(@RequestBody ModelVersionDO modelVersion) {
         modelVersion.setDelFlag(false);
         return AjaxResult.success(modelVersionService.selectModelVersionList(modelVersion));
     }

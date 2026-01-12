@@ -32,7 +32,7 @@
 
 package tech.qiantong.qmodel.module.modelReconstitution.domain;
 
-import java.net.*;
+import java.net.URLEncoder;
 
 /**
  * 模型输入管理 对象 model_input

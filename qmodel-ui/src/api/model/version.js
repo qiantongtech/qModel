@@ -52,7 +52,7 @@ export function getVersion(id) {
 // 查询一个模型全部版本记录
 export function getMVList(modelId) {
   return request({
-    url: '/model/version/MVList/' + modelId,
+    url: '/model/version/mVList/' + modelId,
     method: 'get'
   })
 }
@@ -60,7 +60,7 @@ export function getMVList(modelId) {
 // 展示一个模型全部版本记录
 export function getVersionList(query) {
   return request({
-    url: '/model/version/VersionList/',
+    url: '/model/version/versionList/',
     method: 'get',
     params: query
   })

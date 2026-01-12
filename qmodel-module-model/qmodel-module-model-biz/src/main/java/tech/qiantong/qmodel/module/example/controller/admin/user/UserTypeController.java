@@ -32,21 +32,16 @@
 
 package tech.qiantong.qmodel.module.example.controller.admin.user;
 
-import javax.annotation.Resource;
-import javax.servlet.http.HttpServletResponse;
-import javax.validation.Valid;
-import java.util.Arrays;
 import cn.hutool.core.date.DateUtil;
-import java.util.List;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import tech.qiantong.qmodel.common.core.page.PageParam;
 import tech.qiantong.qmodel.common.annotation.Log;
 import tech.qiantong.qmodel.common.core.controller.BaseController;
 import tech.qiantong.qmodel.common.core.domain.CommonResult;
+import tech.qiantong.qmodel.common.core.page.PageParam;
 import tech.qiantong.qmodel.common.core.page.PageResult;
 import tech.qiantong.qmodel.common.enums.BusinessType;
 import tech.qiantong.qmodel.common.utils.object.BeanUtils;
@@ -57,6 +52,12 @@ import tech.qiantong.qmodel.module.example.controller.admin.user.vo.UserTypeSave
 import tech.qiantong.qmodel.module.example.convert.user.UserTypeConvert;
 import tech.qiantong.qmodel.module.example.dal.dataobject.user.UserTypeDO;
 import tech.qiantong.qmodel.module.example.service.user.IUserTypeService;
+
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * 用户类型Controller

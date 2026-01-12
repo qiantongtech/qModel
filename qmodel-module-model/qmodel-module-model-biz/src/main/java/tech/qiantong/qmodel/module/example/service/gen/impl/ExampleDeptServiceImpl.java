@@ -32,21 +32,22 @@
 
 package tech.qiantong.qmodel.module.example.service.gen.impl;
 
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-import lombok.extern.slf4j.Slf4j;
-import javax.annotation.Resource;
-import tech.qiantong.qmodel.common.core.page.PageResult;
-import tech.qiantong.qmodel.common.utils.object.BeanUtils;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import tech.qiantong.qmodel.common.core.page.PageResult;
+import tech.qiantong.qmodel.common.utils.object.BeanUtils;
 import tech.qiantong.qmodel.module.example.controller.admin.gen.vo.ExampleDeptPageReqVO;
 import tech.qiantong.qmodel.module.example.controller.admin.gen.vo.ExampleDeptSaveReqVO;
 import tech.qiantong.qmodel.module.example.dal.dataobject.gen.ExampleDeptDO;
 import tech.qiantong.qmodel.module.example.dal.mapper.gen.ExampleDeptMapper;
 import tech.qiantong.qmodel.module.example.service.gen.IExampleDeptService;
+
+import javax.annotation.Resource;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 /**
  * 示例部门Service业务层处理
  *

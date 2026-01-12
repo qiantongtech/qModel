@@ -33,9 +33,10 @@
 package tech.qiantong.qmodel.module.example.controller.admin.user.vo;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import lombok.*;
 import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.Data;
 import tech.qiantong.qmodel.common.annotation.Excel;
+
 import java.util.Date;
 
 /**

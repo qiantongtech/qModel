@@ -32,17 +32,6 @@
 
 package tech.qiantong.qmodel.module.model.controller.admin.input;
 
-import javax.annotation.Resource;
-import javax.servlet.http.HttpServletResponse;
-import javax.validation.Valid;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-
-import cn.hutool.core.io.file.FileReader;
-import com.alibaba.fastjson2.JSONArray;
-import com.alibaba.fastjson2.JSONObject;
-import com.google.common.collect.Maps;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,27 +39,33 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import tech.qiantong.qmodel.common.core.page.PageParam;
-import tech.qiantong.qmodel.common.core.domain.AjaxResult;
 import tech.qiantong.qmodel.common.annotation.Log;
 import tech.qiantong.qmodel.common.core.controller.BaseController;
+import tech.qiantong.qmodel.common.core.domain.AjaxResult;
 import tech.qiantong.qmodel.common.core.domain.CommonResult;
+import tech.qiantong.qmodel.common.core.page.PageParam;
 import tech.qiantong.qmodel.common.core.page.PageResult;
 import tech.qiantong.qmodel.common.enums.BusinessType;
 import tech.qiantong.qmodel.common.utils.object.BeanUtils;
 import tech.qiantong.qmodel.common.utils.poi.ExcelUtil;
-import tech.qiantong.qmodel.common.exception.enums.GlobalErrorCodeConstants;
 import tech.qiantong.qmodel.module.model.controller.admin.input.vo.ModelInputPageReqVO;
 import tech.qiantong.qmodel.module.model.controller.admin.input.vo.ModelInputRespVO;
 import tech.qiantong.qmodel.module.model.controller.admin.input.vo.ModelInputSaveReqVO;
 import tech.qiantong.qmodel.module.model.convert.input.ModelInputConvert;
 import tech.qiantong.qmodel.module.model.dal.dataobject.input.ModelInputDO;
+import tech.qiantong.qmodel.module.model.dal.dataobject.version.ModelVersionDO;
 import tech.qiantong.qmodel.module.model.service.input.IModelInputService;
-import tech.qiantong.qmodel.module.modelReconstitution.domain.ModelInputReconstitution;
+import tech.qiantong.qmodel.module.model.service.version.IModelVersionService;
 import tech.qiantong.qmodel.module.modelReconstitution.domain.ModelReconstitution;
 import tech.qiantong.qmodel.module.modelReconstitution.domain.ModelVersionReconstitution;
 import tech.qiantong.qmodel.module.modelReconstitution.service.IModelReconstitutionService;
-import tech.qiantong.qmodel.module.modelReconstitution.service.IModelVersionReconstitutionService;
+
+
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * 模型输入管理Controller
@@ -90,7 +85,7 @@ public class ModelInputController extends BaseController {
     private IModelReconstitutionService modelReconstitutionService;
 
     @Autowired
-    private IModelVersionReconstitutionService modelVersionService;
+    private IModelVersionService modelVersionService;
 
 
     @Operation(summary = "查询模型输入管理列表")
@@ -171,7 +166,7 @@ public class ModelInputController extends BaseController {
      * 查询所有模型版本
      */
     @PostMapping("/findAllModelVersion")
-    public AjaxResult findAllModelVersion(@RequestBody ModelVersionReconstitution modelVersion) {
+    public AjaxResult findAllModelVersion(@RequestBody ModelVersionDO modelVersion) {
         modelVersion.setDelFlag(false);
         return AjaxResult.success(modelVersionService.selectModelVersionList(modelVersion));
     }

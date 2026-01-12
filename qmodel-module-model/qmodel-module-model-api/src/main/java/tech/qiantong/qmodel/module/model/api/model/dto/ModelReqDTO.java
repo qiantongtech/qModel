@@ -48,7 +48,7 @@ public class ModelReqDTO {
     private static final long serialVersionUID = 1L;
 
     /** ID */
-    private Long ID;
+    private Long id;
 
     /** 企业id */
     private Long companyId;

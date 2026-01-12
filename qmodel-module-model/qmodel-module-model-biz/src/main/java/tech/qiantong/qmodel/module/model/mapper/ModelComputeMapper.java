@@ -32,9 +32,9 @@
 
 package tech.qiantong.qmodel.module.model.mapper;
 
-import com.baomidou.mybatisplus.core.mapper.*;
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Mapper;
-import tech.qiantong.qmodel.module.model.domain.*;
+import tech.qiantong.qmodel.module.model.domain.ModelCompute;
 
 @Mapper
 public interface ModelComputeMapper extends BaseMapper<ModelCompute> {

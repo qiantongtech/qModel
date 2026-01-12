@@ -35,7 +35,7 @@ import request from '@/utils/request'
 // 查询版本管理列表
 export function listVersion(query) {
   return request({
-    url: '/modelReconstitution/version/list',
+    url: '/model/version/list',
     method: 'get',
     params: query
   })
@@ -44,7 +44,7 @@ export function listVersion(query) {
 // 查询版本管理详细
 export function getVersion(id) {
   return request({
-    url: '/modelReconstitution/version/' + id,
+    url: '/model/version/' + id,
     method: 'get'
   })
 }
@@ -52,7 +52,7 @@ export function getVersion(id) {
 // 查询一个模型全部版本记录
 export function getMVList(modelId) {
   return request({
-    url: '/modelReconstitution/version/MVList/' + modelId,
+    url: '/model/version/mVList/' + modelId,
     method: 'get'
   })
 }
@@ -60,7 +60,7 @@ export function getMVList(modelId) {
 // 展示一个模型全部版本记录
 export function getVersionList(query) {
   return request({
-    url: '/modelReconstitution/version/VersionList/',
+    url: '/model/version/versionList/',
     method: 'get',
     params: query
   })
@@ -69,7 +69,7 @@ export function getVersionList(query) {
 // 版本的切换
 export function handoffVersion(data) {
   return request({
-    url: '/modelReconstitution/version/handoff',
+    url: '/model/version/handoff',
     method: 'put',
     data: data
   })
@@ -78,7 +78,7 @@ export function handoffVersion(data) {
 // 新增版本管理
 export function addVersion(data) {
   return request({
-    url: '/modelReconstitution/version',
+    url: '/model/version',
     method: 'post',
     data: data
   })
@@ -87,7 +87,7 @@ export function addVersion(data) {
 // 修改版本管理
 export function updateVersion(data) {
   return request({
-    url: '/modelReconstitution/version',
+    url: '/model/version',
     method: 'put',
     data: data
   })
@@ -96,7 +96,7 @@ export function updateVersion(data) {
 // 删除版本管理
 export function delVersion(id) {
   return request({
-    url: '/modelReconstitution/version/' + id,
+    url: '/model/version/' + id,
     method: 'delete'
   })
 }
