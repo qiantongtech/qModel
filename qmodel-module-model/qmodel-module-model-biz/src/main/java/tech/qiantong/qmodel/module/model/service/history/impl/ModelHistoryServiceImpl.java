@@ -118,6 +118,28 @@ public class ModelHistoryServiceImpl extends ServiceImpl<ModelHistoryMapper, Mod
                 ));
     }
 
+    /**
+     * 创建模型历史记录的便捷方法
+     *
+     * @param modelId 模型ID
+     * @param modelName 模型名称
+     * @param context 操作内容
+     * @param modelVersion 模型版本
+     * @param updatorId 更新人ID
+     * @param updateBy 更新人姓名
+     * @return 模型历史编号
+     */
+    @Override
+    public Long createModelHistory(Long modelId, String modelName, String context, String modelVersion, Long updatorId, String updateBy) {
+        ModelHistorySaveReqVO modelHistory = new ModelHistorySaveReqVO();
+        modelHistory.setModelId(modelId);
+        modelHistory.setModelName(modelName);
+        modelHistory.setContext(context);
+        modelHistory.setModelVersion(modelVersion);
+        modelHistory.setUpdatorId(updatorId);
+        modelHistory.setUpdateBy(updateBy);
+        return createModelHistory(modelHistory);
+    }
 
     /**
      * 导入模型历史数据

@@ -115,4 +115,18 @@ public interface IModelHistoryService extends IService<ModelHistoryDO> {
      */
     String importModelHistory(List<ModelHistoryRespVO> importExcelList, boolean isUpdateSupport, String operName);
 
+    /**
+     * 创建模型历史记录的便捷方法
+     *
+     * @param modelId 模型ID
+     * @param modelName 模型名称
+     * @param context 操作内容
+     * @param modelVersion 模型版本
+     * @param updatorId 更新人ID
+     * @param updateBy 更新人姓名
+     * @return 模型历史编号
+     */
+    Long createModelHistory(Long modelId, String modelName, String context, String modelVersion, Long updatorId, String updateBy);
+
+
 }

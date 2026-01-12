@@ -153,16 +153,7 @@ public class ModelVersionController extends BaseController {
     public CommonResult<Long> add(@Valid @RequestBody ModelVersionSaveReqVO modelVersion) {
         modelVersion.setStatus(0);
 
-        ModelHistorySaveReqVO modelHistory = new ModelHistorySaveReqVO();
-        modelHistory.setCompanyId(null);
-        modelHistory.setModelId(modelVersion.getModelId());
-        modelHistory.setModelName(modelVersion.getModelName());
-        modelHistory.setContext("新增了" + modelVersion.getModelName() + "一个版本");
-        //获取最大版本号
-        modelHistory.setModelVersion(modelVersion.getVersion());
-        modelHistory.setUpdatorId(getUserId());
-        modelHistory.setUpdateBy(getNickName());
-        modelHistoryService.createModelHistory(modelHistory);
+        modelHistoryService.createModelHistory(modelVersion.getModelId(), modelVersion.getModelName(), "新增了" + modelVersion.getModelName() + "一个版本", modelVersion.getVersion(), getUserId(), getNickName());
 
         return CommonResult.toAjax(modelVersionService.createModelVersion(modelVersion));
     }
@@ -207,15 +198,7 @@ public class ModelVersionController extends BaseController {
             version.setId(jsonObject.getLong("afterVersionId"));
             version.setStatus(1);
             modelVersionService.updateModelVersion(version);
-            ModelHistorySaveReqVO history = new ModelHistorySaveReqVO();
-            history.setCompanyId(null);
-            history.setModelId(jsonObject.getLong("modelId"));
-            history.setModelName(jsonObject.getStr("modelName"));
-            history.setContext("切换了模型的版本号, 切换到了【" + jsonObject.getDouble("afterVersion") + "】");
-            history.setModelVersion(jsonObject.getStr("afterVersion"));
-            history.setUpdatorId(getUserId());
-            history.setUpdateBy(getNickName());
-            modelHistoryService.createModelHistory(history);
+            modelHistoryService.createModelHistory(jsonObject.getLong("modelId"), jsonObject.getStr("modelName"), "切换了模型的版本号, 切换到了【" + jsonObject.getDouble("afterVersion") + "】", jsonObject.getStr("afterVersion"), getUserId(), getNickName());
         }
         modelReconstitutionService.updateModelReconstitution(model);
         return success();
@@ -239,16 +222,7 @@ public class ModelVersionController extends BaseController {
             modelReconstitution.setRemark(modelVersion.getRemark());
             modelReconstitutionService.updateModelReconstitution(modelReconstitution);
 
-            ModelHistorySaveReqVO modelHistory = new ModelHistorySaveReqVO();
-            modelHistory.setCompanyId(null);
-            modelHistory.setModelId(modelVersion.getModelId());
-            modelHistory.setModelName(modelVersion.getModelName());
-            modelHistory.setContext("启用了" + modelVersion.getModelName() + "【" + modelVersion.getVersion() + "】版本");
-            //获取最大版本号
-            modelHistory.setModelVersion(modelVersion.getVersion());
-            modelHistory.setUpdatorId(getUserId());
-            modelHistory.setUpdateBy(getNickName());
-            modelHistoryService.createModelHistory(modelHistory);
+            modelHistoryService.createModelHistory(modelVersion.getModelId(), modelVersion.getModelName(), "启用了" + modelVersion.getModelName() + "【" + modelVersion.getVersion() + "】版本", modelVersion.getVersion(), getUserId(), getNickName());
 
             ModelOperateSaveReqVO operate = new ModelOperateSaveReqVO();
             operate.setCompanyId(modelReconstitution.getCompanyId());
@@ -276,15 +250,7 @@ public class ModelVersionController extends BaseController {
         if (isStatus) {
             modelReconstitutionService.updateModelReconstitution(modelReconstitution);
             //历史操作记录插入
-            ModelHistorySaveReqVO modelHistory = new ModelHistorySaveReqVO();
-            modelHistory.setCompanyId(null);
-            modelHistory.setModelId(modelVersion.getModelId());
-            modelHistory.setModelName(modelVersion.getModelName());
-            modelHistory.setContext("停用了" + modelVersion.getModelName() + "【" + modelVersion.getVersion() + "】版本");
-            modelHistory.setModelVersion(modelVersion.getVersion());
-            modelHistory.setUpdatorId(getUserId());
-            modelHistory.setUpdateBy(getNickName());
-            modelHistoryService.createModelHistory(modelHistory);
+            modelHistoryService.createModelHistory(modelVersion.getModelId(), modelVersion.getModelName(), "停用了" + modelVersion.getModelName() + "【" + modelVersion.getVersion() + "】版本", modelVersion.getVersion(), getUserId(), getNickName());
 
             ModelOperateSaveReqVO operate = new ModelOperateSaveReqVO();
             operate.setCompanyId(modelReconstitution.getCompanyId());
@@ -300,15 +266,7 @@ public class ModelVersionController extends BaseController {
             modelOperateService.createModelOperate(operate);
         }else {
             //历史操作记录插入
-            ModelHistorySaveReqVO modelHistory = new ModelHistorySaveReqVO();
-            modelHistory.setCompanyId(null);
-            modelHistory.setModelId(modelVersion.getModelId());
-            modelHistory.setModelName(modelVersion.getModelName());
-            modelHistory.setContext("修改了" + modelVersion.getModelName() + "【" + modelVersion.getVersion() + "】版本的内容");
-            modelHistory.setModelVersion(modelVersion.getVersion());
-            modelHistory.setUpdatorId(getUserId());
-            modelHistory.setUpdateBy(getNickName());
-            modelHistoryService.createModelHistory(modelHistory);
+            modelHistoryService.createModelHistory(modelVersion.getModelId(), modelVersion.getModelName(), "修改了" + modelVersion.getModelName() + "【" + modelVersion.getVersion() + "】版本的内容", modelVersion.getVersion(), getUserId(), getNickName());
         }
         return CommonResult.toAjax(modelVersionService.updateModelVersion(modelVersion));
     }
@@ -322,15 +280,7 @@ public class ModelVersionController extends BaseController {
             for (Long id : ids) {
                 ModelVersionDO modelVersion = modelVersionService.getModelVersionById(id);
                 //历史操作记录插入
-                ModelHistorySaveReqVO modelHistory = new ModelHistorySaveReqVO();
-                modelHistory.setCompanyId(null);
-                modelHistory.setModelId(modelVersion.getModelId());
-                modelHistory.setModelName(modelVersion.getModelName());
-                modelHistory.setContext("删除了" + modelVersion.getModelName() + "【" + modelVersion.getVersion() + "】版本的内容");
-                modelHistory.setModelVersion(modelVersion.getVersion());
-                modelHistory.setUpdatorId(getUserId());
-                modelHistory.setUpdateBy(getNickName());
-                modelHistoryService.createModelHistory(modelHistory);
+                modelHistoryService.createModelHistory(modelVersion.getModelId(), modelVersion.getModelName(), "删除了" + modelVersion.getModelName() + "【" + modelVersion.getVersion() + "】版本的内容", modelVersion.getVersion(), getUserId(), getNickName());
             }
         }
         return CommonResult.toAjax(modelVersionService.removeModelVersion(Arrays.asList(ids)));

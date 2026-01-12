@@ -112,7 +112,7 @@ public class ModelController extends BaseController {
     @Log(title = "模型管理", businessType = BusinessType.INSERT)
     @PostMapping
     public CommonResult<Long> add(@Valid @RequestBody ModelSaveReqVO model, @RequestBody ModelVersionSaveReqVO modelVersion) {
-        return CommonResult.toAjax(modelService.createModel(model,modelVersion));
+        return CommonResult.toAjax(modelService.createModel(model, modelVersion));
     }
 
     @Operation(summary = "修改模型管理")
@@ -130,8 +130,9 @@ public class ModelController extends BaseController {
     public CommonResult<Integer> remove(@PathVariable Long[] ids) {
         return CommonResult.toAjax(modelService.removeModel(Arrays.asList(ids)));
     }
+
     /**
-     * 查询模型管理 列表
+     * 查询模型管理列表
      */
     @Operation(summary = "查询模型管理列表")
     @PreAuthorize("@ss.hasPermi('model:model::list')")
@@ -144,11 +145,12 @@ public class ModelController extends BaseController {
     /**
      * 修改模型管理详细信息（版本会自增）
      */
+    @Operation(summary = "修改模型管理详细信息（版本会自增）")
     @PreAuthorize("@ss.hasPermi('model:model:edit')")
-    @Log(title = "模型管理 ", businessType = BusinessType.UPDATE)
+    @Log(title = "模型管理", businessType = BusinessType.UPDATE)
     @PutMapping("/update")
     public CommonResult<Integer> update(@RequestBody ModelSaveReqVO model, @RequestBody ModelVersionSaveReqVO modelVersion) {
-        return CommonResult.toAjax(modelService.updateModel(model,modelVersion));
+        return CommonResult.toAjax(modelService.updateModel(model, modelVersion));
     }
 
 }

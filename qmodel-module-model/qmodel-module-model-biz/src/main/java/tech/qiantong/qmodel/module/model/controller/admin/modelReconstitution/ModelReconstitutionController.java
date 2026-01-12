@@ -197,16 +197,7 @@ public class ModelReconstitutionController extends BaseController {
         version.setModelId(model.getId());
         modelVersionService.updateModelVersion(version);
         // 添加操作历史
-        ModelHistorySaveReqVO modelHistory = new ModelHistorySaveReqVO();
-        modelHistory.setCompanyId(null);
-        modelHistory.setModelId(model.getId());
-        modelHistory.setModelName(model.getName());
-        modelHistory.setContext("新增了"+model.getName());
-        modelHistory.setModelVersion(version.getVersion());
-        modelHistory.setUpdatorId(getUserId());
-        modelHistory.setUpdateBy(getNickName());
-        modelHistory.setUpdateTime(model.getCreateTime());
-        modelHistoryService.createModelHistory(modelHistory);
+        modelHistoryService.createModelHistory(model.getId(), model.getName(), "新增了"+model.getName(), version.getVersion(), getUserId(), getNickName());
 
         return CommonResult.toAjax(modelReconstitution);
     }
@@ -217,19 +208,10 @@ public class ModelReconstitutionController extends BaseController {
     @PutMapping
     public CommonResult<Integer> edit(@Valid @RequestBody ModelReconstitutionSaveReqVO modelReconstitution) {
         ModelReconstitution modelReconstitutionInfo = modelReconstitutionService.selectModelReconstitutionById(modelReconstitution.getId());
-        if (modelReconstitutionInfo !=null) {
-            ModelHistorySaveReqVO modelHistory = new ModelHistorySaveReqVO();
-            modelHistory.setCompanyId(null);
-            modelHistory.setModelId(modelReconstitution.getId());
-            modelHistory.setModelName(modelReconstitution.getName());
-            modelHistory.setContext("修改了"+modelReconstitution.getName()+"基本信息");
-            modelHistory.setModelVersion(modelReconstitution.getVersion());
-            modelHistory.setUpdatorId(getUserId());
-            modelHistory.setUpdateBy(getNickName());
-            modelHistory.setUpdateTime(modelReconstitution.getCreateTime());
-            modelHistoryService.createModelHistory(modelHistory);
+        if (modelReconstitutionInfo != null) {
+            modelHistoryService.createModelHistory(modelReconstitution.getId(), modelReconstitution.getName(), "修改了" + modelReconstitution.getName() + "基本信息", modelReconstitution.getVersion(), getUserId(), getNickName());
         }
-        if (modelReconstitution.getWhetherPublish() != null){
+        if (modelReconstitution.getWhetherPublish() != null) {
             modelReconstitution.setPublishTime(DateUtils.getNowDate());
         }
 

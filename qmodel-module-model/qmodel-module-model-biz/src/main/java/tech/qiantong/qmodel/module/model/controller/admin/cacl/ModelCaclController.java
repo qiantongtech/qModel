@@ -167,15 +167,8 @@ public class ModelCaclController extends BaseController {
     @Log(title = "模型计算重构", businessType = BusinessType.INSERT)
     @PostMapping
     public CommonResult<Long> add(@Valid @RequestBody ModelCaclSaveReqVO modelCacl) {
-        if (modelCacl != null){
-            ModelHistorySaveReqVO modelHistory = new ModelHistorySaveReqVO();
-            modelHistory.setModelId(modelCacl.getModelId());
-            modelHistory.setModelName(modelCacl.getModelName());
-            modelHistory.setContext("添加了一条【" + modelCacl.getName() + "】模型计算");
-            modelHistory.setModelVersion(modelCacl.getModelVersion());
-            modelHistory.setUpdatorId(getUserId());
-            modelHistory.setUpdateBy(getNickName());
-            modelHistoryService.createModelHistory(modelHistory);
+        if (modelCacl != null) {
+            modelHistoryService.createModelHistory(modelCacl.getModelId(), modelCacl.getModelName(), "添加了一条【" + modelCacl.getName() + "】模型计算", modelCacl.getModelVersion(), getUserId(), getNickName());
         }
         return CommonResult.toAjax(modelCaclService.createModelCacl(modelCacl));
     }
@@ -185,15 +178,8 @@ public class ModelCaclController extends BaseController {
     @Log(title = "模型计算重构", businessType = BusinessType.UPDATE)
     @PutMapping
     public CommonResult<Integer> edit(@Valid @RequestBody ModelCaclSaveReqVO modelCacl) {
-        if (modelCacl != null){
-            ModelHistorySaveReqVO modelHistory = new ModelHistorySaveReqVO();
-            modelHistory.setModelId(modelCacl.getModelId());
-            modelHistory.setModelName(modelCacl.getModelName());
-            modelHistory.setContext("修改了【" + modelCacl.getName() + "】基本信息");
-            modelHistory.setModelVersion(modelCacl.getModelVersion());
-            modelHistory.setUpdatorId(getUserId());
-            modelHistory.setUpdateBy(getNickName());
-            modelHistoryService.createModelHistory(modelHistory);
+        if (modelCacl != null) {
+            modelHistoryService.createModelHistory(modelCacl.getModelId(), modelCacl.getModelName(), "修改了【" + modelCacl.getName() + "】基本信息", modelCacl.getModelVersion(), getUserId(), getNickName());
         }
         return CommonResult.toAjax(modelCaclService.updateModelCacl(modelCacl));
     }

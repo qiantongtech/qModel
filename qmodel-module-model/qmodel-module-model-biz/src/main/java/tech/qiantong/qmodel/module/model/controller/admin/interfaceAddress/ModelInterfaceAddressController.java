@@ -156,15 +156,7 @@ public class ModelInterfaceAddressController extends BaseController {
     public CommonResult<Long> add(@Valid @RequestBody ModelInterfaceAddressSaveReqVO modelInterfaceAddress) {
         // 添加操作历史
         if (modelInterfaceAddress !=null) {
-            ModelHistorySaveReqVO modelHistory = new ModelHistorySaveReqVO();
-            modelHistory.setModelId(modelInterfaceAddress.getModelId());
-            modelHistory.setModelName(modelInterfaceAddress.getModelName());
-            modelHistory.setContext("新增了【"+modelInterfaceAddress.getInterfaceAddress()+"】接口地址");
-            modelHistory.setModelVersion(modelInterfaceAddress.getVersion());
-            modelHistory.setUpdatorId(getUserId());
-            modelHistory.setUpdateBy(getNickName());
-            modelHistory.setUpdateTime(modelInterfaceAddress.getCreateTime());
-            modelHistoryService.createModelHistory(modelHistory);
+            modelHistoryService.createModelHistory(modelInterfaceAddress.getModelId(), modelInterfaceAddress.getModelName(), "新增了【"+modelInterfaceAddress.getInterfaceAddress()+"】接口地址", modelInterfaceAddress.getVersion(), getUserId(), getNickName());
         }
         return CommonResult.toAjax(modelInterfaceAddressService.createModelInterfaceAddress(modelInterfaceAddress));
     }
@@ -176,15 +168,7 @@ public class ModelInterfaceAddressController extends BaseController {
     public CommonResult<Integer> edit(@Valid @RequestBody ModelInterfaceAddressSaveReqVO modelInterfaceAddress) {
 
         if (modelInterfaceAddress !=null) {
-            ModelHistorySaveReqVO modelHistory = new ModelHistorySaveReqVO();
-            modelHistory.setModelId(modelInterfaceAddress.getModelId());
-            modelHistory.setModelName(modelInterfaceAddress.getModelName());
-            modelHistory.setContext("修改了【"+modelInterfaceAddress.getInterfaceAddress()+"】接口基本信息");
-            modelHistory.setModelVersion(modelInterfaceAddress.getVersion());
-            modelHistory.setUpdatorId(getUserId());
-            modelHistory.setUpdateBy(getNickName());
-            modelHistory.setUpdateTime(modelInterfaceAddress.getCreateTime());
-            modelHistoryService.createModelHistory(modelHistory);
+            modelHistoryService.createModelHistory(modelInterfaceAddress.getModelId(), modelInterfaceAddress.getModelName(), "修改了【"+modelInterfaceAddress.getInterfaceAddress()+"】接口基本信息", modelInterfaceAddress.getVersion(), getUserId(), getNickName());
         }
         return CommonResult.toAjax(modelInterfaceAddressService.updateModelInterfaceAddress(modelInterfaceAddress));
     }
