@@ -151,63 +151,92 @@
               @queryTable="getList"
             ></right-toolbar>
           </div>
-          <el-row :gutter="20" v-loading="loading">
+          <!-- <el-row v-loading="loading" :gutter="15">
             <el-col
               :sm="12"
               :md="12"
               :lg="8"
               :xl="6"
-              style="margin-bottom: 20px"
+              style="margin-bottom: 15px"
+              v-for="(item, index) in 10"
               :key="index"
+            > -->
+          <div class="card-box" v-loading="loading" v-if="total > 0">
+            <el-card
+              :body-style="{ padding: '16px 16px 0' }"
+              shadow="never"
               v-for="(item, index) in modelList"
+              :key="index"
             >
-              <el-card
-                style="border-radius: 8px"
-                :body-style="{ padding: '16px 16px 0' }"
-                shadow="never"
-              >
-                <div class="card-item">
-                  <div class="item-top">
-                    <div class="top-title ellipsis">
-                      <i class="el-icon-s-tools" /><span>{{ item.name }}</span>
-                    </div>
+              <div class="card-item" @click="handleView(item)">
+                <div class="item-top">
+                  <div class="top-title ellipsis">
+                    <img
+                      src="../../assets/system/images/model/version/card-title.svg"
+                      alt=""
+                    /><span class="title-name">{{ item.name }}</span>
                   </div>
-                  <div
-                    v-if="false"
-                    class="item-desc ellipsis-3"
-                    :title="item.description"
+                  <el-popover
+                    placement="bottom"
+                    trigger="click"
+                    popper-class="custom-popover-width"
+                    :popper-style="{ minWidth: '60px', width: '90px' }"
                   >
-                    {{ item.description }}
-                  </div>
-                  <div class="item-con">
-                    <div class="con-l">
-                      <div class="con-view">
-                        <div class="con-view-title">版本号：</div>
-                        <el-tag size="small" type="info"
-                          >Version {{ item.version }}</el-tag
-                        >
+                    <template #reference>
+                      <div class="imgbox" @click.stop>
+                        <img
+                          src="../../assets/system/images/model/version/more.svg"
+                          alt=""
+                        />
                       </div>
-                      <div class="con-view">
-                        <div class="con-view-title">接入方式：</div>
-                        <span v-if="item.accessMode == 1">API接口</span>
-                        <span v-else>单机程序（exe）</span>
-                      </div>
-                      <!--                      <div class="con-view">
-                                                                    <div class="con-view-title">接入方式：</div>
-                                                                    <dict-tag
-                                                                      style="height: 17px;line-height: 15px"
-                                                                      :options="dict.type.model_access_mode"
-                                                                      :value="item.requestMethod"
-                                                                    />
-                                                                  </div>-->
-                      <div class="con-view">
-                        <div class="con-view-title">发布时间：</div>
-                        <span v-if="item.publishTime == null">-,-</span>
-                        <span v-else>{{ item.publishTime }}</span>
-                      </div>
+                    </template>
+                    <div class="popover-content">
+                      <el-button type="primary" text>
+                        <Edit
+                          style="width: 1em; height: 1em; margin-right: 8px"
+                        />
+                        修改</el-button
+                      >
+                      <el-button type="danger" text>
+                        <Delete
+                          style="width: 1em; height: 1em; margin-right: 8px"
+                        />
+                        删除</el-button
+                      >
+                    </div>
+                  </el-popover>
+                </div>
+                <div
+                  v-if="false"
+                  class="item-desc ellipsis-3"
+                  :title="item.description"
+                >
+                  {{ item.description }}
+                </div>
+                <div class="item-con">
+                  <div class="con-l">
+                    <div class="con-view">
+                      <div class="con-view-title">版本号</div>
+                      <tag
+                        size="small"
+                        type="primary"
+                        :name="'Version' + item.version"
+                      ></tag>
+                    </div>
+                    <div class="con-view">
+                      <div class="con-view-title">接入方式</div>
+                      <span v-if="item.accessMode == 1">API接口</span>
+                      <span v-else>单机程序（exe）</span>
+                    </div>
+
+                    <div class="con-view">
+                      <div class="con-view-title">发布时间</div>
+                      <span v-if="item.publishTime == null">-,-</span>
+                      <span v-else>{{ item.publishTime }}</span>
                     </div>
                   </div>
-                  <div class="card-btns">
+                </div>
+                <!-- <div class="card-btns">
                     <el-button
                       type="primary"
                       style="padding-right: 8px; padding-left: 8px"
@@ -232,25 +261,26 @@
                     >
                       <i class="iconfont-mini icon-a-shanchuxianxing mr5"></i>
                     </el-button>
-                  </div>
-                </div>
-              </el-card>
-            </el-col>
-          </el-row>
+                  </div> -->
+              </div>
+            </el-card>
+          </div>
+          <!-- </el-col>
+          </el-row> -->
 
           <el-empty
             description="暂无数据，请添加模型"
             v-if="total == 0"
           ></el-empty>
-
-          <pagination
-            :pageSizes="[12, 24, 36, 48]"
-            v-show="total > 0"
-            :total="total"
-            v-model:page="queryParams.pageNum"
-            v-model:limit="queryParams.pageSize"
-            @pagination="getList"
-          />
+          <div class="pagefy" v-show="total > 0">
+            <pagination
+              :pageSizes="[12, 24, 36, 48]"
+              :total="total"
+              v-model:page="queryParams.pageNum"
+              v-model:limit="queryParams.pageSize"
+              @pagination="getList"
+            />
+          </div>
         </div>
       </el-main>
     </el-container>
@@ -811,6 +841,7 @@ const getList = () => {
 /** 查询分类下拉树结构 */
 const getTreeselect = () => {
   listClassify().then((res) => {
+    console.log(res.rows, "1231321");
     for (let i = 0; i < res.data.length; i++) {
       let arrTemp = [];
       for (let j = 0; j < res.data.length; j++) {
@@ -1054,12 +1085,30 @@ const handleExport = () => {
 </script>
 <style lang="scss" scoped>
 .pagecont-bottom {
+  position: relative;
   flex: 1;
   min-height: calc(100vh - 250px);
-  padding: 13px 15px;
-  background-color: #ffffff;
+  padding: 0px;
+  background-color: transparent;
   border-radius: 2px;
   box-shadow: 0 5px 8px rgba(128, 145, 165, 0.1);
+}
+.card-box {
+  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-gap: 15px;
+  padding: 0;
+  height: calc(100vh - 355px);
+  overflow: auto;
+  // height: 100px;
+}
+.pagefy {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  background: #fff;
+  padding: 11px 15px;
 }
 
 ::v-deep {
@@ -1071,15 +1120,15 @@ const handleExport = () => {
 }
 
 .left-pane {
+  height: calc(100vh - 124px);
   background-color: #ffffff;
-  overflow: hidden;
   transition: width 0s; /* 可以根据需要调整过渡时间 */
 }
 
 .resize-bar {
   cursor: ew-resize;
   background-color: #f0f2f5;
-  height: 86vh;
+  height: calc(100vh - 124px);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1166,13 +1215,23 @@ const handleExport = () => {
       width: 85%;
       font-weight: bold;
       font-size: 16px;
-      line-height: 22px;
+      display: flex;
+      align-items: center;
+      // line-height: 22px;
       // i {
       //   vertical-align: middle;
       // }
       span {
-        margin-left: 5px;
+        margin-left: 11px;
       }
+    }
+    .imgbox {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 40px;
+      height: 40px;
+      // background: #2666fb;
     }
 
     .top-status {
@@ -1209,19 +1268,19 @@ const handleExport = () => {
     display: flex;
     align-items: center;
     border-top: 1px solid #ebeef5;
-    border-bottom: 1px solid #ebeef5;
-    padding: 10px 0;
-    margin-top: 10px;
+    // border-bottom: 1px solid #ebeef5;
+    // padding: 10px 0;
+    margin-top: 14px;
 
     .con-l {
       width: 100%;
-
+      margin-top: 5px;
       .con-view {
         display: flex;
         align-items: center;
         text-align: left;
         font-weight: 400;
-        line-height: 1.5;
+        margin-top: 11px;
         font-size: 14px;
 
         &:last-child {
@@ -1260,7 +1319,10 @@ const handleExport = () => {
     color: #c0c4cc;
   }
 }
-
+:deep(.left-tree) {
+  padding: 15px;
+  overflow: hidden;
+}
 .head-container {
   ::v-deep
     .el-tree--highlight-current
@@ -1268,5 +1330,48 @@ const handleExport = () => {
     > .el-tree-node__content {
     background-color: #cee5ff;
   }
+}
+:deep(.el-tree) {
+  height: calc(100vh - 210px);
+  overflow: auto;
+}
+:deep(.pagination-container) {
+  margin-top: 4px !important;
+  background: transparent;
+}
+:deep(.justify-between) {
+  padding: 13px 15px;
+  background: #fff;
+}
+:deep(.el-card) {
+  border: 0px;
+  border-radius: 2px 2px 2px 2px !important;
+}
+:deep(.el-col) {
+  cursor: pointer;
+}
+
+.popover-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  // padding: 10px 0;
+  min-width: 60px;
+}
+:deep(.el-button + .el-button) {
+  margin-left: 0;
+}
+:deep(.tag-rect) {
+  border: 0;
+}
+:deep(.el-card__body) {
+  padding: 12px 20px 13px 20px !important;
+}
+:deep(.el-card) {
+  height: 178px;
+}
+:deep(.el-empty) {
+  height: calc(100vh - 355px);
 }
 </style>

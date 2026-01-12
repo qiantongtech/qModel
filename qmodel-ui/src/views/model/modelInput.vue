@@ -39,7 +39,7 @@
       v-show="showSearch"
       class="btn-style"
     >
-      <el-form-item label="模型名称：" prop="modelName">
+      <el-form-item label="模型名称1：" prop="modelName">
         <el-input
           v-model="queryParams.modelName"
           placeholder="请输入模型名称："

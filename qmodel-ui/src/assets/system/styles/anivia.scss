@@ -719,7 +719,7 @@
   //小弹窗高度
   .smallwindow {
     .el-dialog .el-dialog__body {
-      height: 550px;
+      // height: 550px;
     }
   }
 
@@ -1103,7 +1103,7 @@
 
     .el-dialog__body {
       overflow: auto;
-      height: 550px;
+      // height: 550px;
       padding: 20px 40px !important;
       // border: 1px solid red;
     }

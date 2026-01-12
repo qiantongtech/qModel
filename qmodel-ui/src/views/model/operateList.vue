@@ -35,7 +35,7 @@
     <div class="pagecont-top" v-show="showSearch">
       <el-form
         :model="queryParams"
-        ref="queryForm"
+        ref="queryFormRef"
         :inline="true"
         v-show="showSearch"
         class="btn-style"
@@ -131,9 +131,9 @@
       v-model="open"
       width="800px"
       :close-on-click-modal="false"
-      append-to-body
+      append-to="body"
     >
-      <el-form ref="form" :model="form" label-width="100px" size="mini">
+      <el-form ref="formRef" :model="form" label-width="100px" size="mini">
         <el-row>
           <el-col :span="12">
             <el-form-item label="操作人员：">{{ form.createBy }} </el-form-item>
@@ -194,7 +194,7 @@
           </el-col>
           <el-col :span="12">
             <el-form-item label="操作时间："
-              >{{ parseTime(form.createTime) }}
+              >{{ proxy ? proxy.parseTime(form.createTime) : "" }}
             </el-form-item>
           </el-col>
           <el-col :span="24">
@@ -213,7 +213,9 @@
   </div>
 </template>
 
-<script>
+<script setup>
+import { ref, reactive, onMounted, getCurrentInstance } from "vue";
+import { ElMessage, ElMessageBox } from "element-plus";
 import {
   listOperate,
   delOperate,
@@ -222,204 +224,228 @@ import {
 } from "@/api/modelReconstitution/operate";
 import JsonViewer from "json-editor-vue";
 
-export default {
-  name: "Operate",
-  components: { JsonViewer },
-  data() {
-    return {
-      reqContent:
-        '{"searchValue":null,"createBy":"演示账号","createTime":"2023-10-08 13:55:32","updateBy":null,"updateTime":"2023-10-08 13:55:30","remark":null,"params":{},"id":3,"companyId":1005,"name":"塔河2","engName":"123","type":1,"modelId":1047,"modelName":"塔河大坝监控","modelVersion":"1","description":"参数23","singleContent":"[]","multipleContent":"[{\\"name\\":\\"参数1\\",\\"value\\":\\"1\\",\\"order\\":0,\\"index\\":1},{\\"name\\":\\"参数2\\",\\"value\\":\\"2\\",\\"order\\":2,\\"index\\":2}]","validFlag":true,"delFlag":false,"creatorId":480,"updatorId":null}',
-      respContent:
-        '{"msg":"操作成功","code":200,"data":{"searchValue":null,"createBy":null,"createTime":"2023-08-28 17:37:28","updateBy":null,"updateTime":"2023-09-14 14:16:14","remark":null,"params":{},"id":1002,"name":"开都-孔雀河流域数字孪生","companyName":"开都-孔雀河流域数字孪生","companyId":1005,"licence":"苏ICP备2022008519号-1","loginTemplate":1,"loginBannerOne":"https://s.qiantongkeji.com/2023/71/31/7f26c416-88cd-43e4-8601-b51d1b7366c4.png","loginBannerTwo":"[{\\"image\\":\\"https://s.qiantongkeji.com/2023/81/13/3c63e5d2-6ea8-42a5-8e07-3a96a6299089.png\\",\\"title\\":\\"开都-孔雀河流域数字孪生\\",\\"enTitle\\":\\"TA HE SHU ZI LUAN SHENG\\",\\"digest\\":\\"虚拟仿真、实时联动、智能决策\\",\\"content\\":\\"伊犁州直水利综合信息监管平台致力于水资源的智能化管理，旨在提升水利行业的效率和可持续发展。平台通过数字孪生、虚拟仿真、云计算技术，实现水利业务“四预”流程的智慧模拟、仿真推演，为水利业务提供决策支持。\\"}]","loginLogo":"https://s.qiantongkeji.com/2023/81/14/0f2d8a63-4918-45a7-8a97-267a7c517df7.png","phone":"400-660-8208","email":"support@qiantong.tech","messageLogo":"https://s.qiantongkeji.com/2023/81/14/c1a621ae-b1cf-4f80-8de1-37888ad67031.png","logo":"https://s.qiantongkeji.com/2023/81/14/e9ac588f-256e-4648-bca0-b66f89c2ea16.png","favicon":"https://s.qiantongkeji.com/2023/71/31/9a1f6192-739b-4a19-893a-034644857c0c.png","validFlag":1,"delFlag":false,"creatorId":null,"updatorId":null}}',
-      // 遮罩层
-      loading: true,
-      // 选中数组
-      ids: [],
-      // 非单个禁用
-      single: true,
-      // 非多个禁用
-      multiple: true,
-      // 显示搜索条件
-      showSearch: true,
-      // 总条数
-      total: 0,
-      // 模型历史管理 表格数据
-      operateList: [],
-      // 弹出层标题
-      title: "",
-      // 是否显示弹出层
-      open: false,
-      // 查询参数
-      queryParams: {
-        pageNum: 1,
-        pageSize: 10,
-        companyId: null,
-        moduleName: null,
-        type: null,
-        content: null,
-        method: null,
-        reqContent: null,
-        respContent: null,
-        ip: null,
-        address: null,
-        status: null,
-        validFlag: null,
-        creatorId: null,
-        updatorId: null,
-      },
-      // 表单参数
-      form: {},
-      // 表单校验
-      rules: {
-        validFlag: [
-          {
-            required: true,
-            message: "是否有效 0：无效，1：有效不能为空",
-            trigger: "blur",
-          },
-        ],
-        delFlag: [
-          {
-            required: true,
-            message: "删除标志 1：已删除，0：未删除不能为空",
-            trigger: "blur",
-          },
-        ],
-        createTime: [
-          { required: true, message: "创建时间不能为空", trigger: "blur" },
-        ],
-        updateTime: [
-          { required: true, message: "更新时间不能为空", trigger: "blur" },
-        ],
-      },
-    };
-  },
-  computed: {
-    // 操作日志类型字典翻译
-    typeFormat() {
-      return function (dict, row) {
-        return this.selectDictLabel(this.dict.type[dict], row);
-      };
+const { proxy } = getCurrentInstance();
+
+// 数据属性
+const reqContent = ref(
+  '{"searchValue":null,"createBy":"演示账号","createTime":"2023-10-08 13:55:32","updateBy":null,"updateTime":"2023-10-08 13:55:30","remark":null,"params":{},"id":3,"companyId":1005,"name":"塔河2","engName":"123","type":1,"modelId":1047,"modelName":"塔河大坝监控","modelVersion":"1","description":"参数23","singleContent":"[]","multipleContent":"[{\\"name\\":\\"参数1\\",\\"value\\":\\"1\\",\\"order\\":0,\\"index\\":1},{\\"name\\":\\"参数2\\",\\"value\\":\\"2\\",\\"order\\":2,\\"index\\":2}]","validFlag":true,"delFlag":false,"creatorId":480,"updatorId":null}'
+);
+const respContent = ref(
+  '{"msg":"操作成功","code":200,"data":{"searchValue":null,"createBy":null,"createTime":"2023-08-28 17:37:28","updateBy":null,"updateTime":"2023-09-14 14:16:14","remark":null,"params":{},"id":1002,"name":"开都-孔雀河流域数字孪生","companyName":"开都-孔雀河流域数字孪生","companyId":1005,"licence":"苏ICP备2022008519号-1","loginTemplate":1,"loginBannerOne":"https://s.qiantongkeji.com/2023/71/31/7f26c416-88cd-43e4-8601-b51d1b7366c4.png","loginBannerTwo":"[{\\"image\\":\\"https://s.qiantongkeji.com/2023/81/13/3c63e5d2-6ea8-42a5-8e07-3a96a6299089.png\\",\\"title\\":\\"开都-孔雀河流域数字孪生\\",\\"enTitle\\":\\"TA HE SHU ZI LUAN SHENG\\",\\"digest\\":\\"虚拟仿真、实时联动、智能决策\\",\\"content\\":\\"伊犁州直水利综合信息监管平台致力于水资源的智能化管理，旨在提升水利行业的效率和可持续发展。平台通过数字孪生、虚拟仿真、云计算技术，实现水利业务"四预"流程的智慧模拟、仿真推演，为水利业务提供决策支持。\\"}]","loginLogo":"https://s.qiantongkeji.com/2023/81/14/0f2d8a63-4918-45a7-8a97-267a7c517df7.png","phone":"400-660-8208","email":"support@qiantong.tech","messageLogo":"https://s.qiantongkeji.com/2023/81/14/c1a621ae-b1cf-4f80-8de1-37888ad67031.png","logo":"https://s.qiantongkeji.com/2023/81/14/e9ac588f-256e-4648-bca0-b66f89c2ea16.png","favicon":"https://s.qiantongkeji.com/2023/71/31/9a1f6192-739b-4a19-893a-034644857c0c.png","validFlag":1,"delFlag":false,"creatorId":null,"updatorId":null}}'
+);
+
+// 遮罩层
+const loading = ref(true);
+// 选中数组
+const ids = ref([]);
+// 非单个禁用
+const single = ref(true);
+// 非多个禁用
+const multiple = ref(true);
+// 显示搜索条件
+const showSearch = ref(true);
+// 总条数
+const total = ref(0);
+// 模型历史管理 表格数据
+const operateList = ref([]);
+// 弹出层标题
+const title = ref("");
+// 是否显示弹出层
+const open = ref(false);
+// 查询参数
+const queryParams = reactive({
+  pageNum: 1,
+  pageSize: 10,
+  companyId: null,
+  moduleName: null,
+  type: null,
+  content: null,
+  method: null,
+  reqContent: null,
+  respContent: null,
+  ip: null,
+  address: null,
+  status: null,
+  validFlag: null,
+  creatorId: null,
+  updatorId: null,
+});
+// 表单参数
+const form = ref({});
+// 表单校验
+const rules = reactive({
+  validFlag: [
+    {
+      required: true,
+      message: "是否有效 0：无效，1：有效不能为空",
+      trigger: "blur",
     },
-  },
-  created() {
-    this.getList();
-  },
-  methods: {
-    /** 查询模型历史管理 列表 */
-    getList() {
-      this.loading = true;
-      listOperate(this.queryParams).then((response) => {
-        this.operateList = response.rows;
-        this.total = response.total;
-        this.loading = false;
-      });
+  ],
+  delFlag: [
+    {
+      required: true,
+      message: "删除标志 1：已删除，0：未删除不能为空",
+      trigger: "blur",
     },
-    // 取消按钮
-    cancel() {
-      this.open = false;
-      this.reset();
-    },
-    // 表单重置
-    reset() {
-      this.form = {
-        id: null,
-        companyId: null,
-        moduleName: null,
-        type: null,
-        content: null,
-        method: null,
-        reqContent: null,
-        respContent: null,
-        ip: null,
-        address: null,
-        status: 0,
-        validFlag: null,
-        delFlag: null,
-        createBy: null,
-        creatorId: null,
-        createTime: null,
-        updateBy: null,
-        updatorId: null,
-        updateTime: null,
-        remark: null,
-      };
-      this.resetForm("form");
-    },
-    /** 搜索按钮操作 */
-    handleQuery() {
-      this.queryParams.pageNum = 1;
-      this.getList();
-    },
-    /** 重置按钮操作 */
-    resetQuery() {
-      this.resetForm("queryForm");
-      this.handleQuery();
-    },
-    // 多选框选中数据
-    handleSelectionChange(selection) {
-      this.ids = selection.map((item) => item.id);
-      this.single = selection.length !== 1;
-      this.multiple = !selection.length;
-    },
-    /** 新增按钮操作 */
-    handleAdd() {
-      this.reset();
-      this.open = true;
-      this.title = "添加模型历史管理 ";
-    },
-    /** 详细按钮操作 */
-    handleView(row) {
-      this.open = true;
-      this.form = row;
-      this.title = "历史记录详情 ";
-    },
-    /** 提交按钮 */
-    submitForm() {
-      this.$refs["form"].validate((valid) => {
-        if (valid) {
-          if (this.form.id != null) {
-            updateOperate(this.form).then((response) => {
-              this.$modal.msgSuccess("修改成功");
-              this.open = false;
-              this.getList();
-            });
-          } else {
-            addOperate(this.form).then((response) => {
-              this.$modal.msgSuccess("新增成功");
-              this.open = false;
-              this.getList();
-            });
-          }
-        }
-      });
-    },
-    /** 删除按钮操作 */
-    handleDelete(row) {
-      const ids = row.id || this.ids;
-      this.$modal
-        .confirm('是否确认删除模型历史管理 编号为"' + ids + '"的数据项？')
-        .then(function () {
-          return delOperate(ids);
-        })
-        .then(() => {
-          this.getList();
-          this.$modal.msgSuccess("删除成功");
-        })
-        .catch(() => {});
-    },
-    /** 导出按钮操作 */
-    handleExport() {
-      this.download(
-        "model/operate/export",
-        {
-          ...this.queryParams,
-        },
-        `operate_${new Date().getTime()}.xlsx`
-      );
-    },
-  },
+  ],
+  createTime: [
+    { required: true, message: "创建时间不能为空", trigger: "blur" },
+  ],
+  updateTime: [
+    { required: true, message: "更新时间不能为空", trigger: "blur" },
+  ],
+});
+
+// 模板引用
+const queryFormRef = ref(null);
+const formRef = ref(null);
+
+// 计算属性 - 操作日志类型字典翻译
+const typeFormat = (dict, row) => {
+  return proxy ? proxy.selectDictLabel(proxy.dict.type[dict], row) : "";
 };
+
+// 方法定义
+/** 查询模型历史管理 列表 */
+const getList = () => {
+  loading.value = true;
+  listOperate(queryParams).then((response) => {
+    operateList.value = response.rows;
+    total.value = response.total;
+    loading.value = false;
+  });
+};
+
+// 取消按钮
+const cancel = () => {
+  open.value = false;
+  reset();
+};
+
+// 表单重置
+const reset = () => {
+  form.value = {
+    id: null,
+    companyId: null,
+    moduleName: null,
+    type: null,
+    content: null,
+    method: null,
+    reqContent: null,
+    respContent: null,
+    ip: null,
+    address: null,
+    status: 0,
+    validFlag: null,
+    delFlag: null,
+    createBy: null,
+    creatorId: null,
+    createTime: null,
+    updateBy: null,
+    updatorId: null,
+    updateTime: null,
+    remark: null,
+  };
+  if (formRef.value) {
+    formRef.value.clearValidate();
+  }
+};
+
+/** 搜索按钮操作 */
+const handleQuery = () => {
+  queryParams.pageNum = 1;
+  getList();
+};
+
+/** 重置按钮操作 */
+const resetQuery = () => {
+  if (queryFormRef.value) {
+    queryFormRef.value.resetFields();
+  }
+  handleQuery();
+};
+
+// 多选框选中数据
+const handleSelectionChange = (selection) => {
+  ids.value = selection.map((item) => item.id);
+  single.value = selection.length !== 1;
+  multiple.value = !selection.length;
+};
+
+/** 详细按钮操作 */
+const handleView = (row) => {
+  open.value = true;
+  form.value = row;
+  title.value = "历史记录详情 ";
+};
+
+/** 提交按钮 */
+const submitForm = () => {
+  if (formRef.value) {
+    formRef.value.validate((valid) => {
+      if (valid) {
+        if (form.value.id != null) {
+          updateOperate(form.value).then((response) => {
+            ElMessage.success("修改成功");
+            open.value = false;
+            getList();
+          });
+        } else {
+          addOperate(form.value).then((response) => {
+            ElMessage.success("新增成功");
+            open.value = false;
+            getList();
+          });
+        }
+      }
+    });
+  }
+};
+
+/** 删除按钮操作 */
+const handleDelete = (row) => {
+  const operateIds = row.id || ids.value;
+  ElMessageBox.confirm(
+    '是否确认删除模型历史管理 编号为"' + operateIds + '"的数据项？'
+  )
+    .then(function () {
+      return delOperate(operateIds);
+    })
+    .then(() => {
+      getList();
+      ElMessage.success("删除成功");
+    })
+    .catch(() => {});
+};
+
+/** 导出按钮操作 */
+const handleExport = () => {
+  // 使用 proxy 访问全局 download 方法
+  if (proxy && proxy.download) {
+    proxy.download(
+      "model/operate/export",
+      {
+        ...queryParams,
+      },
+      `operate_${new Date().getTime()}.xlsx`
+    );
+  } else {
+    // 如果没有全局 download 方法，使用替代方法
+    const link = document.createElement("a");
+    link.href = `/model/operate/export?${new URLSearchParams(
+      queryParams
+    ).toString()}`;
+    link.download = `operate_${new Date().getTime()}.xlsx`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  }
+};
+
+// 组件挂载后执行
+onMounted(() => {
+  getList();
+});
 </script>
 <style lang="scss" scoped>
 ::v-deep .jv-container .jv-code.boxed {
