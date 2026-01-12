@@ -272,7 +272,7 @@
             description="暂无数据，请添加模型"
             v-if="total == 0"
           ></el-empty>
-          <div class="pagefy" v-show="total > 0">
+          <div class="pagefy" v-if="total > 0">
             <pagination
               :pageSizes="[12, 24, 36, 48]"
               :total="total"
@@ -833,7 +833,7 @@ const getList = () => {
   loading.value = true;
   listModel(queryParams).then((response) => {
     modelList.value = response.rows;
-    total.value = response.total;
+    total.value = response.data.total;
     loading.value = false;
   });
 };
