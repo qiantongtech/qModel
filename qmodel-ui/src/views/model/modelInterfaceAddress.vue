@@ -31,41 +31,50 @@
 -->
 
 <template>
-  <div class="app-container">
-    <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch">
+  <div class="app-container pagecont-top">
+    <el-form
+      :model="queryParams"
+      ref="queryForm"
+      :inline="true"
+      v-show="showSearch"
+    >
       <el-form-item label="模型版本：" prop="versionId">
         <el-select
-          style="width: 100%"
           v-model="queryParams.versionId"
           placeholder="请选择模型类别"
           clearable
+          class="el-form-input-width"
         >
           <el-option
             v-for="item in versionList"
             :key="item.id"
             :label="'Version ' + item.version"
-            :value="item.id">
+            :value="item.id"
+          >
           </el-option>
         </el-select>
       </el-form-item>
       <el-form-item label="请求方式：" prop="requestMethod">
         <el-select
-          style="width: 100%"
           v-model="queryParams.requestMethod"
           placeholder="请选择模型类别"
           clearable
+          class="el-form-input-width"
         >
           <el-option
             v-for="item in model_type"
             :key="item.value"
             :label="item.label"
-            :value="item.value * 1">
+            :value="item.value * 1"
+          >
           </el-option>
         </el-select>
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
-        <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
+        <el-button type="primary" size="mini" @click="handleQuery"
+          >搜索</el-button
+        >
+        <el-button size="mini" @click="resetQuery">重置</el-button>
       </el-form-item>
     </el-form>
 
@@ -76,7 +85,8 @@
           plain
           @click="handleAdd"
           v-hasPermi="['modelReconstitution:interfaceAddress:add']"
-        >添加接口地址</el-button>
+          >添加接口地址</el-button
+        >
       </el-col>
       <right-toolbar
         v-model:showSearch="showSearch"
@@ -84,46 +94,77 @@
       ></right-toolbar>
     </el-row>
 
-    <el-table v-loading="loading" :data="interfaceAddressList" @selection-change="handleSelectionChange">
-      <el-table-column label="接口地址" align="center" prop="interfaceAddress" />
-      <el-table-column label="模型版本" align="center" prop="version" width="150px">
+    <el-table
+      v-loading="loading"
+      :data="interfaceAddressList"
+      @selection-change="handleSelectionChange"
+    >
+      <el-table-column
+        label="接口地址"
+        align="center"
+        prop="interfaceAddress"
+      />
+      <el-table-column
+        label="模型版本"
+        align="center"
+        prop="version"
+        width="150px"
+      >
         <template #default="scope">
           <el-tag size="small">Version {{ scope.row.version }}</el-tag>
         </template>
       </el-table-column>
-      <el-table-column label="请求方式" align="center" prop="requestMethod" width="150px" >
+      <el-table-column
+        label="请求方式"
+        align="center"
+        prop="requestMethod"
+        width="150px"
+      >
         <template #default="scope">
-          <dict-tag
-            :options="model_type"
-            :value="scope.row.requestMethod"
-          />
+          <dict-tag :options="model_type" :value="scope.row.requestMethod" />
         </template>
       </el-table-column>
-      <el-table-column label="创建人" align="center" prop="createBy" width="150px"/>
-      <el-table-column label="创建时间" align="center" prop="createTime" width="150px"/>
+      <el-table-column
+        label="创建人"
+        align="center"
+        prop="createBy"
+        width="150px"
+      />
+      <el-table-column
+        label="创建时间"
+        align="center"
+        prop="createTime"
+        width="150px"
+      />
       <el-table-column label="接口说明" align="center" prop="remark" />
-      <el-table-column label="操作" align="center" class-name="small-padding fixed-width" width="200px">
+      <el-table-column
+        label="操作"
+        align="center"
+        class-name="small-padding fixed-width"
+        width="200px"
+      >
         <template #default="scope">
           <el-button
-              link
+            link
             @click="handleUpdate(scope.row)"
             v-hasPermi="['modelReconstitution:interfaceAddress:edit']"
-          >修改</el-button>
+            >修改</el-button
+          >
           <el-button
-              link
+            link
             @click="handleDelete(scope.row)"
             v-hasPermi="['modelReconstitution:interfaceAddress:remove']"
-          >删除</el-button>
-          <el-button
-              link
-            @click="setTheParameters(scope.row)"
-          >设置参数</el-button>
+            >删除</el-button
+          >
+          <el-button link @click="setTheParameters(scope.row)"
+            >设置参数</el-button
+          >
         </template>
       </el-table-column>
     </el-table>
 
     <pagination
-      v-show="total>0"
+      v-show="total > 0"
       :total="total"
       v-model:page="queryParams.pageNum"
       v-model:limit="queryParams.pageSize"
@@ -131,7 +172,13 @@
     />
 
     <!-- 添加或修改接口地址对话框 -->
-    <el-dialog :title="title" v-model="open" width="800px" :close-on-click-modal="false" append-to-body>
+    <el-dialog
+      :title="title"
+      v-model="open"
+      width="800px"
+      :close-on-click-modal="false"
+      append-to-body
+    >
       <el-form ref="form" :model="form" :rules="rules" label-width="150px">
         <el-row>
           <el-col :span="12">
@@ -146,7 +193,8 @@
                   v-for="item in versionList"
                   :key="item.id"
                   :label="'Version ' + item.version"
-                  :value="item.id">
+                  :value="item.id"
+                >
                 </el-option>
               </el-select>
             </el-form-item>
@@ -163,7 +211,8 @@
                   v-for="item in model_type"
                   :key="item.value"
                   :label="item.label"
-                  :value="item.value * 1">
+                  :value="item.value * 1"
+                >
                 </el-option>
               </el-select>
             </el-form-item>
@@ -172,8 +221,14 @@
         <el-row>
           <el-col :span="24">
             <el-form-item label="接口地址：" prop="interfaceAddress">
-              <el-input clearable v-model="form.interfaceAddress" placeholder="请输入接口地址">
-                <template #prepend>{{model.interfaceorfileAddress + ":" + model.port}}</template>
+              <el-input
+                clearable
+                v-model="form.interfaceAddress"
+                placeholder="请输入接口地址"
+              >
+                <template #prepend>{{
+                  model.interfaceorfileAddress + ":" + model.port
+                }}</template>
               </el-input>
             </el-form-item>
           </el-col>
@@ -181,25 +236,38 @@
         <el-row>
           <el-col :span="24">
             <el-form-item label="接口说明：" prop="remark">
-              <el-input clearable v-model="form.remark" type="textarea" :rows="3" placeholder="请输入接口说明" />
+              <el-input
+                clearable
+                v-model="form.remark"
+                type="textarea"
+                :rows="3"
+                placeholder="请输入接口说明"
+              />
             </el-form-item>
           </el-col>
         </el-row>
       </el-form>
       <template #footer>
-            <div class="dialog-footer">
-        <el-button type="primary" @click="submitForm">确 定</el-button>
-        <el-button @click="cancel">取 消</el-button>
-      </div></template>
+        <div class="dialog-footer">
+          <el-button type="primary" @click="submitForm">确 定</el-button>
+          <el-button @click="cancel">取 消</el-button>
+        </div></template
+      >
     </el-dialog>
   </div>
 </template>
 
 <script setup>
-import { ref, reactive, watch, onMounted, getCurrentInstance } from 'vue';
-import { useRouter } from 'vue-router';
-import { ElMessage, ElMessageBox } from 'element-plus';
-import { listInterfaceAddress, getInterfaceAddress, delInterfaceAddress, addInterfaceAddress, updateInterfaceAddress } from "@/api/modelReconstitution/interfaceAddress";
+import { ref, reactive, watch, onMounted, getCurrentInstance } from "vue";
+import { useRouter } from "vue-router";
+import { ElMessage, ElMessageBox } from "element-plus";
+import {
+  listInterfaceAddress,
+  getInterfaceAddress,
+  delInterfaceAddress,
+  addInterfaceAddress,
+  updateInterfaceAddress,
+} from "@/api/modelReconstitution/interfaceAddress";
 import { getVersionList } from "@/api/modelReconstitution/version";
 import { useDict } from "@/utils/dict.js";
 
@@ -211,8 +279,8 @@ const router = useRouter();
 const props = defineProps({
   model: {
     type: Object,
-    default: {}
-  }
+    default: {},
+  },
 });
 
 // 响应式数据
@@ -253,8 +321,7 @@ const queryParams = reactive({
 // 表单参数
 const form = ref({});
 // 表单校验
-const rules = reactive({
-});
+const rules = reactive({});
 const model_type = useDict("model_type").model_type;
 
 // 模板引用
@@ -262,22 +329,26 @@ const queryFormRef = ref(null);
 const formRef = ref(null);
 
 // 监听器
-watch(() => props.model, (newVal, oldVal) => {
-  getVersionList({modelId:newVal.id}).then((response) => {
-    versionList.value = response.rows;
-    queryParams.versionId = newVal.versionId;
-    getList();
-  });
-}, {
-  deep: true, // 开启深度监听
-  immediate: true
-});
+watch(
+  () => props.model,
+  (newVal, oldVal) => {
+    getVersionList({ modelId: newVal.id }).then((response) => {
+      versionList.value = response.rows;
+      queryParams.versionId = newVal.versionId;
+      getList();
+    });
+  },
+  {
+    deep: true, // 开启深度监听
+    immediate: true,
+  }
+);
 
 // 方法定义
 /** 查询接口地址列表 */
 const getList = () => {
   loading.value = true;
-  listInterfaceAddress(queryParams).then(response => {
+  listInterfaceAddress(queryParams).then((response) => {
     interfaceAddressList.value = response.rows;
     total.value = response.total;
     loading.value = false;
@@ -291,7 +362,7 @@ const setTheParameters = (row) => {
     path: "/modelReconstitution/waterConserve/modelInputAndOutput",
     query: {
       modelId,
-      interfaceAddressId
+      interfaceAddressId,
     },
   });
 };
@@ -322,7 +393,7 @@ const reset = () => {
     updateBy: null,
     updatorId: null,
     updateTime: null,
-    remark: null
+    remark: null,
   };
   if (formRef.value) {
     formRef.value.clearValidate();
@@ -346,7 +417,7 @@ const resetQuery = () => {
 
 // 多选框选中数据
 const handleSelectionChange = (selection) => {
-  ids.value = selection.map(item => item.id);
+  ids.value = selection.map((item) => item.id);
   single.value = selection.length !== 1;
   multiple.value = !selection.length;
 };
@@ -362,7 +433,7 @@ const handleAdd = () => {
 const handleUpdate = (row) => {
   reset();
   const id = row.id || ids.value;
-  getInterfaceAddress(id).then(response => {
+  getInterfaceAddress(id).then((response) => {
     form.value = response.data;
     open.value = true;
     title.value = "修改接口地址";
@@ -380,20 +451,25 @@ const submitForm = () => {
     form.value.interfaceAddress = "/" + form.value.interfaceAddress;
   }
   if (props.model.interfaceorfileAddress.endsWith("/")) {
-    props.model.interfaceorfileAddress = props.model.interfaceorfileAddress.replace(/\/$/, "");
+    props.model.interfaceorfileAddress =
+      props.model.interfaceorfileAddress.replace(/\/$/, "");
   }
-  form.value.interfaceAddress = props.model.interfaceorfileAddress + ":" + props.model.port + form.value.interfaceAddress;
+  form.value.interfaceAddress =
+    props.model.interfaceorfileAddress +
+    ":" +
+    props.model.port +
+    form.value.interfaceAddress;
   if (formRef.value) {
-    formRef.value.validate(valid => {
+    formRef.value.validate((valid) => {
       if (valid) {
         if (form.value.id != null) {
-          updateInterfaceAddress(form.value).then(response => {
+          updateInterfaceAddress(form.value).then((response) => {
             ElMessage.success("修改成功");
             open.value = false;
             getList();
           });
         } else {
-          addInterfaceAddress(form.value).then(response => {
+          addInterfaceAddress(form.value).then((response) => {
             ElMessage.success("新增成功");
             open.value = false;
             getList();
@@ -407,23 +483,34 @@ const submitForm = () => {
 /** 删除按钮操作 */
 const handleDelete = (row) => {
   const idsToDelete = row.id || ids.value;
-  ElMessageBox.confirm(`是否确认删除接口地址编号为"${idsToDelete}"的数据项？`, "警告", {
-    confirmButtonText: "确定",
-    cancelButtonText: "取消",
-    type: "warning"
-  }).then(() => {
-    return delInterfaceAddress(idsToDelete);
-  }).then(() => {
-    getList();
-    ElMessage.success("删除成功");
-  }).catch(() => {});
+  ElMessageBox.confirm(
+    `是否确认删除接口地址编号为"${idsToDelete}"的数据项？`,
+    "警告",
+    {
+      confirmButtonText: "确定",
+      cancelButtonText: "取消",
+      type: "warning",
+    }
+  )
+    .then(() => {
+      return delInterfaceAddress(idsToDelete);
+    })
+    .then(() => {
+      getList();
+      ElMessage.success("删除成功");
+    })
+    .catch(() => {});
 };
 
 /** 导出按钮操作 */
 const handleExport = () => {
-  proxy.download('modelReconstitution/interfaceAddress/export', {
-    ...queryParams
-  }, `interfaceAddress_${new Date().getTime()}.xlsx`);
+  proxy.download(
+    "modelReconstitution/interfaceAddress/export",
+    {
+      ...queryParams,
+    },
+    `interfaceAddress_${new Date().getTime()}.xlsx`
+  );
 };
 
 // 组件挂载后执行

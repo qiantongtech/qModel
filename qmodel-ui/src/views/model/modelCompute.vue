@@ -234,540 +234,568 @@
 </template>
 
 <script setup>
-            import { ref, reactive, computed, watch, onMounted, getCurrentInstance } from 'vue';
-            import { useRoute } from 'vue-router';
-            import { ElMessage, ElMessageBox } from 'element-plus';
-            import {
-                listCacl,
-                getCacl,
-                delCacl,
-                addCacl,
-                updateCacl,
-                startCacl,
-                findModelInputById,
-                findModelOutputById
-            } from '@/api/modelReconstitution/cacl';
-            import { findAllModel, findAllModelVersion } from '@/api/modelReconstitution/input';
-            import { listInterfaceAddress } from '@/api/modelReconstitution/interfaceAddress';
-            import { useDict } from '@/utils/dict.js';
+    import { ref, reactive, computed, watch, onMounted, getCurrentInstance } from 'vue';
+    import { useRoute } from 'vue-router';
+    import { ElMessage, ElMessageBox } from 'element-plus';
+    import {
+        listCacl,
+        getCacl,
+        delCacl,
+        addCacl,
+        updateCacl,
+        startCacl,
+        findModelInputById,
+        findModelOutputById
+    } from '@/api/modelReconstitution/cacl';
+    import { findAllModel, findAllModelVersion } from '@/api/modelReconstitution/input';
+    import { listInterfaceAddress } from '@/api/modelReconstitution/interfaceAddress';
+    import { useDict } from '@/utils/dict.js';
 
-            // 获取当前实例以访问路由和其他属性
-            const { proxy } = getCurrentInstance();
-            const route = useRoute();
+    // 获取当前实例以访问路由和其他属性
+    const { proxy } = getCurrentInstance();
+    const route = useRoute();
 
-            // props
-            const props = defineProps({
-                model: {
-                    type: Object
+    // props
+    const props = defineProps({
+        model: {
+            type: Object
+        }
+    });
+
+    // 响应式数据
+    const size = ref('small');
+    const deleteFlag = ref(true);
+    const names = ref([
+        { success: '请求状态' },
+        { errorCode: '状态值' },
+        { message: '请求是否成功' },
+        { data: '数据' },
+        { buildingId: '设备id' },
+        { buildingName: '设备名称' },
+        { buildingType: '设备类型' },
+        { buildingTypeName: '设备类型名称' },
+        { useable: '是否可用' },
+        { realFlow: '实时流量' },
+        { pumpSate: '泵组状态' },
+        { maxTheoryFlow: '流量上限' },
+        { minTheoryFlow: '流量下限' }
+    ]);
+    const jsonStr = ref({
+        success: true,
+        errorCode: '2000',
+        message: '操作成功',
+        data: [
+            {
+                buildingId: 'SGJZ00000849',
+                buildingName: '西泵站 5#机组',
+                buildingType: '100008',
+                buildingTypeName: '泵站',
+                useable: true,
+                realFlow: 0,
+                pumpSate: 0,
+                maxTheoryFlow: 8,
+                minTheoryFlow: 0
+            }
+        ]
+    });
+    const inputList = ref([]);
+    const outputList = ref([]);
+    const modelList = ref([]);
+    const versionList = ref([]);
+    const interfaceAddressList = ref([]);
+    const cacl = ref({});
+    // 遮罩层
+    const loading = ref(true);
+    // 选中数组
+    const ids = ref([]);
+    // 非单个禁用
+    const single = ref(true);
+    // 非多个禁用
+    const multiple = ref(true);
+    // 显示搜索条件
+    const showSearch = ref(true);
+    // 总条数
+    const total = ref(0);
+    // 模型计算管理 表格数据
+    const caclList = ref([]);
+    // 弹出层标题
+    const title = ref('');
+    // 是否显示弹出层
+    const open = ref(false);
+    // 查询参数
+    const timer = ref(null);
+    const queryParams = reactive({
+        pageNum: 1,
+        pageSize: 10,
+        modelName: null,
+        modelVersion: null,
+        startTime: null,
+        endTime: null
+    });
+    // 表单参数
+    const form = ref({
+        modelId: null
+    });
+    // 表单校验
+    const rules = reactive({
+        validFlag: [
+            {
+                required: true,
+                message: '是否有效 0：无效，1：有效不能为空',
+                trigger: 'blur'
+            }
+        ],
+        delFlag: [
+            {
+                required: true,
+                message: '删除标志 1：已删除，0：未删除不能为空',
+                trigger: 'blur'
+            }
+        ],
+        createTime: [{ required: true, message: '创建时间不能为空', trigger: 'blur' }],
+        updateTime: [{ required: true, message: '更新时间不能为空', trigger: 'blur' }]
+    });
+    const titleParams = ref('');
+    const openParams = ref(false);
+    const formParams = ref({});
+    const rulesParams = ref({});
+
+    // 字典数据
+    const model_type = useDict('calculation_status').model_type;
+
+    // 模板引用
+    const queryFormRef = ref(null);
+    const formRef = ref(null);
+
+    // 计算属性
+    const dialogAppendTo = computed(() => {
+        return proxy?.$refs?.appContainer || 'body';
+    });
+
+    // 方法定义
+    // 获取输入参数
+    const getInputList = (param) => {
+        findModelInputById(param).then((res) => {
+            jsonStr.value =
+                JSON.parse(res.data.modelInputJson) == null
+                    ? {}
+                    : JSON.parse(res.data.modelInputJson);
+            let namesCpoy = JSON.parse(res.data.modelInputNames);
+
+            names.value = [];
+            for (let key in namesCpoy) {
+                names.value.push({ [key]: namesCpoy[key] });
+            }
+        });
+    };
+
+    // 获取输出参数
+    const getOutputList = (param) => {
+        findModelOutputById(param).then((res) => {
+            jsonStr.value =
+                JSON.parse(res.data.modelOutputJson) == null
+                    ? {}
+                    : JSON.parse(res.data.modelOutputJson);
+            let namesCpoy = JSON.parse(res.data.modelOutputNames);
+
+            names.value = [];
+            for (let key in namesCpoy) {
+                names.value.push({ [key]: namesCpoy[key] });
+            }
+        });
+    };
+
+    // 获取模型
+    const getAllModel = () => {
+        findAllModel({}).then((res) => {
+            modelList.value = res.data;
+        });
+    };
+
+    // 获取版本
+    const getAllModelVersion = (param) => {
+        const data = { modelId: param };
+        findAllModelVersion(data).then((res) => {
+            if (param) {
+                versionList.value = res.data;
+            } else {
+                versionList.value = [];
+            }
+        });
+    };
+
+    /**监听json数据变化 */
+    const jsonListener = (json) => {
+        console.log(json);
+        jsonStr.value = json;
+    };
+
+    // 获取接口列表
+    const getInterfaceAddress = (modelId, version) => {
+        let versionId = versionList.value.filter((item) => {
+            if (item.version == version) {
+                return true;
+            }
+        })[0].id;
+        const data = { modelId: modelId, versionId: versionId };
+        listInterfaceAddress(data).then((response) => {
+            interfaceAddressList.value = response.rows;
+        });
+    };
+
+    const selectCacl = (id) => {
+        getCacl(id).then((res) => {
+            cacl.value = res.data;
+        });
+    };
+
+    const timerChange = (e) => {
+        if (e) {
+            queryParams.startTime = e[0];
+            queryParams.endTime = e[1];
+        } else {
+            queryParams.startTime = null;
+            queryParams.endTime = null;
+        }
+    };
+
+    /** 查询模型计算管理 列表 */
+    const getList = () => {
+        loading.value = true;
+        listCacl(queryParams).then((response) => {
+            caclList.value = response.rows;
+            total.value = response.total;
+            loading.value = false;
+        });
+    };
+
+    // 取消按钮
+    const cancel = () => {
+        open.value = false;
+        reset();
+        openParams.value = false;
+        resetParams();
+    };
+
+    // 表单重置
+    const reset = () => {
+        form.value = {
+            id: null,
+            code: null,
+            name: null,
+            modelId: null,
+            modelName: null,
+            modelVersion: null,
+            startTime: null,
+            endTime: null,
+            status: 0,
+            inputIds: null,
+            outputIds: null,
+            validFlag: null,
+            delFlag: null,
+            createBy: null,
+            creatorId: null,
+            createTime: null,
+            updateBy: null,
+            updatorId: null,
+            updateTime: null,
+            remark: null,
+            addressId: null,
+            addressType: null,
+            address: null,
+            requestMethod: null
+        };
+        if (formRef.value) {
+            formRef.value.clearValidate();
+        }
+    };
+
+    /** 搜索按钮操作 */
+    const handleQuery = () => {
+        queryParams.pageNum = 1;
+        getList();
+    };
+
+    /** 重置按钮操作 */
+    const resetQuery = () => {
+        if (queryFormRef.value) {
+            queryFormRef.value.resetFields();
+        }
+        queryParams.modelVersion = props.model.version;
+        handleQuery();
+    };
+
+    // 多选框选中数据
+    const handleSelectionChange = (selection) => {
+        ids.value = selection.map((item) => item.id);
+        single.value = selection.length !== 1;
+        multiple.value = !selection.length;
+    };
+
+    // 表单重置
+    const resetParams = () => {
+        formParams.value = {
+            id: null,
+            code: null,
+            name: null,
+            modelId: null,
+            modelName: null,
+            modelVersion: null,
+            startTime: null,
+            endTime: null,
+            status: 0,
+            inputIds: null,
+            outputIds: null,
+            validFlag: null,
+            delFlag: null,
+            createBy: null,
+            creatorId: null,
+            createTime: null,
+            updateBy: null,
+            updatorId: null,
+            updateTime: null,
+            remark: null,
+            addressId: null,
+            addressType: null,
+            address: null,
+            requestMethod: null
+        };
+        if (proxy?.$refs?.formParams) {
+            proxy.$refs.formParams.resetFields();
+        }
+    };
+
+    /** 新增按钮操作 */
+    const handleAdd = () => {
+        reset();
+        open.value = true;
+        title.value = '添加模型计算管理';
+        if (props.model) {
+            form.value.modelId = props.model.id;
+            form.value.modelName = props.model.name;
+            getAllModelVersion(props.model.id);
+        }
+    };
+
+    /** 操作-设置参数 */
+    const setParams = (row) => {
+        const id = row.id;
+        resetParams();
+        // openParams.value = true;
+        // titleParams.value = "输入参数设置";
+        // deleteFlag.value = true;
+        proxy.$tab.openPage(
+            '/model/modelComputeInputOrOutput?modelId=' +
+                props.model.id +
+                '&computeId=' +
+                id +
+                '&isInputOrOut=0&deleteFlag:1'
+        );
+        /*getInputList(id);
+            selectCacl(id);*/
+    };
+
+    /** 操作-计算 */
+    const handleCompute = (row) => {
+        const id = row.id;
+        caclList.value.forEach((item) => {
+            if (item.id == id) {
+                item.status = 1;
+            }
+        });
+        startCacl(id).then((res) => {
+            ElMessage.success('模型计算完毕');
+            getList();
+        });
+    };
+
+    /** 操作-查看结果 */
+    const handleView = (row) => {
+        const id = row.id;
+        getCacl(id).then((res) => {
+            cacl.value = res.data;
+            if (cacl.value.status != 2) {
+                ElMessage.error('模型还没有计算完成，请耐心等待.....');
+                return;
+            }
+            // openParams.value = true;
+            // titleParams.value = "查看结果";
+            // deleteFlag.value = false;
+            proxy.$tab.openPage(
+                '查看计算结果',
+                '/modelReconstitution/waterConserve/modelComputeInputOrOutput',
+                {
+                    modelId: props.model.id,
+                    computeId: id,
+                    isInputOrOut: 1,
+                    deleteFlag: false
                 }
-            });
+            );
+            /*getOutputList(id);
+             */
+        });
+    };
 
-            // 响应式数据
-            const size = ref('small');
-            const deleteFlag = ref(true);
-            const names = ref([
-                { success: '请求状态' },
-                { errorCode: '状态值' },
-                { message: '请求是否成功' },
-                { data: '数据' },
-                { buildingId: '设备id' },
-                { buildingName: '设备名称' },
-                { buildingType: '设备类型' },
-                { buildingTypeName: '设备类型名称' },
-                { useable: '是否可用' },
-                { realFlow: '实时流量' },
-                { pumpSate: '泵组状态' },
-                { maxTheoryFlow: '流量上限' },
-                { minTheoryFlow: '流量下限' }
-            ]);
-            const jsonStr = ref({
-                success: true,
-                errorCode: '2000',
-                message: '操作成功',
-                data: [
-                    {
-                        buildingId: 'SGJZ00000849',
-                        buildingName: '西泵站 5#机组',
-                        buildingType: '100008',
-                        buildingTypeName: '泵站',
-                        useable: true,
-                        realFlow: 0,
-                        pumpSate: 0,
-                        maxTheoryFlow: 8,
-                        minTheoryFlow: 0
-                    }
-                ]
-            });
-            const inputList = ref([]);
-            const outputList = ref([]);
-            const modelList = ref([]);
-            const versionList = ref([]);
-            const interfaceAddressList = ref([]);
-            const cacl = ref({});
-            // 遮罩层
-            const loading = ref(true);
-            // 选中数组
-            const ids = ref([]);
-            // 非单个禁用
-            const single = ref(true);
-            // 非多个禁用
-            const multiple = ref(true);
-            // 显示搜索条件
-            const showSearch = ref(true);
-            // 总条数
-            const total = ref(0);
-            // 模型计算管理 表格数据
-            const caclList = ref([]);
-            // 弹出层标题
-            const title = ref('');
-            // 是否显示弹出层
-            const open = ref(false);
-            // 查询参数
-            const timer = ref(null);
-            const queryParams = reactive({
-                pageNum: 1,
-                pageSize: 10,
-                modelName: null,
-                modelVersion: null,
-                startTime: null,
-                endTime: null
-            });
-            // 表单参数
-            const form = ref({
-                modelId: null
-            });
-            // 表单校验
-            const rules = reactive({
-                validFlag: [
-                    {
-                        required: true,
-                        message: '是否有效 0：无效，1：有效不能为空',
-                        trigger: 'blur'
-                    }
-                ],
-                delFlag: [
-                    {
-                        required: true,
-                        message: '删除标志 1：已删除，0：未删除不能为空',
-                        trigger: 'blur'
-                    }
-                ],
-                createTime: [{ required: true, message: '创建时间不能为空', trigger: 'blur' }],
-                updateTime: [{ required: true, message: '更新时间不能为空', trigger: 'blur' }]
-            });
-            const titleParams = ref('');
-            const openParams = ref(false);
-            const formParams = ref({});
-            const rulesParams = ref({});
+    /** 修改按钮操作 */
+    const handleUpdate = (row) => {
+        reset();
+        const id = row.id || ids.value;
+        getCacl(id).then((response) => {
+            form.value = response.data;
+            open.value = true;
+            title.value = '修改模型计算管理 ';
+        });
+    };
 
-            // 字典数据
-            const model_type = useDict('calculation_status').model_type;
-
-            // 模板引用
-            const queryFormRef = ref(null);
-            const formRef = ref(null);
-
-            // 计算属性
-            const dialogAppendTo = computed(() => {
-                return proxy?.$refs?.appContainer || 'body';
-            });
-
-            // 监听器
-            watch(() => props.model, (newVal, oldVal) => {
-                if (newVal != null && oldVal != null && newVal.id == oldVal.id) return;
-                if (newVal) {
-                    form.value.modelId = newVal.id;
-                    queryParams.modelVersion = newVal.version;
-                    queryParams.modelId = newVal.id;
-                    form.value.modelId = newVal.id;
-                }
-                getList();
-                getAllModelVersion(form.value.modelId);
-            }, { deep: true, immediate: true });
-
-            // 方法定义
-            // 获取输入参数
-            const getInputList = (param) => {
-                findModelInputById(param).then((res) => {
-                    jsonStr.value =
-                        JSON.parse(res.data.modelInputJson) == null
-                            ? {}
-                            : JSON.parse(res.data.modelInputJson);
-                    let namesCpoy = JSON.parse(res.data.modelInputNames);
-
-                    names.value = [];
-                    for (let key in namesCpoy) {
-                        names.value.push({ [key]: namesCpoy[key] });
-                    }
-                });
-            };
-
-            // 获取输出参数
-            const getOutputList = (param) => {
-                findModelOutputById(param).then((res) => {
-                    jsonStr.value =
-                        JSON.parse(res.data.modelOutputJson) == null
-                            ? {}
-                            : JSON.parse(res.data.modelOutputJson);
-                    let namesCpoy = JSON.parse(res.data.modelOutputNames);
-
-                    names.value = [];
-                    for (let key in namesCpoy) {
-                        names.value.push({ [key]: namesCpoy[key] });
-                    }
-                });
-            };
-
-            // 获取模型
-            const getAllModel = () => {
-                findAllModel({}).then((res) => {
-                    modelList.value = res.data;
-                });
-            };
-
-            // 获取版本
-            const getAllModelVersion = (param) => {
-                const data = { modelId: param };
-                findAllModelVersion(data).then((res) => {
-                    if (param) {
-                        versionList.value = res.data;
-                    } else {
-                        versionList.value = [];
-                    }
-                });
-            };
-
-            /**监听json数据变化 */
-            const jsonListener = (json) => {
-                console.log(json);
-                jsonStr.value = json;
-            };
-
-            // 获取接口列表
-            const getInterfaceAddress = (modelId, version) => {
-                let versionId = versionList.value.filter((item) => {
-                    if (item.version == version) {
-                        return true;
-                    }
-                })[0].id;
-                const data = { modelId: modelId, versionId: versionId };
-                listInterfaceAddress(data).then((response) => {
-                    interfaceAddressList.value = response.rows;
-                });
-            };
-
-            const selectCacl = (id) => {
-                getCacl(id).then((res) => {
-                    cacl.value = res.data;
-                });
-            };
-
-            const timerChange = (e) => {
-                if (e) {
-                    queryParams.startTime = e[0];
-                    queryParams.endTime = e[1];
-                } else {
-                    queryParams.startTime = null;
-                    queryParams.endTime = null;
-                }
-            };
-
-            /** 查询模型计算管理 列表 */
-            const getList = () => {
-                loading.value = true;
-                listCacl(queryParams).then((response) => {
-                    caclList.value = response.rows;
-                    total.value = response.total;
-                    loading.value = false;
-                });
-            };
-
-            // 取消按钮
-            const cancel = () => {
-                open.value = false;
-                reset();
-                openParams.value = false;
-                resetParams();
-            };
-
-            // 表单重置
-            const reset = () => {
-                form.value = {
-                    id: null,
-                    code: null,
-                    name: null,
-                    modelId: null,
-                    modelName: null,
-                    modelVersion: null,
-                    startTime: null,
-                    endTime: null,
-                    status: 0,
-                    inputIds: null,
-                    outputIds: null,
-                    validFlag: null,
-                    delFlag: null,
-                    createBy: null,
-                    creatorId: null,
-                    createTime: null,
-                    updateBy: null,
-                    updatorId: null,
-                    updateTime: null,
-                    remark: null,
-                    addressId: null,
-                    addressType: null,
-                    address: null,
-                    requestMethod: null
-                };
-                if (formRef.value) {
-                    formRef.value.clearValidate();
-                }
-            };
-
-            /** 搜索按钮操作 */
-            const handleQuery = () => {
-                queryParams.pageNum = 1;
-                getList();
-            };
-
-            /** 重置按钮操作 */
-            const resetQuery = () => {
-                            if (queryFormRef.value) {
-                                queryFormRef.value.resetFields();
-                            }
-                            queryParams.modelVersion = props.model.version;
-                            handleQuery();
-                        },
-                        // 多选框选中数据
-                        handleSelectionChange(selection) {
-                            ids.value = selection.map((item) => item.id);
-                            single.value = selection.length !== 1;
-                            multiple.value = !selection.length;
-                        },
-                        // 表单重置
-                        resetParams() {
-                            formParams.value = {
-                                id: null,
-                                code: null,
-                                name: null,
-                                modelId: null,
-                                modelName: null,
-                                modelVersion: null,
-                                startTime: null,
-                                endTime: null,
-                                status: 0,
-                                inputIds: null,
-                                outputIds: null,
-                                validFlag: null,
-                                delFlag: null,
-                                createBy: null,
-                                creatorId: null,
-                                createTime: null,
-                                updateBy: null,
-                                updatorId: null,
-                                updateTime: null,
-                                remark: null,
-                                addressId: null,
-                                addressType: null,
-                                address: null,
-                                requestMethod: null
-                            };
-                            if (proxy?.$refs?.formParams) {
-                                proxy.$refs.formParams.resetFields();
-                            }
-                        },
-                        /** 新增按钮操作 */
-                        handleAdd() {
-                            reset();
-                            open.value = true;
-                            title.value = '添加模型计算管理';
-                            if (props.model) {
-                                form.value.modelId = props.model.id;
-                                form.value.modelName = props.model.name;
-                                getAllModelVersion(props.model.id);
-                            }
-                        },
-                        /** 操作-设置参数 */
-                        setParams(row) {
-                            const id = row.id;
-                            resetParams();
-                            // openParams.value = true;
-                            // titleParams.value = "输入参数设置";
-                            // deleteFlag.value = true;
-                            proxy.$tab.openPage(
-                                '/model/modelComputeInputOrOutput?modelId=' +
-                                    props.model.id +
-                                    '&computeId=' +
-                                    id +
-                                    '&isInputOrOut=0&deleteFlag:1'
-                            );
-                            /*getInputList(id);
-                        selectCacl(id);*/
-                        },
-                        /** 操作-计算 */
-                        handleCompute(row) {
-                            const id = row.id;
-                            caclList.value.forEach((item) => {
-                                if (item.id == id) {
-                                    item.status = 1;
-                                }
-                            });
-                            startCacl(id).then((res) => {
-                                ElMessage.success('模型计算完毕');
-                                getList();
-                            });
-                        },
-                        /** 操作-查看结果 */
-                        handleView(row) {
-                            const id = row.id;
-                            getCacl(id).then((res) => {
-                                cacl.value = res.data;
-                                if (cacl.value.status != 2) {
-                                    ElMessage.error('模型还没有计算完成，请耐心等待.....');
-                                    return;
-                                }
-                                // openParams.value = true;
-                                // titleParams.value = "查看结果";
-                                // deleteFlag.value = false;
-                                proxy.$tab.openPage(
-                                    '查看计算结果',
-                                    '/modelReconstitution/waterConserve/modelComputeInputOrOutput',
-                                    {
-                                        modelId: props.model.id,
-                                        computeId: id,
-                                        isInputOrOut: 1,
-                                        deleteFlag: false
-                                    }
-                                );
-                                /*getOutputList(id);
-                                 */
-                            });
-                        },
-                        /** 修改按钮操作 */
-                        handleUpdate(row) {
-                            reset();
-                            const id = row.id || ids.value;
-                            getCacl(id).then((response) => {
-                                form.value = response.data;
-                                open.value = true;
-                                title.value = '修改模型计算管理 ';
-                            });
-                        },
-                        /** 提交按钮 */
-                        submitForm() {
-                            if (formRef.value) {
-                                formRef.value.validate((valid) => {
-                                    if (valid) {
-                                        let model = modelList.value.filter((item) => {
-                                            if (item.id == form.value.modelId) {
-                                                return true;
-                                            }
-                                        })[0];
-                                        form.value.modelName = model.name;
-                                        form.value.addressType = model.accessMode;
-                                        const formData = { ...form.value };
-                                        if (formData.id != null) {
-                                            updateCacl(formData).then((response) => {
-                                                ElMessage.success('修改成功');
-                                                open.value = false;
-                                                getList();
-                                            });
-                                        } else {
-                                            addCacl(formData).then((response) => {
-                                                ElMessage.success('新增成功');
-                                                open.value = false;
-                                                getList();
-                                            });
-                                        }
-                                    }
-                                });
-                            }
-                        },
-                        // 设置参数保存
-                        submitJsonForm() {
-                            let cacl = { id: cacl.value.id, inputContent: JSON.stringify(jsonStr.value) };
-                            updateCacl(cacl).then((response) => {
-                                ElMessage.success('参数设置成功');
-                                openParams.value = false;
-                                getList();
-                            });
-                        },
-                        /** 删除按钮操作 */
-                        handleDelete(row) {
-                            const idsToDelete = row.id || ids.value;
-                            ElMessageBox.confirm('是否确认删除模型计算管理 编号为"' + idsToDelete + '"的数据项？', '警告', {
-                                confirmButtonText: '确定',
-                                cancelButtonText: '取消',
-                                type: 'warning'
-                            }).then(function () {
-                                return delCacl(idsToDelete);
-                            }).then(() => {
-                                getList();
-                                ElMessage.success('删除成功');
-                            }).catch(() => {});
-                        },
-                        /** 导出按钮操作 */
-                        handleExport() {
-                            proxy.$download(
-                                'model/cacl/export',
-                                {
-                                    ...queryParams
-                                },
-                                `cacl_${new Date().getTime()}.xlsx`
-                            );
-                        },
-
-                        /** 单值 添加按钮操作 */
-                        handleAddSingle() {
-                            let obj = {};
-                            obj.param = '';
-                            obj.name = '';
-                            obj.value = '';
-                            form.value.singleContent.push(obj);
-                        },
-                        /** 单值 删除按钮操作 */
-                        handleDeleteSingle(row) {
-                            const id = row.index;
-                            const singleContent = form.value.singleContent;
-                            form.value.singleContent = singleContent.filter(function (item) {
-                                return item.index != id;
-                            });
-                        },
-                        /** 单值 序号 */
-                        singleIndex({ row, rowIndex }) {
-                            row.index = rowIndex + 1;
-                        },
-                        /** 复选框选中数据 */
-                        handleSingleChange(selection) {
-                            checkedSingle.value = selection.map((item) => item.index);
-                        },
-
-                        /** 多列值 添加按钮操作 */
-                        handleAddMultiple() {
-                            let obj = {};
-                            obj.name = '';
-                            obj.value = '';
-                            obj.order = '';
-                            form.value.multipleContent.push(obj);
-                        },
-                        /** 多列值 删除按钮操作 */
-                        handleDeleteMultiple(row) {
-                            const id = row.index;
-                            const multipleContent = form.value.multipleContent;
-                            form.value.multipleContent = multipleContent.filter(function (item) {
-                                return item.index != id;
-                            });
-                        },
-                        /** 多列值 序号 */
-                        multipleIndex({ row, rowIndex }) {
-                            row.index = rowIndex + 1;
-                        },
-                        /** 复选框选中数据 */
-                        handleMultipleChange(selection) {
-                            checkedMultiple.value = selection.map((item) => item.index);
+    /** 提交按钮 */
+    const submitForm = () => {
+        if (formRef.value) {
+            formRef.value.validate((valid) => {
+                if (valid) {
+                    let model = modelList.value.filter((item) => {
+                        if (item.id == form.value.modelId) {
+                            return true;
                         }
+                    })[0];
+                    form.value.modelName = model.name;
+                    form.value.addressType = model.accessMode;
+                    const formData = { ...form.value };
+                    if (formData.id != null) {
+                        updateCacl(formData).then((response) => {
+                            ElMessage.success('修改成功');
+                            open.value = false;
+                            getList();
+                        });
+                    } else {
+                        addCacl(formData).then((response) => {
+                            ElMessage.success('新增成功');
+                            open.value = false;
+                            getList();
+                        });
                     }
                 }
-            };
+            });
+        }
+    };
+
+    /** 删除按钮操作 */
+    const handleDelete = (row) => {
+        const idsToDelete = row.id || ids.value;
+        ElMessageBox.confirm('是否确认删除模型计算管理编号为"' + idsToDelete + '"的数据项？')
+            .then(function () {
+                return delCacl(idsToDelete);
+            })
+            .then(() => {
+                getList();
+                ElMessage.success('删除成功');
+            })
+            .catch(() => {});
+    };
+
+    // 关闭弹窗
+    const close = (done) => {
+        if (timer.value) {
+            clearInterval(timer.value);
+            timer.value = null;
+        }
+        done();
+    };
+
+    // 设置参数保存
+    const submitJsonForm = () => {
+        let caclData = { id: cacl.value.id, inputContent: JSON.stringify(jsonStr.value) };
+        updateCacl(caclData).then((response) => {
+            ElMessage.success('参数设置成功');
+            openParams.value = false;
+            getList();
+        });
+    };
+
+    /** 删除按钮操作 (duplicate, using the one defined earlier) */
+
+    /** 导出按钮操作 */
+    const handleExport = () => {
+        proxy.$download(
+            'model/cacl/export',
+            {
+                ...queryParams
+            },
+            `cacl_${new Date().getTime()}.xlsx`
+        );
+    };
+
+    /** 单值 添加按钮操作 */
+    const handleAddSingle = () => {
+        let obj = {};
+        obj.param = '';
+        obj.name = '';
+        obj.value = '';
+        form.value.singleContent.push(obj);
+    };
+
+    /** 单值 删除按钮操作 */
+    const handleDeleteSingle = (row) => {
+        const id = row.index;
+        const singleContent = form.value.singleContent;
+        form.value.singleContent = singleContent.filter(function (item) {
+            return item.index != id;
+        });
+    };
+
+    /** 单值 序号 */
+    const singleIndex = ({ row, rowIndex }) => {
+        row.index = rowIndex + 1;
+    };
+
+    /** 复选框选中数据 */
+    const handleSingleChange = (selection) => {
+        checkedSingle.value = selection.map((item) => item.index);
+    };
+
+    /** 多列值 添加按钮操作 */
+    const handleAddMultiple = () => {
+        let obj = {};
+        obj.name = '';
+        obj.value = '';
+        obj.order = '';
+        form.value.multipleContent.push(obj);
+    };
+
+    /** 多列值 删除按钮操作 */
+    const handleDeleteMultiple = (row) => {
+        const id = row.index;
+        const multipleContent = form.value.multipleContent;
+        form.value.multipleContent = multipleContent.filter(function (item) {
+            return item.index != id;
+        });
+    };
+
+    /** 多列值 序号 */
+    const multipleIndex = ({ row, rowIndex }) => {
+        row.index = rowIndex + 1;
+    };
+
+    /** 复选框选中数据 */
+    const handleMultipleChange = (selection) => {
+        checkedMultiple.value = selection.map((item) => item.index);
+    };
+
+    // 监听器
+    watch(
+        () => props.model,
+        (newVal, oldVal) => {
+            if (newVal != null && oldVal != null && newVal.id == oldVal.id) return;
+            if (newVal) {
+                form.value.modelId = newVal.id;
+                queryParams.modelVersion = newVal.version;
+                queryParams.modelId = newVal.id;
+                form.value.modelId = newVal.id;
+            }
+            getList();
+            getAllModelVersion(form.value.modelId);
+        },
+        { deep: true, immediate: true }
+    );
 
     // 组件挂载后执行
     onMounted(() => {
