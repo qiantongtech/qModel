@@ -32,9 +32,10 @@
 
 package tech.qiantong.qmodel.generator.util;
 
-import java.util.Properties;
 import org.apache.velocity.app.Velocity;
 import tech.qiantong.qmodel.common.constant.Constants;
+
+import java.util.Properties;
 
 /**
  * VelocityEngine工厂

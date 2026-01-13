@@ -32,18 +32,19 @@
 
 package tech.qiantong.qmodel.quartz.domain;
 
-import java.util.Date;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Size;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
-import com.fasterxml.jackson.annotation.JsonFormat;
 import tech.qiantong.qmodel.common.annotation.Excel;
 import tech.qiantong.qmodel.common.annotation.Excel.ColumnType;
 import tech.qiantong.qmodel.common.constant.ScheduleConstants;
 import tech.qiantong.qmodel.common.core.domain.BaseEntity;
 import tech.qiantong.qmodel.common.utils.StringUtils;
 import tech.qiantong.qmodel.quartz.util.CronUtils;
+
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
+import java.util.Date;
 
 /**
  * 定时任务调度表 sys_job

@@ -32,11 +32,11 @@
 
 package tech.qiantong.qmodel.common.core.domain;
 
+import tech.qiantong.qmodel.common.constant.HttpStatus;
+import tech.qiantong.qmodel.common.utils.StringUtils;
+
 import java.util.HashMap;
 import java.util.Objects;
-
-import tech.qiantong.qmodel.common.utils.StringUtils;
-import tech.qiantong.qmodel.common.constant.HttpStatus;
 
 /**
  * 操作消息提醒

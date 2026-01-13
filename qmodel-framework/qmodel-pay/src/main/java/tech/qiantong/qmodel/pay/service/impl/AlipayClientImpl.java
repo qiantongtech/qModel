@@ -43,13 +43,13 @@ import com.alipay.api.DefaultAlipayClient;
 import com.alipay.api.request.AlipayTradePagePayRequest;
 import com.alipay.api.request.AlipayTradeRefundRequest;
 import com.alipay.api.response.AlipayTradeRefundResponse;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
 import tech.qiantong.qmodel.pay.config.AliPayConfig;
 import tech.qiantong.qmodel.pay.domain.*;
 import tech.qiantong.qmodel.pay.service.PayGatewayClient;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -68,7 +68,7 @@ public class AlipayClientImpl implements PayGatewayClient {
     private static final String CHARSET_UTF8 = "UTF-8";
     private static final String SIGN_TYPE_RSA2 = "RSA2";
 
-    @Autowired
+    @Resource
     private AliPayConfig myAliPayConfig;
 
     /**

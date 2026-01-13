@@ -32,9 +32,10 @@
 
 package tech.qiantong.qmodel.generator.domain;
 
-import javax.validation.constraints.NotBlank;
 import tech.qiantong.qmodel.common.core.domain.BaseEntity;
 import tech.qiantong.qmodel.common.utils.StringUtils;
+
+import javax.validation.constraints.NotBlank;
 
 /**
  * 代码生成业务字段表 gen_table_column

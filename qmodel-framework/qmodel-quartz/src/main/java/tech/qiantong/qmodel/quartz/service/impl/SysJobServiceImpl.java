@@ -32,22 +32,23 @@
 
 package tech.qiantong.qmodel.quartz.service.impl;
 
-import java.util.List;
-import javax.annotation.PostConstruct;
 import org.quartz.JobDataMap;
 import org.quartz.JobKey;
 import org.quartz.Scheduler;
 import org.quartz.SchedulerException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import tech.qiantong.qmodel.common.constant.ScheduleConstants;
 import tech.qiantong.qmodel.common.exception.job.TaskException;
 import tech.qiantong.qmodel.quartz.domain.SysJob;
-import tech.qiantong.qmodel.quartz.util.CronUtils;
-import tech.qiantong.qmodel.quartz.util.ScheduleUtils;
 import tech.qiantong.qmodel.quartz.mapper.SysJobMapper;
 import tech.qiantong.qmodel.quartz.service.ISysJobService;
+import tech.qiantong.qmodel.quartz.util.CronUtils;
+import tech.qiantong.qmodel.quartz.util.ScheduleUtils;
+
+import javax.annotation.PostConstruct;
+import javax.annotation.Resource;
+import java.util.List;
 
 /**
  * 定时任务调度信息 服务层
@@ -57,10 +58,10 @@ import tech.qiantong.qmodel.quartz.service.ISysJobService;
 @Service
 public class SysJobServiceImpl implements ISysJobService
 {
-    @Autowired
+    @Resource
     private Scheduler scheduler;
 
-    @Autowired
+    @Resource
     private SysJobMapper jobMapper;
 
     /**

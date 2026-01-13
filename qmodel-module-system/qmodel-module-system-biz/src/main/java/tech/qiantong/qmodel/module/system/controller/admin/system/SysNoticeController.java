@@ -34,7 +34,7 @@ package tech.qiantong.qmodel.module.system.controller.admin.system;
 
 import java.util.Date;
 import java.util.List;
-import org.springframework.beans.factory.annotation.Autowired;
+import javax.annotation.Resource;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -68,7 +68,7 @@ import javax.annotation.Resource;
 @RequestMapping("/system/notice")
 public class SysNoticeController extends BaseController
 {
-    @Autowired
+    @Resource
     private ISysNoticeService noticeService;
     @Resource
     private WebSocketMessageServer webSocketMessageServer;

@@ -32,9 +32,9 @@
 
 package tech.qiantong.qmodel.quartz.mapper;
 
-import java.util.List;
-
 import tech.qiantong.qmodel.quartz.domain.SysJobLog;
+
+import java.util.List;
 
 /**
  * 调度任务日志信息 数据层

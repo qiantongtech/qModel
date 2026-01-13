@@ -32,13 +32,14 @@
 
 package tech.qiantong.qmodel.common.utils;
 
-import java.util.Collection;
-import java.util.List;
 import com.alibaba.fastjson2.JSONArray;
 import tech.qiantong.qmodel.common.constant.CacheConstants;
 import tech.qiantong.qmodel.common.core.domain.entity.SysDictData;
 import tech.qiantong.qmodel.common.core.redis.RedisCache;
 import tech.qiantong.qmodel.common.utils.spring.SpringUtils;
+
+import java.util.Collection;
+import java.util.List;
 
 /**
  * 字典工具类

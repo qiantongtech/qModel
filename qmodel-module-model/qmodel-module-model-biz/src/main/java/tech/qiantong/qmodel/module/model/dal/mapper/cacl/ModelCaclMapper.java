@@ -34,7 +34,6 @@ package tech.qiantong.qmodel.module.model.dal.mapper.cacl;
 
 import tech.qiantong.qmodel.common.core.page.PageResult;
 import tech.qiantong.qmodel.module.model.controller.admin.modelCacl.vo.ModelCaclPageReqVO;
-
 import tech.qiantong.qmodel.module.model.dal.dataobject.cacl.ModelCaclDO;
 import tech.qiantong.qmodel.mybatis.core.mapper.BaseMapperX;
 import tech.qiantong.qmodel.mybatis.core.query.LambdaQueryWrapperX;

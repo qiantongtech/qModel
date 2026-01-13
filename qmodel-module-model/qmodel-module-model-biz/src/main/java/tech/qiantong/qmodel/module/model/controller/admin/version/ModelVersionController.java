@@ -32,33 +32,23 @@
 
 package tech.qiantong.qmodel.module.model.controller.admin.version;
 
-import javax.annotation.Resource;
-import javax.servlet.http.HttpServletResponse;
-import javax.validation.Valid;
-import java.util.Arrays;
-import java.util.List;
-
 import cn.hutool.json.JSONObject;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import tech.qiantong.qmodel.common.core.page.PageParam;
-import tech.qiantong.qmodel.common.core.domain.AjaxResult;
 import tech.qiantong.qmodel.common.annotation.Log;
 import tech.qiantong.qmodel.common.core.controller.BaseController;
+import tech.qiantong.qmodel.common.core.domain.AjaxResult;
 import tech.qiantong.qmodel.common.core.domain.CommonResult;
+import tech.qiantong.qmodel.common.core.page.PageParam;
 import tech.qiantong.qmodel.common.core.page.PageResult;
-import tech.qiantong.qmodel.common.core.page.TableDataInfo;
 import tech.qiantong.qmodel.common.enums.BusinessType;
 import tech.qiantong.qmodel.common.utils.object.BeanUtils;
 import tech.qiantong.qmodel.common.utils.poi.ExcelUtil;
-import tech.qiantong.qmodel.common.exception.enums.GlobalErrorCodeConstants;
-import tech.qiantong.qmodel.module.model.controller.admin.history.vo.ModelHistorySaveReqVO;
 import tech.qiantong.qmodel.module.model.controller.admin.operate.vo.ModelOperateSaveReqVO;
 import tech.qiantong.qmodel.module.model.controller.admin.version.vo.ModelVersionPageReqVO;
 import tech.qiantong.qmodel.module.model.controller.admin.version.vo.ModelVersionRespVO;
@@ -70,7 +60,12 @@ import tech.qiantong.qmodel.module.model.service.modelReconstitution.IModelRecon
 import tech.qiantong.qmodel.module.model.service.operate.IModelOperateService;
 import tech.qiantong.qmodel.module.model.service.version.IModelVersionService;
 import tech.qiantong.qmodel.module.modelReconstitution.domain.ModelReconstitution;
-import tech.qiantong.qmodel.module.modelReconstitution.domain.ModelVersionReconstitution;
+
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
+import java.util.Arrays;
+import java.util.List;
 
 
 /**
@@ -87,13 +82,13 @@ public class ModelVersionController extends BaseController {
     @Resource
     private IModelVersionService modelVersionService;
 
-    @Autowired
+    @Resource
     private IModelReconstitutionService modelReconstitutionService;
 
-    @Autowired
+    @Resource
     private IModelHistoryService modelHistoryService;
 
-    @Autowired
+    @Resource
     private IModelOperateService modelOperateService;
 
     @Operation(summary = "查询版本管理列表")

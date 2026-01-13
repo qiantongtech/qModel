@@ -32,17 +32,8 @@
 
 package tech.qiantong.qmodel.generator.service;
 
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.IOException;
-import java.io.StringWriter;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.function.Function;
-import java.util.stream.Collectors;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipOutputStream;
+import com.alibaba.fastjson2.JSON;
+import com.alibaba.fastjson2.JSONObject;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.velocity.Template;
@@ -50,11 +41,8 @@ import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.Velocity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import com.alibaba.fastjson2.JSON;
-import com.alibaba.fastjson2.JSONObject;
 import tech.qiantong.qmodel.common.constant.Constants;
 import tech.qiantong.qmodel.common.constant.GenConstants;
 import tech.qiantong.qmodel.common.core.domain.entity.SysDictType;
@@ -69,6 +57,19 @@ import tech.qiantong.qmodel.generator.util.GenUtils;
 import tech.qiantong.qmodel.generator.util.VelocityInitializer;
 import tech.qiantong.qmodel.generator.util.VelocityUtils;
 
+import javax.annotation.Resource;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.IOException;
+import java.io.StringWriter;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
+
 /**
  * 业务 服务层实现
  *
@@ -79,10 +80,10 @@ public class GenTableServiceImpl implements IGenTableService
 {
     private static final Logger log = LoggerFactory.getLogger(GenTableServiceImpl.class);
 
-    @Autowired
+    @Resource
     private GenTableMapper genTableMapper;
 
-    @Autowired
+    @Resource
     private GenTableColumnMapper genTableColumnMapper;
 
     /**

@@ -33,7 +33,7 @@
 package tech.qiantong.qmodel.module.system.service.impl;
 
 import java.util.List;
-import org.springframework.beans.factory.annotation.Autowired;
+import javax.annotation.Resource;
 import org.springframework.stereotype.Service;
 import tech.qiantong.qmodel.common.core.domain.entity.SysDictData;
 import tech.qiantong.qmodel.common.utils.DictUtils;
@@ -48,7 +48,7 @@ import tech.qiantong.qmodel.module.system.service.ISysDictDataService;
 @Service
 public class SysDictDataServiceImpl implements ISysDictDataService
 {
-    @Autowired
+    @Resource
     private SysDictDataMapper dictDataMapper;
 
     /**

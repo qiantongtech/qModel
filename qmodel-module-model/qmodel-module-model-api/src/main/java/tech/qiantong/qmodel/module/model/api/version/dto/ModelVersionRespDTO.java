@@ -32,7 +32,7 @@
 
 package tech.qiantong.qmodel.module.model.api.version.dto;
 
-import lombok.*;
+import lombok.Data;
 
 /**
  * 版本管理 DTO 对象 MODEL_VERSION

@@ -32,16 +32,8 @@
 
 package tech.qiantong.qmodel.quartz.controller;
 
-import java.util.List;
-import javax.servlet.http.HttpServletResponse;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import tech.qiantong.qmodel.common.annotation.Log;
 import tech.qiantong.qmodel.common.core.controller.BaseController;
 import tech.qiantong.qmodel.common.core.domain.AjaxResult;
@@ -50,6 +42,10 @@ import tech.qiantong.qmodel.common.enums.BusinessType;
 import tech.qiantong.qmodel.common.utils.poi.ExcelUtil;
 import tech.qiantong.qmodel.quartz.domain.SysJobLog;
 import tech.qiantong.qmodel.quartz.service.ISysJobLogService;
+
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletResponse;
+import java.util.List;
 
 /**
  * 调度日志操作处理
@@ -60,7 +56,7 @@ import tech.qiantong.qmodel.quartz.service.ISysJobLogService;
 @RequestMapping("/monitor/jobLog")
 public class SysJobLogController extends BaseController
 {
-    @Autowired
+    @Resource
     private ISysJobLogService jobLogService;
 
     /**

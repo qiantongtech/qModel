@@ -33,7 +33,7 @@
 package tech.qiantong.qmodel.module.system.service.impl;
 
 import java.util.List;
-import org.springframework.beans.factory.annotation.Autowired;
+import javax.annotation.Resource;
 import org.springframework.stereotype.Service;
 import tech.qiantong.qmodel.module.system.domain.SysLogininfor;
 import tech.qiantong.qmodel.module.system.mapper.SysLogininforMapper;
@@ -48,7 +48,7 @@ import tech.qiantong.qmodel.module.system.service.ISysLogininforService;
 public class SysLogininforServiceImpl implements ISysLogininforService
 {
 
-    @Autowired
+    @Resource
     private SysLogininforMapper logininforMapper;
 
     /**

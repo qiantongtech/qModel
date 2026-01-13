@@ -32,17 +32,17 @@
 
 package tech.qiantong.qmodel.file.controller;
 
-import tech.qiantong.qmodel.config.ServerConfig;
-import tech.qiantong.qmodel.file.util.FileUploadUtil;
 import org.dromara.x.file.storage.core.FileInfo;
 import org.dromara.x.file.storage.core.FileStorageService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
+import tech.qiantong.qmodel.config.ServerConfig;
+import tech.qiantong.qmodel.file.util.FileUploadUtil;
 
 import javax.annotation.PostConstruct;
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
 /**
@@ -58,11 +58,11 @@ public class FileUploadController {
 
     /**
      * 文件存储服务
-     * 使用 Spring 的 @Autowired 注解自动注入 FileStorageService 实例
+     * 使用 Spring 的 @Resource 注解自动注入 FileStorageService 实例
      */
-    @Autowired
+    @Resource
     private FileStorageService fileStorageService;
-    @Autowired
+    @Resource
     private ServerConfig serverConfig;
     @Value("${dromara.x-file-storage.local-plus[0].storage-path}")
     private String storagePath;

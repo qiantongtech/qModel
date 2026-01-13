@@ -31,7 +31,7 @@
  */
 
 import request from '@/utils/request.js'
-import { parseStrEmpty } from "@/utils/anivia.js";
+import {parseStrEmpty} from "@/utils/anivia.js";
 
 // 查询用户列表
 export function listUser(query) {

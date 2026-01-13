@@ -32,11 +32,12 @@
 
 package tech.qiantong.qmodel.module.model.controller.admin.modelReconstitution.vo;
 
-import java.util.Date;
-import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import tech.qiantong.qmodel.common.core.page.PageParam;
+
+import java.util.Date;
+import java.util.List;
 
 /**
  * 模型库重构 Request VO 对象 MODEL_RECONSTITUTION
@@ -90,5 +91,6 @@ public class ModelReconstitutionPageReqVO extends PageParam {
     @Schema(description = "可执行文件相对路径", example = "")
     private String runnableFileAddress;
 
+    private List<Long> classifyIds;
 
 }

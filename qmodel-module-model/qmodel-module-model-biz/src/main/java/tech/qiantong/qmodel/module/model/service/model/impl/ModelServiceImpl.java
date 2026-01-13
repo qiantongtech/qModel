@@ -43,7 +43,6 @@ import tech.qiantong.qmodel.common.core.page.PageResult;
 import tech.qiantong.qmodel.common.exception.ServiceException;
 import tech.qiantong.qmodel.common.utils.StringUtils;
 import tech.qiantong.qmodel.common.utils.object.BeanUtils;
-import tech.qiantong.qmodel.module.model.controller.admin.history.vo.ModelHistorySaveReqVO;
 import tech.qiantong.qmodel.module.model.controller.admin.model.vo.ModelPageReqVO;
 import tech.qiantong.qmodel.module.model.controller.admin.model.vo.ModelRespVO;
 import tech.qiantong.qmodel.module.model.controller.admin.model.vo.ModelSaveReqVO;
@@ -51,7 +50,6 @@ import tech.qiantong.qmodel.module.model.controller.admin.operate.vo.ModelOperat
 import tech.qiantong.qmodel.module.model.controller.admin.version.vo.ModelVersionSaveReqVO;
 import tech.qiantong.qmodel.module.model.dal.dataobject.model.ModelDO;
 import tech.qiantong.qmodel.module.model.dal.mapper.model.ModelMapper;
-import tech.qiantong.qmodel.module.model.domain.ModelVersion;
 import tech.qiantong.qmodel.module.model.service.classify.IModelClassifyService;
 import tech.qiantong.qmodel.module.model.service.history.IModelHistoryService;
 import tech.qiantong.qmodel.module.model.service.model.IModelService;

@@ -35,7 +35,7 @@ import request from '@/utils/request';
 // 查询模型管理 列表
 export function listModel(query) {
     return request({
-        url: '/model/model/list',
+        url: '/model/modelReconstitution/list',
         method: 'get',
         params: query
     });
@@ -44,7 +44,7 @@ export function listModel(query) {
 // 查询模型管理 详细
 export function getModel(id) {
     return request({
-        url: '/model/model/' + id,
+        url: '/model/modelReconstitution/' + id,
         method: 'get'
     });
 }
@@ -52,7 +52,7 @@ export function getModel(id) {
 // 查询模型管理 分类
 export function getmodelList(classifyId) {
     return request({
-        url: '/model/model/list/children/' + classifyId,
+        url: '/model/modelReconstitution/list/children/' + classifyId,
         method: 'get'
     });
 }
@@ -60,7 +60,7 @@ export function getmodelList(classifyId) {
 // 新增模型管理
 export function addModel(data) {
     return request({
-        url: '/model/model',
+        url: '/model/modelReconstitution',
         method: 'post',
         data: data
     });
@@ -69,7 +69,7 @@ export function addModel(data) {
 // 修改模型管理 基础信息
 export function updateModel(data) {
     return request({
-        url: '/model/model',
+        url: '/model/modelReconstitution',
         method: 'put',
         data: data
     });
@@ -78,7 +78,7 @@ export function updateModel(data) {
 // 删除模型管理
 export function delModel(id) {
     return request({
-        url: '/model/model/' + id,
+        url: '/model/modelReconstitution/' + id,
         method: 'delete'
     });
 }
@@ -86,7 +86,7 @@ export function delModel(id) {
 // 新增模型管理
 export function getFileList(data) {
     return request({
-        url: '/model/model/getFileList',
+        url: '/model/modelReconstitution/getFileList',
         method: 'post',
         data: data
     });

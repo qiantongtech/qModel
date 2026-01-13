@@ -53,7 +53,6 @@ import tech.qiantong.qmodel.module.model.controller.admin.model.vo.ModelSaveReqV
 import tech.qiantong.qmodel.module.model.controller.admin.version.vo.ModelVersionSaveReqVO;
 import tech.qiantong.qmodel.module.model.convert.model.ModelConvert;
 import tech.qiantong.qmodel.module.model.dal.dataobject.model.ModelDO;
-import tech.qiantong.qmodel.module.model.domain.ModelVersion;
 import tech.qiantong.qmodel.module.model.service.model.IModelService;
 
 import javax.annotation.Resource;

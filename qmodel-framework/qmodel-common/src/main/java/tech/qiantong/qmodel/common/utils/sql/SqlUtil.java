@@ -32,8 +32,8 @@
 
 package tech.qiantong.qmodel.common.utils.sql;
 
-import tech.qiantong.qmodel.common.utils.StringUtils;
 import tech.qiantong.qmodel.common.exception.UtilException;
+import tech.qiantong.qmodel.common.utils.StringUtils;
 
 /**
  * sql操作工具类

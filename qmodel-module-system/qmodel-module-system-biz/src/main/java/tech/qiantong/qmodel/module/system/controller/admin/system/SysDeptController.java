@@ -34,7 +34,7 @@ package tech.qiantong.qmodel.module.system.controller.admin.system;
 
 import java.util.List;
 import org.apache.commons.lang3.ArrayUtils;
-import org.springframework.beans.factory.annotation.Autowired;
+import javax.annotation.Resource;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -63,7 +63,7 @@ import tech.qiantong.qmodel.module.system.service.ISysDeptService;
 @RequestMapping("/system/dept")
 public class SysDeptController extends BaseController
 {
-    @Autowired
+    @Resource
     private ISysDeptService deptService;
 
     @GetMapping("/test")

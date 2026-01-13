@@ -633,28 +633,13 @@
 </template>
 
 <script setup>
-import {
-  ref,
-  reactive,
-  onMounted,
-  computed,
-  watch,
-  nextTick,
-  getCurrentInstance,
-} from "vue";
-import {
-  listModel,
-  getModel,
-  delModel,
-  addModel,
-  updateModel,
-  getFileList,
-} from "@/api/modelReconstitution/model";
-import { listClassify } from "@/api/modelReconstitution/classify";
-import { useDict } from "@/utils/dict.js";
+import {computed, getCurrentInstance, nextTick, onMounted, reactive, ref, watch,} from "vue";
+import {addModel, delModel, getFileList, getModel, listModel, updateModel,} from "@/api/modelReconstitution/model";
+import {listClassify} from "@/api/modelReconstitution/classify";
+import {useDict} from "@/utils/dict.js";
 import FileNameUpload from "@/components/FileNameUpload/index.vue";
-import { QuestionFilled } from "@element-plus/icons-vue";
-import { ElMessage, ElMessageBox } from "element-plus";
+import {QuestionFilled} from "@element-plus/icons-vue";
+import {ElMessage, ElMessageBox} from "element-plus";
 
 // Get access to the current instance to use globally registered functions
 const { proxy } = getCurrentInstance();
@@ -832,7 +817,7 @@ const fileModelName = (res) => {
 const getList = () => {
   loading.value = true;
   listModel(queryParams).then((response) => {
-    modelList.value = response.rows;
+    modelList.value = response.data.rows;
     total.value = response.data.total;
     loading.value = false;
   });

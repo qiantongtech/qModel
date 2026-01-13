@@ -32,7 +32,6 @@
 
 package tech.qiantong.qmodel.quartz.util;
 
-import java.util.Date;
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
@@ -47,6 +46,8 @@ import tech.qiantong.qmodel.common.utils.spring.SpringUtils;
 import tech.qiantong.qmodel.quartz.domain.SysJob;
 import tech.qiantong.qmodel.quartz.domain.SysJobLog;
 import tech.qiantong.qmodel.quartz.service.ISysJobLogService;
+
+import java.util.Date;
 
 /**
  * 抽象quartz调用

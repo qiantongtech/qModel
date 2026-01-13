@@ -35,13 +35,9 @@ package tech.qiantong.qmodel.module.model.controller.admin.interfaceAddress.vo;
 import com.baomidou.mybatisplus.annotation.TableField;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
+import tech.qiantong.qmodel.common.core.domain.BaseEntity;
 
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
-
-import tech.qiantong.qmodel.common.annotation.Excel;
-import tech.qiantong.qmodel.common.core.domain.BaseEntity;
 
 /**
  * 接口地址 创建/修改 Request VO MODEL_INTERFACE_ADDRESS

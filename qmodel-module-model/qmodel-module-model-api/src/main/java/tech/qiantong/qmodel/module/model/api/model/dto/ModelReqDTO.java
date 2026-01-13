@@ -32,9 +32,9 @@
 
 package tech.qiantong.qmodel.module.model.api.model.dto;
 
+import lombok.Data;
+
 import java.util.Date;
-import com.fasterxml.jackson.annotation.JsonFormat;
-import lombok.*;
 
 /**
  * 模型管理 DTO 对象 MODEL

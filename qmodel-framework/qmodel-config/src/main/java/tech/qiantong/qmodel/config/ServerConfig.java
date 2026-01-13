@@ -32,9 +32,10 @@
 
 package tech.qiantong.qmodel.config;
 
-import javax.servlet.http.HttpServletRequest;
 import org.springframework.stereotype.Component;
 import tech.qiantong.qmodel.common.utils.ServletUtils;
+
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * 服务相关配置

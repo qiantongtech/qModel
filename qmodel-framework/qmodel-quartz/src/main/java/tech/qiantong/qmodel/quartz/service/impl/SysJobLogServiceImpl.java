@@ -32,12 +32,13 @@
 
 package tech.qiantong.qmodel.quartz.service.impl;
 
-import java.util.List;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import tech.qiantong.qmodel.quartz.domain.SysJobLog;
 import tech.qiantong.qmodel.quartz.mapper.SysJobLogMapper;
 import tech.qiantong.qmodel.quartz.service.ISysJobLogService;
+
+import javax.annotation.Resource;
+import java.util.List;
 
 /**
  * 定时任务调度日志信息 服务层
@@ -47,7 +48,7 @@ import tech.qiantong.qmodel.quartz.service.ISysJobLogService;
 @Service
 public class SysJobLogServiceImpl implements ISysJobLogService
 {
-    @Autowired
+    @Resource
     private SysJobLogMapper jobLogMapper;
 
     /**

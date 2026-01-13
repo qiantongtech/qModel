@@ -32,18 +32,19 @@
 
 package tech.qiantong.qmodel.common.config.serializer;
 
-import java.io.IOException;
-import java.util.Objects;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.BeanProperty;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.ser.ContextualSerializer;
-import tech.qiantong.qmodel.common.utils.SecurityUtils;
 import tech.qiantong.qmodel.common.annotation.Sensitive;
 import tech.qiantong.qmodel.common.core.domain.model.LoginUser;
 import tech.qiantong.qmodel.common.enums.DesensitizedType;
+import tech.qiantong.qmodel.common.utils.SecurityUtils;
+
+import java.io.IOException;
+import java.util.Objects;
 
 /**
  * 数据脱敏序列化过滤

@@ -41,7 +41,7 @@ import org.junit.Assert;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
+import javax.annotation.Resource;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import tech.qiantong.qmodel.server.*;
@@ -54,7 +54,7 @@ import tech.qiantong.qmodel.server.*;
 @SpringBootTest(classes = QModelApplication.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class EsTest {
 
-    @Autowired
+    @Resource
     private DocumentMapper documentMapper;
 
     @Test

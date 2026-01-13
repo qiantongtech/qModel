@@ -32,27 +32,19 @@
 
 package tech.qiantong.qmodel.common.utils.http;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import tech.qiantong.qmodel.common.constant.Constants;
+import tech.qiantong.qmodel.common.utils.StringUtils;
+
+import javax.net.ssl.*;
+import java.io.*;
 import java.net.ConnectException;
 import java.net.SocketTimeoutException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.nio.charset.StandardCharsets;
 import java.security.cert.X509Certificate;
-import javax.net.ssl.HostnameVerifier;
-import javax.net.ssl.HttpsURLConnection;
-import javax.net.ssl.SSLContext;
-import javax.net.ssl.SSLSession;
-import javax.net.ssl.TrustManager;
-import javax.net.ssl.X509TrustManager;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import tech.qiantong.qmodel.common.utils.StringUtils;
-import tech.qiantong.qmodel.common.constant.Constants;
 
 /**
  * 通用http发送方法

@@ -32,7 +32,7 @@
 
 package tech.qiantong.qmodel.module.model.api.output.dto;
 
-import lombok.*;
+import lombok.Data;
 
 /**
  * 模型输出管理 DTO 对象 MODEL_OUTPUT

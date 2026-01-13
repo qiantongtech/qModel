@@ -32,12 +32,6 @@
 
 package tech.qiantong.qmodel.module.model.controller.admin.modelReconstitution;
 
-import javax.annotation.Resource;
-import javax.servlet.http.HttpServletResponse;
-import javax.validation.Valid;
-import java.io.File;
-import java.util.*;
-
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.core.util.ZipUtil;
@@ -45,26 +39,23 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import tech.qiantong.qmodel.common.annotation.Log;
 import tech.qiantong.qmodel.common.config.AniviaConfig;
 import tech.qiantong.qmodel.common.constant.Constants;
-import tech.qiantong.qmodel.common.core.page.PageParam;
-import tech.qiantong.qmodel.common.core.domain.AjaxResult;
-import tech.qiantong.qmodel.common.annotation.Log;
 import tech.qiantong.qmodel.common.core.controller.BaseController;
+import tech.qiantong.qmodel.common.core.domain.AjaxResult;
 import tech.qiantong.qmodel.common.core.domain.CommonResult;
+import tech.qiantong.qmodel.common.core.page.PageParam;
 import tech.qiantong.qmodel.common.core.page.PageResult;
 import tech.qiantong.qmodel.common.enums.BusinessType;
 import tech.qiantong.qmodel.common.utils.DateUtils;
 import tech.qiantong.qmodel.common.utils.StringUtils;
 import tech.qiantong.qmodel.common.utils.object.BeanUtils;
 import tech.qiantong.qmodel.common.utils.poi.ExcelUtil;
-import tech.qiantong.qmodel.common.exception.enums.GlobalErrorCodeConstants;
-import tech.qiantong.qmodel.module.model.controller.admin.history.vo.ModelHistorySaveReqVO;
 import tech.qiantong.qmodel.module.model.controller.admin.modelReconstitution.vo.ModelReconstitutionPageReqVO;
 import tech.qiantong.qmodel.module.model.controller.admin.modelReconstitution.vo.ModelReconstitutionRespVO;
 import tech.qiantong.qmodel.module.model.controller.admin.modelReconstitution.vo.ModelReconstitutionSaveReqVO;
@@ -78,6 +69,12 @@ import tech.qiantong.qmodel.module.model.service.history.IModelHistoryService;
 import tech.qiantong.qmodel.module.model.service.modelReconstitution.IModelReconstitutionService;
 import tech.qiantong.qmodel.module.model.service.version.IModelVersionService;
 import tech.qiantong.qmodel.module.modelReconstitution.domain.ModelReconstitution;
+
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
+import java.io.File;
+import java.util.*;
 
 /**
  * 模型库重构Controller
@@ -93,13 +90,13 @@ public class ModelReconstitutionController extends BaseController {
     @Resource
     private IModelReconstitutionService modelReconstitutionService;
 
-    @Autowired
+    @Resource
     private IModelClassifyService modelClassifyService;
 
-    @Autowired
+    @Resource
     private IModelVersionService modelVersionService;
 
-    @Autowired
+    @Resource
     private IModelHistoryService modelHistoryService;
 
     @Operation(summary = "查询模型库重构列表")
@@ -107,27 +104,6 @@ public class ModelReconstitutionController extends BaseController {
     @GetMapping("/list")
     public CommonResult<PageResult<ModelReconstitutionRespVO>> list(ModelReconstitutionPageReqVO modelReconstitution) {
         PageResult<ModelReconstitutionDO> page = modelReconstitutionService.getModelReconstitutionPage(modelReconstitution);
-        List<ModelReconstitutionDO> list = page.getList();
-        ModelVersionDO modelVersionReconstitution = new ModelVersionDO();
-        List<Long> ids = new ArrayList<>();
-        for (ModelReconstitutionDO reconstitution : list) {
-            ids.add(reconstitution.getVersionId());
-        }
-        Map<String,Object> params = new HashMap<>();
-        params.put("ids",ids);
-        modelVersionReconstitution.setParams(params);
-        List<ModelVersionDO> modelVersions = modelVersionService.selectModelVersionList(modelVersionReconstitution);
-        for (ModelReconstitutionDO reconstitution : list) {
-            if (reconstitution.getVersionId() == null) {
-                continue;
-            }
-            for (ModelVersionDO versionReconstitution : modelVersions) {
-                if (reconstitution.getVersionId().equals(versionReconstitution.getId())){
-                    reconstitution.setVersion(versionReconstitution.getVersion());
-                    reconstitution.setDescription(versionReconstitution.getDescription());
-                }
-            }
-        }
         return CommonResult.success(BeanUtils.toBean(page, ModelReconstitutionRespVO.class));
     }
 

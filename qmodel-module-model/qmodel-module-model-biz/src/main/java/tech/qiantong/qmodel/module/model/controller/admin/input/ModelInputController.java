@@ -34,7 +34,6 @@ package tech.qiantong.qmodel.module.model.controller.admin.input;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -59,9 +58,6 @@ import tech.qiantong.qmodel.module.model.service.modelReconstitution.IModelRecon
 import tech.qiantong.qmodel.module.model.service.version.IModelVersionService;
 import tech.qiantong.qmodel.module.modelReconstitution.domain.ModelReconstitution;
 
-
-
-
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
@@ -82,10 +78,10 @@ public class ModelInputController extends BaseController {
     @Resource
     private IModelInputService modelInputService;
 
-    @Autowired
+    @Resource
     private IModelReconstitutionService modelReconstitutionService;
 
-    @Autowired
+    @Resource
     private IModelVersionService modelVersionService;
 
 

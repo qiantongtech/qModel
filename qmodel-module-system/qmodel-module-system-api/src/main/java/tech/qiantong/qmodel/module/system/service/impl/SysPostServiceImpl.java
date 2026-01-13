@@ -33,7 +33,7 @@
 package tech.qiantong.qmodel.module.system.service.impl;
 
 import java.util.List;
-import org.springframework.beans.factory.annotation.Autowired;
+import javax.annotation.Resource;
 import org.springframework.stereotype.Service;
 import tech.qiantong.qmodel.common.constant.UserConstants;
 import tech.qiantong.qmodel.common.exception.ServiceException;
@@ -51,10 +51,10 @@ import tech.qiantong.qmodel.module.system.service.ISysPostService;
 @Service
 public class SysPostServiceImpl implements ISysPostService
 {
-    @Autowired
+    @Resource
     private SysPostMapper postMapper;
 
-    @Autowired
+    @Resource
     private SysUserPostMapper userPostMapper;
 
     /**

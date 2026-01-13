@@ -32,8 +32,9 @@
 
 package tech.qiantong.qmodel.config;
 
-import java.util.Random;
 import com.google.code.kaptcha.text.impl.DefaultTextCreator;
+
+import java.util.Random;
 
 /**
  * 验证码文本生成器

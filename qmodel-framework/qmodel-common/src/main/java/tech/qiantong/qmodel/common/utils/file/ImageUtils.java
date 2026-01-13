@@ -32,18 +32,19 @@
 
 package tech.qiantong.qmodel.common.utils.file;
 
+import org.apache.poi.util.IOUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import tech.qiantong.qmodel.common.config.AniviaConfig;
+import tech.qiantong.qmodel.common.constant.Constants;
+import tech.qiantong.qmodel.common.utils.StringUtils;
+
 import java.io.ByteArrayInputStream;
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.Arrays;
-import org.apache.poi.util.IOUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import tech.qiantong.qmodel.common.config.AniviaConfig;
-import tech.qiantong.qmodel.common.utils.StringUtils;
-import tech.qiantong.qmodel.common.constant.Constants;
 
 /**
  * 图片处理工具类

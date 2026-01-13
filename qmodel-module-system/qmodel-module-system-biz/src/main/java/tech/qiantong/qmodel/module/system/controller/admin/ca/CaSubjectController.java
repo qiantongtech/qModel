@@ -47,7 +47,7 @@
 //import tech.qiantong.qmodel.file.util.FileUploadUtil;
 //import org.dromara.x.file.storage.core.FileInfo;
 //import org.dromara.x.file.storage.core.FileStorageService;
-//import org.springframework.beans.factory.annotation.Autowired;
+//import javax.annotation.Resource;
 //import org.springframework.beans.factory.annotation.Value;
 //import org.springframework.security.access.prepost.PreAuthorize;
 //import org.springframework.web.bind.annotation.*;
@@ -67,13 +67,13 @@
 //@RequestMapping("/ca/subject")
 //public class CaSubjectController extends BaseController
 //{
-//    @Autowired
+//    @Resource
 //    private ICaSubjectService caSubjectService;
 //
-//    @Autowired
+//    @Resource
 //    private FileStorageService fileStorageService;
 //
-//    @Autowired
+//    @Resource
 //    private ServerConfig serverConfig;
 //
 //    @Value("${dromara.x-file-storage.local-plus[0].storage-path}")

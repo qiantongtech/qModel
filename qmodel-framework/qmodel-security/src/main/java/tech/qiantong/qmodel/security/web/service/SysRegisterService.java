@@ -32,10 +32,7 @@
 
 package tech.qiantong.qmodel.security.web.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import tech.qiantong.qmodel.security.manager.AsyncManager;
-import tech.qiantong.qmodel.security.manager.factory.AsyncFactory;
 import tech.qiantong.qmodel.common.constant.CacheConstants;
 import tech.qiantong.qmodel.common.constant.Constants;
 import tech.qiantong.qmodel.common.constant.UserConstants;
@@ -49,6 +46,10 @@ import tech.qiantong.qmodel.common.utils.SecurityUtils;
 import tech.qiantong.qmodel.common.utils.StringUtils;
 import tech.qiantong.qmodel.module.system.service.ISysConfigService;
 import tech.qiantong.qmodel.module.system.service.ISysUserService;
+import tech.qiantong.qmodel.security.manager.AsyncManager;
+import tech.qiantong.qmodel.security.manager.factory.AsyncFactory;
+
+import javax.annotation.Resource;
 
 /**
  * 注册校验方法
@@ -58,13 +59,13 @@ import tech.qiantong.qmodel.module.system.service.ISysUserService;
 @Component
 public class SysRegisterService
 {
-    @Autowired
+    @Resource
     private ISysUserService userService;
 
-    @Autowired
+    @Resource
     private ISysConfigService configService;
 
-    @Autowired
+    @Resource
     private RedisCache redisCache;
 
     /**

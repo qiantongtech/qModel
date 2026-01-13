@@ -32,19 +32,19 @@
 
 package tech.qiantong.qmodel.security.handle;
 
-import java.io.IOException;
-import java.io.Serializable;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
+import com.alibaba.fastjson2.JSON;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.stereotype.Component;
-import com.alibaba.fastjson2.JSON;
 import tech.qiantong.qmodel.common.constant.HttpStatus;
 import tech.qiantong.qmodel.common.core.domain.AjaxResult;
 import tech.qiantong.qmodel.common.utils.ServletUtils;
 import tech.qiantong.qmodel.common.utils.StringUtils;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.io.Serializable;
 
 /**
  * 认证失败处理类 返回未授权

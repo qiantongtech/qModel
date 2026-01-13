@@ -38,7 +38,6 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import tech.qiantong.qmodel.common.constant.CacheConstants;
@@ -51,6 +50,7 @@ import tech.qiantong.qmodel.common.utils.ip.AddressUtils;
 import tech.qiantong.qmodel.common.utils.ip.IpUtils;
 import tech.qiantong.qmodel.common.utils.uuid.IdUtils;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.Map;
@@ -84,7 +84,7 @@ public class TokenService
 
     private static final Long MILLIS_MINUTE_TEN = 20 * 60 * 1000L;
 
-    @Autowired
+    @Resource
     private RedisCache redisCache;
 
     /**

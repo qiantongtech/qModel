@@ -33,11 +33,11 @@
 package tech.qiantong.qmodel.auth.domain;
 
 import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 import tech.qiantong.qmodel.common.annotation.Excel;
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableName;
 import tech.qiantong.qmodel.common.core.domain.BaseEntity;
 
 /**

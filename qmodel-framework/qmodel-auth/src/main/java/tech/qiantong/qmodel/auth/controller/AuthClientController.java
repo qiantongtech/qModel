@@ -35,6 +35,8 @@ package tech.qiantong.qmodel.auth.controller;
 import cn.hutool.core.util.IdUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.IService;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.*;
 import tech.qiantong.qmodel.auth.domain.AuthClient;
 import tech.qiantong.qmodel.common.annotation.Log;
 import tech.qiantong.qmodel.common.core.controller.BaseController;
@@ -42,10 +44,8 @@ import tech.qiantong.qmodel.common.core.domain.AjaxResult;
 import tech.qiantong.qmodel.common.core.page.TableDataInfo;
 import tech.qiantong.qmodel.common.enums.BusinessType;
 import tech.qiantong.qmodel.common.utils.poi.ExcelUtil;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Arrays;
 import java.util.Date;
@@ -60,7 +60,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/auth/client")
 public class AuthClientController extends BaseController {
-    @Autowired
+    @Resource
     private IService<AuthClient> authClientService;
 
 /**

@@ -32,11 +32,12 @@
 
 package tech.qiantong.qmodel.quartz.domain;
 
-import java.util.Date;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import tech.qiantong.qmodel.common.annotation.Excel;
 import tech.qiantong.qmodel.common.core.domain.BaseEntity;
+
+import java.util.Date;
 
 /**
  * 定时任务调度日志表 sys_job_log

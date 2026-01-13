@@ -32,28 +32,14 @@
 
 package tech.qiantong.qmodel.generator.controller;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import javax.servlet.http.HttpServletResponse;
-import org.apache.commons.io.IOUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 import com.alibaba.druid.DbType;
 import com.alibaba.druid.sql.SQLUtils;
 import com.alibaba.druid.sql.ast.SQLStatement;
 import com.alibaba.druid.sql.dialect.mysql.ast.statement.MySqlCreateTableStatement;
+import org.apache.commons.io.IOUtils;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
 import tech.qiantong.qmodel.common.annotation.Log;
 import tech.qiantong.qmodel.common.core.controller.BaseController;
 import tech.qiantong.qmodel.common.core.domain.AjaxResult;
@@ -64,8 +50,16 @@ import tech.qiantong.qmodel.common.utils.SecurityUtils;
 import tech.qiantong.qmodel.common.utils.sql.SqlUtil;
 import tech.qiantong.qmodel.generator.domain.GenTable;
 import tech.qiantong.qmodel.generator.domain.GenTableColumn;
-import tech.qiantong.qmodel.generator.service.IGenTableService;
 import tech.qiantong.qmodel.generator.service.IGenTableColumnService;
+import tech.qiantong.qmodel.generator.service.IGenTableService;
+
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 代码生成 操作处理
@@ -76,10 +70,10 @@ import tech.qiantong.qmodel.generator.service.IGenTableColumnService;
 @RequestMapping("/tool/gen")
 public class GenController extends BaseController
 {
-    @Autowired
+    @Resource
     private IGenTableService genTableService;
 
-    @Autowired
+    @Resource
     private IGenTableColumnService genTableColumnService;
 
     /**

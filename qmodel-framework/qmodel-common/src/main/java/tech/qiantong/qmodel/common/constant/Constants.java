@@ -32,8 +32,9 @@
 
 package tech.qiantong.qmodel.common.constant;
 
-import java.util.Locale;
 import io.jsonwebtoken.Claims;
+
+import java.util.Locale;
 
 /**
  * 通用常量信息

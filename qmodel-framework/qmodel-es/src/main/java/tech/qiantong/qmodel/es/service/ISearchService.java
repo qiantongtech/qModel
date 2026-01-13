@@ -32,9 +32,9 @@
 
 package tech.qiantong.qmodel.es.service;
 
-import tech.qiantong.qmodel.es.model.example.EsTextDocument;
-import tech.qiantong.qmodel.es.model.Search;
 import org.dromara.easyes.core.biz.EsPageInfo;
+import tech.qiantong.qmodel.es.model.Search;
+import tech.qiantong.qmodel.es.model.example.EsTextDocument;
 
 /**
  * 检索Service

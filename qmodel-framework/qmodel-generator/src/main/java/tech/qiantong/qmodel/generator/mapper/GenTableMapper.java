@@ -32,8 +32,9 @@
 
 package tech.qiantong.qmodel.generator.mapper;
 
-import java.util.List;
 import tech.qiantong.qmodel.generator.domain.GenTable;
+
+import java.util.List;
 
 /**
  * 业务 数据层

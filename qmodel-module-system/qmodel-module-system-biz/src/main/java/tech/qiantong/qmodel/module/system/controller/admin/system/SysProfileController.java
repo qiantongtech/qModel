@@ -38,7 +38,7 @@ import tech.qiantong.qmodel.module.system.service.ISysUserService;
 import tech.qiantong.qmodel.file.util.FileUploadUtil;
 import org.dromara.x.file.storage.core.FileInfo;
 import org.dromara.x.file.storage.core.FileStorageService;
-import org.springframework.beans.factory.annotation.Autowired;
+import javax.annotation.Resource;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -69,16 +69,16 @@ import javax.annotation.PostConstruct;
 @RequestMapping("/system/user/profile")
 public class SysProfileController extends BaseController
 {
-    @Autowired
+    @Resource
     private ISysUserService userService;
 
-    @Autowired
+    @Resource
     private TokenService tokenService;
 
-    @Autowired
+    @Resource
     private FileStorageService fileStorageService;
 
-    @Autowired
+    @Resource
     private ServerConfig serverConfig;
 
     @Value("${dromara.x-file-storage.local-plus[0].storage-path}")

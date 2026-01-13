@@ -33,7 +33,6 @@
 package tech.qiantong.qmodel.pay.service;
 
 import tech.qiantong.qmodel.pay.domain.*;
-import tech.qiantong.qmodel.pay.domain.*;
 
 /**
  * 定义了支付模块的核心业务操作。

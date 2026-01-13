@@ -32,8 +32,8 @@
 
 package tech.qiantong.qmodel.es.esmapper.example;
 
-import tech.qiantong.qmodel.es.model.example.EsTextDocument;
 import org.dromara.easyes.core.kernel.BaseEsMapper;
+import tech.qiantong.qmodel.es.model.example.EsTextDocument;
 
 /**
  * 全文索引检索实体

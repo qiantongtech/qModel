@@ -32,7 +32,6 @@
 
 package tech.qiantong.qmodel.security.web.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 import tech.qiantong.qmodel.common.core.domain.entity.SysRole;
@@ -40,6 +39,7 @@ import tech.qiantong.qmodel.common.core.domain.entity.SysUser;
 import tech.qiantong.qmodel.module.system.service.ISysMenuService;
 import tech.qiantong.qmodel.module.system.service.ISysRoleService;
 
+import javax.annotation.Resource;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -52,10 +52,10 @@ import java.util.Set;
 @Component
 public class SysPermissionService
 {
-    @Autowired
+    @Resource
     private ISysRoleService roleService;
 
-    @Autowired
+    @Resource
     private ISysMenuService menuService;
 
     /**

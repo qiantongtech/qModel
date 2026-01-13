@@ -32,17 +32,6 @@
 
 package tech.qiantong.qmodel.config.web.domain;
 
-import java.net.UnknownHostException;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Properties;
-import tech.qiantong.qmodel.common.utils.Arith;
-import tech.qiantong.qmodel.common.utils.ip.IpUtils;
-import tech.qiantong.qmodel.config.web.domain.server.Cpu;
-import tech.qiantong.qmodel.config.web.domain.server.Jvm;
-import tech.qiantong.qmodel.config.web.domain.server.Mem;
-import tech.qiantong.qmodel.config.web.domain.server.Sys;
-import tech.qiantong.qmodel.config.web.domain.server.SysFile;
 import oshi.SystemInfo;
 import oshi.hardware.CentralProcessor;
 import oshi.hardware.CentralProcessor.TickType;
@@ -52,6 +41,14 @@ import oshi.software.os.FileSystem;
 import oshi.software.os.OSFileStore;
 import oshi.software.os.OperatingSystem;
 import oshi.util.Util;
+import tech.qiantong.qmodel.common.utils.Arith;
+import tech.qiantong.qmodel.common.utils.ip.IpUtils;
+import tech.qiantong.qmodel.config.web.domain.server.*;
+
+import java.net.UnknownHostException;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Properties;
 
 /**
  * 服务器相关信息

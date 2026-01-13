@@ -33,8 +33,8 @@
 package tech.qiantong.qmodel.common.utils.object;
 
 import cn.hutool.core.bean.BeanUtil;
-import tech.qiantong.qmodel.common.utils.collection.CollectionUtils;
 import tech.qiantong.qmodel.common.core.page.PageResult;
+import tech.qiantong.qmodel.common.utils.collection.CollectionUtils;
 
 import java.util.List;
 import java.util.function.Consumer;

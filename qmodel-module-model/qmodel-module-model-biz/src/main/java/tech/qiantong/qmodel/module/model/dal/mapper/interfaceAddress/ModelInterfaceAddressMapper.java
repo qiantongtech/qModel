@@ -32,15 +32,15 @@
 
 package tech.qiantong.qmodel.module.model.dal.mapper.interfaceAddress;
 
-import tech.qiantong.qmodel.module.model.dal.dataobject.interfaceAddress.ModelInterfaceAddressDO;
-import java.util.Arrays;
-import com.github.yulichang.base.MPJBaseMapper;
 import tech.qiantong.qmodel.common.core.page.PageResult;
-import java.util.HashSet;
-import java.util.Set;
 import tech.qiantong.qmodel.module.model.controller.admin.interfaceAddress.vo.ModelInterfaceAddressPageReqVO;
+import tech.qiantong.qmodel.module.model.dal.dataobject.interfaceAddress.ModelInterfaceAddressDO;
 import tech.qiantong.qmodel.mybatis.core.mapper.BaseMapperX;
 import tech.qiantong.qmodel.mybatis.core.query.LambdaQueryWrapperX;
+
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * 接口地址Mapper接口

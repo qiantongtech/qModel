@@ -32,14 +32,15 @@
 
 package tech.qiantong.qmodel.auth.service.impl;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import tech.qiantong.qmodel.auth.domain.AuthClientUser;
 import tech.qiantong.qmodel.auth.mapper.AuthClientUserMapper;
 import tech.qiantong.qmodel.auth.service.IAuthClientUserService;
-import tech.qiantong.qmodel.auth.domain.AuthClientUser;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import org.springframework.transaction.annotation.Transactional;
-import lombok.extern.slf4j.Slf4j;
+
+import javax.annotation.Resource;
 
 /**
  * 应用和用户关联Service业务层处理
@@ -51,7 +52,7 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 @Transactional(rollbackFor = Exception.class)
 public class AuthClientUserServiceImpl  extends ServiceImpl<AuthClientUserMapper,AuthClientUser> implements IAuthClientUserService {
-    @Autowired
+    @Resource
     private AuthClientUserMapper authClientUserMapper;
 
 }

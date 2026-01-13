@@ -32,8 +32,8 @@
 
 package tech.qiantong.qmodel.auth.mapper;
 
-import tech.qiantong.qmodel.auth.domain.AuthClientUser;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import tech.qiantong.qmodel.auth.domain.AuthClientUser;
 
 /**
  * 应用和用户关联Mapper接口
