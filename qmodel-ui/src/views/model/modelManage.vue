@@ -191,13 +191,17 @@
                       </div>
                     </template>
                     <div class="popover-content">
-                      <el-button type="primary" text>
+                      <el-button
+                        type="primary"
+                        text
+                        @click="handleUpdate(item)"
+                      >
                         <Edit
                           style="width: 1em; height: 1em; margin-right: 8px"
                         />
-                        修改</el-button
+                        编辑</el-button
                       >
-                      <el-button type="danger" text>
+                      <el-button type="danger" text @click="handleDelete(item)">
                         <Delete
                           style="width: 1em; height: 1em; margin-right: 8px"
                         />
@@ -635,13 +639,28 @@
 </template>
 
 <script setup>
-import {computed, getCurrentInstance, nextTick, onMounted, reactive, ref, watch,} from "vue";
-import {addModel, delModel, getFileList, getModel, listModel, updateModel,} from "@/api/modelReconstitution/model";
-import {listClassify} from "@/api/modelReconstitution/classify";
-import {useDict} from "@/utils/dict.js";
+import {
+  computed,
+  getCurrentInstance,
+  nextTick,
+  onMounted,
+  reactive,
+  ref,
+  watch,
+} from "vue";
+import {
+  addModel,
+  delModel,
+  getFileList,
+  getModel,
+  listModel,
+  updateModel,
+} from "@/api/modelReconstitution/model";
+import { listClassify } from "@/api/modelReconstitution/classify";
+import { useDict } from "@/utils/dict.js";
 import FileNameUpload from "@/components/FileNameUpload/index.vue";
-import {QuestionFilled} from "@element-plus/icons-vue";
-import {ElMessage, ElMessageBox} from "element-plus";
+import { QuestionFilled } from "@element-plus/icons-vue";
+import { ElMessage, ElMessageBox } from "element-plus";
 
 // Get access to the current instance to use globally registered functions
 const { proxy } = getCurrentInstance();
@@ -870,7 +889,36 @@ const handleNodeClick = (data) => {
 // 取消按钮
 const cancel = () => {
   open.value = false;
-  reset();
+  Object.assign(form, {
+    id: null,
+    companyId: null,
+    name: null,
+    classifyId: null,
+    classifyName: null,
+    builtin: null,
+    accessMode: null,
+    requestMethod: null,
+    interfaceorfileAddress: null,
+    fileList: [],
+    runnableFileAddress: null,
+    versionId: null,
+    version: null,
+    description: null,
+    whetherPublish: null,
+    publishTime: null,
+    delFlag: null,
+    createBy: null,
+    creatorId: null,
+    createTime: null,
+    updateBy: null,
+    updatorId: null,
+    updateTime: null,
+    remark: null,
+  });
+  isEdit.value = false;
+  if (formRef.value) {
+    formRef.value.clearValidate();
+  }
 };
 
 // 表单重置
@@ -936,7 +984,36 @@ const handleSelectionChange = (selection) => {
 
 /** 新增按钮操作 */
 const handleAdd = () => {
-  reset();
+  Object.assign(form, {
+    id: null,
+    companyId: null,
+    name: null,
+    classifyId: null,
+    classifyName: null,
+    builtin: null,
+    accessMode: null,
+    requestMethod: null,
+    interfaceorfileAddress: null,
+    fileList: [],
+    runnableFileAddress: null,
+    versionId: null,
+    version: null,
+    description: null,
+    whetherPublish: null,
+    publishTime: null,
+    delFlag: null,
+    createBy: null,
+    creatorId: null,
+    createTime: null,
+    updateBy: null,
+    updatorId: null,
+    updateTime: null,
+    remark: null,
+  });
+  isEdit.value = false;
+  if (formRef.value) {
+    formRef.value.clearValidate();
+  }
   open.value = true;
   title.value = "添加模型管理 ";
   mess.value = false;
@@ -944,7 +1021,36 @@ const handleAdd = () => {
 
 /** 修改按钮操作 */
 const handleUpdate = (row) => {
-  reset();
+  Object.assign(form, {
+    id: null,
+    companyId: null,
+    name: null,
+    classifyId: null,
+    classifyName: null,
+    builtin: null,
+    accessMode: null,
+    requestMethod: null,
+    interfaceorfileAddress: null,
+    fileList: [],
+    runnableFileAddress: null,
+    versionId: null,
+    version: null,
+    description: null,
+    whetherPublish: null,
+    publishTime: null,
+    delFlag: null,
+    createBy: null,
+    creatorId: null,
+    createTime: null,
+    updateBy: null,
+    updatorId: null,
+    updateTime: null,
+    remark: null,
+  });
+  isEdit.value = false;
+  if (formRef.value) {
+    formRef.value.clearValidate();
+  }
   const id = row.id || ids.value;
   getModel(id).then((response) => {
     Object.assign(form, response.data);

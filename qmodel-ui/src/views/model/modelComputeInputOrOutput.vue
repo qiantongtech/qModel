@@ -130,8 +130,8 @@
 
 <script setup>
     import { ref, reactive, watch, onMounted, getCurrentInstance } from 'vue';
-    import { useRouter, useRoute } from 'vue-router';
-    import { ElMessage } from 'element-plus';
+    import { useRoute, useRouter } from 'vue-router';
+    import { ElMessage, ElMessageBox } from 'element-plus';
     import { getModel } from '@/api/modelReconstitution/model';
     import VueJsonHelper from '@/components/VueJsonHelper/Helper';
     import JsonViewer from 'json-editor-vue';
@@ -144,8 +144,8 @@
 
     // 获取当前实例以访问路由和其他属性
     const { proxy } = getCurrentInstance();
-    const router = useRouter();
     const route = useRoute();
+    const router = useRouter();
 
     // 响应式数据
     const modelId = ref(null);
@@ -192,25 +192,28 @@
     });
     const form = ref({});
 
-    // 模板引用
-    const inputJson = ref(null);
-
     // 监听器
-    watch(modelId, (newVal) => {
-        selectModel();
-    });
+    watch(
+        () => modelId.value,
+        () => {
+            selectModel();
+        }
+    );
 
-    watch(computeId, (newVal) => {
-        selectCacl(newVal);
-        selectInterfaceAddress();
-    });
+    watch(
+        () => computeId.value,
+        () => {
+            selectCacl(computeId.value);
+            selectInterfaceAddress();
+        }
+    );
 
-    // 在组件挂载后初始化数据
+    // 组件挂载后执行
     onMounted(() => {
         modelId.value = route.query.modelId;
         computeId.value = route.query.computeId;
         isInputOrOut.value = route.query.isInputOrOut;
-        deleteFlag.value = route.query.deleteFlag === 'false' ? false : true;
+        deleteFlag.value = route.query.deleteFlag == 'false' ? false : true;
     });
 
     // 方法定义
@@ -251,10 +254,10 @@
                         ? {}
                         : JSON.parse(res.data.modelInputJson);
 
-                let namesCopy = JSON.parse(res.data.modelInputNames);
+                let namesCpoy = JSON.parse(res.data.modelInputNames);
                 names.value = [];
-                for (let key in namesCopy) {
-                    names.value.push({ [key]: namesCopy[key] });
+                for (let key in namesCpoy) {
+                    names.value.push({ [key]: namesCpoy[key] });
                 }
             });
         } else {
@@ -264,16 +267,16 @@
                         ? {}
                         : JSON.parse(res.data.modelOutputJson);
 
-                let namesCopy = JSON.parse(res.data.modelOutputNames);
+                let namesCpoy = JSON.parse(res.data.modelOutputNames);
                 names.value = [];
-                for (let key in namesCopy) {
-                    names.value.push({ [key]: namesCopy[key] });
+                for (let key in namesCpoy) {
+                    names.value.push({ [key]: namesCpoy[key] });
                 }
 
-                let namesInputCopy = JSON.parse(res.data.modelInputNames);
+                let namesInputCpoy = JSON.parse(res.data.modelInputNames);
                 namesTwo.value = [];
-                for (let key in namesInputCopy) {
-                    namesTwo.value.push(namesInputCopy[key]);
+                for (let key in namesInputCpoy) {
+                    namesTwo.value.push(namesInputCpoy[key]);
                 }
             });
         }
@@ -297,12 +300,12 @@
     };
 
     const goBackPage = () => {
-        const modelIdValue = model.value.id;
+        const modelIdVal = model.value.id;
         const modelName = model.value.name;
         router.push({
             path: '/model/modelManageView',
             query: {
-                modelId: modelIdValue,
+                modelId: modelIdVal,
                 modelName,
                 pageNum: 1
             }
