@@ -310,7 +310,7 @@ const typeFormat = (dict, row) => {
 const getList = () => {
   loading.value = true;
   listOperate(queryParams).then((response) => {
-    operateList.value = response.rows;
+    operateList.value = response.data.rows;
     total.value = response.total;
     loading.value = false;
   });
