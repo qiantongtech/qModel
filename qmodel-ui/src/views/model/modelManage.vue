@@ -449,7 +449,9 @@
       <template #footer>
         <div class="dialog-footer">
           <el-button @click="cancel">取 消</el-button>
-          <el-button type="primary" @click="submitForm">确 定</el-button>
+          <el-button type="primary" @click="submitForm" class="btn"
+            >确 定</el-button
+          >
         </div>
       </template>
     </el-dialog>
@@ -841,7 +843,6 @@ const getList = () => {
 /** 查询分类下拉树结构 */
 const getTreeselect = () => {
   listClassify().then((res) => {
-    console.log(res.rows, "1231321");
     for (let i = 0; i < res.data.length; i++) {
       let arrTemp = [];
       for (let j = 0; j < res.data.length; j++) {
@@ -1358,6 +1359,9 @@ const handleExport = () => {
   justify-content: center;
   // padding: 10px 0;
   min-width: 60px;
+}
+.btn {
+  margin-left: 10px !important;
 }
 :deep(.el-button + .el-button) {
   margin-left: 0;
