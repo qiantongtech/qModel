@@ -71,6 +71,7 @@ public class ModelHistoryDO extends BaseEntity {
     private String modelName;
 
     /** 操作内容 */
+    @TableField(value = "\"context\"", select = true)
     private String context;
 
     /** 启用时间 */
