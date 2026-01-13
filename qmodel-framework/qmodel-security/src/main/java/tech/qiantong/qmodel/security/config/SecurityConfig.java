@@ -32,7 +32,6 @@
 
 package tech.qiantong.qmodel.security.config;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -53,6 +52,8 @@ import tech.qiantong.qmodel.security.filter.JwtAuthenticationTokenFilter;
 import tech.qiantong.qmodel.security.handle.AuthenticationEntryPointImpl;
 import tech.qiantong.qmodel.security.handle.LogoutSuccessHandlerImpl;
 
+import javax.annotation.Resource;
+
 /**
  * spring security配置
  *
@@ -65,37 +66,37 @@ public class SecurityConfig
     /**
      * 自定义用户认证逻辑
      */
-    @Autowired
+    @Resource
     private UserDetailsService userDetailsService;
 
     /**
      * 认证失败处理类
      */
-    @Autowired
+    @Resource
     private AuthenticationEntryPointImpl unauthorizedHandler;
 
     /**
      * 退出处理类
      */
-    @Autowired
+    @Resource
     private LogoutSuccessHandlerImpl logoutSuccessHandler;
 
     /**
      * token认证过滤器
      */
-    @Autowired
+    @Resource
     private JwtAuthenticationTokenFilter authenticationTokenFilter;
 
     /**
      * 跨域过滤器
      */
-    @Autowired
+    @Resource
     private CorsFilter corsFilter;
 
     /**
      * 允许匿名访问的地址
      */
-    @Autowired
+    @Resource
     private PermitAllUrlProperties permitAllUrl;
 
     /**

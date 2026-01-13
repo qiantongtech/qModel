@@ -32,7 +32,7 @@
 
 package tech.qiantong.qmodel.module.model.api.classify.dto;
 
-import lombok.*;
+import lombok.Data;
 
 /**
  * 模型分类 DTO 对象 MODEL_CLASSIFY

@@ -32,7 +32,6 @@
 
 package tech.qiantong.qmodel.security.web.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
@@ -44,6 +43,7 @@ import tech.qiantong.qmodel.common.exception.user.UserPasswordRetryLimitExceedEx
 import tech.qiantong.qmodel.common.utils.SecurityUtils;
 import tech.qiantong.qmodel.security.context.AuthenticationContextHolder;
 
+import javax.annotation.Resource;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -53,7 +53,7 @@ import java.util.concurrent.TimeUnit;
  */
 @Component
 public class SysPasswordService {
-    @Autowired
+    @Resource
     private RedisCache redisCache;
 
     @Value(value = "${user.password.maxRetryCount}")

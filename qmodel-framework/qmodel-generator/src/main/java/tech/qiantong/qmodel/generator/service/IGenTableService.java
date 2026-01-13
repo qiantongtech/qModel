@@ -32,11 +32,11 @@
 
 package tech.qiantong.qmodel.generator.service;
 
-import java.util.List;
-import java.util.Map;
-
 import tech.qiantong.qmodel.common.core.domain.entity.SysDictType;
 import tech.qiantong.qmodel.generator.domain.GenTable;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * 业务 服务层

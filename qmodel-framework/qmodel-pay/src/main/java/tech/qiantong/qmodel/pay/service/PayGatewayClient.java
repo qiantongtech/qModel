@@ -33,7 +33,6 @@
 package tech.qiantong.qmodel.pay.service;
 
 import tech.qiantong.qmodel.pay.domain.*;
-import tech.qiantong.qmodel.pay.domain.*;
 
 import java.util.Map;
 

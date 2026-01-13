@@ -34,7 +34,7 @@ package tech.qiantong.qmodel.module.system.controller.admin.system;
 
 
 
-import org.springframework.beans.factory.annotation.Autowired;
+import javax.annotation.Resource;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import tech.qiantong.qmodel.common.core.domain.AjaxResult;
@@ -59,19 +59,19 @@ import java.util.Map;
 @RequestMapping("/system/index")
 public class IndexController {
 
-    @Autowired
+    @Resource
     private IModelClassifyService modelClassifyService;
 
-    @Autowired
+    @Resource
     private IModelReconstitutionService modelReconstitutionService;
 
-    @Autowired
+    @Resource
     private IModelInputService modelInputService;
 
-    @Autowired
+    @Resource
     private IModelOutputService modelOutputReconstitutionService;
 
-    @Autowired
+    @Resource
     private IModelCaclService modelCaclService;
 
 

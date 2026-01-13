@@ -32,14 +32,9 @@
 
 package tech.qiantong.qmodel.config.interceptor.impl;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.concurrent.TimeUnit;
-import javax.servlet.http.HttpServletRequest;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.alibaba.fastjson2.JSON;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-import com.alibaba.fastjson2.JSON;
 import tech.qiantong.qmodel.common.annotation.RepeatSubmit;
 import tech.qiantong.qmodel.common.constant.CacheConstants;
 import tech.qiantong.qmodel.common.core.redis.RedisCache;
@@ -47,6 +42,12 @@ import tech.qiantong.qmodel.common.filter.RepeatedlyRequestWrapper;
 import tech.qiantong.qmodel.common.utils.StringUtils;
 import tech.qiantong.qmodel.common.utils.http.HttpHelper;
 import tech.qiantong.qmodel.config.interceptor.RepeatSubmitInterceptor;
+
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 /**
  * 判断请求url和数据是否和上一次相同，
@@ -65,7 +66,7 @@ public class SameUrlDataInterceptor extends RepeatSubmitInterceptor
     @Value("${token.header}")
     private String header;
 
-    @Autowired
+    @Resource
     private RedisCache redisCache;
 
     @SuppressWarnings("unchecked")

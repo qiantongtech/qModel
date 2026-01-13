@@ -32,33 +32,23 @@
 
 package tech.qiantong.qmodel.module.model.controller.admin.version;
 
-import javax.annotation.Resource;
-import javax.servlet.http.HttpServletResponse;
-import javax.validation.Valid;
-import java.util.Arrays;
-import java.util.List;
-
 import cn.hutool.json.JSONObject;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import tech.qiantong.qmodel.common.core.page.PageParam;
-import tech.qiantong.qmodel.common.core.domain.AjaxResult;
 import tech.qiantong.qmodel.common.annotation.Log;
 import tech.qiantong.qmodel.common.core.controller.BaseController;
+import tech.qiantong.qmodel.common.core.domain.AjaxResult;
 import tech.qiantong.qmodel.common.core.domain.CommonResult;
+import tech.qiantong.qmodel.common.core.page.PageParam;
 import tech.qiantong.qmodel.common.core.page.PageResult;
-import tech.qiantong.qmodel.common.core.page.TableDataInfo;
 import tech.qiantong.qmodel.common.enums.BusinessType;
 import tech.qiantong.qmodel.common.utils.object.BeanUtils;
 import tech.qiantong.qmodel.common.utils.poi.ExcelUtil;
-import tech.qiantong.qmodel.common.exception.enums.GlobalErrorCodeConstants;
-import tech.qiantong.qmodel.module.model.controller.admin.history.vo.ModelHistorySaveReqVO;
 import tech.qiantong.qmodel.module.model.controller.admin.operate.vo.ModelOperateSaveReqVO;
 import tech.qiantong.qmodel.module.model.controller.admin.version.vo.ModelVersionPageReqVO;
 import tech.qiantong.qmodel.module.model.controller.admin.version.vo.ModelVersionRespVO;
@@ -70,7 +60,12 @@ import tech.qiantong.qmodel.module.model.service.modelReconstitution.IModelRecon
 import tech.qiantong.qmodel.module.model.service.operate.IModelOperateService;
 import tech.qiantong.qmodel.module.model.service.version.IModelVersionService;
 import tech.qiantong.qmodel.module.modelReconstitution.domain.ModelReconstitution;
-import tech.qiantong.qmodel.module.modelReconstitution.domain.ModelVersionReconstitution;
+
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
+import java.util.Arrays;
+import java.util.List;
 
 
 /**
@@ -87,13 +82,13 @@ public class ModelVersionController extends BaseController {
     @Resource
     private IModelVersionService modelVersionService;
 
-    @Autowired
+    @Resource
     private IModelReconstitutionService modelReconstitutionService;
 
-    @Autowired
+    @Resource
     private IModelHistoryService modelHistoryService;
 
-    @Autowired
+    @Resource
     private IModelOperateService modelOperateService;
 
     @Operation(summary = "查询版本管理列表")
@@ -153,16 +148,7 @@ public class ModelVersionController extends BaseController {
     public CommonResult<Long> add(@Valid @RequestBody ModelVersionSaveReqVO modelVersion) {
         modelVersion.setStatus(0);
 
-        ModelHistorySaveReqVO modelHistory = new ModelHistorySaveReqVO();
-        modelHistory.setCompanyId(null);
-        modelHistory.setModelId(modelVersion.getModelId());
-        modelHistory.setModelName(modelVersion.getModelName());
-        modelHistory.setContext("新增了" + modelVersion.getModelName() + "一个版本");
-        //获取最大版本号
-        modelHistory.setModelVersion(modelVersion.getVersion());
-        modelHistory.setUpdatorId(getUserId());
-        modelHistory.setUpdateBy(getNickName());
-        modelHistoryService.createModelHistory(modelHistory);
+        modelHistoryService.createModelHistory(modelVersion.getModelId(), modelVersion.getModelName(), "新增了" + modelVersion.getModelName() + "一个版本", modelVersion.getVersion(), getUserId(), getNickName());
 
         return CommonResult.toAjax(modelVersionService.createModelVersion(modelVersion));
     }
@@ -207,15 +193,7 @@ public class ModelVersionController extends BaseController {
             version.setId(jsonObject.getLong("afterVersionId"));
             version.setStatus(1);
             modelVersionService.updateModelVersion(version);
-            ModelHistorySaveReqVO history = new ModelHistorySaveReqVO();
-            history.setCompanyId(null);
-            history.setModelId(jsonObject.getLong("modelId"));
-            history.setModelName(jsonObject.getStr("modelName"));
-            history.setContext("切换了模型的版本号, 切换到了【" + jsonObject.getDouble("afterVersion") + "】");
-            history.setModelVersion(jsonObject.getStr("afterVersion"));
-            history.setUpdatorId(getUserId());
-            history.setUpdateBy(getNickName());
-            modelHistoryService.createModelHistory(history);
+            modelHistoryService.createModelHistory(jsonObject.getLong("modelId"), jsonObject.getStr("modelName"), "切换了模型的版本号, 切换到了【" + jsonObject.getDouble("afterVersion") + "】", jsonObject.getStr("afterVersion"), getUserId(), getNickName());
         }
         modelReconstitutionService.updateModelReconstitution(model);
         return success();
@@ -239,16 +217,7 @@ public class ModelVersionController extends BaseController {
             modelReconstitution.setRemark(modelVersion.getRemark());
             modelReconstitutionService.updateModelReconstitution(modelReconstitution);
 
-            ModelHistorySaveReqVO modelHistory = new ModelHistorySaveReqVO();
-            modelHistory.setCompanyId(null);
-            modelHistory.setModelId(modelVersion.getModelId());
-            modelHistory.setModelName(modelVersion.getModelName());
-            modelHistory.setContext("启用了" + modelVersion.getModelName() + "【" + modelVersion.getVersion() + "】版本");
-            //获取最大版本号
-            modelHistory.setModelVersion(modelVersion.getVersion());
-            modelHistory.setUpdatorId(getUserId());
-            modelHistory.setUpdateBy(getNickName());
-            modelHistoryService.createModelHistory(modelHistory);
+            modelHistoryService.createModelHistory(modelVersion.getModelId(), modelVersion.getModelName(), "启用了" + modelVersion.getModelName() + "【" + modelVersion.getVersion() + "】版本", modelVersion.getVersion(), getUserId(), getNickName());
 
             ModelOperateSaveReqVO operate = new ModelOperateSaveReqVO();
             operate.setCompanyId(modelReconstitution.getCompanyId());
@@ -276,15 +245,7 @@ public class ModelVersionController extends BaseController {
         if (isStatus) {
             modelReconstitutionService.updateModelReconstitution(modelReconstitution);
             //历史操作记录插入
-            ModelHistorySaveReqVO modelHistory = new ModelHistorySaveReqVO();
-            modelHistory.setCompanyId(null);
-            modelHistory.setModelId(modelVersion.getModelId());
-            modelHistory.setModelName(modelVersion.getModelName());
-            modelHistory.setContext("停用了" + modelVersion.getModelName() + "【" + modelVersion.getVersion() + "】版本");
-            modelHistory.setModelVersion(modelVersion.getVersion());
-            modelHistory.setUpdatorId(getUserId());
-            modelHistory.setUpdateBy(getNickName());
-            modelHistoryService.createModelHistory(modelHistory);
+            modelHistoryService.createModelHistory(modelVersion.getModelId(), modelVersion.getModelName(), "停用了" + modelVersion.getModelName() + "【" + modelVersion.getVersion() + "】版本", modelVersion.getVersion(), getUserId(), getNickName());
 
             ModelOperateSaveReqVO operate = new ModelOperateSaveReqVO();
             operate.setCompanyId(modelReconstitution.getCompanyId());
@@ -300,15 +261,7 @@ public class ModelVersionController extends BaseController {
             modelOperateService.createModelOperate(operate);
         }else {
             //历史操作记录插入
-            ModelHistorySaveReqVO modelHistory = new ModelHistorySaveReqVO();
-            modelHistory.setCompanyId(null);
-            modelHistory.setModelId(modelVersion.getModelId());
-            modelHistory.setModelName(modelVersion.getModelName());
-            modelHistory.setContext("修改了" + modelVersion.getModelName() + "【" + modelVersion.getVersion() + "】版本的内容");
-            modelHistory.setModelVersion(modelVersion.getVersion());
-            modelHistory.setUpdatorId(getUserId());
-            modelHistory.setUpdateBy(getNickName());
-            modelHistoryService.createModelHistory(modelHistory);
+            modelHistoryService.createModelHistory(modelVersion.getModelId(), modelVersion.getModelName(), "修改了" + modelVersion.getModelName() + "【" + modelVersion.getVersion() + "】版本的内容", modelVersion.getVersion(), getUserId(), getNickName());
         }
         return CommonResult.toAjax(modelVersionService.updateModelVersion(modelVersion));
     }
@@ -322,15 +275,7 @@ public class ModelVersionController extends BaseController {
             for (Long id : ids) {
                 ModelVersionDO modelVersion = modelVersionService.getModelVersionById(id);
                 //历史操作记录插入
-                ModelHistorySaveReqVO modelHistory = new ModelHistorySaveReqVO();
-                modelHistory.setCompanyId(null);
-                modelHistory.setModelId(modelVersion.getModelId());
-                modelHistory.setModelName(modelVersion.getModelName());
-                modelHistory.setContext("删除了" + modelVersion.getModelName() + "【" + modelVersion.getVersion() + "】版本的内容");
-                modelHistory.setModelVersion(modelVersion.getVersion());
-                modelHistory.setUpdatorId(getUserId());
-                modelHistory.setUpdateBy(getNickName());
-                modelHistoryService.createModelHistory(modelHistory);
+                modelHistoryService.createModelHistory(modelVersion.getModelId(), modelVersion.getModelName(), "删除了" + modelVersion.getModelName() + "【" + modelVersion.getVersion() + "】版本的内容", modelVersion.getVersion(), getUserId(), getNickName());
             }
         }
         return CommonResult.toAjax(modelVersionService.removeModelVersion(Arrays.asList(ids)));

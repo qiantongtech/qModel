@@ -34,12 +34,9 @@ package tech.qiantong.qmodel.module.model.controller.admin.version.vo;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
+import tech.qiantong.qmodel.common.core.domain.BaseEntity;
 
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
-
-import tech.qiantong.qmodel.common.core.domain.BaseEntity;
 
 /**
  * 版本管理 创建/修改 Request VO MODEL_VERSION

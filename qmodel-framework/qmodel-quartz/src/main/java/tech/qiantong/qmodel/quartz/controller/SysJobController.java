@@ -32,19 +32,9 @@
 
 package tech.qiantong.qmodel.quartz.controller;
 
-import java.util.List;
-import javax.servlet.http.HttpServletResponse;
 import org.quartz.SchedulerException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import tech.qiantong.qmodel.common.annotation.Log;
 import tech.qiantong.qmodel.common.constant.Constants;
 import tech.qiantong.qmodel.common.core.controller.BaseController;
@@ -55,9 +45,13 @@ import tech.qiantong.qmodel.common.exception.job.TaskException;
 import tech.qiantong.qmodel.common.utils.StringUtils;
 import tech.qiantong.qmodel.common.utils.poi.ExcelUtil;
 import tech.qiantong.qmodel.quartz.domain.SysJob;
+import tech.qiantong.qmodel.quartz.service.ISysJobService;
 import tech.qiantong.qmodel.quartz.util.CronUtils;
 import tech.qiantong.qmodel.quartz.util.ScheduleUtils;
-import tech.qiantong.qmodel.quartz.service.ISysJobService;
+
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletResponse;
+import java.util.List;
 
 /**
  * 调度任务信息操作处理
@@ -68,7 +62,7 @@ import tech.qiantong.qmodel.quartz.service.ISysJobService;
 @RequestMapping("/monitor/job")
 public class SysJobController extends BaseController
 {
-    @Autowired
+    @Resource
     private ISysJobService jobService;
 
     /**

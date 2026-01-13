@@ -32,19 +32,15 @@
 
 package tech.qiantong.qmodel.common.filter;
 
+import tech.qiantong.qmodel.common.enums.HttpMethod;
+import tech.qiantong.qmodel.common.utils.StringUtils;
+
+import javax.servlet.*;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import javax.servlet.Filter;
-import javax.servlet.FilterChain;
-import javax.servlet.FilterConfig;
-import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import tech.qiantong.qmodel.common.utils.StringUtils;
-import tech.qiantong.qmodel.common.enums.HttpMethod;
 
 /**
  * 防止XSS攻击的过滤器

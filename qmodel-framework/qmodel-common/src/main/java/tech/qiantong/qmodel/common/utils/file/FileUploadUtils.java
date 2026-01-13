@@ -32,20 +32,21 @@
 
 package tech.qiantong.qmodel.common.utils.file;
 
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Paths;
-import java.util.Objects;
 import org.apache.commons.io.FilenameUtils;
 import org.springframework.web.multipart.MultipartFile;
 import tech.qiantong.qmodel.common.config.AniviaConfig;
-import tech.qiantong.qmodel.common.utils.DateUtils;
-import tech.qiantong.qmodel.common.utils.StringUtils;
-import tech.qiantong.qmodel.common.utils.uuid.Seq;
 import tech.qiantong.qmodel.common.constant.Constants;
 import tech.qiantong.qmodel.common.exception.file.FileNameLengthLimitExceededException;
 import tech.qiantong.qmodel.common.exception.file.FileSizeLimitExceededException;
 import tech.qiantong.qmodel.common.exception.file.InvalidExtensionException;
+import tech.qiantong.qmodel.common.utils.DateUtils;
+import tech.qiantong.qmodel.common.utils.StringUtils;
+import tech.qiantong.qmodel.common.utils.uuid.Seq;
+
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Paths;
+import java.util.Objects;
 
 /**
  * 文件上传工具类

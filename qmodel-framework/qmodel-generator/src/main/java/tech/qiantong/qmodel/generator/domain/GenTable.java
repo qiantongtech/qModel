@@ -32,13 +32,14 @@
 
 package tech.qiantong.qmodel.generator.domain;
 
-import java.util.List;
-import javax.validation.Valid;
-import javax.validation.constraints.NotBlank;
 import org.apache.commons.lang3.ArrayUtils;
 import tech.qiantong.qmodel.common.constant.GenConstants;
 import tech.qiantong.qmodel.common.core.domain.BaseEntity;
 import tech.qiantong.qmodel.common.utils.StringUtils;
+
+import javax.validation.Valid;
+import javax.validation.constraints.NotBlank;
+import java.util.List;
 
 /**
  * 业务表 gen_table

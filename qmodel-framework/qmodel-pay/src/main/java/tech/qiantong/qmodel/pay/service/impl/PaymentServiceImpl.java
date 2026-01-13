@@ -32,22 +32,22 @@
 
 package tech.qiantong.qmodel.pay.service.impl;
 
-import tech.qiantong.qmodel.pay.domain.*;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Service;
 import tech.qiantong.qmodel.pay.domain.*;
 import tech.qiantong.qmodel.pay.service.PayGatewayClient;
 import tech.qiantong.qmodel.pay.service.PaymentService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.stereotype.Service;
+
+import javax.annotation.Resource;
 
 @Service
 public class PaymentServiceImpl implements PaymentService {
 
-    @Autowired
+    @Resource
     @Qualifier("alipayClientImpl") // 指定要注入的Bean名称
     private PayGatewayClient alipayClient;
 
-    @Autowired
+    @Resource
     @Qualifier("weChatPayClientImpl") // 指定要注入的Bean名称
     private PayGatewayClient wechatPayClient;
 

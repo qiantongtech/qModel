@@ -107,9 +107,9 @@ public class ModelOperateController extends BaseController {
 
     @Operation(summary = "获取模型历史管理详细信息")
     @PreAuthorize("@ss.hasPermi('model:operate:operate:query')")
-    @GetMapping(value = "/{ID}")
-    public CommonResult<ModelOperateRespVO> getInfo(@PathVariable("ID") Long ID) {
-        ModelOperateDO modelOperateDO = modelOperateService.getModelOperateById(ID);
+    @GetMapping(value = "/{id}")
+    public CommonResult<ModelOperateRespVO> getInfo(@PathVariable("id") Long id) {
+        ModelOperateDO modelOperateDO = modelOperateService.getModelOperateById(id);
         return CommonResult.success(BeanUtils.toBean(modelOperateDO, ModelOperateRespVO.class));
     }
 
@@ -132,7 +132,7 @@ public class ModelOperateController extends BaseController {
     @Operation(summary = "删除模型历史管理")
     @PreAuthorize("@ss.hasPermi('model:operate:operate:remove')")
     @Log(title = "模型历史管理", businessType = BusinessType.DELETE)
-    @DeleteMapping("/{IDs}")
+    @DeleteMapping("/{ids}")
     public CommonResult<Integer> remove(@PathVariable Long[] ids) {
         return CommonResult.toAjax(modelOperateService.removeModelOperate(Arrays.asList(ids)));
     }

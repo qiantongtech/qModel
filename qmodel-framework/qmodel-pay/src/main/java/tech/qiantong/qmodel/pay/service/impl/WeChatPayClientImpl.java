@@ -34,7 +34,6 @@ package tech.qiantong.qmodel.pay.service.impl;
 
 import org.springframework.stereotype.Service;
 import tech.qiantong.qmodel.pay.domain.*;
-import tech.qiantong.qmodel.pay.domain.*;
 import tech.qiantong.qmodel.pay.service.PayGatewayClient;
 
 import java.util.Map;

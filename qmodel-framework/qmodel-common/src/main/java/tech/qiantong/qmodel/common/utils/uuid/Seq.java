@@ -32,10 +32,10 @@
 
 package tech.qiantong.qmodel.common.utils.uuid;
 
-import java.util.concurrent.atomic.AtomicInteger;
-
 import tech.qiantong.qmodel.common.utils.DateUtils;
 import tech.qiantong.qmodel.common.utils.StringUtils;
+
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * @author anivia 序列生成类

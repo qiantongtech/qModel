@@ -33,7 +33,7 @@
 package tech.qiantong.qmodel.module.system.service.impl;
 
 import java.util.List;
-import org.springframework.beans.factory.annotation.Autowired;
+import javax.annotation.Resource;
 import org.springframework.stereotype.Service;
 import tech.qiantong.qmodel.module.system.domain.SysOperLog;
 import tech.qiantong.qmodel.module.system.mapper.SysOperLogMapper;
@@ -47,7 +47,7 @@ import tech.qiantong.qmodel.module.system.service.ISysOperLogService;
 @Service
 public class SysOperLogServiceImpl implements ISysOperLogService
 {
-    @Autowired
+    @Resource
     private SysOperLogMapper operLogMapper;
 
     /**

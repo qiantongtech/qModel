@@ -32,10 +32,10 @@
 
 package tech.qiantong.qmodel.common.utils.bean;
 
-import java.util.Set;
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
 import javax.validation.Validator;
+import java.util.Set;
 
 /**
  * bean对象属性验证

@@ -35,7 +35,7 @@
 //import tech.qiantong.qmodel.pay.domain.*;
 //import tech.qiantong.qmodel.pay.service.PayGatewayClient;
 //import tech.qiantong.qmodel.pay.service.PaymentService;
-//import org.springframework.beans.factory.annotation.Autowired;
+//import javax.annotation.Resource;
 //import org.springframework.beans.factory.annotation.Qualifier;
 //import org.springframework.http.ResponseEntity;
 //import org.springframework.web.bind.annotation.*;
@@ -50,14 +50,14 @@
 //@RequestMapping("/payment")
 //public class PaymentController {
 //
-//    @Autowired
+//    @Resource
 //    private PaymentService paymentService;
 //
-//    @Autowired
+//    @Resource
 //    @Qualifier("alipayClientImpl") // 指定要注入的Bean名称
 //    private PayGatewayClient alipayClient;
 //
-//    @Autowired
+//    @Resource
 //    @Qualifier("weChatPayClientImpl") // 指定要注入的Bean名称
 //    private PayGatewayClient wechatPayClient;
 //

@@ -35,7 +35,7 @@ package tech.qiantong.qmodel.module.system.service.impl;
 import java.util.Collection;
 import java.util.List;
 import javax.annotation.PostConstruct;
-import org.springframework.beans.factory.annotation.Autowired;
+import javax.annotation.Resource;
 import org.springframework.stereotype.Service;
 import tech.qiantong.qmodel.common.annotation.DataSource;
 import tech.qiantong.qmodel.common.constant.CacheConstants;
@@ -57,10 +57,10 @@ import tech.qiantong.qmodel.module.system.service.ISysConfigService;
 @Service
 public class SysConfigServiceImpl implements ISysConfigService
 {
-    @Autowired
+    @Resource
     private SysConfigMapper configMapper;
 
-    @Autowired
+    @Resource
     private RedisCache redisCache;
 
     /**

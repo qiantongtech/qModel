@@ -32,10 +32,7 @@
 
 package tech.qiantong.qmodel.security.aspectj;
 
-import java.util.Collection;
-import java.util.Map;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import com.alibaba.fastjson2.JSON;
 import org.apache.commons.lang3.ArrayUtils;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.AfterReturning;
@@ -48,9 +45,6 @@ import org.springframework.core.NamedThreadLocal;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.multipart.MultipartFile;
-import com.alibaba.fastjson2.JSON;
-import tech.qiantong.qmodel.security.manager.AsyncManager;
-import tech.qiantong.qmodel.security.manager.factory.AsyncFactory;
 import tech.qiantong.qmodel.common.annotation.Log;
 import tech.qiantong.qmodel.common.core.domain.entity.SysUser;
 import tech.qiantong.qmodel.common.core.domain.model.LoginUser;
@@ -62,6 +56,13 @@ import tech.qiantong.qmodel.common.utils.ServletUtils;
 import tech.qiantong.qmodel.common.utils.StringUtils;
 import tech.qiantong.qmodel.common.utils.ip.IpUtils;
 import tech.qiantong.qmodel.module.system.domain.SysOperLog;
+import tech.qiantong.qmodel.security.manager.AsyncManager;
+import tech.qiantong.qmodel.security.manager.factory.AsyncFactory;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.util.Collection;
+import java.util.Map;
 
 /**
  * 操作日志记录处理

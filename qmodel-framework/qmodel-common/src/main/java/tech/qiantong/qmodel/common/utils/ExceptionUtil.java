@@ -32,9 +32,10 @@
 
 package tech.qiantong.qmodel.common.utils;
 
+import org.apache.commons.lang3.exception.ExceptionUtils;
+
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import org.apache.commons.lang3.exception.ExceptionUtils;
 
 /**
  * 错误信息处理类。

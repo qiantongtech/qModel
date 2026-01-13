@@ -132,7 +132,7 @@ public class ModelHistoryController extends BaseController {
     @Operation(summary = "删除模型历史")
     @PreAuthorize("@ss.hasPermi('model:history:history:remove')")
     @Log(title = "模型历史", businessType = BusinessType.DELETE)
-    @DeleteMapping("/{IDs}")
+    @DeleteMapping("/{ids}")
     public CommonResult<Integer> remove(@PathVariable Long[] ids) {
         return CommonResult.toAjax(modelHistoryService.removeModelHistory(Arrays.asList(ids)));
     }

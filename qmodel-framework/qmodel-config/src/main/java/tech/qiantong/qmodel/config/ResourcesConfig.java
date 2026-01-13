@@ -32,8 +32,6 @@
 
 package tech.qiantong.qmodel.config;
 
-import java.util.concurrent.TimeUnit;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.Ordered;
@@ -49,6 +47,9 @@ import tech.qiantong.qmodel.common.config.AniviaConfig;
 import tech.qiantong.qmodel.common.constant.Constants;
 import tech.qiantong.qmodel.config.interceptor.RepeatSubmitInterceptor;
 
+import javax.annotation.Resource;
+import java.util.concurrent.TimeUnit;
+
 /**
  * 通用配置
  *
@@ -57,7 +58,7 @@ import tech.qiantong.qmodel.config.interceptor.RepeatSubmitInterceptor;
 @Configuration
 public class ResourcesConfig implements WebMvcConfigurer
 {
-    @Autowired
+    @Resource
     private RepeatSubmitInterceptor repeatSubmitInterceptor;
 
     @Override

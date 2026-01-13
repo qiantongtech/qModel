@@ -32,15 +32,15 @@
 
 package tech.qiantong.qmodel.generator.util;
 
-import java.util.Arrays;
-import java.util.stream.Collectors;
-
 import org.apache.commons.lang3.RegExUtils;
 import tech.qiantong.qmodel.common.constant.GenConstants;
 import tech.qiantong.qmodel.common.utils.StringUtils;
 import tech.qiantong.qmodel.generator.config.GenConfig;
 import tech.qiantong.qmodel.generator.domain.GenTable;
 import tech.qiantong.qmodel.generator.domain.GenTableColumn;
+
+import java.util.Arrays;
+import java.util.stream.Collectors;
 
 /**
  * 代码生成器 工具类

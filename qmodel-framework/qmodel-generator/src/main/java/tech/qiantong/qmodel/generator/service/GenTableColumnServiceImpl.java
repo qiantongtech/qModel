@@ -32,12 +32,13 @@
 
 package tech.qiantong.qmodel.generator.service;
 
-import java.util.List;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import tech.qiantong.qmodel.common.core.text.Convert;
 import tech.qiantong.qmodel.generator.domain.GenTableColumn;
 import tech.qiantong.qmodel.generator.mapper.GenTableColumnMapper;
+
+import javax.annotation.Resource;
+import java.util.List;
 
 /**
  * 业务字段 服务层实现
@@ -47,7 +48,7 @@ import tech.qiantong.qmodel.generator.mapper.GenTableColumnMapper;
 @Service
 public class GenTableColumnServiceImpl implements IGenTableColumnService
 {
-	@Autowired
+	@Resource
 	private GenTableColumnMapper genTableColumnMapper;
 
 	/**

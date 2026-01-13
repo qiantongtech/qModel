@@ -34,7 +34,7 @@
 //
 //import java.util.ArrayList;
 //import java.util.List;
-//import org.springframework.beans.factory.annotation.Autowired;
+//import javax.annotation.Resource;
 //import org.springframework.beans.factory.annotation.Value;
 //import org.springframework.context.annotation.Bean;
 //import org.springframework.context.annotation.Configuration;
@@ -63,7 +63,7 @@
 //public class SwaggerConfig
 //{
 //    /** 系统基础配置 */
-//    @Autowired
+//    @Resource
 //    private AniviaConfig aniviaConfig;
 //
 //    /** 是否开启swagger */

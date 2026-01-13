@@ -34,8 +34,8 @@ package tech.qiantong.qmodel.module.model.controller.admin.interfaceAddress.vo;
 
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.fasterxml.jackson.annotation.JsonFormat;
-import lombok.*;
 import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.Data;
 import tech.qiantong.qmodel.common.annotation.Excel;
 
 import java.io.Serializable;

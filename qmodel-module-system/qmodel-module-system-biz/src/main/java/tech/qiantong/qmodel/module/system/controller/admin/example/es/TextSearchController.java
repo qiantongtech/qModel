@@ -41,7 +41,7 @@ import tech.qiantong.qmodel.module.system.domain.SysNotice;
 import tech.qiantong.qmodel.module.system.service.ISysNoticeService;
 import tech.qiantong.qmodel.es.service.ISearchService;
 import org.dromara.easyes.core.biz.EsPageInfo;
-import org.springframework.beans.factory.annotation.Autowired;
+import javax.annotation.Resource;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -54,10 +54,10 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/search/fulltext")
 public class TextSearchController
 {
-    @Autowired
+    @Resource
     private ISearchService searchService;
 
-    @Autowired
+    @Resource
     private ISysNoticeService noticeService;
 
     /**

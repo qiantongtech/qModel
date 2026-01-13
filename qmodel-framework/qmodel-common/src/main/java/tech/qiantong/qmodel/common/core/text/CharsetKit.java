@@ -32,10 +32,10 @@
 
 package tech.qiantong.qmodel.common.core.text;
 
+import tech.qiantong.qmodel.common.utils.StringUtils;
+
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
-
-import tech.qiantong.qmodel.common.utils.StringUtils;
 
 /**
  * 字符集工具类

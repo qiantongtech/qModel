@@ -32,7 +32,7 @@
 
 package tech.qiantong.qmodel.module.model.api.input.dto;
 
-import lombok.*;
+import lombok.Data;
 
 /**
  * 模型输入管理 DTO 对象 MODEL_INPUT

@@ -33,16 +33,16 @@
 package tech.qiantong.qmodel.es.service.impl;
 
 import com.github.pagehelper.util.StringUtil;
-import tech.qiantong.qmodel.es.esmapper.example.EsTextDocumentMapper;
-import tech.qiantong.qmodel.es.model.Search;
-import tech.qiantong.qmodel.es.model.example.EsTextDocument;
-import tech.qiantong.qmodel.es.service.ISearchService;
 import lombok.RequiredArgsConstructor;
 import org.dromara.easyes.core.biz.EsPageInfo;
 import org.dromara.easyes.core.conditions.select.LambdaEsQueryWrapper;
 import org.dromara.easyes.core.conditions.update.LambdaEsUpdateWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import tech.qiantong.qmodel.es.esmapper.example.EsTextDocumentMapper;
+import tech.qiantong.qmodel.es.model.Search;
+import tech.qiantong.qmodel.es.model.example.EsTextDocument;
+import tech.qiantong.qmodel.es.service.ISearchService;
 
 import javax.annotation.PostConstruct;
 

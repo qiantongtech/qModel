@@ -45,9 +45,13 @@ import tech.qiantong.qmodel.common.utils.object.BeanUtils;
 import tech.qiantong.qmodel.module.model.controller.admin.modelReconstitution.vo.ModelReconstitutionPageReqVO;
 import tech.qiantong.qmodel.module.model.controller.admin.modelReconstitution.vo.ModelReconstitutionRespVO;
 import tech.qiantong.qmodel.module.model.controller.admin.modelReconstitution.vo.ModelReconstitutionSaveReqVO;
+import tech.qiantong.qmodel.module.model.dal.dataobject.classify.ModelClassifyDO;
 import tech.qiantong.qmodel.module.model.dal.dataobject.modelReconstitution.ModelReconstitutionDO;
+import tech.qiantong.qmodel.module.model.dal.dataobject.version.ModelVersionDO;
 import tech.qiantong.qmodel.module.model.dal.mapper.modelReconstitution.ModelReconstitutionMapper;
+import tech.qiantong.qmodel.module.model.service.classify.IModelClassifyService;
 import tech.qiantong.qmodel.module.model.service.modelReconstitution.IModelReconstitutionService;
+import tech.qiantong.qmodel.module.model.service.version.IModelVersionService;
 import tech.qiantong.qmodel.module.modelReconstitution.domain.ModelReconstitution;
 
 import javax.annotation.Resource;
@@ -67,9 +71,45 @@ public class ModelReconstitutionServiceImpl  extends ServiceImpl<ModelReconstitu
     @Resource
     private ModelReconstitutionMapper modelReconstitutionMapper;
 
+    @Resource
+    private IModelVersionService modelVersionService;
+
+    @Resource
+    private IModelClassifyService modelClassifyService;
+
     @Override
     public PageResult<ModelReconstitutionDO> getModelReconstitutionPage(ModelReconstitutionPageReqVO pageReqVO) {
-        return modelReconstitutionMapper.selectPage(pageReqVO);
+        //查询所有分类的id
+        List<Long> classifyIds = null;
+        if(Objects.nonNull(pageReqVO.getClassifyId())){
+            classifyIds = modelClassifyService.getModelClassifyIds(pageReqVO.getClassifyId());
+            pageReqVO.setClassifyIds(classifyIds);
+        }
+
+        PageResult<ModelReconstitutionDO> page = modelReconstitutionMapper.selectPage(pageReqVO);
+
+        List<ModelReconstitutionDO> list = page.getList();
+        ModelVersionDO modelVersionReconstitution = new ModelVersionDO();
+        List<Long> ids = new ArrayList<>();
+        for (ModelReconstitutionDO reconstitution : list) {
+            ids.add(reconstitution.getVersionId());
+        }
+        Map<String,Object> params = new HashMap<>();
+        params.put("ids",ids);
+        modelVersionReconstitution.setParams(params);
+        List<ModelVersionDO> modelVersions = modelVersionService.selectModelVersionList(modelVersionReconstitution);
+        for (ModelReconstitutionDO reconstitution : list) {
+            if (reconstitution.getVersionId() == null) {
+                continue;
+            }
+            for (ModelVersionDO versionReconstitution : modelVersions) {
+                if (reconstitution.getVersionId().equals(versionReconstitution.getId())){
+                    reconstitution.setVersion(versionReconstitution.getVersion());
+                    reconstitution.setDescription(versionReconstitution.getDescription());
+                }
+            }
+        }
+        return page;
     }
 
     @Override

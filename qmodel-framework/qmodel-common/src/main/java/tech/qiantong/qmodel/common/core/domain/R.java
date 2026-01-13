@@ -32,8 +32,9 @@
 
 package tech.qiantong.qmodel.common.core.domain;
 
-import java.io.Serializable;
 import tech.qiantong.qmodel.common.constant.HttpStatus;
+
+import java.io.Serializable;
 
 /**
  * 响应信息主体

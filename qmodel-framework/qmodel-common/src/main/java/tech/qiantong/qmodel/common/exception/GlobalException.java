@@ -32,6 +32,8 @@
 
 package tech.qiantong.qmodel.common.exception;
 
+import tech.qiantong.qmodel.common.core.domain.CommonResult;
+
 /**
  * 全局异常
  *

@@ -32,14 +32,15 @@
 
 package tech.qiantong.qmodel.common.core.domain.entity;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Size;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
-import tech.qiantong.qmodel.common.constant.UserConstants;
 import tech.qiantong.qmodel.common.annotation.Excel;
 import tech.qiantong.qmodel.common.annotation.Excel.ColumnType;
+import tech.qiantong.qmodel.common.constant.UserConstants;
 import tech.qiantong.qmodel.common.core.domain.BaseEntity;
+
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 
 /**
  * 字典数据表 sys_dict_data

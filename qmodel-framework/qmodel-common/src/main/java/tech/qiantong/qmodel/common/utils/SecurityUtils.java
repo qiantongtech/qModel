@@ -32,9 +32,6 @@
 
 package tech.qiantong.qmodel.common.utils;
 
-import java.util.Collection;
-import java.util.List;
-import java.util.stream.Collectors;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -44,6 +41,10 @@ import tech.qiantong.qmodel.common.constant.HttpStatus;
 import tech.qiantong.qmodel.common.core.domain.entity.SysRole;
 import tech.qiantong.qmodel.common.core.domain.model.LoginUser;
 import tech.qiantong.qmodel.common.exception.ServiceException;
+
+import java.util.Collection;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 安全服务工具类

@@ -32,12 +32,13 @@
 
 package tech.qiantong.qmodel.common.core.domain;
 
-import java.io.Serializable;
-import java.util.List;
-import java.util.stream.Collectors;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import tech.qiantong.qmodel.common.core.domain.entity.SysDept;
 import tech.qiantong.qmodel.common.core.domain.entity.SysMenu;
+
+import java.io.Serializable;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Treeselect树结构实体类

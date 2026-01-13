@@ -38,7 +38,7 @@ import tech.qiantong.qmodel.module.system.ca.domain.CaSubject;
 import tech.qiantong.qmodel.module.system.ca.mapper.CaSubjectMapper;
 import tech.qiantong.qmodel.module.system.ca.service.ICaSubjectService;
 import tech.qiantong.qmodel.common.utils.DateUtils;
-import org.springframework.beans.factory.annotation.Autowired;
+import javax.annotation.Resource;
 import org.springframework.stereotype.Service;
 
 /**
@@ -50,7 +50,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class CaSubjectServiceImpl implements ICaSubjectService
 {
-    @Autowired
+    @Resource
     private CaSubjectMapper caSubjectMapper;
 
     /**

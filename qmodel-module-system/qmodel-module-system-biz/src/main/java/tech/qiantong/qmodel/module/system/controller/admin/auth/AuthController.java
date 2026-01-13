@@ -37,7 +37,7 @@ import cn.hutool.core.convert.Convert;
 import com.ejlchina.okhttps.OkHttps;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
+import javax.annotation.Resource;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -68,15 +68,15 @@ public class AuthController {
 
     private static final Logger log = LoggerFactory.getLogger(AuthController.class);
 
-    @Autowired
+    @Resource
     private ISysUserService userService;
-    @Autowired
+    @Resource
     private SysPermissionService permissionService;
-    @Autowired
+    @Resource
     private TokenService tokenService;
-    @Autowired
+    @Resource
     private IRedisService redisService;
-    @Autowired
+    @Resource
     private IRelUserAuthProductService userAuthProductService;
 
     @Value("${oauth2.redis-prefix}")

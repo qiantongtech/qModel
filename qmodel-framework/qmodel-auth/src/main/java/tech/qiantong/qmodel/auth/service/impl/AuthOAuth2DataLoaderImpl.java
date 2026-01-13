@@ -37,12 +37,13 @@ import cn.dev33.satoken.oauth2.data.loader.SaOAuth2DataLoader;
 import cn.dev33.satoken.oauth2.data.model.loader.SaClientModel;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.util.IdUtil;
-import tech.qiantong.qmodel.auth.service.IAuthClientService;
-import tech.qiantong.qmodel.auth.service.IAuthClientUserService;
+import org.springframework.stereotype.Component;
 import tech.qiantong.qmodel.auth.domain.AuthClient;
 import tech.qiantong.qmodel.auth.domain.AuthClientUser;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import tech.qiantong.qmodel.auth.service.IAuthClientService;
+import tech.qiantong.qmodel.auth.service.IAuthClientUserService;
+
+import javax.annotation.Resource;
 
 /**
  * OAuth2.0 数据加载实现类
@@ -52,10 +53,10 @@ import org.springframework.stereotype.Component;
 @Component
 public class AuthOAuth2DataLoaderImpl implements SaOAuth2DataLoader {
 
-    @Autowired
+    @Resource
     private IAuthClientService clientService;
 
-    @Autowired
+    @Resource
     private IAuthClientUserService clientUserService;
 
     /**

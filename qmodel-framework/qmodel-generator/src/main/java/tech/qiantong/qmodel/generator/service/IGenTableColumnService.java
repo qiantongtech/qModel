@@ -32,9 +32,9 @@
 
 package tech.qiantong.qmodel.generator.service;
 
-import java.util.List;
-
 import tech.qiantong.qmodel.generator.domain.GenTableColumn;
+
+import java.util.List;
 
 /**
  * 业务字段 服务层

@@ -32,9 +32,10 @@
 
 package tech.qiantong.qmodel.config.web.domain.server;
 
-import java.lang.management.ManagementFactory;
 import tech.qiantong.qmodel.common.utils.Arith;
 import tech.qiantong.qmodel.common.utils.DateUtils;
+
+import java.lang.management.ManagementFactory;
 
 /**
  * JVM相关信息

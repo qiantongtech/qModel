@@ -32,7 +32,7 @@
 
 package tech.qiantong.qmodel.module.model.api.interfaceAddress.dto;
 
-import lombok.*;
+import lombok.Data;
 
 /**
  * 接口地址 DTO 对象 MODEL_INTERFACE_ADDRESS

@@ -39,7 +39,6 @@ import tech.qiantong.qmodel.module.model.controller.admin.model.vo.ModelRespVO;
 import tech.qiantong.qmodel.module.model.controller.admin.model.vo.ModelSaveReqVO;
 import tech.qiantong.qmodel.module.model.controller.admin.version.vo.ModelVersionSaveReqVO;
 import tech.qiantong.qmodel.module.model.dal.dataobject.model.ModelDO;
-import tech.qiantong.qmodel.module.model.domain.ModelVersion;
 
 import java.util.Collection;
 import java.util.List;

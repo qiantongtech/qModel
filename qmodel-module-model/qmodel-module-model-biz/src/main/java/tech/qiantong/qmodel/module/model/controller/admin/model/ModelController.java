@@ -53,7 +53,6 @@ import tech.qiantong.qmodel.module.model.controller.admin.model.vo.ModelSaveReqV
 import tech.qiantong.qmodel.module.model.controller.admin.version.vo.ModelVersionSaveReqVO;
 import tech.qiantong.qmodel.module.model.convert.model.ModelConvert;
 import tech.qiantong.qmodel.module.model.dal.dataobject.model.ModelDO;
-import tech.qiantong.qmodel.module.model.domain.ModelVersion;
 import tech.qiantong.qmodel.module.model.service.model.IModelService;
 
 import javax.annotation.Resource;
@@ -112,7 +111,7 @@ public class ModelController extends BaseController {
     @Log(title = "模型管理", businessType = BusinessType.INSERT)
     @PostMapping
     public CommonResult<Long> add(@Valid @RequestBody ModelSaveReqVO model, @RequestBody ModelVersionSaveReqVO modelVersion) {
-        return CommonResult.toAjax(modelService.createModel(model,modelVersion));
+        return CommonResult.toAjax(modelService.createModel(model, modelVersion));
     }
 
     @Operation(summary = "修改模型管理")
@@ -130,8 +129,9 @@ public class ModelController extends BaseController {
     public CommonResult<Integer> remove(@PathVariable Long[] ids) {
         return CommonResult.toAjax(modelService.removeModel(Arrays.asList(ids)));
     }
+
     /**
-     * 查询模型管理 列表
+     * 查询模型管理列表
      */
     @Operation(summary = "查询模型管理列表")
     @PreAuthorize("@ss.hasPermi('model:model::list')")
@@ -144,11 +144,12 @@ public class ModelController extends BaseController {
     /**
      * 修改模型管理详细信息（版本会自增）
      */
+    @Operation(summary = "修改模型管理详细信息（版本会自增）")
     @PreAuthorize("@ss.hasPermi('model:model:edit')")
-    @Log(title = "模型管理 ", businessType = BusinessType.UPDATE)
+    @Log(title = "模型管理", businessType = BusinessType.UPDATE)
     @PutMapping("/update")
     public CommonResult<Integer> update(@RequestBody ModelSaveReqVO model, @RequestBody ModelVersionSaveReqVO modelVersion) {
-        return CommonResult.toAjax(modelService.updateModel(model,modelVersion));
+        return CommonResult.toAjax(modelService.updateModel(model, modelVersion));
     }
 
 }

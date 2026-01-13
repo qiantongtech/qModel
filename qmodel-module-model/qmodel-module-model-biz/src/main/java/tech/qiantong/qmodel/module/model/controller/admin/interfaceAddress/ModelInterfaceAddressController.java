@@ -32,28 +32,21 @@
 
 package tech.qiantong.qmodel.module.model.controller.admin.interfaceAddress;
 
-import javax.annotation.Resource;
-import javax.servlet.http.HttpServletResponse;
-import javax.validation.Valid;
-import java.util.*;
-
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import tech.qiantong.qmodel.common.core.page.PageParam;
-import tech.qiantong.qmodel.common.core.domain.AjaxResult;
 import tech.qiantong.qmodel.common.annotation.Log;
 import tech.qiantong.qmodel.common.core.controller.BaseController;
+import tech.qiantong.qmodel.common.core.domain.AjaxResult;
 import tech.qiantong.qmodel.common.core.domain.CommonResult;
+import tech.qiantong.qmodel.common.core.page.PageParam;
 import tech.qiantong.qmodel.common.core.page.PageResult;
 import tech.qiantong.qmodel.common.enums.BusinessType;
 import tech.qiantong.qmodel.common.utils.object.BeanUtils;
 import tech.qiantong.qmodel.common.utils.poi.ExcelUtil;
-import tech.qiantong.qmodel.module.model.controller.admin.history.vo.ModelHistorySaveReqVO;
 import tech.qiantong.qmodel.module.model.controller.admin.interfaceAddress.vo.ModelInterfaceAddressPageReqVO;
 import tech.qiantong.qmodel.module.model.controller.admin.interfaceAddress.vo.ModelInterfaceAddressRespVO;
 import tech.qiantong.qmodel.module.model.controller.admin.interfaceAddress.vo.ModelInterfaceAddressSaveReqVO;
@@ -63,7 +56,11 @@ import tech.qiantong.qmodel.module.model.dal.dataobject.version.ModelVersionDO;
 import tech.qiantong.qmodel.module.model.service.history.IModelHistoryService;
 import tech.qiantong.qmodel.module.model.service.interfaceAddress.IModelInterfaceAddressService;
 import tech.qiantong.qmodel.module.model.service.version.IModelVersionService;
-import tech.qiantong.qmodel.module.modelReconstitution.domain.ModelVersionReconstitution;
+
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
+import java.util.*;
 
 
 /**
@@ -156,15 +153,7 @@ public class ModelInterfaceAddressController extends BaseController {
     public CommonResult<Long> add(@Valid @RequestBody ModelInterfaceAddressSaveReqVO modelInterfaceAddress) {
         // 添加操作历史
         if (modelInterfaceAddress !=null) {
-            ModelHistorySaveReqVO modelHistory = new ModelHistorySaveReqVO();
-            modelHistory.setModelId(modelInterfaceAddress.getModelId());
-            modelHistory.setModelName(modelInterfaceAddress.getModelName());
-            modelHistory.setContext("新增了【"+modelInterfaceAddress.getInterfaceAddress()+"】接口地址");
-            modelHistory.setModelVersion(modelInterfaceAddress.getVersion());
-            modelHistory.setUpdatorId(getUserId());
-            modelHistory.setUpdateBy(getNickName());
-            modelHistory.setUpdateTime(modelInterfaceAddress.getCreateTime());
-            modelHistoryService.createModelHistory(modelHistory);
+            modelHistoryService.createModelHistory(modelInterfaceAddress.getModelId(), modelInterfaceAddress.getModelName(), "新增了【"+modelInterfaceAddress.getInterfaceAddress()+"】接口地址", modelInterfaceAddress.getVersion(), getUserId(), getNickName());
         }
         return CommonResult.toAjax(modelInterfaceAddressService.createModelInterfaceAddress(modelInterfaceAddress));
     }
@@ -176,15 +165,7 @@ public class ModelInterfaceAddressController extends BaseController {
     public CommonResult<Integer> edit(@Valid @RequestBody ModelInterfaceAddressSaveReqVO modelInterfaceAddress) {
 
         if (modelInterfaceAddress !=null) {
-            ModelHistorySaveReqVO modelHistory = new ModelHistorySaveReqVO();
-            modelHistory.setModelId(modelInterfaceAddress.getModelId());
-            modelHistory.setModelName(modelInterfaceAddress.getModelName());
-            modelHistory.setContext("修改了【"+modelInterfaceAddress.getInterfaceAddress()+"】接口基本信息");
-            modelHistory.setModelVersion(modelInterfaceAddress.getVersion());
-            modelHistory.setUpdatorId(getUserId());
-            modelHistory.setUpdateBy(getNickName());
-            modelHistory.setUpdateTime(modelInterfaceAddress.getCreateTime());
-            modelHistoryService.createModelHistory(modelHistory);
+            modelHistoryService.createModelHistory(modelInterfaceAddress.getModelId(), modelInterfaceAddress.getModelName(), "修改了【"+modelInterfaceAddress.getInterfaceAddress()+"】接口基本信息", modelInterfaceAddress.getVersion(), getUserId(), getNickName());
         }
         return CommonResult.toAjax(modelInterfaceAddressService.updateModelInterfaceAddress(modelInterfaceAddress));
     }

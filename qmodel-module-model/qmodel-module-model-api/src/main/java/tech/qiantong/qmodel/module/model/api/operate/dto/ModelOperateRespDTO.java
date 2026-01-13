@@ -32,7 +32,7 @@
 
 package tech.qiantong.qmodel.module.model.api.operate.dto;
 
-import lombok.*;
+import lombok.Data;
 
 /**
  * 模型历史管理 DTO 对象 MODEL_OPERATE

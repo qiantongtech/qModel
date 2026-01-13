@@ -32,13 +32,9 @@
 
 package tech.qiantong.qmodel.generator.util;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import org.apache.velocity.VelocityContext;
 import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.JSONObject;
+import org.apache.velocity.VelocityContext;
 import tech.qiantong.qmodel.common.constant.GenConstants;
 import tech.qiantong.qmodel.common.core.domain.entity.SysDictData;
 import tech.qiantong.qmodel.common.core.domain.entity.SysDictType;
@@ -46,6 +42,11 @@ import tech.qiantong.qmodel.common.utils.DateUtils;
 import tech.qiantong.qmodel.common.utils.StringUtils;
 import tech.qiantong.qmodel.generator.domain.GenTable;
 import tech.qiantong.qmodel.generator.domain.GenTableColumn;
+
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 /**
  * 模板处理工具类

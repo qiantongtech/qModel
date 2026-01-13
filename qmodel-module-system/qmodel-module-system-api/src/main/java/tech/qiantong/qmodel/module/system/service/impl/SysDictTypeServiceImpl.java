@@ -39,7 +39,7 @@ import java.util.stream.Collectors;
 import javax.annotation.PostConstruct;
 
 import com.google.common.collect.Lists;
-import org.springframework.beans.factory.annotation.Autowired;
+import javax.annotation.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import tech.qiantong.qmodel.common.constant.UserConstants;
@@ -60,10 +60,10 @@ import tech.qiantong.qmodel.module.system.service.ISysDictTypeService;
 @Service
 public class SysDictTypeServiceImpl implements ISysDictTypeService
 {
-    @Autowired
+    @Resource
     private SysDictTypeMapper dictTypeMapper;
 
-    @Autowired
+    @Resource
     private SysDictDataMapper dictDataMapper;
 
     /**

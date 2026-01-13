@@ -32,24 +32,25 @@
 
 package tech.qiantong.qmodel.security.handle;
 
-import java.io.IOException;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.alibaba.fastjson2.JSON;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
-import com.alibaba.fastjson2.JSON;
-import tech.qiantong.qmodel.security.manager.AsyncManager;
-import tech.qiantong.qmodel.security.manager.factory.AsyncFactory;
-import tech.qiantong.qmodel.security.web.service.TokenService;
 import tech.qiantong.qmodel.common.constant.Constants;
 import tech.qiantong.qmodel.common.core.domain.AjaxResult;
 import tech.qiantong.qmodel.common.core.domain.model.LoginUser;
 import tech.qiantong.qmodel.common.utils.MessageUtils;
 import tech.qiantong.qmodel.common.utils.ServletUtils;
 import tech.qiantong.qmodel.common.utils.StringUtils;
+import tech.qiantong.qmodel.security.manager.AsyncManager;
+import tech.qiantong.qmodel.security.manager.factory.AsyncFactory;
+import tech.qiantong.qmodel.security.web.service.TokenService;
+
+import javax.annotation.Resource;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 
 /**
  * 自定义退出处理类 返回成功
@@ -59,7 +60,7 @@ import tech.qiantong.qmodel.common.utils.StringUtils;
 @Configuration
 public class LogoutSuccessHandlerImpl implements LogoutSuccessHandler
 {
-    @Autowired
+    @Resource
     private TokenService tokenService;
 
     /**

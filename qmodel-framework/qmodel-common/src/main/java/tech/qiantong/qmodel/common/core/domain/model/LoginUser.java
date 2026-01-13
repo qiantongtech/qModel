@@ -33,9 +33,10 @@
 package tech.qiantong.qmodel.common.core.domain.model;
 
 import com.alibaba.fastjson2.annotation.JSONField;
-import tech.qiantong.qmodel.common.core.domain.entity.SysUser;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import tech.qiantong.qmodel.common.core.domain.entity.SysUser;
+
 import java.util.Collection;
 import java.util.Set;
 

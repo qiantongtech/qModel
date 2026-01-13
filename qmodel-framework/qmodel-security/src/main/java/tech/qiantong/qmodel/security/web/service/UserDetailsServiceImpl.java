@@ -34,7 +34,6 @@ package tech.qiantong.qmodel.security.web.service;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -47,6 +46,8 @@ import tech.qiantong.qmodel.common.utils.MessageUtils;
 import tech.qiantong.qmodel.common.utils.StringUtils;
 import tech.qiantong.qmodel.module.system.service.ISysUserService;
 
+import javax.annotation.Resource;
+
 /**
  * 用户验证处理
  *
@@ -56,13 +57,13 @@ import tech.qiantong.qmodel.module.system.service.ISysUserService;
 public class UserDetailsServiceImpl implements UserDetailsService {
     private static final Logger log = LoggerFactory.getLogger(UserDetailsServiceImpl.class);
 
-    @Autowired
+    @Resource
     private ISysUserService userService;
 
-    @Autowired
+    @Resource
     private SysPasswordService passwordService;
 
-    @Autowired
+    @Resource
     private SysPermissionService permissionService;
 
     @Override

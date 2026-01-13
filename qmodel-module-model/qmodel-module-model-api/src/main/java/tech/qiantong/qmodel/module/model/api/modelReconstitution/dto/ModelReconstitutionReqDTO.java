@@ -32,9 +32,9 @@
 
 package tech.qiantong.qmodel.module.model.api.modelReconstitution.dto;
 
+import lombok.Data;
+
 import java.util.Date;
-import com.fasterxml.jackson.annotation.JsonFormat;
-import lombok.*;
 
 /**
  * 模型库重构 DTO 对象 MODEL_RECONSTITUTION

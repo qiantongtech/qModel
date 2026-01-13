@@ -38,7 +38,7 @@ import tech.qiantong.qmodel.module.system.ca.domain.CaCert;
 import tech.qiantong.qmodel.module.system.ca.mapper.CaCertMapper;
 import tech.qiantong.qmodel.module.system.ca.service.ICaCertService;
 import tech.qiantong.qmodel.common.utils.DateUtils;
-import org.springframework.beans.factory.annotation.Autowired;
+import javax.annotation.Resource;
 import org.springframework.stereotype.Service;
 
 /**
@@ -50,7 +50,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class CaCertServiceImpl implements ICaCertService
 {
-    @Autowired
+    @Resource
     private CaCertMapper caCertMapper;
 
     /**

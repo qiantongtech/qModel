@@ -32,9 +32,9 @@
 
 package tech.qiantong.qmodel.common.enums;
 
-import java.util.function.Function;
-
 import tech.qiantong.qmodel.common.utils.DesensitizedUtil;
+
+import java.util.function.Function;
 
 /**
  * 脱敏类型

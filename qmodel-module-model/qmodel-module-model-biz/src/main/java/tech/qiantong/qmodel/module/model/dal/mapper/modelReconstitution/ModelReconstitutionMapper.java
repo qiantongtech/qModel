@@ -32,15 +32,15 @@
 
 package tech.qiantong.qmodel.module.model.dal.mapper.modelReconstitution;
 
-import tech.qiantong.qmodel.module.model.dal.dataobject.modelReconstitution.ModelReconstitutionDO;
-import java.util.Arrays;
-import com.github.yulichang.base.MPJBaseMapper;
 import tech.qiantong.qmodel.common.core.page.PageResult;
-import java.util.HashSet;
-import java.util.Set;
 import tech.qiantong.qmodel.module.model.controller.admin.modelReconstitution.vo.ModelReconstitutionPageReqVO;
+import tech.qiantong.qmodel.module.model.dal.dataobject.modelReconstitution.ModelReconstitutionDO;
 import tech.qiantong.qmodel.mybatis.core.mapper.BaseMapperX;
 import tech.qiantong.qmodel.mybatis.core.query.LambdaQueryWrapperX;
+
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * 模型库重构Mapper接口
@@ -53,12 +53,11 @@ public interface ModelReconstitutionMapper extends BaseMapperX<ModelReconstituti
     default PageResult<ModelReconstitutionDO> selectPage(ModelReconstitutionPageReqVO reqVO) {
         // 定义排序的字段（防止 SQL 注入，与数据库字段名称一致）
         Set<String> allowedColumns = new HashSet<>(Arrays.asList("id", "create_time", "update_time"));
-
         // 构造动态查询条件
         return selectPage(reqVO, new LambdaQueryWrapperX<ModelReconstitutionDO>()
                 .eqIfPresent(ModelReconstitutionDO::getCompanyId, reqVO.getCompanyId())
                 .likeIfPresent(ModelReconstitutionDO::getName, reqVO.getName())
-                .eqIfPresent(ModelReconstitutionDO::getClassifyId, reqVO.getClassifyId())
+                .inIfPresent(ModelReconstitutionDO::getClassifyId, reqVO.getClassifyIds())
                 .eqIfPresent(ModelReconstitutionDO::getBuiltin, reqVO.getBuiltin())
                 .eqIfPresent(ModelReconstitutionDO::getAccessMode, reqVO.getAccessMode())
                 .eqIfPresent(ModelReconstitutionDO::getRequestMethod, reqVO.getRequestMethod())
@@ -70,9 +69,6 @@ public interface ModelReconstitutionMapper extends BaseMapperX<ModelReconstituti
                 .eqIfPresent(ModelReconstitutionDO::getPort, reqVO.getPort())
                 .likeIfPresent(ModelReconstitutionDO::getFileName, reqVO.getFileName())
                 .eqIfPresent(ModelReconstitutionDO::getRunnableFileAddress, reqVO.getRunnableFileAddress())
-                // 如果 reqVO.getName() 不为空，则添加 name 的精确匹配条件（name = '<name>'）
-                // .likeIfPresent(ModelReconstitutionDO::getName, reqVO.getName())
-                // 按照 createTime 字段降序排序
                 .orderBy(reqVO.getOrderByColumn(), reqVO.getIsAsc(), allowedColumns));
     }
 }
