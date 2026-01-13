@@ -581,7 +581,7 @@ const getList = () => {
   loading.value = true;
   listCacl(queryParams).then((response) => {
     caclList.value = response.data.rows;
-    total.value = response.total;
+    total.value = response.data.total;
     loading.value = false;
   });
 };

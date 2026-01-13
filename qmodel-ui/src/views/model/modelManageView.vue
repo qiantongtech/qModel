@@ -370,7 +370,6 @@
     const getModelById = (params) => {
         getModel(params).then((res) => {
             viewInfo.value = res.data;
-            console.log(viewInfo.value.accessMode, 'viewInfo');
         });
     };
 
@@ -386,7 +385,6 @@
 
     const handleClick = (tab, event) => {
         activeName.value = tab.paneName;
-        console.log(activeName.value, 'activeName');
     };
 
     // 设置默认激活的tab
@@ -472,12 +470,12 @@
     /** 查询分类下拉树结构 */
     const getTreeSelect = () => {
         listClassify().then((res) => {
-            for (let i = 0; i < res.rows.length; i++) {
+            for (let i = 0; i < res.data.rows.length; i++) {
                 let arrTemp = [];
-                for (let j = 0; j < res.rows.length; j++) {
-                    if (res.rows[i].id == res.rows[j].parentId) {
-                        res.rows[i].children = arrTemp;
-                        arrTemp.push(res.rows[j]);
+                for (let j = 0; j < res.data.rows.length; j++) {
+                    if (res.data.rows[i].id == res.data.rows[j].parentId) {
+                        res.data.rows[i].children = arrTemp;
+                        arrTemp.push(res.data.rows[j]);
                     }
                 }
             }
@@ -528,7 +526,7 @@
                 modelId: viewInfo.value.id,
                 versionId: viewInfo.value.versionId
             }).then((response) => {
-                interfaceAddressList.value = response.rows;
+                interfaceAddressList.value = response.data.rows;
                 if (interfaceAddressList.value.length > 0) {
                     viewInfo.value.whetherPublish = whetherPublish;
                     updateModel(viewInfo.value).then((response) => {

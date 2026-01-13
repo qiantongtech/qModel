@@ -141,7 +141,7 @@
         (newVal) => {
             if (newVal) {
                 getVersionList({ modelId: newVal.id }).then((response) => {
-                    versionList.value = response.rows;
+                    versionList.value = response.data;
                     modelVersion.value = newVal.version;
                 });
             }
@@ -161,8 +161,8 @@
         queryParams.pageNum = 1;
         queryParams.modelVersion = modelVersion.value;
         historyList(queryParams).then((response) => {
-            historyListData.value = response.rows;
-            total.value = response.total;
+            historyListData.value = response.data.rows;
+            total.value = response.data.total;
             loading.value = false;
         });
     };
@@ -174,8 +174,8 @@
         queryParams.modelId = mId;
         queryParams.modelVersion = props.model.version;
         historyList(queryParams).then((response) => {
-            historyListData.value = response.rows;
-            total.value = response.total;
+            historyListData.value = response.data.rows;
+            total.value = response.data.total;
             loading.value = false;
         });
     };

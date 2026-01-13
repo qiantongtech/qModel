@@ -322,7 +322,7 @@
         const mid = route.query.modelId;
         queryParams.modelId = mid;
         getVersionList(queryParams).then((response) => {
-            versionList.value = response.rows;
+            versionList.value = response.data;
             total.value = response.total;
             loading.value = false;
         });
@@ -369,12 +369,12 @@
     /** 查询分类下拉树结构 */
     const getTreeselect = () => {
         listClassify().then((res) => {
-            for (let i = 0; i < res.rows.length; i++) {
+            for (let i = 0; i < res.data.rows.length; i++) {
                 let arrTemp = [];
-                for (let j = 0; j < res.rows.length; j++) {
-                    if (res.rows[i].id == res.rows[j].parentId) {
-                        res.rows[i].children = arrTemp;
-                        arrTemp.push(res.rows[j]);
+                for (let j = 0; j < res.data.rows.length; j++) {
+                    if (res.data.rows[i].id == res.data.rows[j].parentId) {
+                        res.data.rows[i].children = arrTemp;
+                        arrTemp.push(res.data.rows[j]);
                     }
                 }
             }

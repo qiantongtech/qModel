@@ -361,7 +361,7 @@
     const rulesParams = ref({});
 
     // 字典数据
-    const model_type = useDict('calculation_status').model_type;
+    const model_type = useDict('calculation_status').calculation_status;
 
     // 模板引用
     const queryFormRef = ref(null);
@@ -439,7 +439,7 @@
         })[0].id;
         const data = { modelId: modelId, versionId: versionId };
         listInterfaceAddress(data).then((response) => {
-            interfaceAddressList.value = response.rows;
+            interfaceAddressList.value = response.data.rows;
         });
     };
 
@@ -463,8 +463,8 @@
     const getList = () => {
         loading.value = true;
         listCacl(queryParams).then((response) => {
-            caclList.value = response.rows;
-            total.value = response.total;
+            caclList.value = response.data.rows;
+            total.value = response.data.total;
             loading.value = false;
         });
     };

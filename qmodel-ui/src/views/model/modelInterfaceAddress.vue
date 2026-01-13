@@ -333,7 +333,7 @@ watch(
   () => props.model,
   (newVal, oldVal) => {
     getVersionList({ modelId: newVal.id }).then((response) => {
-      versionList.value = response.rows;
+      versionList.value = response.data;
       queryParams.versionId = newVal.versionId;
       getList();
     });
@@ -349,7 +349,7 @@ watch(
 const getList = () => {
   loading.value = true;
   listInterfaceAddress(queryParams).then((response) => {
-    interfaceAddressList.value = response.rows;
+    interfaceAddressList.value = response.data.rows;
     total.value = response.total;
     loading.value = false;
   });
