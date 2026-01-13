@@ -194,60 +194,46 @@
           {{ title }}
         </span>
       </template>
-      <el-form ref="form" :model="form" :rules="rules" label-width="150px">
-        <el-row>
-          <el-col :span="20">
-            <el-form-item label="计算名称：" prop="name">
-              <el-input
-                clearable
-                v-model="form.name"
-                placeholder="请输入计算名称"
-              />
-            </el-form-item>
-          </el-col>
-        </el-row>
-        <el-row>
-          <el-col :span="20">
-            <el-form-item label="模型名称：" prop="modelId">
-              <el-select
-                v-model="form.modelId"
-                placeholder="请选择所属模型"
-                clearable
-                class="el-form-input-width"
-                @change="
-                  getAllModelVersion(form.modelId), (form.modelVersion = null)
-                "
-                value-key="id"
-              >
-                <el-option
-                  v-for="dict in modelList"
-                  :key="dict.id"
-                  :label="dict.name"
-                  :value="dict.id"
-                />
-              </el-select>
-            </el-form-item>
-          </el-col>
-        </el-row>
-        <el-row>
-          <el-col :span="20">
-            <el-form-item label="模型版本：" prop="modelVersion">
-              <el-select
-                v-model="form.modelVersion"
-                placeholder="请先选择所属模型"
-                clearable
-                style="width: 100%"
-              >
-                <el-option
-                  v-for="dict in versionList"
-                  :key="dict.id"
-                  :label="'Version ' + dict.version"
-                  :value="parseInt(dict.version)"
-                />
-              </el-select>
-            </el-form-item>
-          </el-col>
-        </el-row>
+      <el-form ref="form" :model="form" :rules="rules" label-width="95px">
+        <el-form-item label="计算名称：" prop="name">
+          <el-input
+            clearable
+            v-model="form.name"
+            placeholder="请输入计算名称"
+          />
+        </el-form-item>
+        <el-form-item label="模型名称：" prop="modelId">
+          <el-select
+            v-model="form.modelId"
+            placeholder="请选择所属模型"
+            clearable
+            @change="
+              getAllModelVersion(form.modelId), (form.modelVersion = null)
+            "
+            value-key="id"
+          >
+            <el-option
+              v-for="dict in modelList"
+              :key="dict.id"
+              :label="dict.name"
+              :value="dict.id"
+            />
+          </el-select>
+        </el-form-item>
+        <el-form-item label="模型版本：" prop="modelVersion">
+          <el-select
+            v-model="form.modelVersion"
+            placeholder="请先选择所属模型"
+            clearable
+          >
+            <el-option
+              v-for="dict in versionList"
+              :key="dict.id"
+              :label="'Version ' + dict.version"
+              :value="parseInt(dict.version)"
+            />
+          </el-select>
+        </el-form-item>
       </el-form>
       <template #footer>
         <div class="dialog-footer">
@@ -1188,7 +1174,6 @@ const handleMultipleChange = (selection) => {
   background-color: #e9f0ff;
   color: #316efb;
 }
-
 .params-item {
   .params-title {
     font-weight: bold;
