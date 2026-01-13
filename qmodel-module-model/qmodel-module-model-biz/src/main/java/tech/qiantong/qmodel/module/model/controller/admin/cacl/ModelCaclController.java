@@ -64,6 +64,7 @@ import tech.qiantong.qmodel.module.model.controller.admin.modelCacl.vo.ModelCacl
 import tech.qiantong.qmodel.module.model.dal.dataobject.cacl.ModelCaclDO;
 import tech.qiantong.qmodel.module.model.dal.dataobject.input.ModelInputDO;
 import tech.qiantong.qmodel.module.model.dal.dataobject.interfaceAddress.ModelInterfaceAddressDO;
+import tech.qiantong.qmodel.module.model.enums.RequestMethodEnum;
 import tech.qiantong.qmodel.module.model.service.cacl.IModelCaclService;
 import tech.qiantong.qmodel.module.model.service.history.IModelHistoryService;
 import tech.qiantong.qmodel.module.model.service.input.IModelInputService;
@@ -207,18 +208,19 @@ public class ModelCaclController extends BaseController {
             }
             Map<String, String> headersMap = new HashMap<>();
             headersMap.put("userId", getUserId().toString());
-            switch (interfaceAddress.getRequestMethod().intValue()) {
-                case 0:
+            RequestMethodEnum requestMethod = RequestMethodEnum.getByValue(interfaceAddress.getRequestMethod());
+            switch (requestMethod) {
+                case GET:
                     String url = HttpUtil.urlWithForm(interfaceAddress.getInterfaceAddress(), jsonObject, null, false);
                     result = HttpUtil.get(url);
                     break;
-                case 1:
+                case POST:
                     result = HttpRequest.post(interfaceAddress.getInterfaceAddress()).addHeaders(headersMap).body(JSONUtil.toJsonStr(jsonObject), "application/json").execute().body();
                     break;
-                case 2:
+                case PUT:
                     result = HttpRequest.put(interfaceAddress.getInterfaceAddress()).addHeaders(headersMap).body(JSONUtil.toJsonStr(jsonObject), "application/json").execute().body();
                     break;
-                case 3:
+                case DELETE:
                     result = HttpRequest.delete(interfaceAddress.getInterfaceAddress()).addHeaders(headersMap).execute().body();
                     break;
                 default:
@@ -256,8 +258,6 @@ public class ModelCaclController extends BaseController {
                 modelCaclService.updateModelCacl(BeanUtils.toBean(modelCacl, ModelCaclSaveReqVO.class));
             }
         }
-        // 记录历史记录
-        // 这里可能需要创建 ModelHistorySaveReqVO 对象并保存历史记录
         return R.ok();
     }
 

@@ -594,7 +594,7 @@ const getAllModel = () => {
 const getList = () => {
   loading.value = true;
   listCacl(queryParams).then((response) => {
-    caclList.value = response.rows;
+    caclList.value = response.data.rows;
     total.value = response.total;
     loading.value = false;
   });

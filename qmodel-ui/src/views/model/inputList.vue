@@ -614,7 +614,7 @@ const getList = () => {
     queryParams.modelId = parseInt(modelId);
   }
   listInput(queryParams).then((response) => {
-    inputList.value = response.rows;
+    inputList.value = response.data.rows;
     total.value = response.total;
     loading.value = false;
   });
