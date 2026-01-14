@@ -114,9 +114,15 @@
         class-name="small-padding fixed-width"
       >
         <template #default="scope">
-          <el-button link @click="handleView(scope.row)">详情</el-button>
-          <el-button link @click="handleUpdate(scope.row)">修改</el-button>
-          <el-button link @click="handleDelete(scope.row)">删除</el-button>
+          <el-button type="primary" link @click="handleView(scope.row)"
+            ><View class="icon-mini" /> 详情</el-button
+          >
+          <el-button type="primary" link @click="handleUpdate(scope.row)"
+            ><Edit class="icon-mini" /> 修改</el-button
+          >
+          <el-button type="danger" link @click="handleDelete(scope.row)"
+            ><Delete class="icon-mini" /> 删除</el-button
+          >
         </template>
       </el-table-column>
     </el-table>
