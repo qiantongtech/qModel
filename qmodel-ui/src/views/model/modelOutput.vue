@@ -31,7 +31,7 @@
 -->
 
 <template>
-  <div class="app-container pagecont-top">
+  <div class="app-container">
     <el-form
       :model="queryParams"
       ref="queryFormRef"
@@ -495,6 +495,9 @@ import { useDict } from "@/utils/dict.js";
 // 获取当前实例以访问全局方法
 const { proxy } = getCurrentInstance();
 
+const model_input_param_type = useDict(
+  "model_input_param_type"
+).model_input_param_type;
 // 响应式数据
 
 // 遮罩层
@@ -599,6 +602,10 @@ const rules = reactive({
 const queryFormRef = ref(null);
 const formRef = ref(null);
 
+// 选中的数据
+const checkedSingle = ref([]);
+const checkedMultiple = ref([]);
+
 // 获取路由信息
 const $route = useRoute();
 
@@ -612,8 +619,10 @@ const getList = () => {
     queryParams.modelId = parseInt(modelId);
   }
   listOutput(queryParams).then((response) => {
-    inputList.value = response.rows;
-    total.value = response.total;
+    console.log(response, "shuju");
+
+    inputList.value = response.data.rows;
+    total.value = response.data.total;
     loading.value = false;
   });
 };
@@ -793,6 +802,9 @@ const handleExport = () => {
 
 /** 单值 添加按钮操作 */
 const handleAddSingle = () => {
+  if (!form.value.singleContent) {
+    form.value.singleContent = [];
+  }
   let obj = {};
   obj.name = "";
   obj.value = "";
@@ -802,6 +814,10 @@ const handleAddSingle = () => {
 
 /** 单值 删除按钮操作 */
 const handleDeleteSingle = (row) => {
+  if (!form.value.singleContent) {
+    form.value.singleContent = [];
+    return;
+  }
   const id = row.index;
   const singleContent = form.value.singleContent;
   form.value.singleContent = singleContent.filter(function (item) {
@@ -821,6 +837,9 @@ const handleSingleChange = (selection) => {
 
 /** 多列值 添加按钮操作 */
 const handleAddMultiple = () => {
+  if (!form.value.multipleContent) {
+    form.value.multipleContent = [];
+  }
   let obj = {};
   obj.name = "";
   obj.value = "";
@@ -830,6 +849,10 @@ const handleAddMultiple = () => {
 
 /** 多列值 删除按钮操作 */
 const handleDeleteMultiple = (row) => {
+  if (!form.value.multipleContent) {
+    form.value.multipleContent = [];
+    return;
+  }
   const id = row.index;
   const multipleContent = form.value.multipleContent;
   form.value.multipleContent = multipleContent.filter(function (item) {
@@ -844,7 +867,7 @@ const multipleIndex = ({ row, rowIndex }) => {
 
 /** 复选框选中数据 */
 const handleMultipleChange = (selection) => {
-  checkedMultiple.value = selection.map((item) => item.index);
+  checkedMultiple.value = selection?.map((item) => item.index) || [];
 };
 
 // 组件挂载后执行
@@ -853,6 +876,8 @@ onMounted(() => {
 });
 </script>
 <style lang="scss" scoped>
-.modelOutput {
+.app-container {
+  min-height: 0;
+  background: transparent;
 }
 </style>

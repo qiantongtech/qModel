@@ -870,5 +870,6 @@ onMounted(() => {
 <style scoped lang="scss">
 .app-container {
   background: transparent;
+  min-height: 0;
 }
 </style>

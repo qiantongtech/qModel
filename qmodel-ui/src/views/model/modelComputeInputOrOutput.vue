@@ -32,7 +32,11 @@
 
 <template>
   <div class="app-container pagecont-top" style="background-color: white">
-    <h1>{{ isInputOrOut == 1 ? "查看参数" : "设置参数" }}</h1>
+    <div class="father_box">
+      <div class="son_oneBox">
+        <span>{{ isInputOrOut == 1 ? "查看参数" : "设置参数" }}</span>
+      </div>
+    </div>
     <el-descriptions class="margin-top" :column="3" :size="''" border>
       <!--      <template slot="extra">
               <el-button type="primary" size="small">返回</el-button>
@@ -328,6 +332,15 @@ const saveData = () => {
 <style scoped lang="scss">
 .app-container {
   padding: 15px;
+  .father_box {
+    padding-bottom: 10px;
+    line-height: 46px;
+    .son_oneBox {
+      font-size: 20px;
+      font-weight: bolder;
+    }
+  }
+
   .button-style {
     display: flex;
     justify-content: center;

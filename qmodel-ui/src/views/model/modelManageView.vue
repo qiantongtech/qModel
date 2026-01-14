@@ -403,7 +403,7 @@ const getModelById = (params) => {
 
 const goBack = () => {
   router.push({
-    path: "/modelReconstitution/waterConserve/modelManage",
+    path: "/model/version",
     query: {
       pageNum: 1,
     },
