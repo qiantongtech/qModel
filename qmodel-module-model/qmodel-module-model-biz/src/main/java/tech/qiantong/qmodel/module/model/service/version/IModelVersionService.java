@@ -34,15 +34,18 @@ package tech.qiantong.qmodel.module.model.service.version;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import tech.qiantong.qmodel.common.core.page.PageResult;
+import tech.qiantong.qmodel.module.model.controller.admin.interfaceAddress.vo.ModelInterfaceAddressPageReqVO;
+import tech.qiantong.qmodel.module.model.controller.admin.interfaceAddress.vo.ModelInterfaceAddressRespVO;
+import tech.qiantong.qmodel.module.model.controller.admin.modelReconstitution.vo.ModelReconstitutionSaveReqVO;
 import tech.qiantong.qmodel.module.model.controller.admin.version.vo.ModelVersionPageReqVO;
 import tech.qiantong.qmodel.module.model.controller.admin.version.vo.ModelVersionRespVO;
 import tech.qiantong.qmodel.module.model.controller.admin.version.vo.ModelVersionSaveReqVO;
+import tech.qiantong.qmodel.module.model.dal.dataobject.interfaceAddress.ModelInterfaceAddressDO;
 import tech.qiantong.qmodel.module.model.dal.dataobject.version.ModelVersionDO;
 
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
-
 /**
  * 版本管理Service接口
  *
@@ -111,6 +114,24 @@ public interface IModelVersionService extends IService<ModelVersionDO> {
      */
     Map<Long, ModelVersionDO> getModelVersionMap();
 
+    /**
+     * 创建模型版本并更新模型ID
+     *
+     * @param version 版本信息
+     * @param modelId 模型ID
+     * @return 版本管理编号
+     */
+    Long createModelVersionWithModelId(ModelVersionSaveReqVO version, Long modelId);
+
+    /**
+     * 创建模型版本（带属性设置）
+     *
+     * @param modelReconstitution 模型重构信息
+     * @param userId 用户ID
+     * @param nickName 用户昵称
+     * @return 版本管理编号
+     */
+    Long createModelVersionWithAttributes(ModelReconstitutionSaveReqVO modelReconstitution, Long userId, String nickName);
 
     /**
      * 导入版本管理数据

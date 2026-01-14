@@ -612,9 +612,10 @@ const getList = () => {
     queryParams.modelId = parseInt(modelId);
   }
   listOutput(queryParams).then((response) => {
-    inputList.value = response.rows;
-    total.value = response.total;
+    inputList.value = response.data.rows;
+    total.value = response.data.total;
     loading.value = false;
+    console.log(inputList.value,"qqqqqqqqqqqqqqqqqqqqqqqqqq")
   });
 };
 

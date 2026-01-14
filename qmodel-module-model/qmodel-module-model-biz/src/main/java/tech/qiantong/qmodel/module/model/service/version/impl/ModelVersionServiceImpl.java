@@ -41,6 +41,7 @@ import tech.qiantong.qmodel.common.core.page.PageResult;
 import tech.qiantong.qmodel.common.exception.ServiceException;
 import tech.qiantong.qmodel.common.utils.StringUtils;
 import tech.qiantong.qmodel.common.utils.object.BeanUtils;
+import tech.qiantong.qmodel.module.model.controller.admin.modelReconstitution.vo.ModelReconstitutionSaveReqVO;
 import tech.qiantong.qmodel.module.model.controller.admin.version.vo.ModelVersionPageReqVO;
 import tech.qiantong.qmodel.module.model.controller.admin.version.vo.ModelVersionRespVO;
 import tech.qiantong.qmodel.module.model.controller.admin.version.vo.ModelVersionSaveReqVO;
@@ -90,6 +91,48 @@ public class ModelVersionServiceImpl  extends ServiceImpl<ModelVersionMapper,Mod
         ModelVersionDO dictType = BeanUtils.toBean(createReqVO, ModelVersionDO.class);
         modelVersionMapper.insert(dictType);
         return dictType.getId();
+    }
+
+    @Override
+    public Long createModelVersionWithModelId(ModelVersionSaveReqVO version, Long modelId) {
+        // 创建版本记录
+        ModelVersionDO versionDO = BeanUtils.toBean(version, ModelVersionDO.class);
+        modelVersionMapper.insert(versionDO);
+        
+        // 更新模型ID
+        if (modelId != null) {
+            versionDO.setModelId(modelId);
+            modelVersionMapper.updateById(versionDO);
+        }
+        
+        return versionDO.getId();
+    }
+
+    @Override
+    public Long createModelVersionWithAttributes(ModelReconstitutionSaveReqVO modelReconstitution, Long userId, String nickName) {
+        ModelVersionSaveReqVO version = new ModelVersionSaveReqVO();
+        version.setCompanyId(null);
+        version.setCreatorId(userId);
+        version.setCreateBy(nickName);
+        version.setVersion(modelReconstitution.getVersion());
+        version.setDescription(modelReconstitution.getDescription());
+        version.setStatus(1);
+        version.setModelName(modelReconstitution.getName());
+        version.setFileAddress(modelReconstitution.getInterfaceorfileAddress());
+        version.setInterfaceAddress(modelReconstitution.getInterfaceorfileAddress());
+        version.setRunnableFileAddress(modelReconstitution.getRunnableFileAddress());
+        
+        // 创建版本记录
+        ModelVersionDO versionDO = BeanUtils.toBean(version, ModelVersionDO.class);
+        modelVersionMapper.insert(versionDO);
+        
+        // 更新模型ID
+        if (modelReconstitution.getId() != null) {
+            versionDO.setModelId(modelReconstitution.getId());
+            modelVersionMapper.updateById(versionDO);
+        }
+        
+        return versionDO.getId();
     }
 
     @Override

@@ -154,7 +154,6 @@ public class ModelInputController extends BaseController {
      */
     @PostMapping("/findAllModel")
     public AjaxResult findAllModel(@RequestBody ModelReconstitution modelReconstitution) {
-//        modelReconstitution.setCompanyId(null);
         modelReconstitution.setDelFlag(false);
         return AjaxResult.success(modelReconstitutionService.selectModelReconstitutionList(modelReconstitution));
     }

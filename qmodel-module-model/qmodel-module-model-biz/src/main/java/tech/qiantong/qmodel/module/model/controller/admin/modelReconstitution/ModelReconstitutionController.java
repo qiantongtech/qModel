@@ -146,35 +146,17 @@ public class ModelReconstitutionController extends BaseController {
         return CommonResult.success(BeanUtils.toBean(modelReconstitutionDO, ModelReconstitutionRespVO.class));
     }
 
-    @Operation(summary = "新增模型库重构")
+    @Operation(summary = "新增模型库")
     @PreAuthorize("@ss.hasPermi('model:modelReconstitution:reconstitution:add')")
     @Log(title = "模型库重构", businessType = BusinessType.INSERT)
     @PostMapping
     public CommonResult<Long> add(@Valid @RequestBody ModelReconstitutionSaveReqVO model) {
-        model.setCompanyId(null);
-        model.setCreatorId(getUserId());
-        model.setCreateBy(getNickName());
-
-        ModelVersionSaveReqVO version = new ModelVersionSaveReqVO();
-        version.setCompanyId(null);
-        version.setCreatorId(getUserId());
-        version.setCreateBy(getNickName());
-        version.setVersion(model.getVersion());
-        version.setDescription(model.getDescription());
-        version.setStatus(1);
-        version.setModelName(model.getName());
-        version.setFileAddress(model.getInterfaceorfileAddress());
-        version.setInterfaceAddress(model.getInterfaceorfileAddress());
-        version.setRunnableFileAddress(model.getRunnableFileAddress());
-        modelVersionService.createModelVersion(version);
-
-        model.setVersionId(version.getId());
+        // 创建模型版本并设置属性
+        Long versionId = modelVersionService.createModelVersionWithAttributes(model, getUserId(), getNickName());
+        model.setVersionId(versionId);
         Long modelReconstitution = modelReconstitutionService.createModelReconstitution(model);
-        version.setModelId(model.getId());
-        modelVersionService.updateModelVersion(version);
         // 添加操作历史
-        modelHistoryService.createModelHistory(model.getId(), model.getName(), "新增了"+model.getName(), version.getVersion(), getUserId(), getNickName());
-
+        modelHistoryService.createModelHistory(model.getId(), model.getName(), "新增了"+model.getName(), model.getVersion(), getUserId(), getNickName());
         return CommonResult.toAjax(modelReconstitution);
     }
 
