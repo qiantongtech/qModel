@@ -600,7 +600,7 @@ const getList = () => {
   }
   listOutput(queryParams).then((response) => {
     inputList.value = response.data.rows;
-    total.value = response.total;
+    total.value = response.data.total;
     loading.value = false;
   });
 };

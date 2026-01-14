@@ -45,12 +45,15 @@ import tech.qiantong.qmodel.module.model.controller.admin.interfaceAddress.vo.Mo
 import tech.qiantong.qmodel.module.model.controller.admin.interfaceAddress.vo.ModelInterfaceAddressRespVO;
 import tech.qiantong.qmodel.module.model.controller.admin.interfaceAddress.vo.ModelInterfaceAddressSaveReqVO;
 import tech.qiantong.qmodel.module.model.dal.dataobject.interfaceAddress.ModelInterfaceAddressDO;
+import tech.qiantong.qmodel.module.model.dal.dataobject.version.ModelVersionDO;
 import tech.qiantong.qmodel.module.model.dal.mapper.interfaceAddress.ModelInterfaceAddressMapper;
 import tech.qiantong.qmodel.module.model.service.interfaceAddress.IModelInterfaceAddressService;
+import tech.qiantong.qmodel.module.model.service.version.IModelVersionService;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -67,9 +70,38 @@ public class ModelInterfaceAddressServiceImpl  extends ServiceImpl<ModelInterfac
     @Resource
     private ModelInterfaceAddressMapper modelInterfaceAddressMapper;
 
+    @Resource
+    private IModelVersionService modelVersionService;
+
     @Override
     public PageResult<ModelInterfaceAddressDO> getModelInterfaceAddressPage(ModelInterfaceAddressPageReqVO pageReqVO) {
         return modelInterfaceAddressMapper.selectPage(pageReqVO);
+    }
+
+    @Override
+    public PageResult<ModelInterfaceAddressRespVO> getModelInterfaceAddressPageWithVersion(ModelInterfaceAddressPageReqVO pageReqVO) {
+        PageResult<ModelInterfaceAddressDO> page = modelInterfaceAddressMapper.selectPage(pageReqVO);
+        List<ModelInterfaceAddressDO> list = page.getList();
+
+        ModelVersionDO modelVersionReconstitution = new ModelVersionDO();
+        List<Long> ids = new ArrayList<>();
+        for (ModelInterfaceAddressDO interfaceAddress : list) {
+            ids.add(interfaceAddress.getVersionId());
+        }
+        Map<String, Object> params = new HashMap<>();
+        params.put("ids", ids);
+        modelVersionReconstitution.setParams(params);
+        List<ModelVersionDO> modelVersionReconstitutions = modelVersionService.selectModelVersionList(modelVersionReconstitution);
+        for (ModelInterfaceAddressDO interfaceAddress : list) {
+            for (ModelVersionDO versionReconstitution : modelVersionReconstitutions) {
+                if (interfaceAddress.getVersionId().equals(versionReconstitution.getId())) {
+                    interfaceAddress.setVersion(versionReconstitution.getVersion());
+                    interfaceAddress.setDescription(versionReconstitution.getDescription());
+                }
+            }
+        }
+
+        return BeanUtils.toBean(page, ModelInterfaceAddressRespVO.class);
     }
 
     @Override

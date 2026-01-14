@@ -87,29 +87,8 @@ public class ModelInterfaceAddressController extends BaseController {
     @PreAuthorize("@ss.hasPermi('model:interfaceAddress:interfaceaddress:list')")
     @GetMapping("/list")
     public CommonResult<PageResult<ModelInterfaceAddressRespVO>> list(ModelInterfaceAddressPageReqVO modelInterfaceAddress) {
-        PageResult<ModelInterfaceAddressDO> page = modelInterfaceAddressService.getModelInterfaceAddressPage(modelInterfaceAddress);
-
-        List<ModelInterfaceAddressDO> list = page.getList();
-
-        ModelVersionDO modelVersionReconstitution = new ModelVersionDO();
-        List<Long> ids = new ArrayList<>();
-        for (ModelInterfaceAddressDO interfaceAddress : list) {
-            ids.add(interfaceAddress.getVersionId());
-        }
-        Map<String, Object> params = new HashMap<>();
-        params.put("ids", ids);
-        modelVersionReconstitution.setParams(params);
-        List<ModelVersionDO> modelVersionReconstitutions = modelVersionService.selectModelVersionList(modelVersionReconstitution);
-        for (ModelInterfaceAddressDO interfaceAddress : list) {
-            for (ModelVersionDO versionReconstitution : modelVersionReconstitutions) {
-                if (interfaceAddress.getVersionId().equals(versionReconstitution.getId())) {
-                    interfaceAddress.setVersion(versionReconstitution.getVersion());
-                    interfaceAddress.setDescription(versionReconstitution.getDescription());
-                }
-            }
-        }
-
-        return CommonResult.success(BeanUtils.toBean(page, ModelInterfaceAddressRespVO.class));
+        PageResult<ModelInterfaceAddressRespVO> page = modelInterfaceAddressService.getModelInterfaceAddressPageWithVersion(modelInterfaceAddress);
+        return CommonResult.success(page);
     }
 
     @Operation(summary = "导出接口地址列表")

@@ -59,6 +59,14 @@ public interface IModelInterfaceAddressService extends IService<ModelInterfaceAd
     PageResult<ModelInterfaceAddressDO> getModelInterfaceAddressPage(ModelInterfaceAddressPageReqVO pageReqVO);
 
     /**
+     * 获得接口地址分页列表（包含版本信息）
+     *
+     * @param pageReqVO 分页请求
+     * @return 接口地址分页列表
+     */
+    PageResult<ModelInterfaceAddressRespVO> getModelInterfaceAddressPageWithVersion(ModelInterfaceAddressPageReqVO pageReqVO);
+
+    /**
      * 创建接口地址
      *
      * @param createReqVO 接口地址信息

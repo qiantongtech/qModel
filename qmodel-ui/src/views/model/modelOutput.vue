@@ -630,6 +630,7 @@ const getList = () => {
     inputList.value = response.data.rows;
     total.value = response.data.total;
     loading.value = false;
+    console.log(inputList.value, "qqqqqqqqqqqqqqqqqqqqqqqqqq");
   });
 };
 
