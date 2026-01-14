@@ -39,6 +39,7 @@ import lombok.Data;
 import tech.qiantong.qmodel.common.core.domain.BaseEntity;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.util.Date;
 
 /**
@@ -64,7 +65,7 @@ public class ModelReconstitutionSaveReqVO extends BaseEntity {
     private String name;
 
     @Schema(description = "模型分类", example = "")
-    @NotBlank(message = "模型分类不能为空")
+    @NotNull(message = "模型分类不能为空")
     private Long classifyId;
 
     @Schema(description = "是否预置", example = "")

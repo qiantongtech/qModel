@@ -620,8 +620,8 @@ const getList = () => {
   }
   console.log(queryParams, "this.queryParams");
   listInput(queryParams).then((response) => {
-    inputList.value = response.rows;
-    total.value = response.total;
+    inputList.value = response.data.rows;
+    total.value = response.data.total;
     loading.value = false;
   });
 };

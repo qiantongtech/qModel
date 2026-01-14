@@ -57,7 +57,6 @@ public class ModelVersionSaveReqVO extends BaseEntity {
     private Long companyId;
 
     @Schema(description = "所属模型id", example = "")
-    @NotBlank(message = "所属模型id")
     private Long modelId;
 
     @Schema(description = "所属模型名称", example = "")

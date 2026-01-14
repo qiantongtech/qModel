@@ -79,13 +79,13 @@ public class ModelReconstitutionServiceImpl  extends ServiceImpl<ModelReconstitu
 
     @Override
     public PageResult<ModelReconstitutionDO> getModelReconstitutionPage(ModelReconstitutionPageReqVO pageReqVO) {
-        //查询所有分类的id
+
         List<Long> classifyIds = null;
+        // 获取分类下的所有子分类id
         if(Objects.nonNull(pageReqVO.getClassifyId())){
             classifyIds = modelClassifyService.getModelClassifyIds(pageReqVO.getClassifyId());
             pageReqVO.setClassifyIds(classifyIds);
         }
-
         PageResult<ModelReconstitutionDO> page = modelReconstitutionMapper.selectPage(pageReqVO);
 
         List<ModelReconstitutionDO> list = page.getList();
