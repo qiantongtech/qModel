@@ -735,10 +735,10 @@ const handleAdd = () => {
 
 /** 操作-设置参数 */
 const setParams = async (row) => {
-  ElMessage.warning(
-    `由于服务器资源问题，暂不支持在演示站中计算，请在本地搭建计算。`
-  );
-  return;
+  // ElMessage.warning(
+  //   `由于服务器资源问题，暂不支持在演示站中计算，请在本地搭建计算。`
+  // );
+  // return;
 
   const id = row.id;
   const res = await getInputList(id);
@@ -747,15 +747,15 @@ const setParams = async (row) => {
     return;
   }
   // Note: The tab functionality may need to be implemented differently in Vue 3
-  // await proxy.$tab.openPage(
-  //     '设置参数',
-  //     '/modelReconstitution/waterConserve/fileInputOrOutput',
-  //     {
-  //         modelId: props.model.id,
-  //         computeId: id,
-  //         isInputOrOut: 0
-  //     }
-  // );
+  await proxy.$tab.openPage(
+    "设置参数",
+    "/modelReconstitution/waterConserve/fileInputOrOutput",
+    {
+      modelId: props.model.id,
+      computeId: id,
+      isInputOrOut: 0,
+    }
+  );
 };
 
 /** 操作-计算 */

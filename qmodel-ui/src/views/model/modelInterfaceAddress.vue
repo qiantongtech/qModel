@@ -72,9 +72,11 @@
       </el-form-item>
       <el-form-item>
         <el-button type="primary" size="mini" @click="handleQuery"
-          >搜索</el-button
+          ><i class="iconfont-mini icon-a-zu22377 mr5"></i> 搜索</el-button
         >
-        <el-button size="mini" @click="resetQuery">重置</el-button>
+        <el-button size="mini" @click="resetQuery"
+          ><i class="iconfont-mini icon-a-zu22378 mr5"></i>重置</el-button
+        >
       </el-form-item>
     </el-form>
 
@@ -85,7 +87,7 @@
           plain
           @click="handleAdd"
           v-hasPermi="['modelReconstitution:interfaceAddress:add']"
-          >添加接口地址</el-button
+          ><i class="iconfont-mini icon-xinzeng"></i>添加接口地址</el-button
         >
       </el-col>
       <right-toolbar
@@ -146,18 +148,21 @@
         <template #default="scope">
           <el-button
             link
+            type="primary"
             @click="handleUpdate(scope.row)"
             v-hasPermi="['modelReconstitution:interfaceAddress:edit']"
-            >修改</el-button
+          >
+            <Edit class="icon-mini" />修改</el-button
           >
           <el-button
             link
+            type="danger"
             @click="handleDelete(scope.row)"
             v-hasPermi="['modelReconstitution:interfaceAddress:remove']"
-            >删除</el-button
+            ><Delete class="icon-mini" />删除</el-button
           >
-          <el-button link @click="setTheParameters(scope.row)"
-            >设置参数</el-button
+          <el-button link type="primary" @click="setTheParameters(scope.row)"
+            ><Setting class="icon-mini" />设置参数</el-button
           >
         </template>
       </el-table-column>
@@ -179,7 +184,7 @@
       :close-on-click-modal="false"
       append-to-body
     >
-      <el-form ref="form" :model="form" :rules="rules" label-width="150px">
+      <el-form ref="formref" :model="form" :rules="rules" label-width="150px">
         <el-row>
           <el-col :span="12">
             <el-form-item label="模型版本：" prop="versionId">
@@ -319,7 +324,26 @@ const queryParams = reactive({
   updatorId: null,
 });
 // 表单参数
-const form = ref({});
+const form = ref({
+  id: null,
+  companyId: null,
+  modelId: null,
+  interfaceAddress: null,
+  versionId: null,
+  requestMethod: null,
+  inputParameter: null,
+  outputParameter: null,
+  inputParameterIllustrate: null,
+  outputParameterIllustrate: null,
+  delFlag: null,
+  createBy: null,
+  creatorId: null,
+  createTime: null,
+  updateBy: null,
+  updatorId: null,
+  updateTime: null,
+  remark: null,
+});
 // 表单校验
 const rules = reactive({});
 const model_type = useDict("model_type").model_type;
@@ -350,7 +374,7 @@ const getList = () => {
   loading.value = true;
   listInterfaceAddress(queryParams).then((response) => {
     interfaceAddressList.value = response.data.rows;
-    total.value = response.total;
+    total.value = response.data.total;
     loading.value = false;
   });
 };
@@ -450,35 +474,35 @@ const submitForm = () => {
   if (!form.value.interfaceAddress.startsWith("/")) {
     form.value.interfaceAddress = "/" + form.value.interfaceAddress;
   }
-  if (props.model.interfaceorfileAddress.endsWith("/")) {
-    props.model.interfaceorfileAddress =
-      props.model.interfaceorfileAddress.replace(/\/$/, "");
-  }
+  // if (props.model.interfaceorfileAddress.endsWith("/")) {
+  //   props.model.interfaceorfileAddress =
+  //     props.model.interfaceorfileAddress.replace(/\/$/, "");
+  // }
   form.value.interfaceAddress =
     props.model.interfaceorfileAddress +
     ":" +
     props.model.port +
     form.value.interfaceAddress;
-  if (formRef.value) {
-    formRef.value.validate((valid) => {
-      if (valid) {
-        if (form.value.id != null) {
-          updateInterfaceAddress(form.value).then((response) => {
-            ElMessage.success("修改成功");
-            open.value = false;
-            getList();
-          });
-        } else {
-          addInterfaceAddress(form.value).then((response) => {
-            ElMessage.success("新增成功");
-            open.value = false;
-            getList();
-          });
-        }
-      }
+  // if (formRef.value) {
+  //   formRef.value.validate((valid) => {
+  //     if (valid) {
+  if (form.value.id != null) {
+    updateInterfaceAddress(form.value).then((response) => {
+      ElMessage.success("修改成功");
+      open.value = false;
+      getList();
+    });
+  } else {
+    addInterfaceAddress(form.value).then((response) => {
+      ElMessage.success("新增成功");
+      open.value = false;
+      getList();
     });
   }
 };
+//     });
+//   }
+// };
 
 /** 删除按钮操作 */
 const handleDelete = (row) => {

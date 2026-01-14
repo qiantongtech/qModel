@@ -125,6 +125,7 @@
               <el-button
                 @click="resetQuery"
                 @mousedown="(e) => e.preventDefault()"
+                class="btn"
               >
                 <i class="iconfont-mini icon-a-zu22378 mr5"></i>重置
               </el-button>
@@ -196,15 +197,11 @@
                         text
                         @click="handleUpdate(item)"
                       >
-                        <Edit
-                          style="width: 1em; height: 1em; margin-right: 8px"
-                        />
+                        <Edit class="icon-mini" />
                         编辑</el-button
                       >
                       <el-button type="danger" text @click="handleDelete(item)">
-                        <Delete
-                          style="width: 1em; height: 1em; margin-right: 8px"
-                        />
+                        <Delete class="icon-mini" />
                         删除</el-button
                       >
                     </div>
@@ -1081,7 +1078,6 @@ const handleUpdate = (row) => {
 
 // 详情
 const handleView = (row) => {
-
   const modelId = row.id;
   const modelName = row.name;
   // Assuming router is available via proxy
@@ -1450,8 +1446,9 @@ const handleExport = () => {
   min-width: 60px;
 }
 .btn {
-  margin-left: 10px !important;
+  margin-left: 12px !important;
 }
+
 :deep(.el-button + .el-button) {
   margin-left: 0;
 }
