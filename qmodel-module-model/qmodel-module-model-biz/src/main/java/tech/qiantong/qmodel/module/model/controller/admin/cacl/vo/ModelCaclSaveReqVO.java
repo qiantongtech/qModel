@@ -59,7 +59,6 @@ public class ModelCaclSaveReqVO extends BaseEntity {
     private Long companyId;
 
     @Schema(description = "计算编码", example = "")
-    @NotBlank(message = "计算编码不能为空")
     private String code;
 
     @Schema(description = "计算名称", example = "")
@@ -89,15 +88,12 @@ public class ModelCaclSaveReqVO extends BaseEntity {
     private Long status;
 
     @Schema(description = "模型输入内容", example = "")
-    @NotBlank(message = "模型输入内容不能为空")
     private String inputContent;
 
     @Schema(description = "模型输出内容", example = "")
-    @NotBlank(message = "模型输出内容不能为空")
     private String outputContent;
 
     @Schema(description = "备注", example = "")
-    @NotBlank(message = "备注不能为空")
     private String remark;
 
     @Schema(description = "文件或接口地址id", example = "")

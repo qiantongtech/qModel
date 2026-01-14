@@ -64,6 +64,7 @@ public class ModelReconstitutionSaveReqVO extends BaseEntity {
     private String name;
 
     @Schema(description = "模型分类", example = "")
+    @NotBlank(message = "模型分类不能为空")
     private Long classifyId;
 
     @Schema(description = "是否预置", example = "")
@@ -76,7 +77,6 @@ public class ModelReconstitutionSaveReqVO extends BaseEntity {
     private Long requestMethod;
 
     @Schema(description = "接口和文件的地址", example = "")
-    @NotBlank(message = "接口和文件的地址不能为空")
     private String interfaceorfileAddress;
 
     @Schema(description = "版本id", example = "")
@@ -90,11 +90,9 @@ public class ModelReconstitutionSaveReqVO extends BaseEntity {
     private Date publishTime;
 
     @Schema(description = "备注", example = "")
-    @NotBlank(message = "备注不能为空")
     private String remark;
 
     @Schema(description = "接口的端口号", example = "")
-    @NotBlank(message = "接口的端口号不能为空")
     private String port;
 
     @Schema(description = "文件名称", example = "")
@@ -105,10 +103,12 @@ public class ModelReconstitutionSaveReqVO extends BaseEntity {
 
     /** 版本号 */
     @TableField(exist = false)
+    @NotBlank(message = "版本号不能为空")
     private String version;
 
-    /** 版本说明 */
+    /** 版本发布说明 */
     @TableField(exist = false)
+    @NotBlank(message = "版本发布说明")
     private String description;
 
     @TableField(exist = false)

@@ -71,11 +71,9 @@ public class ModelInterfaceAddressSaveReqVO extends BaseEntity {
     private Integer requestMethod;
 
     @Schema(description = "输入参数", example = "")
-    @NotBlank(message = "输入参数不能为空")
     private String inputParameter;
 
     @Schema(description = "输出参数", example = "")
-    @NotBlank(message = "输出参数不能为空")
     private String outputParameter;
 
     @Schema(description = "备注", example = "")
@@ -83,11 +81,9 @@ public class ModelInterfaceAddressSaveReqVO extends BaseEntity {
     private String remark;
 
     @Schema(description = "输入参数说明", example = "")
-    @NotBlank(message = "输入参数说明不能为空")
     private String inputParameterIllustrate;
 
     @Schema(description = "输出参数说明", example = "")
-    @NotBlank(message = "输出参数说明不能为空")
     private String outputParameterIllustrate;
 
     @Schema(description = "模型名称", example = "")

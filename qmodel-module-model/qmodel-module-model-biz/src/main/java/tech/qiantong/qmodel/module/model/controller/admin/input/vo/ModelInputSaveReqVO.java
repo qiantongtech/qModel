@@ -88,21 +88,19 @@ public class ModelInputSaveReqVO extends BaseEntity {
     private String example;
 
     @Schema(description = "参数文件", example = "")
-//    @NotBlank(message = "参数文件不能为空")
     private String paramFile;
 
     @Schema(description = "参数单值", example = "")
-//    @NotBlank(message = "参数单值不能为空")
     private String singleContent;
 
     @Schema(description = "参数多列值", example = "")
-//    @NotBlank(message = "参数多列值不能为空")
     private String multipleContent;
 
     @Schema(description = "备注", example = "")
     private String remark;
 
     @Schema(description = "是否可变", example = "")
+    @NotBlank(message = "是否可变不能为空")
     private Boolean changeFlag;
 
 

@@ -57,6 +57,7 @@ public class ModelVersionSaveReqVO extends BaseEntity {
     private Long companyId;
 
     @Schema(description = "所属模型id", example = "")
+    @NotBlank(message = "所属模型id")
     private Long modelId;
 
     @Schema(description = "所属模型名称", example = "")
@@ -68,30 +69,24 @@ public class ModelVersionSaveReqVO extends BaseEntity {
     private String version;
 
     @Schema(description = "文件地址", example = "")
-    @NotBlank(message = "文件地址不能为空")
     private String fileAddress;
 
     @Schema(description = "接口地址", example = "")
-    @NotBlank(message = "接口地址不能为空")
     private String interfaceAddress;
 
     @Schema(description = "版本状态", example = "")
     private Integer status;
 
     @Schema(description = "描述", example = "")
-    @NotBlank(message = "描述不能为空")
     private String description;
 
     @Schema(description = "备注", example = "")
-    @NotBlank(message = "备注不能为空")
     private String remark;
 
     @Schema(description = "文件的名称", example = "")
-    @NotBlank(message = "文件的名称不能为空")
     private String fileName;
 
     @Schema(description = "可执行文件地址", example = "")
-    @NotBlank(message = "可执行文件地址不能为空")
     private String runnableFileAddress;
 
 
