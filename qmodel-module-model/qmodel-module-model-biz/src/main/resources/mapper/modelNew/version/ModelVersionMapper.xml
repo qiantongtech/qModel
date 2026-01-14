@@ -77,6 +77,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="createTime != null "> and CREATE_TIME = #{createTime}</if>
             <if test="fileName != null  and fileName != ''"> and FILE_NAME like concat('%', #{fileName}, '%')</if>
             <if test="runnableFileAddress != null  and runnableFileAddress != ''"> and RUNNABLE_FILE_ADDRESS = #{runnableFileAddress}</if>
+            <if test="params.ids != null and params.ids != '' and params.ids.size() > 0">
+                and id in
+                <foreach item="id" collection="params.ids" open="(" separator="," close=")">
+                    #{id}
+                </foreach>
+            </if>
         </where>
     </select>
 

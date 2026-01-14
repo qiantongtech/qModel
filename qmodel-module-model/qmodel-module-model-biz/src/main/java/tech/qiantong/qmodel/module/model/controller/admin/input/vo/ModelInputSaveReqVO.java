@@ -100,7 +100,7 @@ public class ModelInputSaveReqVO extends BaseEntity {
     private String remark;
 
     @Schema(description = "是否可变", example = "")
-    @NotBlank(message = "是否可变不能为空")
+    @NotNull(message = "是否可变不能为空")
     private Boolean changeFlag;
 
 

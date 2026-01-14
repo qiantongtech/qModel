@@ -32,6 +32,7 @@
 
 package tech.qiantong.qmodel.module.model.controller.admin.modelReconstitution.vo;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
@@ -143,5 +144,17 @@ public class ModelReconstitutionRespVO implements Serializable {
     @Excel(name = "可执行文件相对路径")
     @Schema(description = "可执行文件相对路径", example = "")
     private String runnableFileAddress;
+
+    /** 版本号 */
+    @TableField(exist = false)
+    private String version;
+
+    /** 版本说明 */
+    @TableField(exist = false)
+    private String description;
+
+    @TableField(exist = false)
+    private String classifyName;
+
 
 }

@@ -30,7 +30,7 @@
  * 更多信息请访问：https://qmodel.qiantong.tech/business.html
  */
 
-package tech.qiantong.qmodel.module.model.controller.admin.modelCacl.vo;
+package tech.qiantong.qmodel.module.model.controller.admin.cacl.vo;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.v3.oas.annotations.media.Schema;

@@ -147,9 +147,7 @@ public class ModelVersionController extends BaseController {
     @PostMapping
     public CommonResult<Long> add(@Valid @RequestBody ModelVersionSaveReqVO modelVersion) {
         modelVersion.setStatus(0);
-
         modelHistoryService.createModelHistory(modelVersion.getModelId(), modelVersion.getModelName(), "新增了" + modelVersion.getModelName() + "一个版本", modelVersion.getVersion(), getUserId(), getNickName());
-
         return CommonResult.toAjax(modelVersionService.createModelVersion(modelVersion));
     }
 
