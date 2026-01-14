@@ -31,7 +31,7 @@
 -->
 
 <template>
-  <div class="app-container pagecont-top">
+  <div class="app-container">
     <el-form
       :model="queryParams"
       ref="queryFormRef"
@@ -358,8 +358,10 @@ const getList = () => {
   const mid = route.query.modelId;
   queryParams.modelId = mid;
   getVersionList(queryParams).then((response) => {
+    console.log(response, "12312");
+
     versionList.value = response.data;
-    total.value = response.total;
+    total.value = response.data.length;
     loading.value = false;
   });
   getModel(mid).then((response) => {
@@ -645,6 +647,7 @@ onMounted(() => {
 <style lang="scss" scoped>
 .app-container {
   min-height: 0;
+  background: transparent;
   .icon-mini {
     width: 1em;
     height: 1em;

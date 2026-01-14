@@ -621,11 +621,14 @@ onMounted(() => {
 <style lang="scss" scoped>
 .modelManageView {
   padding: 0;
+  .pagecont-top {
+    padding: 0;
+  }
   .father_box {
     display: flex;
     justify-content: space-between;
     padding-bottom: 10px;
-    line-height: 57px;
+    line-height: 46px;
 
     .son_oneBox {
       font-size: 20px;
@@ -650,5 +653,8 @@ onMounted(() => {
       height: 95%;
     }
   }
+}
+:deep(.el-card__body) {
+  min-height: calc(87vh - 7px);
 }
 </style>

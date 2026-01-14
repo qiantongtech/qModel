@@ -31,7 +31,7 @@
 -->
 
 <template>
-  <div class="app-container pagecont-top">
+  <div class="app-container">
     <el-form
       :model="queryParams"
       ref="queryForm"
@@ -383,7 +383,7 @@ const setTheParameters = (row) => {
   let modelId = row.modelId;
   let interfaceAddressId = row.id;
   router.push({
-    path: "/modelReconstitution/waterConserve/modelInputAndOutput",
+    path: "/modelReconstitution/waterConserve/fileInputOrOutput",
     query: {
       modelId,
       interfaceAddressId,
@@ -542,3 +542,9 @@ onMounted(() => {
   // getList();
 });
 </script>
+<style scoped lang="scss">
+.app-container {
+  min-height: 0;
+  background: transparent;
+}
+</style>

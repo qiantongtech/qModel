@@ -47,23 +47,15 @@
           @click="hidden = !hidden"
         >
           <el-link :underline="false" v-if="item.childs != null">
-            <i
-              :class="
-                hidden
-                  ? 'el-icon-caret-right'
-                  : 'el-icon-caret-bottom el-icon-blue'
-              "
-            ></i>
+            <CaretRight v-if="hidden" class="el-icon" />
+            <CaretBottom v-else class="el-icon el-icon-blue" />
           </el-link>
-          <i v-else style="margin-left: 14px"></i>
+          <span v-else style="display: inline-block; width: 14px"></span>
         </div>
-        <div
-          class="item-key item-cell"
-        >
+        <div class="item-key item-cell">
           <el-input
             v-model="item.key"
             :placeholder="parent.type == 'Array' ? '' : '请输入键'"
-            :size="size"
             :disabled="!deleteFlag"
             @change="judgement(item.key)"
           ></el-input>
@@ -71,7 +63,6 @@
         <div class="item-type item-cell">
           <el-select
             v-model="item.type"
-            :size="size"
             placeholder="请选择"
             :disabled="!deleteFlag"
             @change="changeSelect"
@@ -88,14 +79,15 @@
         </div>
         <div class="item-value item-cell">
           <el-input
-            :size="size"
             v-model="item.value"
             v-if="item.type != 'Number' && item.type != 'Boolean'"
             :placeholder="
               item.type == 'Array' || item.type == 'Object' ? '' : '请输入值'
             "
             :disabled="
-              item.type == 'Array' || item.type == 'Object' || !deleteFlag ? true : false
+              item.type == 'Array' || item.type == 'Object' || !deleteFlag
+                ? true
+                : false
             "
             :class="
               size == 'mini'
@@ -108,7 +100,6 @@
           <el-input-number
             v-model="item.value"
             v-else-if="item.type == 'Number'"
-            :size="size"
             :disabled="!deleteFlag"
             :class="
               size == 'mini'
@@ -136,7 +127,6 @@
         </div>
         <div class="item-value item-cell input-cell" v-if="!item.isRoot">
           <el-input
-            :size="size"
             v-model="item.remark"
             placeholder="备注说明"
             :disabled="!deleteFlag"
@@ -167,7 +157,13 @@
             placement="top"
             v-if="item.type == 'Array' || item.type == 'Object'"
           >
-            <el-link :underline="false" @click="addItem()"><i class="el-icon-plus el-icon-blue"></i></el-link>
+            <el-link
+              :underline="false"
+              @click="addItem()"
+              class="item-control-cell"
+            >
+              <Plus class="el-icon el-icon-blue"
+            /></el-link>
           </el-tooltip>
           <el-popconfirm
             title="确定删除当前节点吗？"
@@ -175,12 +171,10 @@
             v-if="!item.isRoot"
           >
             <template #reference>
-<el-link
-
-              :underline="false"
-              class="item-control-cell"
-            ><i class="el-icon-close el-icon-dim"></i></el-link>
-</template>
+              <el-link :underline="false" class="item-control-cell"
+                ><Close class="el-icon el-icon-dim"></Close
+              ></el-link>
+            </template>
           </el-popconfirm>
         </div>
       </div>
@@ -189,7 +183,6 @@
       <template v-if="item.childs && item.type == 'Object'">
         <span v-for="(child, index) in item.childs" :key="index">
           <VueJsonItem
-            :size="size"
             :item="child"
             :parent="item"
             :names="names"
@@ -203,7 +196,6 @@
       <template v-if="item.childs && item.type == 'Array'">
         <span v-for="(child, index) in item.childs" :key="index">
           <VueJsonItem
-            :size="size"
             :item="child"
             :parent="item"
             :index="index"
@@ -220,158 +212,190 @@
   </div>
 </template>
 
-<script>
-export default {
+<script setup>
+import { ref, reactive, watch, onMounted } from "vue";
+
+// Define component name
+defineOptions({
   name: "VueJsonItem",
-  props: {
-    item: {
-      type: Object,
-      default: {
-        key: "",
-        value: "",
-        type: "",
-        remark: "",
-      },
-    },
-    names: {
-      type: Array,
-    },
-    parent: {
-      type: Object,
-    },
-    index: {
-      type: Number,
-      default: 0,
-    },
-    deep: {
-      type: Number,
-      default: 0,
-    },
-    size: {
-      type: String,
-      default: "small",
-    },
-    rootFlag: {
-      type: Boolean,
-      default: true,
-    },
-    openFlag: {
-      type: Boolean,
-      default: true,
-    },
-    deleteFlag: {
-      type: Boolean,
-      default: true
-    }
+});
+
+// Props
+const props = defineProps({
+  item: {
+    type: Object,
+    default: () => ({
+      key: "",
+      value: "",
+      type: "",
+      remark: "",
+    }),
   },
-  mounted() {
-    this.getName()
+  names: {
+    type: Array,
   },
-  watch: {
-    deleteFlag() {
-      console.log(this.deleteFlag)
-    }
+  parent: {
+    type: Object,
   },
-  data() {
-    return {
-      hidden: !this.openFlag,
-      newdeep: this.deep + 1,
-      options: [
-        { value: "String", labal: "String" },
-        { value: "Object", labal: "Object" },
-        { value: "Array", labal: "Array" },
-        { value: "Number", labal: "Number" },
-        { value: "Boolean", labal: "Boolean" },
-      ],
-      rootOptions: [
-        { value: "Object", labal: "Object" },
-        { value: "Array", labal: "Array" },
-      ],
+  index: {
+    type: Number,
+    default: 0,
+  },
+  deep: {
+    type: Number,
+    default: 0,
+  },
+  size: {
+    type: String,
+    default: "small",
+  },
+  rootFlag: {
+    type: Boolean,
+    default: true,
+  },
+  openFlag: {
+    type: Boolean,
+    default: true,
+  },
+  deleteFlag: {
+    type: Boolean,
+    default: true,
+  },
+});
+
+// Emits
+const emit = defineEmits(["addIllustrate"]);
+
+// Reactive data
+const hidden = ref(!props.openFlag);
+const newdeep = ref(props.deep + 1);
+const options = ref([
+  { value: "String", label: "String" },
+  { value: "Object", label: "Object" },
+  { value: "Array", label: "Array" },
+  { value: "Number", label: "Number" },
+  { value: "Boolean", label: "Boolean" },
+]);
+const rootOptions = ref([
+  { value: "Object", label: "Object" },
+  { value: "Array", label: "Array" },
+]);
+
+// Check if there's a typo in the options - there isn't one based on the original content
+
+// Methods
+/**增加元素 */
+const addItem = () => {
+  let childs = props.item.childs;
+  let type = props.item.type;
+  let count = 0;
+  if (childs && childs.length > 0 && childs[childs.length - 1] != undefined) {
+    count = parseInt(childs[childs.length - 1].key) + 1;
+  }
+  let additem = undefined;
+  if (type != "Array") {
+    additem = { type: "String", childs: null, value: "" };
+  } else {
+    console.log(
+      childs && childs.length > 0 ? childs[childs.length - 1] : undefined
+    );
+    additem = {
+      key: count,
+      type:
+        childs && childs.length > 0 && childs[childs.length - 1] == undefined
+          ? "String"
+          : childs[childs.length - 1].type,
+      childs:
+        childs && childs.length > 0 && childs[childs.length - 1] == undefined
+          ? []
+          : childs[childs.length - 1].childs,
+      value: "",
     };
-  },
-  methods: {
-    /**增加元素 */
-    addItem() {
-      let childs = this.item.childs;
-      let type = this.item.type;
-      let count = 0;
-      if (childs[childs.length - 1] != undefined) {
-        count = parseInt(childs[childs.length - 1].key) + 1;
-      }
-      let additem = undefined;
-      if (type != "Array") {
-        additem = { type: "String", childs: null, value: "" };
-      } else {
-        console.log(childs[childs.length - 1])
-        additem = {
-          key: count,
-          type: childs[childs.length - 1] == undefined ? "String" : childs[childs.length - 1].type,
-          childs: childs[childs.length - 1] == undefined ? [] : childs[childs.length - 1].childs,
-          value: "",
-        };
-      }
-      this.$set(childs, childs.length, additem);
-    },
-    /**删除元素 */
-    delItem() {
-      let childs = this.parent.childs;
-      let item = this.item;
-      for (let i in childs) {
-        if (childs[i] == item) {
-          childs.splice(i, 1);
-        }
-      }
-    },
-    /** 判断key值是否重复 */
-    judgement(key) {
-    },
-    /** 备注说明添加 */
-    addIllustrate(item) {
-      this.$emit('addIllustrate', item);
-    },
-    /**更改类型 */
-    changeSelect(option) {
-      if (option == "Array" || option == "Object") {
-        this.item.childs = [];
-        this.item.value = null;
-      } else if (option == "Number") {
-        this.item.childs = null;
-        this.item.value = 0;
-      } else if (option == "Boolean") {
-        this.item.childs = null;
-        this.item.value = true;
-      }
-    },
-    /**判断是否为空 */
-    isNull(e) {
-      let flag = false;
-      if (e == null || e == "" || e == undefined) {
-        flag = true;
-      }
-      if (e == 0) {
-        flag = false;
-      }
-      return flag;
-    },
-    /**通过key获取中文 */
-    getName() {
-      let n = undefined;
-      let names = this.names;
-      for (let i in names) {
-        let name = names[i];
-        if (Object.keys(name)[0] == this.item.key) {
-          n = name[Object.keys(name)[0]];
-          break;
-        }
-      }
-      if (n != undefined) {
-        this.item.remark=n
-      } else {
-        this.item.remark=""
-      }
-    },
-  },
+  }
+  if (childs) {
+    childs.push(additem);
+  }
 };
+
+/**删除元素 */
+const delItem = () => {
+  let childs = props.parent.childs;
+  let item = props.item;
+  for (let i in childs) {
+    if (childs[i] == item) {
+      childs.splice(i, 1);
+    }
+  }
+};
+
+/** 判断key值是否重复 */
+const judgement = (key) => {
+  // 空实现
+};
+
+/** 备注说明添加 */
+const addIllustrate = (item) => {
+  emit("addIllustrate", item);
+};
+
+/**更改类型 */
+const changeSelect = (option) => {
+  if (option == "Array" || option == "Object") {
+    props.item.childs = [];
+    props.item.value = null;
+  } else if (option == "Number") {
+    props.item.childs = null;
+    props.item.value = 0;
+  } else if (option == "Boolean") {
+    props.item.childs = null;
+    props.item.value = true;
+  }
+};
+
+/**判断是否为空 */
+const isNull = (e) => {
+  let flag = false;
+  if (e == null || e == "" || e == undefined) {
+    flag = true;
+  }
+  if (e == 0) {
+    flag = false;
+  }
+  return flag;
+};
+
+/**通过key获取中文 */
+const getName = () => {
+  let n = undefined;
+  let names = props.names;
+  if (names) {
+    for (let i in names) {
+      let name = names[i];
+      if (Object.keys(name)[0] == props.item.key) {
+        n = name[Object.keys(name)[0]];
+        break;
+      }
+    }
+  }
+  if (n != undefined) {
+    props.item.remark = n;
+  } else {
+    props.item.remark = "";
+  }
+};
+
+// Watchers
+watch(
+  () => props.deleteFlag,
+  (newVal) => {
+    console.log(newVal);
+  }
+);
+
+// Lifecycle hooks
+onMounted(() => {
+  getName();
+});
 </script>
 
 <style scoped lang="scss">
@@ -479,4 +503,3 @@ export default {
   }
 }
 </style>
-

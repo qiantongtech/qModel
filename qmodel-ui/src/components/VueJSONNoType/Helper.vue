@@ -53,193 +53,198 @@
   </el-row>
 </template>
 
-<script>
+<script setup>
+import { ref, reactive, watch, onMounted } from 'vue';
 import Item from "./Item";
-export default {
-  name: "VueJsonHelperNoType",
-  components: {
-    "Item": Item,
+
+// Define component name
+defineOptions({
+  name: "VueJsonHelperNoType"
+});
+
+// Props
+const props = defineProps({
+  names: {
+    type: Array,
   },
-  data() {
-    return {
-      deep: 0,
-      isJson: false,
-      jsonData: undefined,
-      errorResult: undefined,
-      item: {
-        key: "Root",
-        value: null,
-        type: null,
-        remark: null,
-        isRoot: true,
-        childs: [],
-      },
-    };
+  size: {
+    type: String,
+    default: 'small'
   },
-  props: {
-    names: {
-      type: Array,
-    },
-    size: {
-      type: String,
-      default: 'small'
-    },
-    jsonStr: {
-      type: String,
-    },
-    rootFlag: {
-      type: Boolean,
-      default: true
-    },
-    openFlag: {
-      type: Boolean,
-      default: true
-    },
-    borderFlag: {
-      type: Boolean,
-      default: true
-    },
-    shadowFlag: {
-      type: Boolean,
-      default: false
-    },
-    backTopFlag: {
-      type: Boolean,
-      default: false
-    },
-    deleteFlag: {
-      type: Boolean,
-      default: true
-    }
+  jsonStr: {
+    type: String,
   },
-  watch: {
-    item: {
-      handler(newVal, oldVal) {
-        if (newVal == oldVal) {
-          var json = this.handleJsonData(newVal);
-          if (json != undefined) {
-            this.$emit("jsonListener", json);
-          }
-        }
-      },
-      immediate: true,
-      deep: true,
-    },
-    jsonStr:{
-      handler(newVal, oldVal){
-        this.isJson = this.judgeJson();
-        this.item.childs = this.handleJson(this.jsonData);
-        this.item.type = this.handleType();
-      }
-    }
+  rootFlag: {
+    type: Boolean,
+    default: true
   },
-  created() {
-    this.isJson = this.judgeJson();
-    this.item.childs = this.handleJson(this.jsonData);
-    this.item.type = this.handleType();
+  openFlag: {
+    type: Boolean,
+    default: true
   },
-  methods: {
-    handleAddIllustrate(item){
-      this.$emit('handleAddIllustrate', item);
-    },
-    /**判断是否为json */
-    judgeJson() {
-      var flag = false;
-      try {
-        this.jsonData = JSON.parse(this.jsonStr);
-        flag = true;
-      } catch (e) {
-        this.errorResult = e;
-        flag = false;
-      }
-      return flag;
-    },
-    /**处理JSONData数据 */
-    handleJsonData(jsonData) {
-      var objs = {};
-      var arr = [];
-      var type = jsonData.type;
-      var childs = jsonData.childs;
-      for (var i in childs) {
-        if (childs[i].type != "Object" && childs[i].type != "Array") {
-          if (type == "Object") {
-            objs[childs[i].key] = childs[i].value;
-          } else if (type == "Array") {
-            arr.push(childs[i].value);
-          }
-        } else {
-          if (type == "Object") {
-            objs[childs[i].key] = this.handleJsonData(childs[i]);
-          } else if (type == "Array") {
-            arr.push(this.handleJsonData(childs[i]));
-          }
-        }
-      }
-      if (type == "Object") {
-        return objs;
-      } else if (type == "Array") {
-        return arr;
-      }
-    },
-    /**处理JSON数据 */
-    handleJson(json) {
-      var jsonData = [];
-      for (var i in json) {
-        var type = this.judgeType(json[i]);
-        let n = undefined;
-        let names = this.names;
-        for (let j in names) {
-          let name = names[j];
-          if (Object.keys(name)[0] == i) {
-            n = name[Object.keys(name)[0]];
-            break;
-          }
-        }
-        if (type == "Object" || type == "Array") {
-          var item = {
-            key: i,
-            value: null,
-            type: type,
-            remark: n == undefined ? "" : n,
-            childs: this.handleJson(json[i]),
-          };
-          jsonData.push(item);
-        } else {
-          var item = {
-            key: i,
-            value: json[i],
-            type: type,
-            remark: n == undefined ? "" : n,
-          };
-          jsonData.push(item);
-        }
-      }
-      return jsonData;
-    },
-    /**判断数据类型 */
-    judgeType(data) {
-      var type = Object.prototype.toString.call(data);
-      if (type === "[object String]") {
-        type = "String";
-      } else if (type === "[object Number]") {
-        type = "Number";
-      } else if (type === "[object Boolean]") {
-        type = "Boolean";
-      } else if (type === "[object Array]") {
-        type = "Array";
-      } else if (type === "[object Object]") {
-        type = "Object";
-      } else {
-        type = null;
-      }
-      return type;
-    },
-    /**处理根节点数据类型 */
-    handleType() {
-      return this.judgeType(this.jsonData);
-    },
+  borderFlag: {
+    type: Boolean,
+    default: true
   },
+  shadowFlag: {
+    type: Boolean,
+    default: false
+  },
+  backTopFlag: {
+    type: Boolean,
+    default: false
+  },
+  deleteFlag: {
+    type: Boolean,
+    default: true
+  }
+});
+
+// Emits
+const emit = defineEmits(['jsonListener', 'handleAddIllustrate']);
+
+// Reactive data
+const deep = ref(0);
+const isJson = ref(false);
+const jsonData = ref(undefined);
+const errorResult = ref(undefined);
+const item = reactive({
+  key: "Root",
+  value: null,
+  type: null,
+  remark: null,
+  isRoot: true,
+  childs: [],
+});
+
+// Methods
+const handleAddIllustrate = (item) => {
+  emit('handleAddIllustrate', item);
 };
+
+/**判断是否为json */
+const judgeJson = () => {
+  var flag = false;
+  try {
+    jsonData.value = JSON.parse(props.jsonStr);
+    flag = true;
+  } catch (e) {
+    errorResult.value = e;
+    flag = false;
+  }
+  return flag;
+};
+
+/**处理JSONData数据 */
+const handleJsonData = (jsonData) => {
+  var objs = {};
+  var arr = [];
+  var type = jsonData.type;
+  var childs = jsonData.childs;
+  for (var i in childs) {
+    if (childs[i].type != "Object" && childs[i].type != "Array") {
+      if (type == "Object") {
+        objs[childs[i].key] = childs[i].value;
+      } else if (type == "Array") {
+        arr.push(childs[i].value);
+      }
+    } else {
+      if (type == "Object") {
+        objs[childs[i].key] = handleJsonData(childs[i]);
+      } else if (type == "Array") {
+        arr.push(handleJsonData(childs[i]));
+      }
+    }
+  }
+  if (type == "Object") {
+    return objs;
+  } else if (type == "Array") {
+    return arr;
+  }
+};
+
+/**处理JSON数据 */
+const handleJson = (json) => {
+  var jsonData = [];
+  for (var i in json) {
+    var type = judgeType(json[i]);
+    let n = undefined;
+    let names = props.names;
+    for (let j in names) {
+      let name = names[j];
+      if (Object.keys(name)[0] == i) {
+        n = name[Object.keys(name)[0]];
+        break;
+      }
+    }
+    if (type == "Object" || type == "Array") {
+      var item = {
+        key: i,
+        value: null,
+        type: type,
+        remark: n == undefined ? "" : n,
+        childs: handleJson(json[i]),
+      };
+      jsonData.push(item);
+    } else {
+      var item = {
+        key: i,
+        value: json[i],
+        type: type,
+        remark: n == undefined ? "" : n,
+      };
+      jsonData.push(item);
+    }
+  }
+  return jsonData;
+};
+
+/**判断数据类型 */
+const judgeType = (data) => {
+  var type = Object.prototype.toString.call(data);
+  if (type === "[object String]") {
+    type = "String";
+  } else if (type === "[object Number]") {
+    type = "Number";
+  } else if (type === "[object Boolean]") {
+    type = "Boolean";
+  } else if (type === "[object Array]") {
+    type = "Array";
+  } else if (type === "[object Object]") {
+    type = "Object";
+  } else {
+    type = null;
+  }
+  return type;
+};
+
+/**处理根节点数据类型 */
+const handleType = () => {
+  return judgeType(jsonData.value);
+};
+
+// Watchers
+watch(item, (newVal, oldVal) => {
+  if (newVal == oldVal) {
+    var json = handleJsonData(newVal);
+    if (json != undefined) {
+      emit("jsonListener", json);
+    }
+  }
+}, { immediate: true, deep: true });
+
+watch(() => props.jsonStr, (newVal, oldVal) => {
+  isJson.value = judgeJson();
+  item.childs = handleJson(jsonData.value);
+  item.type = handleType();
+});
+
+// Lifecycle hooks
+onMounted(() => {
+  isJson.value = judgeJson();
+  item.childs = handleJson(jsonData.value);
+  item.type = handleType();
+});
 </script>
 
 <style scoped>

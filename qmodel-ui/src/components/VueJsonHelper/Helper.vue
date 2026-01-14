@@ -31,31 +31,49 @@
 -->
 
 <template>
-  <el-row :class="borderFlag?'el-row-border':''" :style="shadowFlag?'box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1)':''">
+  <el-row
+    :class="borderFlag ? 'el-row-border' : ''"
+    :style="shadowFlag ? 'box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1)' : ''"
+  >
     <el-col v-if="isJson" class="item-body">
       <div class="tip">
         注！每一个输入框或者下拉框按顺序所对应的含义分别是：
-        <span>参数名称</span>-<span>参数类型</span>-<span>参数值</span>-<span>参数说明</span><br>
+        <span>参数名称</span>-<span>参数类型</span>-<span>参数值</span>-<span
+          >参数说明</span
+        ><br />
         <template v-if="namesTwo != null && namesTwo.length != 0">
           <div style="display: flex">
-            <div style="width: 48%;">
-              <span>当前接口输出参数有：</span><br>
-              <span v-for="(value,index) in names" :key="index" style="margin-left: 32px;" v-if="JSON.stringify(jsonStr).indexOf(Object.keys(value)[0]) != -1">
-                <span v-for="(valueTwo,key) in value" v-if="JSON.stringify(jsonStr).indexOf(key) != -1">
-                  {{ key }}:{{ valueTwo }}
-                </span><br>
+            <div style="width: 48%">
+              <span>当前接口输出参数有：</span><br />
+              <span
+                v-for="(value, index) in names"
+                :key="index"
+                style="margin-left: 32px"
+                v-if="
+                  JSON.stringify(jsonStr).indexOf(Object.keys(value)[0]) != -1
+                "
+              >
+                <span
+                  v-for="(valueTwo, key) in value"
+                  v-if="JSON.stringify(jsonStr).indexOf(key) != -1"
+                >
+                  {{ key }}:{{ valueTwo }} </span
+                ><br />
               </span>
             </div>
-            <div style="width: 48%;">
-              <span>当前接口设置参数有：</span><br>
-              <span v-for="(value,index) in namesTwo" :key="index" style="margin-left: 32px;">
-                <span v-for="(valueTwo,key) in value">
-                    {{ key }}:{{ valueTwo }}
-                </span><br>
+            <div style="width: 48%">
+              <span>当前接口设置参数有：</span><br />
+              <span
+                v-for="(value, index) in namesTwo"
+                :key="index"
+                style="margin-left: 32px"
+              >
+                <span v-for="(valueTwo, key) in value">
+                  {{ key }}:{{ valueTwo }} </span
+                ><br />
               </span>
             </div>
           </div>
-
         </template>
       </div>
       <Item
@@ -78,199 +96,210 @@
   </el-row>
 </template>
 
-<script>
+<script setup>
+import { ref, reactive, watch, onMounted } from "vue";
 import Item from "./Item";
 
-export default {
+// Define component name
+defineOptions({
   name: "VueJsonHelper",
-  components: {
-    "Item": Item,
-  },
-  data() {
-    return {
-      deep: 0,
-      isJson: false,
-      jsonData: undefined,
-      errorResult: undefined,
-      item: {
-        key: "根",
-        value: null,
-        type: null,
-        remark: null,
-        isRoot: true,
-        childs: [],
-      },
-    };
-  },
-  props: {
-    names: {
-      type: Array,
-    },
-    namesTwo: {
-      type: Array,
-    },
-    size: {
-      type: String,
-      default: 'small'
-    },
-    jsonStr: {
-      type: String,
-    },
-    rootFlag: {
-      type: Boolean,
-      default: true
-    },
-    openFlag: {
-      type: Boolean,
-      default: true
-    },
-    borderFlag: {
-      type: Boolean,
-      default: true
-    },
-    shadowFlag: {
-      type: Boolean,
-      default: false
-    },
-    backTopFlag: {
-      type: Boolean,
-      default: false
-    },
-    deleteFlag: {
-      type: Boolean,
-      default: true
-    }
-  },
-  watch: {
-    item: {
-      handler(newVal, oldVal) {
-        if (newVal == oldVal) {
-          var json = this.handleJsonData(newVal);
-          if (json != undefined) {
-            this.$emit("jsonListener", json);
-          }
-        }
-      },
-      immediate: true,
-      deep: true,
-    },
-    jsonStr: {
-      handler(newVal, oldVal) {
-        this.isJson = this.judgeJson();
-        this.item.childs = this.handleJson(this.jsonData);
-        this.item.type = this.handleType();
-      }
-    }
-  },
-  created() {
-    this.isJson = this.judgeJson();
-    this.item.childs = this.handleJson(this.jsonData);
-    this.item.type = this.handleType();
-  },
-  computed:{
+});
 
+// Props
+const props = defineProps({
+  names: {
+    type: Array,
   },
-  methods: {
-    handleAddIllustrate(item) {
-      this.$emit('handleAddIllustrate', item);
-    },
-    /**判断是否为json */
-    judgeJson() {
-      var flag = false;
-      try {
-        this.jsonData = JSON.parse(this.jsonStr);
-        flag = true;
-      } catch (e) {
-        this.errorResult = e;
-        flag = false;
-      }
-      return flag;
-    },
-    /**处理JSONData数据 */
-    handleJsonData(jsonData) {
-      var objs = {};
-      var arr = [];
-      let type = jsonData.type;
-      var childs = jsonData.childs;
-      for (var i in childs) {
-        if (childs[i].type != "Object" && childs[i].type != "Array") {
-          if (type == "Object") {
-            objs[childs[i].key] = childs[i].value;
-          } else if (type == "Array") {
-            arr.push(childs[i].value);
-          }
-        } else {
-          if (type == "Object") {
-            objs[childs[i].key] = this.handleJsonData(childs[i]);
-          } else if (type == "Array") {
-            arr.push(this.handleJsonData(childs[i]));
-          }
-        }
-      }
+  namesTwo: {
+    type: Array,
+  },
+  size: {
+    type: String,
+    default: "small",
+  },
+  jsonStr: {
+    type: String,
+  },
+  rootFlag: {
+    type: Boolean,
+    default: true,
+  },
+  openFlag: {
+    type: Boolean,
+    default: true,
+  },
+  borderFlag: {
+    type: Boolean,
+    default: true,
+  },
+  shadowFlag: {
+    type: Boolean,
+    default: false,
+  },
+  backTopFlag: {
+    type: Boolean,
+    default: false,
+  },
+  deleteFlag: {
+    type: Boolean,
+    default: true,
+  },
+});
+
+// Emits
+const emit = defineEmits(["jsonListener", "handleAddIllustrate"]);
+
+// Reactive data
+const deep = ref(0);
+const isJson = ref(false);
+const jsonData = ref(undefined);
+const errorResult = ref(undefined);
+const item = reactive({
+  key: "根",
+  value: null,
+  type: null,
+  remark: null,
+  isRoot: true,
+  childs: [],
+});
+
+// Methods
+/**判断是否为json */
+const judgeJson = () => {
+  var flag = false;
+  try {
+    jsonData.value = JSON.parse(props.jsonStr);
+    flag = true;
+  } catch (e) {
+    errorResult.value = e;
+    flag = false;
+  }
+  return flag;
+};
+
+/**处理JSONData数据 */
+const handleJsonData = (jsonData) => {
+  var objs = {};
+  var arr = [];
+  let type = jsonData.type;
+  var childs = jsonData.childs;
+  for (var i in childs) {
+    if (childs[i].type != "Object" && childs[i].type != "Array") {
       if (type == "Object") {
-        return objs;
+        objs[childs[i].key] = childs[i].value;
       } else if (type == "Array") {
-        return arr;
+        arr.push(childs[i].value);
       }
-    },
-    /**处理JSON数据 */
-    handleJson(json) {
-      var jsonData = [];
-      for (var i in json) {
-        let type = this.judgeType(json[i]);
-        let n = undefined;
-        let names = this.names;
-        for (let j in names) {
-          let name = names[j];
-          if (Object.keys(name)[0] == i) {
-            n = name[Object.keys(name)[0]];
-            break;
-          }
-        }
-        if (type == "Object" || type == "Array") {
-          var item = {
-            key: i,
-            value: null,
-            type: type,
-            remark: n == undefined ? "" : n,
-            childs: this.handleJson(json[i]),
-          };
-          jsonData.push(item);
-        } else {
-          var item = {
-            key: i,
-            value: json[i],
-            type: type,
-            remark: n == undefined ? "" : n,
-          };
-          jsonData.push(item);
-        }
+    } else {
+      if (type == "Object") {
+        objs[childs[i].key] = handleJsonData(childs[i]);
+      } else if (type == "Array") {
+        arr.push(handleJsonData(childs[i]));
       }
-      return jsonData;
-    },
-    /**判断数据类型 */
-    judgeType(data) {
-      let type = Object.prototype.toString.call(data);
-      if (type === "[object String]") {
-        type = "String";
-      } else if (type === "[object Number]") {
-        type = "Number";
-      } else if (type === "[object Boolean]") {
-        type = "Boolean";
-      } else if (type === "[object Array]") {
-        type = "Array";
-      } else if (type === "[object Object]") {
-        type = "Object";
-      } else {
-        type = null;
+    }
+  }
+  if (type == "Object") {
+    return objs;
+  } else if (type == "Array") {
+    return arr;
+  }
+};
+
+/**处理JSON数据 */
+const handleJson = (json) => {
+  var jsonData = [];
+  for (var i in json) {
+    let type = judgeType(json[i]);
+    let n = undefined;
+    let names = props.names;
+    for (let j in names) {
+      let name = names[j];
+      if (Object.keys(name)[0] == i) {
+        n = name[Object.keys(name)[0]];
+        break;
       }
-      return type;
-    },
-    /**处理根节点数据类型 */
-    handleType() {
-      return this.judgeType(this.jsonData);
-    },
+    }
+    if (type == "Object" || type == "Array") {
+      var item = {
+        key: i,
+        value: null,
+        type: type,
+        remark: n == undefined ? "" : n,
+        childs: handleJson(json[i]),
+      };
+      jsonData.push(item);
+    } else {
+      var item = {
+        key: i,
+        value: json[i],
+        type: type,
+        remark: n == undefined ? "" : n,
+      };
+      jsonData.push(item);
+    }
+  }
+  return jsonData;
+};
+
+/**判断数据类型 */
+const judgeType = (data) => {
+  let type = Object.prototype.toString.call(data);
+  if (type === "[object String]") {
+    type = "String";
+  } else if (type === "[object Number]") {
+    type = "Number";
+  } else if (type === "[object Boolean]") {
+    type = "Boolean";
+  } else if (type === "[object Array]") {
+    type = "Array";
+  } else if (type === "[object Object]") {
+    type = "Object";
+  } else {
+    type = null;
+  }
+  return type;
+};
+
+/**处理根节点数据类型 */
+const handleType = () => {
+  return judgeType(jsonData.value);
+};
+
+// Watchers
+watch(
+  item,
+  (newVal, oldVal) => {
+    var json = handleJsonData(newVal);
+    if (json != undefined) {
+      emit("jsonListener", json);
+    }
   },
+  {
+    immediate: true,
+    deep: true,
+  }
+);
+
+watch(
+  () => props.jsonStr,
+  (newVal, oldVal) => {
+    isJson.value = judgeJson();
+    item.childs = handleJson(jsonData.value);
+    item.type = handleType();
+  }
+);
+
+// Lifecycle hooks
+onMounted(() => {
+  isJson.value = judgeJson();
+  item.childs = handleJson(jsonData.value);
+  item.type = handleType();
+  console.log(props.size, "daixo");
+});
+
+// Other methods
+const handleAddIllustrate = (item) => {
+  emit("handleAddIllustrate", item);
 };
 </script>
 
@@ -295,7 +324,8 @@ export default {
 }
 
 .tip {
-  font-family: Helvetica Neue, Helvetica, PingFang SC, Hiragino Sans GB, Microsoft YaHei, SimSun, sans-serif;
+  font-family: Helvetica Neue, Helvetica, PingFang SC, Hiragino Sans GB,
+    Microsoft YaHei, SimSun, sans-serif;
   font-weight: 400;
   -webkit-font-smoothing: antialiased;
   -webkit-tap-highlight-color: transparent;
