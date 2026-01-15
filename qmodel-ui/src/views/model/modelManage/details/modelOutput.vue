@@ -49,10 +49,10 @@
       </el-form-item>
       <el-form-item label="版本号：" prop="modelVersion">
         <el-select
+          class="el-form-input-width"
           v-model="queryParams.modelVersion"
           placeholder="请输入版本号"
           clearable
-          class="el-form-input-width"
         >
           <el-option
             v-for="item in versionList"
@@ -96,10 +96,10 @@
       :data="inputList"
       @selection-change="handleSelectionChange"
     >
-      <el-table-column label="参数名称" align="center" prop="name" />
-      <el-table-column label="参数类型" align="center" prop="type">
+      <el-table-column label="输出名称" align="center" prop="name" />
+      <el-table-column label="输出类型" align="center" prop="type">
         <template #default="scope">
-          <dict-tag :options="model_type" :value="scope.row.type" />
+          <dict-tag :options="model_input_param_type" :value="scope.row.type" />
         </template>
       </el-table-column>
       <el-table-column label="所属模型" align="center" prop="modelName" />
@@ -114,14 +114,14 @@
         class-name="small-padding fixed-width"
       >
         <template #default="scope">
-          <el-button link @click="handleView(scope.row)"
-            ><View class="icon-mini" />详情</el-button
+          <el-button type="primary" link @click="handleView(scope.row)"
+            ><View class="icon-mini" /> 详情</el-button
           >
-          <el-button link @click="handleUpdate(scope.row)"
-            ><Edit class="icon-mini" />修改</el-button
+          <el-button type="primary" link @click="handleUpdate(scope.row)"
+            ><Edit class="icon-mini" /> 修改</el-button
           >
-          <el-button link @click="handleDelete(scope.row)"
-            ><Delete class="icon-mini" />删除</el-button
+          <el-button type="danger" link @click="handleDelete(scope.row)"
+            ><Delete class="icon-mini" /> 删除</el-button
           >
         </template>
       </el-table-column>
@@ -141,7 +141,7 @@
       v-model="open"
       width="800px"
       :close-on-click-modal="false"
-      append-to="body"
+      append-to-body
     >
       <el-form
         ref="formRef"
@@ -158,7 +158,7 @@
                 v-model="form.modelId"
                 placeholder="请选择所属模型"
                 clearable
-                style="width: 100%"
+                class="el-form-input-width"
                 :disabled="modelId != null"
                 @change="
                   getAllModelVersion(form.modelId.id),
@@ -183,7 +183,7 @@
                 v-model="form.modelVersion"
                 placeholder="请先选择所属模型"
                 clearable
-                style="width: 100%"
+                class="el-form-input-width"
               >
                 <el-option
                   v-for="dict in versionList"
@@ -197,11 +197,11 @@
         </el-row>
         <el-row v-if="form.modelVersion != null && form.modelId != null">
           <el-col :span="20">
-            <el-form-item label="参数名称：" prop="name">
+            <el-form-item label="输出名称：" prop="name">
               <el-input
                 clearable
                 v-model="form.name"
-                placeholder="请输入参数名称"
+                placeholder="请输入输出名称"
               />
             </el-form-item>
           </el-col>
@@ -217,45 +217,37 @@
             </el-form-item>
           </el-col>
         </el-row>
-        <el-row v-if="form.modelVersion != null && form.modelId != null">
+        <el-row>
           <el-col :span="20">
-            <el-form-item label="是否可变：" prop="changeFlag">
-              <el-radio v-model="form.changeFlag" label="true">是</el-radio>
-              <el-radio v-model="form.changeFlag" label="false">否</el-radio>
-            </el-form-item>
-          </el-col>
-        </el-row>
-        <el-row v-if="form.modelVersion != null && form.modelId != null">
-          <el-col :span="20">
-            <el-form-item label="参数类型：" prop="type">
+            <el-form-item label="输出类型：" prop="type">
               <el-select
                 v-model="form.type"
-                placeholder="请选择参数类型"
+                placeholder="请选择输出类型"
                 clearable
-                style="width: 100%"
+                class="el-form-input-width"
               >
                 <el-option
-                  v-for="dict in model_type"
+                  v-for="dict in model_input_param_type"
                   :key="dict.value"
                   :label="dict.label"
-                  :value="parseInt(dict.value)"
+                  :value="dict.value"
                 />
               </el-select>
             </el-form-item>
           </el-col>
         </el-row>
-        <el-row v-if="form.type === 0">
+        <el-row v-if="form.type == 0">
           <el-col :span="20">
-            <el-form-item label="单值默认值：" prop="singleContent">
+            <el-form-item label="单值默认返回数据：" prop="singleContent">
               <el-input
                 clearable
                 v-model="form.singleContent"
-                placeholder="请输入单值默认值"
+                placeholder="请输入单值默认返回数据"
               />
             </el-form-item>
           </el-col>
         </el-row>
-        <el-row v-if="form.type === 1">
+        <el-row v-if="form.type == 1">
           <el-col :span="20">
             <el-form-item label="多列数示例：" prop="multipleContent">
               <el-row type="flex" justify="end">
@@ -281,20 +273,20 @@
                 :row-class-name="multipleIndex"
                 @selection-change="handleMultipleChange"
               >
-                <el-table-column label="行名称" prop="form.multiple.name">
+                <el-table-column label="列名称" prop="form.multiple.name">
                   <template #default="scope">
-                    <el-input v-model="scope.row.name" placeholder="行名称" />
+                    <el-input v-model="scope.row.name" placeholder="列名称" />
                   </template>
                 </el-table-column>
-                <el-table-column label="行默认值" prop="form.multiple.value">
+                <el-table-column label="列默认值" prop="form.multiple.value">
                   <template #default="scope">
                     <el-input
                       v-model="scope.row.value"
-                      placeholder="行默认值"
+                      placeholder="列默认值"
                     />
                   </template>
                 </el-table-column>
-                <el-table-column label="行排序" prop="form.multiple.order">
+                <el-table-column label="列排序" prop="form.multiple.order">
                   <template #default="scope">
                     <el-input-number
                       v-model="scope.row.order"
@@ -317,16 +309,16 @@
             </el-form-item>
           </el-col>
         </el-row>
-        <el-row v-if="form.type === 2">
+        <el-row v-if="form.type == 2">
           <el-col :span="20">
-            <el-form-item label="参数文件：" prop="paramFile">
+            <el-form-item label="输出文件：" prop="paramFile">
               <FileUpload v-model="form.paramFile" :limit="1" fileStyle2 />
             </el-form-item>
           </el-col>
         </el-row>
         <el-row>
           <el-col :span="20">
-            <el-form-item label="参数说明：" prop="description">
+            <el-form-item label="输出说明：" prop="description">
               <el-input
                 v-model="form.description"
                 :rows="3"
@@ -336,13 +328,13 @@
             </el-form-item>
           </el-col>
         </el-row>
-        <!-- <el-row>
-                  <el-col :span="20">
-                    <el-form-item label="参数示例：" prop="example">
-                      <FileUpload v-model="form.example" :limit="1" fileStyle2 />
-                    </el-form-item>
-                  </el-col>
-                </el-row> -->
+        <!--        <el-row>
+                          <el-col :span="20">
+                            <el-form-item label="输出示例：" prop="example">
+                              <FileUpload v-model="form.example" :limit="1" fileStyle2 />
+                            </el-form-item>
+                          </el-col>
+                        </el-row>-->
       </el-form>
       <template #footer>
         <div class="dialog-footer">
@@ -358,7 +350,7 @@
       v-model="openView"
       width="800px"
       :close-on-click-modal="false"
-      append-to="body"
+      append-to-body
     >
       <el-form
         ref="formRef"
@@ -367,6 +359,23 @@
         label-width="150px"
         style="max-height: 600px; overflow: hidden auto"
       >
+        <el-row>
+          <el-col :span="20">
+            <el-form-item label="输出名称：" prop="name">
+              {{ formView.name }}
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="20">
+            <el-form-item
+              :label="formView.accessMode == 0 ? '文件名称：' : '字段名称：'"
+              prop="engName"
+            >
+              {{ formView.engName }}
+            </el-form-item>
+          </el-col>
+        </el-row>
         <el-row>
           <el-col :span="20">
             <!-- modelName -->
@@ -384,25 +393,11 @@
         </el-row>
         <el-row>
           <el-col :span="20">
-            <el-form-item label="参数名称：" prop="name">
-              {{ formView.name }}
-            </el-form-item>
-          </el-col>
-        </el-row>
-        <el-row>
-          <el-col :span="20">
-            <el-form-item
-              :label="formView.type == 1 ? '文件名称：' : '字段名称：'"
-              prop="engName"
-            >
-              {{ formView.engName }}
-            </el-form-item>
-          </el-col>
-        </el-row>
-        <el-row>
-          <el-col :span="20">
-            <el-form-item label="参数类型：" prop="type">
-              <dict-tag :options="model_type" :value="formView.type" />
+            <el-form-item label="输出类型：" prop="type">
+              <!--              <dict-tag-->
+              <!--                :options="model_type"-->
+              <!--                :value="formView.type"-->
+              <!--              />-->
             </el-form-item>
           </el-col>
         </el-row>
@@ -434,13 +429,24 @@
                     {{ scope.row.order }}
                   </template>
                 </el-table-column>
+                <!-- <el-table-column align="center" label="操作" width="100">
+                                  <template #default="scope">
+                                    <el-button
+                                      type="danger"
+                                      icon="el-icon-delete"
+                                      size="mini"
+                                      @click="handleDeleteMultiple(scope.row)"
+                                      >删除</el-button
+                                    >
+                                  </template>
+                                </el-table-column> -->
               </el-table>
             </el-form-item>
           </el-col>
         </el-row>
         <el-row v-if="formView.type === 2">
           <el-col :span="20">
-            <el-form-item label="参数文件：" prop="paramFile">
+            <el-form-item label="输出文件：" prop="paramFile">
               <FileUpload
                 v-model="formView.paramFile"
                 :limit="1"
@@ -452,27 +458,43 @@
         </el-row>
         <el-row>
           <el-col :span="20">
-            <el-form-item label="参数说明：" prop="description">
+            <el-form-item label="输出说明：" prop="description">
               {{ formView.description == null ? "--" : formView.description }}
             </el-form-item>
           </el-col>
         </el-row>
+        <!--        <el-row>
+                          <el-col :span="20">
+                            <el-form-item label="输出示例：" prop="example">
+                              <FileUpload
+                                v-model="formView.example"
+                                :limit="1"
+                                fileStyle2
+                                disabled
+                              />
+                            </el-form-item>
+                          </el-col>
+                        </el-row>-->
       </el-form>
+      <!-- <template #footer>
+                  <div class="dialog-footer">
+              <el-button type="primary" @click="submitForm">确 定</el-button>
+              <el-button @click="cancel">取 消</el-button>
+            </div> -->
     </el-dialog>
   </div>
 </template>
 
 <script setup>
+import { ref, reactive, watch, onMounted, getCurrentInstance } from "vue";
+import { ElMessage, ElMessageBox } from "element-plus";
 import {
-  ref,
-  reactive,
-  computed,
-  onMounted,
-  watch,
-  getCurrentInstance,
-} from "vue";
-import { useRoute } from "vue-router";
-import { ElMessageBox, ElMessage } from "element-plus";
+  listOutput,
+  getOutput,
+  delOutput,
+  addOutput,
+  updateOutput,
+} from "@/api/modelReconstitution/output";
 import {
   listInput,
   getInput,
@@ -483,16 +505,17 @@ import {
   findAllModelVersion,
   getAllDatFileJson,
 } from "@/api/modelReconstitution/input";
+
 import { useDict } from "@/utils/dict.js";
-import { getFileList } from "@/api/modelReconstitution/model.js";
 
+// 获取当前实例以访问全局方法
 const { proxy } = getCurrentInstance();
-const route = useRoute();
 
+const model_input_param_type = useDict(
+  "model_input_param_type"
+).model_input_param_type;
 // 响应式数据
-const jsonFile = ref([]);
-const modelList = ref([]);
-const versionList = ref([]);
+
 // 遮罩层
 const loading = ref(true);
 // 选中数组
@@ -505,8 +528,13 @@ const multiple = ref(true);
 const showSearch = ref(true);
 // 总条数
 const total = ref(0);
-// 模型输入管理 表格数据
+// 模型输出管理 表格数据
 const inputList = ref([]);
+// 模型列表
+const modelList = ref([]);
+// 版本列表
+const versionList = ref([]);
+
 // 弹出层标题
 const title = ref("");
 // 是否显示弹出层
@@ -519,110 +547,105 @@ const openView = ref(false);
 const queryParams = reactive({
   pageNum: 1,
   pageSize: 10,
+  modelId: null,
   modelName: null,
   modelVersion: null,
+  name: null,
+  engName: null,
+  type: null,
+  description: null,
+  singleContent: null,
+  multipleContent: null,
+  paramFile: null,
+  example: null,
+  validFlag: null,
+  delFlag: null,
+  createBy: null,
+  creatorId: null,
+  createTime: null,
+  updateBy: null,
+  updatorId: null,
+  updateTime: null,
+  remark: null,
 });
 // 表单参数
-const form = ref({
-  singleContent: [],
-  multipleContent: [],
-  changeFlag: null,
-});
+const form = ref({});
 // 表单参数
 const formView = ref({});
 // 表单校验
-const rulesView = ref({});
-// 可编辑表格
-const checkedSingle = ref([]);
-const checkedMultiple = ref([]);
-
-// 表单校验规则
 const rules = reactive({
-  validFlag: [
+  modelId: [
     {
       required: true,
-      message: "是否有效 0：无效，1：有效不能为空",
+      message: "所属模型不能为空",
       trigger: "blur",
     },
   ],
-  delFlag: [
-    {
-      required: true,
-      message: "删除标志 1：已删除，0：未删除不能为空",
-      trigger: "blur",
-    },
-  ],
-  createTime: [
-    { required: true, message: "创建时间不能为空", trigger: "blur" },
-  ],
-  updateTime: [
-    { required: true, message: "更新时间不能为空", trigger: "blur" },
-  ],
-  modelId: [{ required: true, message: "请选择所属模型", trigger: "change" }],
   modelVersion: [
-    { required: true, message: "请选择所属模型版本", trigger: "change" },
+    {
+      required: true,
+      message: "所属版本不能为空",
+      trigger: "blur",
+    },
   ],
-  engName: [{ required: true, message: "文件名称不能为空", trigger: "blur" }],
+  name: [
+    {
+      required: true,
+      message: "输出名称不能为空",
+      trigger: "blur",
+    },
+  ],
+  engName: [
+    {
+      required: true,
+      message: "文件路径名称不能为空",
+      trigger: "blur",
+    },
+  ],
+  type: [
+    {
+      required: true,
+      message: "输出类型不能为空",
+      trigger: "blur",
+    },
+  ],
+  description: [
+    {
+      required: true,
+      message: "输出说明不能为空",
+      trigger: "blur",
+    },
+  ],
 });
-
-// 计算属性
-const modelId = computed(() => route.query.modelId);
-const modelName = computed(() => route.query.modelName);
 
 // 模板引用
 const queryFormRef = ref(null);
 const formRef = ref(null);
 
-// props
-const props = defineProps({
-  model: {
-    type: Object,
-  },
-});
+// 选中的数据
+const checkedSingle = ref([]);
+const checkedMultiple = ref([]);
 
-// 获取字典数据
-const model_type = useDict("model_type").model_type;
+// 获取路由信息
+const $route = useRoute();
 
-//测试json数据
-const getAllJson = () => {
-  getFileList({ fileUrl: props.model.interfaceorfileAddress }).then((res) => {
-    jsonFile.value = res;
-    console.log(jsonFile.value, "========");
-    console.log(res, "++++++++++");
-  });
-};
+// 方法定义
 
-// 获取模型
-const getAllModel = () => {
-  findAllModel({}).then((res) => {
-    modelList.value = res.data;
-  });
-};
-
-// 获取版本
-const getAllModelVersion = (param) => {
-  const data = { modelId: param };
-  findAllModelVersion(data).then((res) => {
-    if (param) {
-      versionList.value = res.data;
-    } else {
-      versionList.value = [];
-    }
-  });
-};
-
-/** 查询模型输入管理 列表 */
+/** 查询模型输出管理 列表 */
 const getList = () => {
   loading.value = true;
-  let modelId = route.query.modelId;
+  let modelId = $route.query.modelId;
+
   if (modelId) {
     queryParams.modelId = parseInt(modelId);
   }
-  console.log(queryParams, "this.queryParams");
-  listInput(queryParams).then((response) => {
+  listOutput(queryParams).then((response) => {
+    console.log(response, "shuju");
+
     inputList.value = response.data.rows;
     total.value = response.data.total;
     loading.value = false;
+    console.log(inputList.value, "qqqqqqqqqqqqqqqqqqqqqqqqqq");
   });
 };
 
@@ -647,11 +670,29 @@ const reset = () => {
     example: null,
     singleContent: [],
     multipleContent: [],
-    changeFlag: null,
   };
   if (formRef.value) {
     formRef.value.clearValidate();
   }
+};
+// 获取模型
+const getAllModel = () => {
+  findAllModel({}).then((res) => {
+    console.log(res, "mox");
+
+    modelList.value = res.data;
+  });
+};
+// 获取版本
+const getAllModelVersion = (param) => {
+  const data = { modelId: param };
+  findAllModelVersion(data).then((res) => {
+    if (param) {
+      versionList.value = res.data;
+    } else {
+      versionList.value = [];
+    }
+  });
 };
 
 /** 搜索按钮操作 */
@@ -677,14 +718,18 @@ const handleSelectionChange = (selection) => {
 
 /** 新增按钮操作 */
 const handleAdd = () => {
-  getAllJson();
   reset();
   open.value = true;
-  title.value = "添加模型输入管理";
-  if (modelId.value) {
+  title.value = "添加模型输出管理";
+  form.value.multipleContent = [];
+  form.value.singleContent = [];
+  // 如果有路由参数，则设置默认模型ID
+  const modelId = $route.query.modelId;
+  const modelName = $route.query.modelName;
+  if (modelId) {
     form.value.modelId = {
-      id: parseInt(modelId.value),
-      name: modelName.value,
+      id: parseInt(modelId),
+      name: modelName,
     };
     getAllModelVersion(form.value.modelId.id);
     form.value.modelVersion = null;
@@ -692,39 +737,46 @@ const handleAdd = () => {
 };
 
 /** 修改按钮操作 */
-const handleUpdate = async (row) => {
+const handleUpdate = (row) => {
   reset();
   const id = row.id || ids.value;
-  getInput(id).then((response) => {
+  getOutput(id).then((response) => {
     form.value = response.data;
-    form.value.modelId = {
-      id: response.data.modelId,
-      name: response.data.modelName,
-    };
-    if (form.value.changeFlag != null) {
-      form.value.changeFlag = form.value.changeFlag.toString();
+    if (form.value.multipleContent != null) {
+      form.value.multipleContent = JSON.parse(form.value.multipleContent);
+    } else {
+      form.value.multipleContent = [];
     }
-    form.value.singleContent = JSON.parse(form.value.singleContent);
-    form.value.multipleContent = JSON.parse(form.value.multipleContent);
-    getAllModelVersion(form.value.modelId.id);
+    if (form.value.singleContent != null) {
+      form.value.singleContent = JSON.parse(form.value.singleContent);
+    } else {
+      form.value.singleContent = [];
+    }
     open.value = true;
-    title.value = "修改模型输入管理";
+    title.value = "修改模型输出管理";
   });
 };
 
-/** 详情按钮操作 */
+/** 详细按钮操作 */
 const handleView = (row) => {
   reset();
   const id = row.id || ids.value;
-  getInput(id).then((response) => {
+  getOutput(id).then((response) => {
     formView.value = response.data;
-    formView.value.singleContent = JSON.parse(formView.value.singleContent);
-    formView.value.multipleContent = JSON.parse(formView.value.multipleContent);
-    if (formView.value.changeFlag != null) {
-      formView.value.changeFlag = formView.value.changeFlag.toString();
+    if (formView.value.multipleContent != null) {
+      formView.value.multipleContent = JSON.parse(
+        formView.value.multipleContent
+      );
+    } else {
+      formView.value.multipleContent = [];
+    }
+    if (formView.value.singleContent != null) {
+      formView.value.singleContent = JSON.parse(formView.value.singleContent);
+    } else {
+      formView.value.singleContent = [];
     }
     openView.value = true;
-    titleView.value = "模型输入管理详情";
+    titleView.value = "模型输出管理详情";
   });
 };
 
@@ -733,19 +785,25 @@ const submitForm = () => {
   if (formRef.value) {
     formRef.value.validate((valid) => {
       if (valid) {
-        const formData = { ...form.value };
-        formData.modelName = formData.modelId.name;
-        formData.modelId = formData.modelId.id;
-        formData.singleContent = JSON.stringify(formData.singleContent);
-        formData.multipleContent = JSON.stringify(formData.multipleContent);
+        const formData = { ...form.value }; // 创建副本以避免直接修改响应式数据
         if (formData.id != null) {
-          updateInput(formData).then((response) => {
+          if (formData.type == 1) {
+            formData.multipleContent = JSON.stringify(formData.multipleContent);
+          } else if (formData.type == 0) {
+            formData.singleContent = JSON.stringify(formData.singleContent);
+          }
+          updateOutput(formData).then((response) => {
             ElMessage.success("修改成功");
             open.value = false;
             getList();
           });
         } else {
-          addInput(formData).then((response) => {
+          if (formData.type == 1) {
+            formData.multipleContent = JSON.stringify(formData.multipleContent);
+          } else if (formData.type == 0) {
+            formData.singleContent = JSON.stringify(formData.singleContent);
+          }
+          addOutput(formData).then((response) => {
             ElMessage.success("新增成功");
             open.value = false;
             getList();
@@ -760,7 +818,7 @@ const submitForm = () => {
 const handleDelete = (row) => {
   const idsToDelete = row.id || ids.value;
   ElMessageBox.confirm(
-    '是否确认删除模型输入管理 编号为"' + idsToDelete + '"的数据项？',
+    `是否确认删除模型输出管理编号为"${idsToDelete}"的数据项？`,
     "警告",
     {
       confirmButtonText: "确定",
@@ -768,8 +826,8 @@ const handleDelete = (row) => {
       type: "warning",
     }
   )
-    .then(function () {
-      return delInput(idsToDelete);
+    .then(() => {
+      return delOutput(idsToDelete);
     })
     .then(() => {
       getList();
@@ -781,25 +839,32 @@ const handleDelete = (row) => {
 /** 导出按钮操作 */
 const handleExport = () => {
   proxy.download(
-    "model/input/export",
+    "model/output/export",
     {
       ...queryParams,
     },
-    `input_${new Date().getTime()}.xlsx`
+    `output_${new Date().getTime()}.xlsx`
   );
 };
 
 /** 单值 添加按钮操作 */
 const handleAddSingle = () => {
+  if (!form.value.singleContent) {
+    form.value.singleContent = [];
+  }
   let obj = {};
-  obj.param = "";
   obj.name = "";
   obj.value = "";
+  obj.order = "";
   form.value.singleContent.push(obj);
 };
 
 /** 单值 删除按钮操作 */
 const handleDeleteSingle = (row) => {
+  if (!form.value.singleContent) {
+    form.value.singleContent = [];
+    return;
+  }
   const id = row.index;
   const singleContent = form.value.singleContent;
   form.value.singleContent = singleContent.filter(function (item) {
@@ -819,6 +884,9 @@ const handleSingleChange = (selection) => {
 
 /** 多列值 添加按钮操作 */
 const handleAddMultiple = () => {
+  if (!form.value.multipleContent) {
+    form.value.multipleContent = [];
+  }
   let obj = {};
   obj.name = "";
   obj.value = "";
@@ -828,6 +896,10 @@ const handleAddMultiple = () => {
 
 /** 多列值 删除按钮操作 */
 const handleDeleteMultiple = (row) => {
+  if (!form.value.multipleContent) {
+    form.value.multipleContent = [];
+    return;
+  }
   const id = row.index;
   const multipleContent = form.value.multipleContent;
   form.value.multipleContent = multipleContent.filter(function (item) {
@@ -842,34 +914,18 @@ const multipleIndex = ({ row, rowIndex }) => {
 
 /** 复选框选中数据 */
 const handleMultipleChange = (selection) => {
-  checkedMultiple.value = selection.map((item) => item.index);
+  checkedMultiple.value = selection?.map((item) => item.index) || [];
 };
-
-// 监听器
-watch(
-  () => props.model,
-  (newVal, oldVal) => {
-    if (newVal != null && oldVal != null && newVal.id == oldVal.id) return;
-    if (newVal) {
-      form.value.modelId = newVal.id;
-      queryParams.modelVersion = newVal.version;
-      queryParams.modelId = newVal.id;
-      form.value.modelId = newVal.id;
-    }
-    getList();
-    getAllModelVersion(form.value.modelId);
-  },
-  { deep: true, immediate: true }
-);
 
 // 组件挂载后执行
 onMounted(() => {
   getAllModel();
+  getList();
 });
 </script>
-<style scoped lang="scss">
+<style lang="scss" scoped>
 .app-container {
-  background: transparent;
   min-height: 0;
+  background: transparent;
 }
 </style>

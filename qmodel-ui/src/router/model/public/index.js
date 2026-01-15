@@ -31,7 +31,7 @@
  */
 
 /* Layout */
-import Layout from '@/layout/index.vue'
+import Layout from '@/layout/index.vue';
 
 // 示例模块动公共路由
 export default [
@@ -42,7 +42,7 @@ export default [
         children: [
             {
                 path: 'modelManageView',
-                component: () => import('@/views/model/modelManageView'),
+                component: () => import('@/views/model/modelManage/details/index.vue'),
                 name: 'modelManageView',
                 meta: { title: '模型详情', noCache: true }
             },
@@ -57,7 +57,7 @@ export default [
                 component: () => import('@/views/model/modelInputAndOutput'),
                 name: 'modelInputAndOutput',
                 meta: { title: '模型设置参数', noCache: true }
-            },
+            }
         ]
-    },
-]
+    }
+];

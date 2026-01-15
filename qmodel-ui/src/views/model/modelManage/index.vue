@@ -173,7 +173,7 @@
                 <div class="item-top">
                   <div class="top-title ellipsis">
                     <img
-                      src="../../assets/system/images/model/version/card-title.svg"
+                      src="@/assets/system/images/model/version/card-title.svg"
                       alt=""
                     /><span class="title-name">{{ item.name }}</span>
                   </div>
@@ -186,7 +186,7 @@
                     <template #reference>
                       <div class="imgbox" @click.stop>
                         <img
-                          src="../../assets/system/images/model/version/more.svg"
+                          src="@/assets/system/images/model/version/more.svg"
                           alt=""
                         />
                       </div>
