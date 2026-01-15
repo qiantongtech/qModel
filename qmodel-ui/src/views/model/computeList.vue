@@ -741,17 +741,22 @@ const setParams = async (row) => {
   // return;
 
   const id = row.id;
+  const modelId = row.modelId;
   const res = await getInputList(id);
   if (res.length == 0) {
     ElMessage.warning(`模型名称【${row.modelName}】未设置输入参数`);
     return;
   }
+  console.log(row, "zi");
+
   // Note: The tab functionality may need to be implemented differently in Vue 3
-  await proxy.$tab.openPage("设置参数", "/model/modelComputeInputOrOutput", {
-    modelId: props.model.id,
-    computeId: id,
-    isInputOrOut: 0,
-  });
+  await proxy.$tab.openPage(
+    "/model/modelComputeInputOrOutput?modelId=" +
+      modelId +
+      "&computeId=" +
+      id +
+      "&isInputOrOut=0&deleteFlag:1"
+  );
 };
 
 /** 操作-计算 */

@@ -48,7 +48,7 @@ export default [
             },
             {
                 path: 'modelComputeInputOrOutput',
-                component: () => import('@/views/model/modelComputeInputOrOutput'),
+                component: () => import('@/views/model/modelComputeInputOrOutput.vue'),
                 name: 'modelComputeInputOrOutput',
                 meta: { title: '模型计算详情', noCache: true }
             },

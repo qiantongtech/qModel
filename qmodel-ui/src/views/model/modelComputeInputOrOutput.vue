@@ -216,6 +216,8 @@ watch(
 
 // 组件挂载后执行
 onMounted(() => {
+  console.log(route.query.modelId, "idsss");
+
   modelId.value = route.query.modelId;
   computeId.value = route.query.computeId;
   isInputOrOut.value = route.query.isInputOrOut;
@@ -289,8 +291,11 @@ const selectInterfaceAddress = () => {
 };
 
 const selectModel = () => {
+  console.log(modelId.value, "123123123");
+
   getModel(modelId.value).then((response) => {
     model.value = response.data;
+    console.log(response.data, "response.data");
   });
 };
 
@@ -306,16 +311,17 @@ const jsonListener = (json) => {
 };
 
 const goBackPage = () => {
-  const modelIdVal = model.value.id;
-  const modelName = model.value.name;
-  router.push({
-    path: "/model/modelManageView",
-    query: {
-      modelId: modelIdVal,
-      modelName,
-      pageNum: 1,
-    },
-  });
+  // const modelIdVal = model.value.id;
+  // const modelName = model.value.name;
+  // router.push({
+  //   path: "/model/modelManageView",
+  //   query: {
+  //     modelId: modelIdVal,
+  //     modelName,
+  //     pageNum: 1,
+  //   },
+  // });
+  router.go(-1);
 };
 
 const saveData = () => {
