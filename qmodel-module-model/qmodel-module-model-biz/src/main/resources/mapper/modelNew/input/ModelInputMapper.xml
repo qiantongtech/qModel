@@ -37,16 +37,16 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 <mapper namespace="tech.qiantong.qmodel.module.model.dal.mapper.input.ModelInputMapper">
 
     <resultMap type="ModelInputDO" id="ModelInputResult">
-        <result property="ID"    column="ID"    />
+        <result property="id"    column="ID"    />
         <result property="companyId"    column="COMPANY_ID"    />
-        <result property="NAME"    column="NAME"    />
+        <result property="name"    column="NAME"    />
         <result property="engName"    column="ENG_NAME"    />
-        <result property="TYPE"    column="TYPE"    />
+        <result property="type"    column="TYPE"    />
         <result property="modelId"    column="MODEL_ID"    />
         <result property="modelName"    column="MODEL_NAME"    />
         <result property="modelVersion"    column="MODEL_VERSION"    />
-        <result property="DESCRIPTION"    column="DESCRIPTION"    />
-        <result property="EXAMPLE"    column="EXAMPLE"    />
+        <result property="description"    column="DESCRIPTION"    />
+        <result property="example"    column="EXAMPLE"    />
         <result property="paramFile"    column="PARAM_FILE"    />
         <result property="singleContent"    column="SINGLE_CONTENT"    />
         <result property="multipleContent"    column="MULTIPLE_CONTENT"    />
@@ -58,7 +58,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="updateBy"    column="UPDATE_BY"    />
         <result property="updatorId"    column="UPDATOR_ID"    />
         <result property="updateTime"    column="UPDATE_TIME"    />
-        <result property="REMARK"    column="REMARK"    />
+        <result property="remark"    column="REMARK"    />
         <result property="changeFlag"    column="CHANGE_FLAG"    />
     </resultMap>
 
@@ -70,14 +70,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <include refid="selectModelInputVo"/>
         <where>
             <if test="companyId != null "> and COMPANY_ID = #{companyId}</if>
-            <if test="NAME != null  and NAME != ''"> and NAME like concat('%', #{NAME}, '%')</if>
+            <if test="name != null  and name != ''"> and NAME like concat('%', #{name}, '%')</if>
             <if test="engName != null  and engName != ''"> and ENG_NAME like concat('%', #{engName}, '%')</if>
-            <if test="TYPE != null "> and TYPE = #{TYPE}</if>
+            <if test="type != null "> and TYPE = #{type}</if>
             <if test="modelId != null "> and MODEL_ID = #{modelId}</if>
             <if test="modelName != null  and modelName != ''"> and MODEL_NAME like concat('%', #{modelName}, '%')</if>
             <if test="modelVersion != null  and modelVersion != ''"> and MODEL_VERSION = #{modelVersion}</if>
-            <if test="DESCRIPTION != null  and DESCRIPTION != ''"> and DESCRIPTION = #{DESCRIPTION}</if>
-            <if test="EXAMPLE != null  and EXAMPLE != ''"> and EXAMPLE = #{EXAMPLE}</if>
+            <if test="description != null  and description != ''"> and DESCRIPTION = #{description}</if>
+            <if test="example != null  and example != ''"> and EXAMPLE = #{example}</if>
             <if test="paramFile != null  and paramFile != ''"> and PARAM_FILE = #{paramFile}</if>
             <if test="singleContent != null  and singleContent != ''"> and SINGLE_CONTENT = #{singleContent}</if>
             <if test="multipleContent != null  and multipleContent != ''"> and MULTIPLE_CONTENT = #{multipleContent}</if>
@@ -88,22 +88,22 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
     <select id="selectModelInputByID" parameterType="Long" resultMap="ModelInputResult">
         <include refid="selectModelInputVo"/>
-        where ID = #{ID}
+        where ID = #{id}
     </select>
 
     <insert id="insertModelInput" parameterType="ModelInputDO">
         insert into MODEL_INPUT
         <trim prefix="(" suffix=")" suffixOverrides=",">
-            <if test="ID != null">ID,</if>
+            <if test="id != null">ID,</if>
             <if test="companyId != null">COMPANY_ID,</if>
-            <if test="NAME != null">NAME,</if>
+            <if test="name != null">NAME,</if>
             <if test="engName != null">ENG_NAME,</if>
-            <if test="TYPE != null">TYPE,</if>
+            <if test="type != null">TYPE,</if>
             <if test="modelId != null">MODEL_ID,</if>
             <if test="modelName != null">MODEL_NAME,</if>
             <if test="modelVersion != null">MODEL_VERSION,</if>
-            <if test="DESCRIPTION != null">DESCRIPTION,</if>
-            <if test="EXAMPLE != null">EXAMPLE,</if>
+            <if test="description != null">DESCRIPTION,</if>
+            <if test="example != null">EXAMPLE,</if>
             <if test="paramFile != null">PARAM_FILE,</if>
             <if test="singleContent != null">SINGLE_CONTENT,</if>
             <if test="multipleContent != null">MULTIPLE_CONTENT,</if>
@@ -115,20 +115,20 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="updateBy != null">UPDATE_BY,</if>
             <if test="updatorId != null">UPDATOR_ID,</if>
             <if test="updateTime != null">UPDATE_TIME,</if>
-            <if test="REMARK != null">REMARK,</if>
+            <if test="remark != null">REMARK,</if>
             <if test="changeFlag != null">CHANGE_FLAG,</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
-            <if test="ID != null">#{ID},</if>
+            <if test="id != null">#{id},</if>
             <if test="companyId != null">#{companyId},</if>
-            <if test="NAME != null">#{NAME},</if>
+            <if test="name != null">#{name},</if>
             <if test="engName != null">#{engName},</if>
-            <if test="TYPE != null">#{TYPE},</if>
+            <if test="type != null">#{type},</if>
             <if test="modelId != null">#{modelId},</if>
             <if test="modelName != null">#{modelName},</if>
             <if test="modelVersion != null">#{modelVersion},</if>
-            <if test="DESCRIPTION != null">#{DESCRIPTION},</if>
-            <if test="EXAMPLE != null">#{EXAMPLE},</if>
+            <if test="description != null">#{description},</if>
+            <if test="example != null">#{example},</if>
             <if test="paramFile != null">#{paramFile},</if>
             <if test="singleContent != null">#{singleContent},</if>
             <if test="multipleContent != null">#{multipleContent},</if>
@@ -140,7 +140,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="updateBy != null">#{updateBy},</if>
             <if test="updatorId != null">#{updatorId},</if>
             <if test="updateTime != null">#{updateTime},</if>
-            <if test="REMARK != null">#{REMARK},</if>
+            <if test="remark != null">#{remark},</if>
             <if test="changeFlag != null">#{changeFlag},</if>
          </trim>
     </insert>
@@ -149,14 +149,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         update MODEL_INPUT
         <trim prefix="SET" suffixOverrides=",">
             <if test="companyId != null">COMPANY_ID = #{companyId},</if>
-            <if test="NAME != null">NAME = #{NAME},</if>
+            <if test="name != null">NAME = #{name},</if>
             <if test="engName != null">ENG_NAME = #{engName},</if>
-            <if test="TYPE != null">TYPE = #{TYPE},</if>
+            <if test="type != null">TYPE = #{type},</if>
             <if test="modelId != null">MODEL_ID = #{modelId},</if>
             <if test="modelName != null">MODEL_NAME = #{modelName},</if>
             <if test="modelVersion != null">MODEL_VERSION = #{modelVersion},</if>
-            <if test="DESCRIPTION != null">DESCRIPTION = #{DESCRIPTION},</if>
-            <if test="EXAMPLE != null">EXAMPLE = #{EXAMPLE},</if>
+            <if test="description != null">DESCRIPTION = #{description},</if>
+            <if test="example != null">EXAMPLE = #{example},</if>
             <if test="paramFile != null">PARAM_FILE = #{paramFile},</if>
             <if test="singleContent != null">SINGLE_CONTENT = #{singleContent},</if>
             <if test="multipleContent != null">MULTIPLE_CONTENT = #{multipleContent},</if>
@@ -168,20 +168,20 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="updateBy != null">UPDATE_BY = #{updateBy},</if>
             <if test="updatorId != null">UPDATOR_ID = #{updatorId},</if>
             <if test="updateTime != null">UPDATE_TIME = #{updateTime},</if>
-            <if test="REMARK != null">REMARK = #{REMARK},</if>
+            <if test="remark != null">REMARK = #{remark},</if>
             <if test="changeFlag != null">CHANGE_FLAG = #{changeFlag},</if>
         </trim>
-        where ID = #{ID}
+        where ID = #{id}
     </update>
 
     <delete id="deleteModelInputByID" parameterType="Long">
-        delete from MODEL_INPUT where ID = #{ID}
+        delete from MODEL_INPUT where ID = #{id}
     </delete>
 
     <delete id="deleteModelInputByIDs" parameterType="String">
         delete from MODEL_INPUT where ID in
-        <foreach item="ID" collection="array" open="(" separator="," close=")">
-            #{ID}
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
         </foreach>
     </delete>
 </mapper>

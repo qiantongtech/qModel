@@ -64,6 +64,8 @@ import tech.qiantong.qmodel.module.model.controller.admin.modelCacl.vo.ModelCacl
 import tech.qiantong.qmodel.module.model.dal.dataobject.cacl.ModelCaclDO;
 import tech.qiantong.qmodel.module.model.dal.dataobject.input.ModelInputDO;
 import tech.qiantong.qmodel.module.model.dal.dataobject.interfaceAddress.ModelInterfaceAddressDO;
+import tech.qiantong.qmodel.module.model.domain.ModelCacl;
+import tech.qiantong.qmodel.module.model.domain.ModelInput;
 import tech.qiantong.qmodel.module.model.enums.RequestMethodEnum;
 import tech.qiantong.qmodel.module.model.service.cacl.IModelCaclService;
 import tech.qiantong.qmodel.module.model.service.history.IModelHistoryService;
@@ -71,6 +73,7 @@ import tech.qiantong.qmodel.module.model.service.input.IModelInputService;
 import tech.qiantong.qmodel.module.model.service.interfaceAddress.IModelInterfaceAddressService;
 import tech.qiantong.qmodel.module.model.service.model.IModelService;
 import tech.qiantong.qmodel.module.model.service.modelReconstitution.IModelReconstitutionService;
+import tech.qiantong.qmodel.module.model.enums.AccessModeEnum;
 import tech.qiantong.qmodel.module.modelReconstitution.domain.ModelReconstitution;
 import tech.qiantong.qmodel.module.modelReconstitution.service.IModelVirtualCalcService;
 
@@ -197,7 +200,7 @@ public class ModelCaclController extends BaseController {
     public R calculate(@RequestParam(value = "modelCaclId") Long modelCaclId) throws IOException {
         ModelCaclDO modelCacl = modelCaclService.getModelCaclById(modelCaclId);
         ModelReconstitution model = modelReconstitutionService.selectModelReconstitutionById(modelCacl.getModelId());
-        if (model.getAccessMode() == 1) {
+        if (AccessModeEnum.API_INTERFACE.getValue().equals(model.getAccessMode())) {
             JSONObject jsonObject = new JSONObject();
             String result = "";
             ModelInterfaceAddressDO interfaceAddress = modelInterfaceAddressService.getModelInterfaceAddressById(modelCacl.getAddressId());
@@ -264,7 +267,7 @@ public class ModelCaclController extends BaseController {
     /**
      * 设置参数接口 --查看
      */
-    @GetMapping("/findModelInputById")
+    /*@GetMapping("/findModelInputById")
     public R findModelInputById(@RequestParam(value = "modelCaclId") Long modelCaclId) {
         String inputJson = "{}";
         String inputNames = null;
@@ -273,7 +276,7 @@ public class ModelCaclController extends BaseController {
         ModelReconstitution modelReconstitution = modelReconstitutionService.selectModelReconstitutionById(modelCacl.getModelId());
 
         HashMap<String, Object> resultMap = Maps.newHashMap();
-        if (modelReconstitution.getAccessMode() == 0) {
+        if (AccessModeEnum.FILE.getValue().equals(modelReconstitution.getAccessMode())) {
             if (modelReconstitution.getId().equals(12L)) {
                 {
                     JSONObject multipleContent = new JSONObject();
@@ -389,6 +392,24 @@ public class ModelCaclController extends BaseController {
         }
 
         return R.ok(resultMap);
+    }*/
+
+    /**
+     * 设置参数接口 --查看
+     */
+    @GetMapping("/findModelInputById")
+    public AjaxResult findModelInputById(@RequestParam(value = "modelCaclId") Long modelCaclId) {
+        ModelCaclDO modelCacl = modelCaclService.getModelCaclById(modelCaclId);
+        ModelInputDO modelInputQo = new ModelInputDO();
+        modelInputQo.setDelFlag(false);
+        modelInputQo.setModelId(modelCacl.getModelId());
+        modelInputQo.setModelVersion(modelCacl.getModelVersion());
+        // 所有模型输入对象
+        List<ModelInputDO> modelInputList = modelInputReconstitutionService.selectModelInputList(modelInputQo);
+        HashMap<String, Object> resultMap = Maps.newHashMap();
+        resultMap.put("modelCacl", modelCacl);
+        resultMap.put("modelInputList", modelInputList);
+        return AjaxResult.success(resultMap);
     }
 
     /**
@@ -400,7 +421,7 @@ public class ModelCaclController extends BaseController {
         ModelInterfaceAddressDO interfaceAddress = modelInterfaceAddressService.getModelInterfaceAddressById(modelCacl.getAddressId());
         ModelReconstitution modelReconstitution = modelReconstitutionService.selectModelReconstitutionById(modelCacl.getModelId());
         HashMap<String, Object> resultMap = Maps.newHashMap();
-        if (modelReconstitution.getAccessMode() == 0) {
+        if (AccessModeEnum.FILE.getValue().equals(modelReconstitution.getAccessMode())) {
             String outputJson = modelCacl.getOutputContent();
             String outputNames = "";
             String inputNames = "null";
