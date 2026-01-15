@@ -383,7 +383,7 @@ const setTheParameters = (row) => {
   let modelId = row.modelId;
   let interfaceAddressId = row.id;
   router.push({
-    path: "/modelReconstitution/waterConserve/fileInputOrOutput",
+    path: "/model/modelInputAndOutput",
     query: {
       modelId,
       interfaceAddressId,

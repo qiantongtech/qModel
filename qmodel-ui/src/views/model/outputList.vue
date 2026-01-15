@@ -14,7 +14,7 @@
    *
   More information: https://qmodel.qiantong.tech/business.html
    *
-  ============================================================================
+  ===================================================
    *
   版权所有 © 2026 江苏千桐科技有限公司
   qModel 模型平台（开源版）
@@ -166,7 +166,7 @@
           {{ title }}
         </span>
       </template>
-      <el-form ref="formRef" :model="form" :rules="rules" label-width="100px">
+      <el-form ref="formRef" :model="form" :rules="rules" label-width="140px">
         <el-form-item label="所属模型：" prop="modelId">
           <el-select
             v-model="form.modelId"
@@ -242,7 +242,7 @@
           </el-select>
         </el-form-item>
         <el-form-item
-          v-if="form.type === 0"
+          v-if="form.type == 0"
           label="单值默认返回数据："
           prop="singleContent"
         >
@@ -253,24 +253,19 @@
           />
         </el-form-item>
         <el-form-item
-          v-if="form.type === 1"
+          v-if="form.type == 1"
           label="多列数示例："
           prop="multipleContent"
         >
           <el-row type="flex" justify="end">
             <el-col :span="1.5" class="btn-style">
-              <el-button
-                type="primary"
-                icon="el-icon-plus"
-                size="mini"
-                @click="handleAddMultiple"
-                >添加
+              <el-button type="primary" size="mini" @click="handleAddMultiple"
+                ><Plus class="icon-mini" /> 添加
               </el-button>
             </el-col>
           </el-row>
           <el-table
             :data="form.multipleContent"
-            style="width: auto"
             :row-class-name="multipleIndex"
             @selection-change="handleMultipleChange"
           >
@@ -305,11 +300,7 @@
             </el-table-column>
           </el-table>
         </el-form-item>
-        <el-form-item
-          v-if="form.type === 2"
-          label="输出文件："
-          prop="paramFile"
-        >
+        <el-form-item v-if="form.type == 2" label="输出文件：" prop="paramFile">
           <FileUpload v-model="form.paramFile" :limit="1" fileStyle2 />
         </el-form-item>
         <el-form-item label="输出说明：" prop="description">
@@ -352,7 +343,7 @@
           <el-col :span="12">
             <el-form-item
               :label="
-                formView.format !== undefined && formView.format === 0
+                formView.format !== undefined && formView.format == 0
                   ? '文件名称：'
                   : '字段名称：'
               "
@@ -384,7 +375,7 @@
             </el-form-item>
           </el-col>
         </el-row>
-        <el-row :gutter="20" v-if="formView.type === 1">
+        <el-row :gutter="20" v-if="formView.type == 1">
           <el-col :span="24">
             <el-form-item label="各参数信息：" prop="multipleContent">
               <el-table
@@ -413,7 +404,7 @@
             </el-form-item>
           </el-col>
         </el-row>
-        <el-row :gutter="20" v-if="formView.type === 2">
+        <el-row :gutter="20" v-if="formView.type == 2">
           <el-col :span="24">
             <el-form-item label="输出文件：" prop="paramFile">
               <FileUpload
@@ -459,6 +450,7 @@ import {
 import { getModel } from "@/api/model/model";
 import { useDict } from "@/utils/dict.js";
 import { ElMessage, ElMessageBox } from "element-plus";
+import { Plus } from "@element-plus/icons-vue";
 
 // Get access to the current instance to use router
 const { proxy } = getCurrentInstance();
@@ -587,7 +579,7 @@ const getAllModelVersion = (param) => {
     } else {
       versionList.value = [];
     }
-    let model = modelList.value.filter((item) => item.id === param);
+    let model = modelList.value.filter((item) => item.id == param);
     form.format = model[0].format;
   });
 };
@@ -688,13 +680,13 @@ const handleView = (row) => {
       .then((res) => {
         formView.value.format = res.data.format;
         // 修复数据格式处理
-        if (formView.value.type === 0) {
+        if (formView.value.type == 0) {
           formView.value.singleContent =
-            formView.value.singleContent === "[]" ||
-            formView.value.singleContent === '""'
+            formView.value.singleContent == "[]" ||
+            formView.value.singleContent == '""'
               ? "--"
               : formView.value.singleContent;
-        } else if (formView.value.type === 1) {
+        } else if (formView.value.type == 1) {
           try {
             formView.value.multipleContent = JSON.parse(
               formView.value.multipleContent
@@ -711,8 +703,8 @@ const handleView = (row) => {
         console.error("获取模型信息失败", error);
         // 即使获取模型信息失败，也要显示详情，但 format 会是 undefined
         formView.value.singleContent =
-          formView.value.singleContent === "[]" ||
-          formView.value.singleContent === '""'
+          formView.value.singleContent == "[]" ||
+          formView.value.singleContent == '""'
             ? "--"
             : formView.value.singleContent;
         try {

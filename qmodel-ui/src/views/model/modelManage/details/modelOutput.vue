@@ -617,6 +617,12 @@ const rules = reactive({
     },
   ],
 });
+// props
+const props = defineProps({
+  model: {
+    type: Object,
+  },
+});
 
 // 模板引用
 const queryFormRef = ref(null);
@@ -916,11 +922,27 @@ const multipleIndex = ({ row, rowIndex }) => {
 const handleMultipleChange = (selection) => {
   checkedMultiple.value = selection?.map((item) => item.index) || [];
 };
+// 监听器
+watch(
+  () => props.model,
+  (newVal, oldVal) => {
+    if (newVal != null && oldVal != null && newVal.id == oldVal.id) return;
+    if (newVal) {
+      form.value.modelId = newVal.id;
+      queryParams.modelVersion = newVal.version;
+      queryParams.modelId = newVal.id;
+      form.value.modelId = newVal.id;
+    }
+    getList();
+    getAllModelVersion(form.value.modelId);
+  },
+  { deep: true, immediate: true }
+);
 
 // 组件挂载后执行
 onMounted(() => {
   getAllModel();
-  getList();
+  // getList();
 });
 </script>
 <style lang="scss" scoped>

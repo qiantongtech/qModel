@@ -194,7 +194,7 @@
           {{ title }}
         </span>
       </template>
-      <el-form ref="form" :model="form" :rules="rules" label-width="95px">
+      <el-form ref="formref" :model="form" :rules="rules" label-width="95px">
         <el-form-item label="计算名称：" prop="name">
           <el-input
             clearable
@@ -230,7 +230,7 @@
               v-for="dict in versionList"
               :key="dict.id"
               :label="'Version ' + dict.version"
-              :value="parseInt(dict.version)"
+              :value="dict.version"
             />
           </el-select>
         </el-form-item>
@@ -747,15 +747,11 @@ const setParams = async (row) => {
     return;
   }
   // Note: The tab functionality may need to be implemented differently in Vue 3
-  await proxy.$tab.openPage(
-    "设置参数",
-    "/modelReconstitution/waterConserve/fileInputOrOutput",
-    {
-      modelId: props.model.id,
-      computeId: id,
-      isInputOrOut: 0,
-    }
-  );
+  await proxy.$tab.openPage("设置参数", "/model/modelComputeInputOrOutput", {
+    modelId: props.model.id,
+    computeId: id,
+    isInputOrOut: 0,
+  });
 };
 
 /** 操作-计算 */

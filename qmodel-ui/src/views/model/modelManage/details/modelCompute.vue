@@ -633,6 +633,7 @@ const setParams = (row) => {
   // openParams.value = true;
   // titleParams.value = "输入参数设置";
   // deleteFlag.value = true;
+
   proxy.$tab.openPage(
     "/model/modelComputeInputOrOutput?modelId=" +
       props.model.id +

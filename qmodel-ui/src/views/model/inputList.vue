@@ -14,7 +14,7 @@
    *
   More information: https://qmodel.qiantong.tech/business.html
    *
-  ============================================================================
+  ==================================
    *
   版权所有 © 2026 江苏千桐科技有限公司
   qModel 模型平台（开源版）
@@ -261,7 +261,7 @@
         <el-form-item
           label="单值默认值："
           prop="singleContent"
-          v-if="form.type === 0"
+          v-if="form.type == 0"
         >
           <el-input
             clearable
@@ -272,12 +272,12 @@
         <el-form-item
           label="多列数示例："
           prop="multipleContent"
-          v-if="form.type === 1"
+          v-if="form.type == 1"
         >
           <el-row type="flex" justify="end">
             <el-col :span="1.5" class="btn-style">
               <el-button type="primary" @click="handleAddMultiple"
-                >添加
+                ><Plus class="icon-mini" /> 添加
               </el-button>
             </el-col>
           </el-row>
@@ -316,11 +316,7 @@
             </el-table-column>
           </el-table>
         </el-form-item>
-        <el-form-item
-          label="参数文件："
-          prop="paramFile"
-          v-if="form.type === 2"
-        >
+        <el-form-item label="参数文件：" prop="paramFile" v-if="form.type == 2">
           <FileUpload v-model="form.paramFile" :limit="1" fileStyle2 />
         </el-form-item>
         <el-form-item label="参数说明：" prop="description">
@@ -399,7 +395,7 @@
             </el-form-item>
           </el-col>
         </el-row>
-        <el-row :gutter="20" v-if="formView.type === 1">
+        <el-row :gutter="20" v-if="formView.type == 1">
           <el-col :span="24">
             <el-form-item label="各参数信息" prop="multipleContent">
               <el-table
@@ -422,7 +418,7 @@
             </el-form-item>
           </el-col>
         </el-row>
-        <el-row :gutter="20" v-if="formView.type === 2">
+        <el-row :gutter="20" v-if="formView.type == 2">
           <el-col :span="24">
             <el-form-item label="参数文件" prop="paramFile">
               <FileUpload
@@ -585,7 +581,7 @@ const cancelView = () => {
 const getAllJson = () => {
   // getAllDatFileJson().then((res) => {
   //   jsonFile.value = res;
-  //   console.log(jsonFile.value, "========");
+  //   console.log(jsonFile.value, "====");
   //   console.log(res, "++++++++++");
   // });
 };
@@ -695,6 +691,8 @@ const handleUpdate = (row) => {
     form.singleContent = JSON.parse(form.singleContent);
     form.multipleContent = JSON.parse(form.multipleContent);
     getAllModelVersion(form.modelId.id);
+    console.log(form, "类型");
+    form.type = form.type.toString();
     open.value = true;
     title.value = "修改模型输入管理";
   });
