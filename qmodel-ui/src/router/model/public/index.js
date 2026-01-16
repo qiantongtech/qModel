@@ -48,13 +48,17 @@ export default [
             },
             {
                 path: 'modelComputeInputOrOutput',
-                component: () => import('@/views/model/modelComputeInputOrOutput.vue'),
+                component: () =>
+                    import(
+                        '@/views/model/modelManage/parameterSettings/modelComputeInputOrOutput.vue'
+                    ),
                 name: 'modelComputeInputOrOutput',
                 meta: { title: '模型计算详情', noCache: true }
             },
             {
                 path: 'modelInputAndOutput',
-                component: () => import('@/views/model/modelInputAndOutput'),
+                component: () =>
+                    import('@/views/model/modelManage/parameterSettings/modelInputAndOutput.vue'),
                 name: 'modelInputAndOutput',
                 meta: { title: '模型设置参数', noCache: true }
             }

@@ -110,6 +110,7 @@
             type="text"
             @click="handleEnable(scope.row)"
           >
+            <Switch class="icon-mini" />
             版本切换
           </el-button>
           <el-button link type="primary" @click="handleUpdate(scope.row)">
