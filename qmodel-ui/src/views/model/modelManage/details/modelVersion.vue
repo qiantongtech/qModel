@@ -47,7 +47,7 @@
           class="el-form-input-width"
         >
           <el-option
-            v-for="item in versionList"
+            v-for="item in versionData"
             :key="item.id"
             :label="'Version ' + item.version"
             :value="item.version"
@@ -279,7 +279,7 @@ const open = ref(false);
 const modelForm = ref({});
 const queryFormRef = ref();
 const formRef = ref();
-
+const versionData = ref([]);
 // 查询参数
 const queryParams = reactive({
   classifyId: null,

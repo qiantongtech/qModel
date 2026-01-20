@@ -1,145 +1,257 @@
-<!--
-  Copyright © 2026 Qiantong Technology Co., Ltd.
-  qModel Model Platform(Open Source Edition)
-   *
-  License:
-  Released under the Apache License, Version 2.0.
-  You may use, modify, and distribute this software for commercial purposes
-  under the terms of the License.
-   *
-  Special Notice:
-  All derivative versions are strictly prohibited from modifying or removing
-  the default system logo and copyright information.
-  For brand customization, please apply for brand customization authorization via official channels.
-   *
-  More information: https://qmodel.qiantong.tech/business.html
-   *
-  ============================================================================
-   *
-  版权所有 © 2026 江苏千桐科技有限公司
-  qModel 模型平台（开源版）
-   *
-  许可协议：
-  本项目基于 Apache License 2.0 开源协议发布，
-  允许在遵守协议的前提下进行商用、修改和分发。
-   *
-  特别说明：
-  所有衍生版本不得修改或移除系统默认的 LOGO 和版权信息；
-  如需定制品牌，请通过官方渠道申请品牌定制授权。
-   *
-  更多信息请访问：https://qmodel.qiantong.tech/business.html
--->
-
 <template>
-    <el-tag
-        :type="type"
-        :size="size"
-        :color="computedBackgroundColor"
-        :style="{
-            color: computedColor,
-            borderColor: computedBorderColor
-        }"
-        :closable="closable"
-        :disable-transitions="disableTransitions"
-        :hit="hit"
-        :effect="effect"
-    >
-        {{ name }}
-    </el-tag>
+  <span
+    class="tag"
+    :class="[
+      styleType,
+      type,
+      size,
+      { 'tag-pill': isPillStyle, 'tag-rect': isRectStyle },
+    ]"
+    :style="{
+      backgroundColor: computedBackgroundColor,
+      color: computedColor,
+      borderColor: computedBorderColor,
+    }"
+  >
+    {{ name }}
+  </span>
 </template>
 
 <script setup>
-    import { computed } from 'vue';
+import { computed } from "vue";
 
-    const props = defineProps({
-        // 标签类型
-        type: {
-            type: String,
-            default: 'primary',
-            validator: (value) =>
-                ['default', 'primary', 'success', 'warning', 'danger', 'info'].includes(value)
-        },
-        // 标签名称
-        name: {
-            type: String,
-            default: 'Tag 1'
-        },
-        // 标签大小
-        size: {
-            type: String,
-            default: 'default',
-            validator: (value) => ['large', 'default', 'small'].includes(value)
-        },
-        // 是否可关闭
-        closable: {
-            type: Boolean,
-            default: false
-        },
-        // 是否禁用渐变动画
-        disableTransitions: {
-            type: Boolean,
-            default: false
-        },
-        // 是否有边框描边
-        hit: {
-            type: Boolean,
-            default: false
-        },
-        // 主题
-        effect: {
-            type: String,
-            default: 'light',
-            validator: (value) => ['dark', 'light', 'plain'].includes(value)
-        }
-    });
+const props = defineProps({
+  // 标签类型
+  type: {
+    type: String,
+    default: "primary",
+    validator: (value) =>
+      ["default", "primary", "success", "warning", "danger", "info"].includes(
+        value
+      ),
+  },
+  // 标签名称
+  name: {
+    type: String,
+    default: "标签",
+  },
+  // 标签大小
+  size: {
+    type: String,
+    default: "",
+    validator: (value) => ["large", "small"].includes(value),
+  },
+  // 标签样式类型：pill-圆角标签，rect-直角标签
+  styleType: {
+    type: String,
+    default: "rect",
+    validator: (value) => ["pill", "rect"].includes(value),
+  },
+});
 
-    // 根据类型计算默认颜色
-    const computedColor = computed(() => {
-        const colorMap = {
-            default: '#909399',
-            primary: '#2666FB',
-            success: '#009E21',
-            warning: '#FF8C00',
-            danger: '#EC544D',
-            info: '#8737A3'
-        };
-        return colorMap[props.type] || '#606266';
-    });
+// 判断是否为圆角样式
+const isPillStyle = computed(() => props.styleType === "pill");
 
-    const computedBackgroundColor = computed(() => {
-        const bgColorMap = {
-            default: '#f4f5f5',
-            primary: '#e9efff',
-            success: '#e5f5e8',
-            warning: '#fff8e5',
-            danger: '#fdeeed',
-            info: '#f3ebf6'
-        };
-        return bgColorMap[props.type] || '#f4f4f5';
-    });
+// 判断是否为直角样式
+const isRectStyle = computed(() => props.styleType === "rect");
 
-    const computedBorderColor = computed(() => {
-        const borderColorMap = {
-            default: '#d3d4d6',
-            primary: '#2666FB',
-            success: '#009E21',
-            warning: '#FFB800',
-            danger: '#EC544D',
-            info: '#8737A3'
-        };
-        return borderColorMap[props.type] || '#d3d4d6';
-    });
+// 根据样式类型计算字体颜色
+const computedColor = computed(() => {
+  if (isRectStyle.value) {
+    // 直角标签使用深色字体
+    const colorMap = {
+      default: "#909399",
+      primary: "#409eff",
+      success: "#67c23a",
+      warning: "#e6a23c",
+      danger: "#EC544D",
+      info: "#8737A3",
+    };
+    return colorMap[props.type] || "#909399";
+  } else {
+    // 圆角标签使用白色字体
+    return "#ffffff";
+  }
+});
 
-    // 定义事件
-    defineEmits(['close', 'click']);
+// 根据样式类型计算背景颜色
+const computedBackgroundColor = computed(() => {
+  if (isRectStyle.value) {
+    // 直角标签使用浅色背景
+    const bgColorMap = {
+      default: "#f4f4f5",
+      primary: "#ecf5ff",
+      success: "#f0f9e8",
+      warning: "#fdf6ec",
+      danger: "#fef0f0",
+      info: "#f3ebf6",
+    };
+    return bgColorMap[props.type] || "#f4f4f5";
+  } else {
+    // 圆角标签使用深色背景
+    const bgColorMap = {
+      default: "#909399",
+      primary: "#2666FB",
+      success: "#009E21",
+      warning: "#FF8C00",
+      danger: "#EC544D",
+      info: "#8737A3",
+    };
+    return bgColorMap[props.type] || "#909399";
+  }
+});
+
+// 直角标签的边框颜色
+const computedBorderColor = computed(() => {
+  if (isRectStyle.value) {
+    const borderColorMap = {
+      default: "#d3d4d6",
+      primary: "#b3d8ff",
+      success: "#c2e7b0",
+      warning: "#f5dab1",
+      danger: "#fbc4c4",
+      info: "#d4b8de",
+    };
+    return borderColorMap[props.type] || "#d3d4d6";
+  }
+  return "transparent";
+});
 </script>
 
 <style scoped>
-    /* .el-tag {
-        margin: 2px;
-    } */
-    .el-tag {
-        font-size: 14px !important;
-        padding: 0px 12px !important;
-    }
+.tag {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0px 9px;
+  height: 24px;
+  font-size: 14px;
+  line-height: 1;
+  box-sizing: border-box;
+  white-space: nowrap;
+  font-weight: 500;
+  cursor: default;
+  user-select: none;
+  transition: all 0.2s ease;
+}
+
+/* 圆角标签样式 */
+.tag-pill {
+  border-radius: 8px 8px 8px 0px;
+  border: none;
+}
+
+/* 直角标签样式 */
+.tag-rect {
+  border-radius: 4px;
+  border: 1px solid;
+}
+
+/* 大小样式 */
+.tag.small {
+  padding: 0px 9px;
+  height: 20px;
+  font-size: 14px;
+}
+
+.tag.small.tag-pill {
+  border-radius: 6px 6px 6px 0px;
+}
+
+.tag.small.tag-rect {
+  border-radius: 3px;
+}
+
+.tag.large {
+  padding: 0px 9px;
+  height: 32px;
+  font-size: 14px;
+}
+
+.tag.large.tag-pill {
+  border-radius: 10px 10px 10px 0px;
+}
+
+.tag.large.tag-rect {
+  border-radius: 5px;
+}
+
+/* 类型样式 - 圆角标签 */
+/* .tag-pill.default {
+  background-color: #909399;
+  color: #ffffff;
+}
+
+.tag-pill.primary {
+  background-color: #409eff;
+  color: #ffffff;
+}
+
+.tag-pill.success {
+  background-color: #67c23a;
+  color: #ffffff;
+}
+
+.tag-pill.warning {
+  background-color: #e6a23c;
+  color: #ffffff;
+}
+
+.tag-pill.danger {
+  background-color: #f56c6c;
+  color: #ffffff;
+}
+
+.tag-pill.info {
+  background-color: #909399;
+  color: #ffffff;
+} */
+
+/* 类型样式 - 直角标签 */
+/* .tag-rect.default {
+  background-color: #f4f4f5;
+  color: #909399;
+  border-color: #d3d4d6;
+}
+
+.tag-rect.primary {
+  background-color: #ecf5ff;
+  color: #409eff;
+  border-color: #b3d8ff;
+}
+
+.tag-rect.success {
+  background-color: #f0f9e8;
+  color: #67c23a;
+  border-color: #c2e7b0;
+}
+
+.tag-rect.warning {
+  background-color: #fdf6ec;
+  color: #e6a23c;
+  border-color: #f5dab1;
+}
+
+.tag-rect.danger {
+  background-color: #fef0f0;
+  color: #f56c6c;
+  border-color: #fbc4c4;
+}
+
+.tag-rect.info {
+  background-color: #f4f4f5;
+  color: #909399;
+  border-color: #d3d4d6;
+} */
+
+/* 悬停效果 */
+.tag:hover {
+  opacity: 0.9;
+}
+
+/* 禁用状态 */
+.tag:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
 </style>
