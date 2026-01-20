@@ -62,18 +62,15 @@ public class ModelCaclSaveReqVO extends BaseEntity {
     private String code;
 
     @Schema(description = "计算名称", example = "")
-    @NotBlank(message = "计算名称不能为空")
     private String name;
 
     @Schema(description = "模型id", example = "")
     private Long modelId;
 
     @Schema(description = "模型名称", example = "")
-    @NotBlank(message = "模型名称不能为空")
     private String modelName;
 
     @Schema(description = "模型版本", example = "")
-    @NotBlank(message = "模型版本不能为空")
     private String modelVersion;
 
     @Schema(description = "开始时间", example = "")

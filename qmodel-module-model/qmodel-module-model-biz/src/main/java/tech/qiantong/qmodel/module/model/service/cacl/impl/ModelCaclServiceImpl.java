@@ -89,9 +89,7 @@ public class ModelCaclServiceImpl extends ServiceImpl<ModelCaclMapper, ModelCacl
 
     @Override
     public int updateModelCacl(ModelCaclSaveReqVO updateReqVO) {
-        // 相关校验
 
-        // 更新模型计算重构
         ModelCaclDO updateObj = BeanUtils.toBean(updateReqVO, ModelCaclDO.class);
         return modelCaclMapper.updateById(updateObj);
     }
