@@ -76,11 +76,11 @@ public class ModelReconstitutionRespVO implements Serializable {
 
     @Excel(name = "接入方式")
     @Schema(description = "接入方式", example = "")
-    private Long accessMode;
+    private Integer accessMode;
 
     @Excel(name = "请求方式")
     @Schema(description = "请求方式", example = "")
-    private Long requestMethod;
+    private Integer requestMethod;
 
     @Excel(name = "接口和文件的地址")
     @Schema(description = "接口和文件的地址", example = "")

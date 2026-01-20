@@ -32,46 +32,72 @@
 
 package tech.qiantong.qmodel.module.model.enums;
 
-import com.baomidou.mybatisplus.annotation.EnumValue;
-import com.fasterxml.jackson.annotation.JsonValue;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 
 /**
- * 访问模式、接入模式枚举
+ * 状态枚举
+ * 用于表示启用/停用状态
  *
  * @author qModel
- * @date 2026-01-15
+ * @date 2026-01-20
  */
-public enum AccessModeEnum {
-    FILE(0, "文件访问"),
-    API_INTERFACE(1, "API接口");
+@Getter
+@AllArgsConstructor
+public enum StatusEnum {
 
-    @EnumValue
+    /**
+     * 停用
+     */
+    DISABLED(0, "停用"),
+
+    /**
+     * 启用
+     */
+    ENABLED(1, "启用");
+
+    /**
+     * 状态值
+     */
     private final Integer value;
-    @JsonValue
-    private final String label;
 
-    AccessModeEnum(Integer value, String label) {
-        this.value = value;
-        this.label = label;
-    }
+    /**
+     * 状态描述
+     */
+    private final String desc;
 
-    public Integer getValue() {
-        return value;
-    }
-
-    public String getLabel() {
-        return label;
-    }
-
-    public static AccessModeEnum getByValue(Integer value) {
-        if (value == null) {
-            return null;
-        }
-        for (AccessModeEnum mode : AccessModeEnum.values()) {
-            if (mode.getValue().equals(value)) {
-                return mode;
+    /**
+     * 根据值获取枚举
+     *
+     * @param value 值
+     * @return 枚举
+     */
+    public static StatusEnum getByValue(Long value) {
+        for (StatusEnum statusEnum : values()) {
+            if (statusEnum.getValue().equals(value)) {
+                return statusEnum;
             }
         }
         return null;
+    }
+
+    /**
+     * 是否为启用状态
+     *
+     * @param value 状态值
+     * @return 是否启用
+     */
+    public static boolean isEnabled(Integer value) {
+        return ENABLED.getValue().equals(value);
+    }
+
+    /**
+     * 是否为停用状态
+     *
+     * @param value 状态值
+     * @return 是否停用
+     */
+    public static boolean isDisabled(Integer value) {
+        return DISABLED.getValue().equals(value);
     }
 }

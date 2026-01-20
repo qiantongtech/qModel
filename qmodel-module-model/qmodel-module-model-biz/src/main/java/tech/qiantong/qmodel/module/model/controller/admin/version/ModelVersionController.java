@@ -32,7 +32,7 @@
 
 package tech.qiantong.qmodel.module.model.controller.admin.version;
 
-import cn.hutool.json.JSONObject;
+import com.alibaba.fastjson.JSONObject;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -49,7 +49,6 @@ import tech.qiantong.qmodel.common.core.page.PageResult;
 import tech.qiantong.qmodel.common.enums.BusinessType;
 import tech.qiantong.qmodel.common.utils.object.BeanUtils;
 import tech.qiantong.qmodel.common.utils.poi.ExcelUtil;
-import tech.qiantong.qmodel.module.model.controller.admin.operate.vo.ModelOperateSaveReqVO;
 import tech.qiantong.qmodel.module.model.controller.admin.version.vo.ModelVersionPageReqVO;
 import tech.qiantong.qmodel.module.model.controller.admin.version.vo.ModelVersionRespVO;
 import tech.qiantong.qmodel.module.model.controller.admin.version.vo.ModelVersionSaveReqVO;
@@ -59,7 +58,6 @@ import tech.qiantong.qmodel.module.model.service.history.IModelHistoryService;
 import tech.qiantong.qmodel.module.model.service.modelReconstitution.IModelReconstitutionService;
 import tech.qiantong.qmodel.module.model.service.operate.IModelOperateService;
 import tech.qiantong.qmodel.module.model.service.version.IModelVersionService;
-import tech.qiantong.qmodel.module.modelReconstitution.domain.ModelReconstitution;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
@@ -175,26 +173,8 @@ public class ModelVersionController extends BaseController {
      */
     @PutMapping(value = "/handoff")
     @Transactional
-    public AjaxResult handoffVersion(@RequestBody JSONObject jsonObject) {
-        ModelVersionSaveReqVO version = new ModelVersionSaveReqVO();
-        if (jsonObject.getLong("beforeVersionId") != null) {
-            version.setId(jsonObject.getLong("beforeVersionId"));
-            version.setStatus(0);
-            Integer i = modelVersionService.updateModelVersion(version);
-        }
-        ModelReconstitution model = new ModelReconstitution();
-        model.setId(jsonObject.getLong("modelId"));
-        if (jsonObject.getLong("afterVersionId") == null) {
-            model.setParamByKey("clearVersionId", true);
-        } else {
-            model.setVersionId(jsonObject.getLong("afterVersionId"));
-            version.setId(jsonObject.getLong("afterVersionId"));
-            version.setStatus(1);
-            modelVersionService.updateModelVersion(version);
-            modelHistoryService.createModelHistory(jsonObject.getLong("modelId"), jsonObject.getStr("modelName"), "切换了模型的版本号, 切换到了【" + jsonObject.getDouble("afterVersion") + "】", jsonObject.getStr("afterVersion"), getUserId(), getNickName());
-        }
-        modelReconstitutionService.updateModelReconstitution(model);
-        return success();
+    public AjaxResult handoffVersion(@RequestBody ModelVersionRespVO modelVersionRespVO) {
+        return modelVersionService.handoffVersion(modelVersionRespVO, getUserId(), getNickName());
     }
 
 
@@ -203,65 +183,7 @@ public class ModelVersionController extends BaseController {
     @Log(title = "版本管理", businessType = BusinessType.UPDATE)
     @PutMapping
     public CommonResult<Integer> edit(@Valid @RequestBody ModelVersionSaveReqVO modelVersion) {
-        ModelReconstitution modelReconstitution = modelReconstitutionService.selectModelReconstitutionById(modelVersion.getId());
-        if (modelVersion.getStatus() != null && modelVersion.getStatus() == 1) {
-            if (modelReconstitution.getAccessMode() != null && modelReconstitution.getAccessMode().equals(1)) {
-                modelReconstitution.setInterfaceorfileAddress(modelVersion.getInterfaceAddress());
-            }
-            if (modelReconstitution.getAccessMode() != null && modelReconstitution.getAccessMode().equals(0)) {
-                modelReconstitution.setInterfaceorfileAddress(modelVersion.getFileAddress());
-            }
-            modelReconstitution.setVersionId(modelVersion.getId());
-            modelReconstitution.setRemark(modelVersion.getRemark());
-            modelReconstitutionService.updateModelReconstitution(modelReconstitution);
-
-            modelHistoryService.createModelHistory(modelVersion.getModelId(), modelVersion.getModelName(), "启用了" + modelVersion.getModelName() + "【" + modelVersion.getVersion() + "】版本", modelVersion.getVersion(), getUserId(), getNickName());
-
-            ModelOperateSaveReqVO operate = new ModelOperateSaveReqVO();
-            operate.setCompanyId(modelReconstitution.getCompanyId());
-            operate.setCreatorId(getUserId());
-            operate.setCreateBy(getNickName());
-            operate.setModuleName(modelReconstitution.getName());
-            operate.setContent("启用"+ "【" + modelVersion.getVersion() + "】版本");
-            operate.setType(2L);
-            JSONObject object = new JSONObject();
-            object.set("模型名称", modelReconstitution.getName());
-            object.set("启用版本", modelVersion.getVersion());
-            operate.setRespContent(object.toString());
-            modelOperateService.createModelOperate(operate);
-        }
-        ModelVersionDO modelVersionDO = new ModelVersionDO();
-        modelVersionDO.setModelId(modelVersion.getModelId());
-        List<ModelVersionDO> mvList = modelVersionService.selectModelVersionList(modelVersionDO);
-        Boolean isStatus = true;
-        for (ModelVersionDO version : mvList) {
-            if (version.getStatus() == 1){
-                isStatus = false;
-            }
-        }
-        //停用
-        if (isStatus) {
-            modelReconstitutionService.updateModelReconstitution(modelReconstitution);
-            //历史操作记录插入
-            modelHistoryService.createModelHistory(modelVersion.getModelId(), modelVersion.getModelName(), "停用了" + modelVersion.getModelName() + "【" + modelVersion.getVersion() + "】版本", modelVersion.getVersion(), getUserId(), getNickName());
-
-            ModelOperateSaveReqVO operate = new ModelOperateSaveReqVO();
-            operate.setCompanyId(modelReconstitution.getCompanyId());
-            operate.setCreatorId(getUserId());
-            operate.setCreateBy(getNickName());
-            operate.setModuleName(modelReconstitution.getName());
-            operate.setContent("停用【" + modelVersion.getVersion() + "】版本");
-            operate.setType(2L);
-            JSONObject object = new JSONObject();
-            object.set("模型名称", modelReconstitution.getName());
-            object.set("启用版本", modelVersion.getVersion());
-            operate.setRespContent(object.toString());
-            modelOperateService.createModelOperate(operate);
-        }else {
-            //历史操作记录插入
-            modelHistoryService.createModelHistory(modelVersion.getModelId(), modelVersion.getModelName(), "修改了" + modelVersion.getModelName() + "【" + modelVersion.getVersion() + "】版本的内容", modelVersion.getVersion(), getUserId(), getNickName());
-        }
-        return CommonResult.toAjax(modelVersionService.updateModelVersion(modelVersion));
+        return CommonResult.toAjax(modelVersionService.updateModelVersionWithBusinessLogic(modelVersion, getUserId(), getNickName()));
     }
 
     @Operation(summary = "删除版本管理")

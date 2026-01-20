@@ -83,6 +83,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
                     #{id}
                 </foreach>
             </if>
+            <if test="delFlag != null"> and DEL_FLAG = #{delFlag} </if>
         </where>
     </select>
 

@@ -121,11 +121,9 @@ public class ModelReconstitutionServiceImpl  extends ServiceImpl<ModelReconstitu
 
     @Override
     public int updateModelReconstitution(ModelReconstitutionSaveReqVO updateReqVO) {
-        // 相关校验
-
         // 更新模型库重构
         ModelReconstitutionDO updateObj = BeanUtils.toBean(updateReqVO, ModelReconstitutionDO.class);
-        return modelReconstitutionMapper.updateById(updateObj);
+        return modelReconstitutionMapper.updateModelReconstitution(updateObj);
     }
     @Override
     public int removeModelReconstitution(Collection<Long> idList) {

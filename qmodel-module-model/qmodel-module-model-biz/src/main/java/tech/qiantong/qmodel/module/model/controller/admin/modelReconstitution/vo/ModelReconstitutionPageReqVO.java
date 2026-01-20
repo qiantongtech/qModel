@@ -64,10 +64,10 @@ public class ModelReconstitutionPageReqVO extends PageParam {
     private Long builtin;
 
     @Schema(description = "接入方式", example = "")
-    private Long accessMode;
+    private Integer accessMode;
 
     @Schema(description = "请求方式", example = "")
-    private Long requestMethod;
+    private Integer requestMethod;
 
     @Schema(description = "接口和文件的地址", example = "")
     private String interfaceorfileAddress;
