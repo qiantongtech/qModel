@@ -56,7 +56,7 @@
       <el-descriptions-item>
         <template #label> 请求方式 </template>
         <dict-tag
-          :options="dict.type.model_access_mode"
+          :options="model_access_mode"
           :value="interfaceAddress.requestMethod"
         />
       </el-descriptions-item>
@@ -146,6 +146,7 @@ import {
 import { getModel } from "@/api/modelReconstitution/model";
 import VueJsonHelper from "@/components/VueJsonHelper/Helper";
 import JsonViewer from "json-editor-vue";
+import { useDict } from "@/utils/dict.js";
 
 // 获取当前实例以访问路由和其他属性
 const { proxy } = getCurrentInstance();
@@ -177,6 +178,7 @@ const dict = reactive({
     model_access_mode: [],
   },
 });
+const model_access_mode = useDict("model_access_mode").model_access_mode;
 
 // 监听器
 watch(modelId, (newVal) => {

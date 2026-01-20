@@ -62,7 +62,7 @@
           class="el-form-input-width"
         >
           <el-option
-            v-for="item in model_type"
+            v-for="item in model_access_mode"
             :key="item.value"
             :label="item.label"
             :value="item.value * 1"
@@ -123,7 +123,7 @@
         width="150px"
       >
         <template #default="scope">
-          <dict-tag :options="model_type" :value="scope.row.requestMethod" />
+          <dict-tag :options="model_access_mode" :value="scope.row.requestMethod" />
         </template>
       </el-table-column>
       <el-table-column
@@ -213,7 +213,7 @@
                 clearable
               >
                 <el-option
-                  v-for="item in model_type"
+                  v-for="item in model_access_mode"
                   :key="item.value"
                   :label="item.label"
                   :value="item.value * 1"
@@ -346,7 +346,7 @@ const form = ref({
 });
 // 表单校验
 const rules = reactive({});
-const model_type = useDict("model_type").model_type;
+const model_access_mode = useDict("model_access_mode").model_access_mode;
 
 // 模板引用
 const queryFormRef = ref(null);

@@ -267,7 +267,7 @@ public class ModelCaclController extends BaseController {
     /**
      * 设置参数接口 --查看
      */
-    /*@GetMapping("/findModelInputById")
+    @GetMapping("/findModelInputById")
     public R findModelInputById(@RequestParam(value = "modelCaclId") Long modelCaclId) {
         String inputJson = "{}";
         String inputNames = null;
@@ -392,25 +392,25 @@ public class ModelCaclController extends BaseController {
         }
 
         return R.ok(resultMap);
-    }*/
+    }
 
     /**
      * 设置参数接口 --查看
      */
-    @GetMapping("/findModelInputById")
-    public AjaxResult findModelInputById(@RequestParam(value = "modelCaclId") Long modelCaclId) {
-        ModelCaclDO modelCacl = modelCaclService.getModelCaclById(modelCaclId);
-        ModelInputDO modelInputQo = new ModelInputDO();
-        modelInputQo.setDelFlag(false);
-        modelInputQo.setModelId(modelCacl.getModelId());
-        modelInputQo.setModelVersion(modelCacl.getModelVersion());
-        // 所有模型输入对象
-        List<ModelInputDO> modelInputList = modelInputReconstitutionService.selectModelInputList(modelInputQo);
-        HashMap<String, Object> resultMap = Maps.newHashMap();
-        resultMap.put("modelCacl", modelCacl);
-        resultMap.put("modelInputList", modelInputList);
-        return AjaxResult.success(resultMap);
-    }
+//    @GetMapping("/findModelInputById")
+//    public AjaxResult findModelInputById(@RequestParam(value = "modelCaclId") Long modelCaclId) {
+//        ModelCaclDO modelCacl = modelCaclService.getModelCaclById(modelCaclId);
+//        ModelInputDO modelInputQo = new ModelInputDO();
+//        modelInputQo.setDelFlag(false);
+//        modelInputQo.setModelId(modelCacl.getModelId());
+//        modelInputQo.setModelVersion(modelCacl.getModelVersion());
+//        // 所有模型输入对象
+//        List<ModelInputDO> modelInputList = modelInputReconstitutionService.selectModelInputList(modelInputQo);
+//        HashMap<String, Object> resultMap = Maps.newHashMap();
+//        resultMap.put("modelCacl", modelCacl);
+//        resultMap.put("modelInputList", modelInputList);
+//        return AjaxResult.success(resultMap);
+//    }
 
     /**
      * 查看计算结果接口
