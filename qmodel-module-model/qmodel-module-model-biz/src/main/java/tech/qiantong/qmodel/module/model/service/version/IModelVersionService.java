@@ -46,6 +46,8 @@ import tech.qiantong.qmodel.module.model.dal.dataobject.version.ModelVersionDO;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import com.alibaba.fastjson.JSONObject;
+import tech.qiantong.qmodel.common.core.domain.AjaxResult;
 /**
  * 版本管理Service接口
  *
@@ -142,5 +144,25 @@ public interface IModelVersionService extends IService<ModelVersionDO> {
      * @return 结果
      */
     String importModelVersion(List<ModelVersionRespVO> importExcelList, boolean isUpdateSupport, String operName);
+
+    /**
+     * 切换版本
+     *
+     * @param modelVersionRespVO 包含切换版本所需参数
+     * @param userId 用户ID
+     * @param nickName 用户昵称
+     * @return 操作结果
+     */
+    AjaxResult handoffVersion(ModelVersionRespVO modelVersionRespVO, Long userId, String nickName);
+
+    /**
+     * 更新版本管理
+     *
+     * @param modelVersion 版本管理信息
+     * @param userId 用户ID
+     * @param nickName 用户昵称
+     * @return 操作结果
+     */
+    int updateModelVersionWithBusinessLogic(ModelVersionSaveReqVO modelVersion, Long userId, String nickName);
 
 }

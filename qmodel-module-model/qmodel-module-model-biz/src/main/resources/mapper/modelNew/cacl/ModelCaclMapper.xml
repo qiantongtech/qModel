@@ -37,16 +37,16 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 <mapper namespace="tech.qiantong.qmodel.module.model.dal.mapper.cacl.ModelCaclMapper">
 
     <resultMap type="ModelCaclDO" id="ModelCaclResult">
-        <result property="ID"    column="ID"    />
+        <result property="id"    column="ID"    />
         <result property="companyId"    column="COMPANY_ID"    />
-        <result property="CODE"    column="CODE"    />
-        <result property="NAME"    column="NAME"    />
+        <result property="code"    column="CODE"    />
+        <result property="name"    column="NAME"    />
         <result property="modelId"    column="MODEL_ID"    />
         <result property="modelName"    column="MODEL_NAME"    />
         <result property="modelVersion"    column="MODEL_VERSION"    />
         <result property="startTime"    column="START_TIME"    />
         <result property="endTime"    column="END_TIME"    />
-        <result property="STATUS"    column="STATUS"    />
+        <result property="status"    column="STATUS"    />
         <result property="inputContent"    column="INPUT_CONTENT"    />
         <result property="outputContent"    column="OUTPUT_CONTENT"    />
         <result property="validFlag"    column="VALID_FLAG"    />
@@ -57,7 +57,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="updateBy"    column="UPDATE_BY"    />
         <result property="updatorId"    column="UPDATOR_ID"    />
         <result property="updateTime"    column="UPDATE_TIME"    />
-        <result property="REMARK"    column="REMARK"    />
+        <result property="remark"    column="REMARK"    />
         <result property="addressId"    column="ADDRESS_ID"    />
         <result property="addressType"    column="ADDRESS_TYPE"    />
         <result property="mpProgrammeId"    column="MP_PROGRAMME_ID"    />
@@ -71,14 +71,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <include refid="selectModelCaclVo"/>
         <where>
             <if test="companyId != null "> and COMPANY_ID = #{companyId}</if>
-            <if test="CODE != null  and CODE != ''"> and CODE = #{CODE}</if>
-            <if test="NAME != null  and NAME != ''"> and NAME like concat('%', #{NAME}, '%')</if>
+            <if test="code != null  and code != ''"> and CODE = #{code}</if>
+            <if test="name != null  and name != ''"> and NAME like concat('%', #{name}, '%')</if>
             <if test="modelId != null "> and MODEL_ID = #{modelId}</if>
             <if test="modelName != null  and modelName != ''"> and MODEL_NAME like concat('%', #{modelName}, '%')</if>
             <if test="modelVersion != null  and modelVersion != ''"> and MODEL_VERSION = #{modelVersion}</if>
             <if test="startTime != null "> and START_TIME = #{startTime}</if>
             <if test="endTime != null "> and END_TIME = #{endTime}</if>
-            <if test="STATUS != null "> and STATUS = #{STATUS}</if>
+            <if test="status != null "> and STATUS = #{status}</if>
             <if test="inputContent != null  and inputContent != ''"> and INPUT_CONTENT = #{inputContent}</if>
             <if test="outputContent != null  and outputContent != ''"> and OUTPUT_CONTENT = #{outputContent}</if>
             <if test="createTime != null "> and CREATE_TIME = #{createTime}</if>
@@ -90,22 +90,22 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
     <select id="selectModelCaclByID" parameterType="Long" resultMap="ModelCaclResult">
         <include refid="selectModelCaclVo"/>
-        where ID = #{ID}
+        where ID = #{id}
     </select>
 
     <insert id="insertModelCacl" parameterType="ModelCaclDO">
         insert into MODEL_CACL_RECONSTITUTION
         <trim prefix="(" suffix=")" suffixOverrides=",">
-            <if test="ID != null">ID,</if>
+            <if test="id != null">ID,</if>
             <if test="companyId != null">COMPANY_ID,</if>
-            <if test="CODE != null">CODE,</if>
-            <if test="NAME != null">NAME,</if>
+            <if test="code != null">CODE,</if>
+            <if test="name != null">NAME,</if>
             <if test="modelId != null">MODEL_ID,</if>
             <if test="modelName != null">MODEL_NAME,</if>
             <if test="modelVersion != null">MODEL_VERSION,</if>
             <if test="startTime != null">START_TIME,</if>
             <if test="endTime != null">END_TIME,</if>
-            <if test="STATUS != null">STATUS,</if>
+            <if test="status != null">STATUS,</if>
             <if test="inputContent != null">INPUT_CONTENT,</if>
             <if test="outputContent != null">OUTPUT_CONTENT,</if>
             <if test="validFlag != null">VALID_FLAG,</if>
@@ -116,22 +116,22 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="updateBy != null">UPDATE_BY,</if>
             <if test="updatorId != null">UPDATOR_ID,</if>
             <if test="updateTime != null">UPDATE_TIME,</if>
-            <if test="REMARK != null">REMARK,</if>
+            <if test="remark != null">REMARK,</if>
             <if test="addressId != null">ADDRESS_ID,</if>
             <if test="addressType != null">ADDRESS_TYPE,</if>
             <if test="mpProgrammeId != null">MP_PROGRAMME_ID,</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
-            <if test="ID != null">#{ID},</if>
+            <if test="id != null">#{id},</if>
             <if test="companyId != null">#{companyId},</if>
-            <if test="CODE != null">#{CODE},</if>
-            <if test="NAME != null">#{NAME},</if>
+            <if test="code != null">#{code},</if>
+            <if test="name != null">#{name},</if>
             <if test="modelId != null">#{modelId},</if>
             <if test="modelName != null">#{modelName},</if>
             <if test="modelVersion != null">#{modelVersion},</if>
             <if test="startTime != null">#{startTime},</if>
             <if test="endTime != null">#{endTime},</if>
-            <if test="STATUS != null">#{STATUS},</if>
+            <if test="status != null">#{status},</if>
             <if test="inputContent != null">#{inputContent},</if>
             <if test="outputContent != null">#{outputContent},</if>
             <if test="validFlag != null">#{validFlag},</if>
@@ -142,7 +142,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="updateBy != null">#{updateBy},</if>
             <if test="updatorId != null">#{updatorId},</if>
             <if test="updateTime != null">#{updateTime},</if>
-            <if test="REMARK != null">#{REMARK},</if>
+            <if test="remark != null">#{remark},</if>
             <if test="addressId != null">#{addressId},</if>
             <if test="addressType != null">#{addressType},</if>
             <if test="mpProgrammeId != null">#{mpProgrammeId},</if>
@@ -153,14 +153,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         update MODEL_CACL_RECONSTITUTION
         <trim prefix="SET" suffixOverrides=",">
             <if test="companyId != null">COMPANY_ID = #{companyId},</if>
-            <if test="CODE != null">CODE = #{CODE},</if>
-            <if test="NAME != null">NAME = #{NAME},</if>
+            <if test="code != null">CODE = #{code},</if>
+            <if test="name != null">NAME = #{name},</if>
             <if test="modelId != null">MODEL_ID = #{modelId},</if>
             <if test="modelName != null">MODEL_NAME = #{modelName},</if>
             <if test="modelVersion != null">MODEL_VERSION = #{modelVersion},</if>
             <if test="startTime != null">START_TIME = #{startTime},</if>
             <if test="endTime != null">END_TIME = #{endTime},</if>
-            <if test="STATUS != null">STATUS = #{STATUS},</if>
+            <if test="status != null">STATUS = #{status},</if>
             <if test="inputContent != null">INPUT_CONTENT = #{inputContent},</if>
             <if test="outputContent != null">OUTPUT_CONTENT = #{outputContent},</if>
             <if test="validFlag != null">VALID_FLAG = #{validFlag},</if>
@@ -171,16 +171,16 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="updateBy != null">UPDATE_BY = #{updateBy},</if>
             <if test="updatorId != null">UPDATOR_ID = #{updatorId},</if>
             <if test="updateTime != null">UPDATE_TIME = #{updateTime},</if>
-            <if test="REMARK != null">REMARK = #{REMARK},</if>
+            <if test="remark != null">REMARK = #{remark},</if>
             <if test="addressId != null">ADDRESS_ID = #{addressId},</if>
             <if test="addressType != null">ADDRESS_TYPE = #{addressType},</if>
             <if test="mpProgrammeId != null">MP_PROGRAMME_ID = #{mpProgrammeId},</if>
         </trim>
-        where ID = #{ID}
+        where ID = #{id}
     </update>
 
     <delete id="deleteModelCaclByID" parameterType="Long">
-        delete from MODEL_CACL_RECONSTITUTION where ID = #{ID}
+        delete from MODEL_CACL_RECONSTITUTION where ID = #{id}
     </delete>
 
     <delete id="deleteModelCaclByIDs" parameterType="String">

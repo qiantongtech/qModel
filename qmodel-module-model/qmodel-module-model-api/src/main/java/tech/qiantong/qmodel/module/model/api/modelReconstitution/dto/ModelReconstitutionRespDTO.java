@@ -63,10 +63,10 @@ public class ModelReconstitutionRespDTO {
     private Long builtin;
 
     /** 接入方式 */
-    private Long accessMode;
+    private Integer accessMode;
 
     /** 请求方式 */
-    private Long requestMethod;
+    private Integer requestMethod;
 
     /** 接口和文件的地址 */
     private String interfaceorfileAddress;

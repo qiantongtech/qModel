@@ -37,11 +37,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 <mapper namespace="tech.qiantong.qmodel.module.model.dal.mapper.modelReconstitution.ModelReconstitutionMapper">
 
     <resultMap type="ModelReconstitutionDO" id="ModelReconstitutionResult">
-        <result property="ID"    column="ID"    />
+        <result property="id"    column="ID"    />
         <result property="companyId"    column="COMPANY_ID"    />
-        <result property="NAME"    column="NAME"    />
+        <result property="name"    column="NAME"    />
         <result property="classifyId"    column="CLASSIFY_ID"    />
-        <result property="BUILTIN"    column="BUILTIN"    />
+        <result property="builtin"    column="BUILTIN"    />
         <result property="accessMode"    column="ACCESS_MODE"    />
         <result property="requestMethod"    column="REQUEST_METHOD"    />
         <result property="interfaceorfileAddress"    column="INTERFACEORFILE_ADDRESS"    />
@@ -55,9 +55,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="updateBy"    column="UPDATE_BY"    />
         <result property="updatorId"    column="UPDATOR_ID"    />
         <result property="updateTime"    column="UPDATE_TIME"    />
-        <result property="REMARK"    column="REMARK"    />
-        <result property="PORT"    column="PORT"    />
-        <result property="FILE_NAME"    column="FILE_NAME"    />
+        <result property="remark"    column="REMARK"    />
+        <result property="port"    column="PORT"    />
+        <result property="fileName"    column="FILE_NAME"    />
         <result property="runnableFileAddress"    column="RUNNABLE_FILE_ADDRESS"    />
     </resultMap>
 
@@ -87,17 +87,17 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
     <select id="selectModelReconstitutionByID" parameterType="Long" resultMap="ModelReconstitutionResult">
         <include refid="selectModelReconstitutionVo"/>
-        where ID = #{ID}
+        where ID = #{id}
     </select>
 
     <insert id="insertModelReconstitution" parameterType="ModelReconstitutionDO">
         insert into MODEL_RECONSTITUTION
         <trim prefix="(" suffix=")" suffixOverrides=",">
-            <if test="ID != null">ID,</if>
+            <if test="id != null">ID,</if>
             <if test="companyId != null">COMPANY_ID,</if>
-            <if test="NAME != null">NAME,</if>
+            <if test="name != null">NAME,</if>
             <if test="classifyId != null">CLASSIFY_ID,</if>
-            <if test="BUILTIN != null">BUILTIN,</if>
+            <if test="builtin != null">BUILTIN,</if>
             <if test="accessMode != null">ACCESS_MODE,</if>
             <if test="requestMethod != null">REQUEST_METHOD,</if>
             <if test="interfaceorfileAddress != null">INTERFACEORFILE_ADDRESS,</if>
@@ -111,17 +111,17 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="updateBy != null">UPDATE_BY,</if>
             <if test="updatorId != null">UPDATOR_ID,</if>
             <if test="updateTime != null">UPDATE_TIME,</if>
-            <if test="REMARK != null">REMARK,</if>
-            <if test="PORT != null">PORT,</if>
-            <if test="FILE_NAME != null">FILE_NAME,</if>
+            <if test="remark != null">REMARK,</if>
+            <if test="port != null">PORT,</if>
+            <if test="fileName != null">FILE_NAME,</if>
             <if test="runnableFileAddress != null">RUNNABLE_FILE_ADDRESS,</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
-            <if test="ID != null">#{ID},</if>
+            <if test="id != null">#{id},</if>
             <if test="companyId != null">#{companyId},</if>
-            <if test="NAME != null">#{NAME},</if>
+            <if test="name != null">#{name},</if>
             <if test="classifyId != null">#{classifyId},</if>
-            <if test="BUILTIN != null">#{BUILTIN},</if>
+            <if test="builtin != null">#{builtin},</if>
             <if test="accessMode != null">#{accessMode},</if>
             <if test="requestMethod != null">#{requestMethod},</if>
             <if test="interfaceorfileAddress != null">#{interfaceorfileAddress},</if>
@@ -135,9 +135,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="updateBy != null">#{updateBy},</if>
             <if test="updatorId != null">#{updatorId},</if>
             <if test="updateTime != null">#{updateTime},</if>
-            <if test="REMARK != null">#{REMARK},</if>
-            <if test="PORT != null">#{PORT},</if>
-            <if test="FILE_NAME != null">#{FILE_NAME},</if>
+            <if test="remark != null">#{remark},</if>
+            <if test="port != null">#{port},</if>
+            <if test="fileName != null">#{fileName},</if>
             <if test="runnableFileAddress != null">#{runnableFileAddress},</if>
          </trim>
     </insert>
@@ -146,9 +146,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         update MODEL_RECONSTITUTION
         <trim prefix="SET" suffixOverrides=",">
             <if test="companyId != null">COMPANY_ID = #{companyId},</if>
-            <if test="NAME != null">NAME = #{NAME},</if>
+            <if test="name != null">NAME = #{name},</if>
             <if test="classifyId != null">CLASSIFY_ID = #{classifyId},</if>
-            <if test="BUILTIN != null">BUILTIN = #{BUILTIN},</if>
+            <if test="builtin != null">BUILTIN = #{builtin},</if>
             <if test="accessMode != null">ACCESS_MODE = #{accessMode},</if>
             <if test="requestMethod != null">REQUEST_METHOD = #{requestMethod},</if>
             <if test="interfaceorfileAddress != null">INTERFACEORFILE_ADDRESS = #{interfaceorfileAddress},</if>
@@ -162,16 +162,17 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="updateBy != null">UPDATE_BY = #{updateBy},</if>
             <if test="updatorId != null">UPDATOR_ID = #{updatorId},</if>
             <if test="updateTime != null">UPDATE_TIME = #{updateTime},</if>
-            <if test="REMARK != null">REMARK = #{REMARK},</if>
-            <if test="PORT != null">PORT = #{PORT},</if>
-            <if test="FILE_NAME != null">FILE_NAME = #{FILE_NAME},</if>
+            <if test="remark != null">REMARK = #{remark},</if>
+            <if test="port != null">PORT = #{port},</if>
+            <if test="fileName != null">FILE_NAME = #{fileName},</if>
             <if test="runnableFileAddress != null">RUNNABLE_FILE_ADDRESS = #{runnableFileAddress},</if>
+            <if test="params.clearVersionId != null">VERSION_ID = null</if>
         </trim>
-        where ID = #{ID}
+        where ID = #{id}
     </update>
 
     <delete id="deleteModelReconstitutionByID" parameterType="Long">
-        delete from MODEL_RECONSTITUTION where ID = #{ID}
+        delete from MODEL_RECONSTITUTION where ID = #{id}
     </delete>
 
     <delete id="deleteModelReconstitutionByIDs" parameterType="String">

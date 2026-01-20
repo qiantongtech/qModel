@@ -73,7 +73,7 @@ public class ModelVersionSaveReqVO extends BaseEntity {
     @Schema(description = "接口地址", example = "")
     private String interfaceAddress;
 
-    @Schema(description = "版本状态", example = "")
+    @Schema(description = "版本状态0-停用、1-启用", example = "")
     private Integer status;
 
     @Schema(description = "描述", example = "")

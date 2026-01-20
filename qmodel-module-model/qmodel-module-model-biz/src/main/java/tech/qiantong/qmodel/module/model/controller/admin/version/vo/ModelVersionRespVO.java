@@ -135,4 +135,19 @@ public class ModelVersionRespVO implements Serializable {
     @Schema(description = "可执行文件地址", example = "")
     private String runnableFileAddress;
 
+    @Excel(name = "切换后版本号")
+    private String afterVersion;
+
+    @Excel(name = "切换后版本id")
+    private Long afterVersionId;
+
+    @Excel(name = "切换前版本id")
+    private Long beforeVersionId;
+
+    @Excel(name = "切换后版本号")
+    private String beforeVersion;
+
+    @Excel(name = "停用版本id")
+    private Long clearVersionId;
+
 }

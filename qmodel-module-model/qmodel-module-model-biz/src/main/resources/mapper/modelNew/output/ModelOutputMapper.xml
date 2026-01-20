@@ -37,15 +37,15 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 <mapper namespace="tech.qiantong.qmodel.module.model.dal.mapper.output.ModelOutputMapper">
 
     <resultMap type="ModelOutputDO" id="ModelOutputResult">
-        <result property="ID"    column="ID"    />
+        <result property="id"    column="ID"    />
         <result property="companyId"    column="COMPANY_ID"    />
-        <result property="NAME"    column="NAME"    />
+        <result property="name"    column="NAME"    />
         <result property="engName"    column="ENG_NAME"    />
-        <result property="TYPE"    column="TYPE"    />
+        <result property="type"    column="TYPE"    />
         <result property="modelId"    column="MODEL_ID"    />
         <result property="modelName"    column="MODEL_NAME"    />
         <result property="modelVersion"    column="MODEL_VERSION"    />
-        <result property="DESCRIPTION"    column="DESCRIPTION"    />
+        <result property="description"    column="DESCRIPTION"    />
         <result property="singleContent"    column="SINGLE_CONTENT"    />
         <result property="multipleContent"    column="MULTIPLE_CONTENT"    />
         <result property="validFlag"    column="VALID_FLAG"    />
@@ -56,7 +56,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="updateBy"    column="UPDATE_BY"    />
         <result property="updatorId"    column="UPDATOR_ID"    />
         <result property="updateTime"    column="UPDATE_TIME"    />
-        <result property="REMARK"    column="REMARK"    />
+        <result property="remark"    column="REMARK"    />
     </resultMap>
 
     <sql id="selectModelOutputVo">
@@ -67,13 +67,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <include refid="selectModelOutputVo"/>
         <where>
             <if test="companyId != null "> and COMPANY_ID = #{companyId}</if>
-            <if test="NAME != null  and NAME != ''"> and NAME like concat('%', #{NAME}, '%')</if>
+            <if test="name != null  and name != ''"> and NAME like concat('%', #{name}, '%')</if>
             <if test="engName != null  and engName != ''"> and ENG_NAME like concat('%', #{engName}, '%')</if>
-            <if test="TYPE != null "> and TYPE = #{TYPE}</if>
+            <if test="type != null "> and TYPE = #{type}</if>
             <if test="modelId != null "> and MODEL_ID = #{modelId}</if>
             <if test="modelName != null  and modelName != ''"> and MODEL_NAME like concat('%', #{modelName}, '%')</if>
             <if test="modelVersion != null  and modelVersion != ''"> and MODEL_VERSION = #{modelVersion}</if>
-            <if test="DESCRIPTION != null  and DESCRIPTION != ''"> and DESCRIPTION = #{DESCRIPTION}</if>
+            <if test="description != null  and description != ''"> and DESCRIPTION = #{description}</if>
             <if test="singleContent != null  and singleContent != ''"> and SINGLE_CONTENT = #{singleContent}</if>
             <if test="multipleContent != null  and multipleContent != ''"> and MULTIPLE_CONTENT = #{multipleContent}</if>
             <if test="createTime != null "> and CREATE_TIME = #{createTime}</if>
@@ -82,7 +82,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
     <select id="selectModelOutputByID" parameterType="Long" resultMap="ModelOutputResult">
         <include refid="selectModelOutputVo"/>
-        where ID = #{ID}
+        where ID = #{id}
     </select>
 
     <insert id="insertModelOutput" parameterType="ModelOutputDO">
