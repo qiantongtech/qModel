@@ -68,6 +68,7 @@ import tech.qiantong.qmodel.module.model.service.classify.IModelClassifyService;
 import tech.qiantong.qmodel.module.model.service.history.IModelHistoryService;
 import tech.qiantong.qmodel.module.model.service.modelReconstitution.IModelReconstitutionService;
 import tech.qiantong.qmodel.module.model.service.version.IModelVersionService;
+import tech.qiantong.qmodel.module.model.dal.dataobject.modelReconstitution.FileItemDO;
 import tech.qiantong.qmodel.module.modelReconstitution.domain.ModelReconstitution;
 
 import javax.annotation.Resource;
@@ -185,63 +186,8 @@ public class ModelReconstitutionController extends BaseController {
     }
 
     @PostMapping("/getFileList")
-    public AjaxResult getFileList(@RequestBody String reqJsonStr) {
-        JSONArray fileListArray = new JSONArray();
-        // 下载文件
-        String localPath = AniviaConfig.getProfile();
-        String downloadPath = localPath + StringUtils.substringAfter(
-                JSONObject.parseObject(reqJsonStr).getString("fileUrl"), Constants.RESOURCE_PREFIX
-        );
-        // 解压文件
-        File unzip = ZipUtil.unzip(downloadPath);
-
-        logger.info(String.valueOf(unzip.exists()));
-        logger.info(unzip.getAbsolutePath());
-        // 读取所有文件
-        List<File> fileList = FileUtil.loopFiles(unzip);
-        fileList.forEach(file -> {
-            // 根据压缩包绝对路径，获取解压后的文件的相对路径
-            String absolutePath = unzip.getAbsolutePath();
-            String fileAbsolutePath = file.getAbsolutePath();
-            String filePath = StrUtil.removePrefix(fileAbsolutePath, absolutePath);
-
-            // 构建文件路径树，用于前台展示
-            // {fileName: 文件夹名称或者文件名称, children: 子文件名称}
-            JSONArray curFileJson = fileListArray;
-            // 根据分隔符辨别文件路径，构建父级文件夹目录
-            String[] strings = filePath.split("/");
-            for (int i = 0; i < strings.length; i++) {
-                String curPath = strings[i];
-                if (curPath.isEmpty()) {
-                    continue;
-                }
-                // 如果时最后一个，则应该是文件名，直接存储展示
-                if (i == strings.length - 1) {
-                    JSONObject temp = new JSONObject();
-                    temp.put("fileName", curPath);
-                    curFileJson.add(temp);
-                } else {
-                    // 父级文件夹。判断有没有，有则直接进入，没有则新建
-                    JSONObject temp = null;
-                    for (int i1 = 0; i1 < curFileJson.size(); i1++) {
-                        temp = curFileJson.getJSONObject(i1);
-                        if (temp.getString("fileName").equals(curPath)) {
-                            break;
-                        } else {
-                            temp = null;
-                        }
-                    }
-                    if (temp == null) {
-                        temp = new JSONObject();
-                        temp.put("fileName", curPath);
-                        temp.put("children", new JSONArray());
-                        curFileJson.add(temp);
-                    }
-                    curFileJson = temp.getJSONArray("children");
-                }
-            }
-        });
-        return AjaxResult.success(fileListArray);
+    public AjaxResult getFileList(@RequestBody String filePath) {
+        return AjaxResult.success(modelReconstitutionService.getFileList(filePath));
     }
 
 }

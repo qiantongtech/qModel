@@ -32,6 +32,7 @@
 
 package tech.qiantong.qmodel.module.model.controller.admin.modelCacl.vo;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
@@ -152,5 +153,17 @@ public class ModelCaclRespVO implements Serializable {
     @Excel(name = "文件计算的历史方案id")
     @Schema(description = "文件计算的历史方案id", example = "")
     private Long mpProgrammeId;
+
+    /**
+     * 地址
+     */
+    @TableField(exist = false)
+    private String address;
+
+    /**
+     * 请求方式  0：get，1：post，2：put，3：delete
+     */
+    @TableField(exist = false)
+    private Integer requestMethod;
 
 }

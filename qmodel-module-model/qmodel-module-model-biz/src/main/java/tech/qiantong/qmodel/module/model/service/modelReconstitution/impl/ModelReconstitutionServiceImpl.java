@@ -33,14 +33,21 @@
 package tech.qiantong.qmodel.module.model.service.modelReconstitution.impl;
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.util.ZipUtil;
+import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import tech.qiantong.qmodel.common.config.AniviaConfig;
+import tech.qiantong.qmodel.common.constant.Constants;
 import tech.qiantong.qmodel.common.core.page.PageResult;
 import tech.qiantong.qmodel.common.utils.DateUtils;
+import tech.qiantong.qmodel.common.utils.StringUtils;
 import tech.qiantong.qmodel.common.utils.object.BeanUtils;
 import tech.qiantong.qmodel.module.model.controller.admin.modelReconstitution.vo.ModelReconstitutionPageReqVO;
 import tech.qiantong.qmodel.module.model.controller.admin.modelReconstitution.vo.ModelReconstitutionRespVO;
@@ -52,9 +59,11 @@ import tech.qiantong.qmodel.module.model.dal.mapper.modelReconstitution.ModelRec
 import tech.qiantong.qmodel.module.model.service.classify.IModelClassifyService;
 import tech.qiantong.qmodel.module.model.service.modelReconstitution.IModelReconstitutionService;
 import tech.qiantong.qmodel.module.model.service.version.IModelVersionService;
+import tech.qiantong.qmodel.module.model.dal.dataobject.modelReconstitution.FileItemDO;
 import tech.qiantong.qmodel.module.modelReconstitution.domain.ModelReconstitution;
 
 import javax.annotation.Resource;
+import java.io.File;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -263,5 +272,93 @@ public class ModelReconstitutionServiceImpl  extends ServiceImpl<ModelReconstitu
                 .list().stream()
                 .filter(model -> model.getCreateTime().after(DateUtils.getLastWeekStartTime())
                         && model.getCreateTime().before(DateUtils.getLastWeekEndTime())).count();
+    }
+
+    @Override
+    public List<FileItemDO> getFileList(String reqJsonStr) {
+        List<FileItemDO> fileList = new ArrayList<>();
+        
+        try {
+            // 解析请求JSON字符串
+            String localPath = AniviaConfig.getProfile();
+            String downloadPath = localPath + StringUtils.substringAfter(
+                    JSONObject.parseObject(reqJsonStr).getString("fileUrl"), Constants.RESOURCE_PREFIX
+            );
+            
+            // 解压文件
+            File unzip = ZipUtil.unzip(downloadPath);
+
+            log.info("Unzip file exists: {}", unzip.exists());
+            log.info("Unzip file path: {}", unzip.getAbsolutePath());
+            
+            if (!unzip.exists()) {
+                log.error("解压文件不存在: {}", downloadPath);
+                return fileList; // 返回空列表
+            }
+            
+            // 读取所有文件
+            List<File> originalFileList = FileUtil.loopFiles(unzip);
+            
+            for (File file : originalFileList) {
+                // 根据压缩包绝对路径，获取解压后的文件的相对路径
+                String absolutePath = unzip.getAbsolutePath();
+                String fileAbsolutePath = file.getAbsolutePath();
+                String filePath = StrUtil.removePrefix(fileAbsolutePath, absolutePath);
+
+                // 构建文件路径树，用于前台展示
+                List<FileItemDO> curFileList = fileList;
+                
+                // 根据分隔符辨别文件路径，构建父级文件夹目录
+                String[] pathParts = filePath.split("/");
+                
+                for (int i = 0; i < pathParts.length; i++) {
+                    String curPath = pathParts[i];
+                    
+                    // 跳过空路径部分
+                    if (curPath.isEmpty()) {
+                        continue;
+                    }
+                    
+                    // 如果是最后一个，则应该是文件名，直接存储展示
+                    if (i == pathParts.length - 1) {
+                        FileItemDO fileItem = new FileItemDO(curPath);
+                        curFileList.add(fileItem);
+                    } else {
+                        // 父级文件夹。判断有没有，有则直接进入，没有则新建
+                        FileItemDO folderItem = findOrCreateFolder(curFileList, curPath);
+                        curFileList = folderItem.getChildren();
+                    }
+                }
+            }
+        } catch (Exception e) {
+            log.error("处理文件列表时发生异常", e);
+            // 返回空列表而不是抛出异常，避免影响前端体验
+        }
+        
+        return fileList;
+    }
+    
+    /**
+     * 查找或创建文件夹节点
+     * 
+     * @param fileList 当前层级的文件列表
+     * @param folderName 文件夹名称
+     * @return 对应的文件夹对象
+     */
+    private FileItemDO findOrCreateFolder(List<FileItemDO> fileList, String folderName) {
+        for (FileItemDO item : fileList) {
+            if (folderName.equals(item.getFileName())) {
+                // 检查是否有children字段，如果没有则初始化
+                if (item.getChildren() == null) {
+                    item.setChildren(new ArrayList<>());
+                }
+                return item;
+            }
+        }
+        
+        // 如果没找到，创建新的文件夹节点
+        FileItemDO newFolder = new FileItemDO(folderName, new ArrayList<>());
+        fileList.add(newFolder);
+        return newFolder;
     }
 }
