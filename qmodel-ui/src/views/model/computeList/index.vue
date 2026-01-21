@@ -761,10 +761,10 @@ const setParams = async (row) => {
 
 /** 操作-计算 */
 const handleCompute = (row) => {
-  ElMessage.warning(
-    `由于服务器资源问题，暂不支持在演示站中计算，请在本地搭建计算。`
-  );
-  return;
+  // ElMessage.warning(
+  //   `由于服务器资源问题，暂不支持在演示站中计算，请在本地搭建计算。`
+  // );
+  // return;
 
   const calcIds = row.id || ids.value;
   ElMessageBox.confirm("是否开始计算模型名称为【 " + row.name + " 】的数据项？")

@@ -551,30 +551,30 @@ const submitForm = () => {
             return true;
           }
         });
-        if (versionListFiltered.length == 0) {
-          form.modelId = modelForm.value.id;
-          form.modelName = modelForm.value.name;
-          if (form.fileAddress && form.fileAddress.length > 0) {
-            form.fileName = form.fileAddress[0].name;
-            form.fileAddress = form.fileAddress[0].url;
-          }
-          console.log(form);
-          if (form.id != null) {
-            updateVersion(form).then((response) => {
-              ElMessage.success("修改成功");
-              open.value = false;
-              getList();
-            });
-          } else {
-            addVersion(form).then((response) => {
-              ElMessage.success("新增成功");
-              open.value = false;
-              getList();
-            });
-          }
-        } else {
-          ElMessage.error("已有此版本，请重新输入或者删除之前的版本！");
+        // if (versionListFiltered.length == 0) {
+        form.modelId = modelForm.value.id;
+        form.modelName = modelForm.value.name;
+        if (form.fileAddress && form.fileAddress.length > 0) {
+          form.fileName = form.fileAddress[0].name;
+          form.fileAddress = form.fileAddress[0].url;
         }
+        console.log(form);
+        if (form.id != null) {
+          updateVersion(form).then((response) => {
+            ElMessage.success("修改成功");
+            open.value = false;
+            getList();
+          });
+        } else {
+          addVersion(form).then((response) => {
+            ElMessage.success("新增成功");
+            open.value = false;
+            getList();
+          });
+        }
+        // } else {
+        //   ElMessage.error("已有此版本，请重新输入或者删除之前的版本！");
+        // }
       }
     });
   }
