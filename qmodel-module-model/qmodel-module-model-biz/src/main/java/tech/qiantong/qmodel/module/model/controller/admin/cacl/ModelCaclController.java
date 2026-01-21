@@ -231,21 +231,21 @@ public class ModelCaclController extends BaseController {
             }
             modelCacl.setStartTime(DateUtils.getNowDate());
             modelCacl.setEndTime(DateUtils.getNowDate());
-            modelCacl.setStatus(2L); // 假设计算状态为2表示完成
+            modelCacl.setStatus(1); // 假设计算状态为2表示完成
             modelCacl.setOutputContent(result);
             modelCaclService.updateModelCacl(BeanUtils.toBean(modelCacl, ModelCaclSaveReqVO.class));
         } else {
             if (model.getId().equals(12L)) {
                 modelCacl.setStartTime(DateUtils.getNowDate());
                 modelCacl.setEndTime(DateUtils.getNowDate());
-                modelCacl.setStatus(2L);
+                modelCacl.setStatus(1);
                 modelCacl.setOutputContent(modelVirtualCalcService.getOneResult().toJSONString());
                 modelCaclService.updateModelCacl(BeanUtils.toBean(modelCacl, ModelCaclSaveReqVO.class));
             }
             if (model.getId().equals(13L)) {
                 modelCacl.setStartTime(DateUtils.getNowDate());
                 modelCacl.setEndTime(DateUtils.getNowDate());
-                modelCacl.setStatus(2L);
+                modelCacl.setStatus(1);
                 modelCacl.setOutputContent(modelVirtualCalcService.getTwoResult().toJSONString());
                 modelCaclService.updateModelCacl(BeanUtils.toBean(modelCacl, ModelCaclSaveReqVO.class));
             }
@@ -257,7 +257,7 @@ public class ModelCaclController extends BaseController {
                 modelCacl.setOutputContent((StrUtil.removeAll(join, "\\n").replace("\\\"", "'").replaceAll(" ", "")));
                 modelCacl.setStartTime(DateUtils.getNowDate());
                 modelCacl.setEndTime(DateUtils.getNowDate());
-                modelCacl.setStatus(2L);
+                modelCacl.setStatus(1);
                 modelCaclService.updateModelCacl(BeanUtils.toBean(modelCacl, ModelCaclSaveReqVO.class));
             }
         }
@@ -425,7 +425,7 @@ public class ModelCaclController extends BaseController {
             String outputJson = modelCacl.getOutputContent();
             String outputNames = "";
             String inputNames = "null";
-            resultMap.put("modelOutputJson", JSONUtil.parseObj(outputJson));
+            resultMap.put("modelOutputJson", outputJson);
             resultMap.put("modelOutputNames", outputNames);
             resultMap.put("modelInputNames", inputNames);
         } else {
