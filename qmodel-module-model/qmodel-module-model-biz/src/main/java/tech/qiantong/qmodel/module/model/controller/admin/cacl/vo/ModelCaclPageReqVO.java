@@ -75,7 +75,7 @@ public class ModelCaclPageReqVO extends PageParam {
     private Date endTime;
 
     @Schema(description = "计算状态", example = "")
-    private Long status;
+    private Integer status;
 
     @Schema(description = "模型输入内容", example = "")
     private String inputContent;

@@ -57,11 +57,9 @@ public class ModelOutputSaveReqVO extends BaseEntity {
     private Long companyId;
 
     @Schema(description = "参数名称", example = "")
-    @NotBlank(message = "参数名称不能为空")
     private String name;
 
     @Schema(description = "英文名称", example = "")
-    @NotBlank(message = "英文名称不能为空")
     private String engName;
 
     @Schema(description = "参数类型 0:单值，1：多列数值", example = "")
@@ -89,7 +87,7 @@ public class ModelOutputSaveReqVO extends BaseEntity {
     private String multipleContent;
 
     @Schema(description = "备注", example = "")
-    private String REMARK;
+    private String remark;
 
 
 }

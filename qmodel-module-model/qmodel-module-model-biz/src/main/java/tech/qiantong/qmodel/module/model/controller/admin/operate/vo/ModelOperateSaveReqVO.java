@@ -61,7 +61,7 @@ public class ModelOperateSaveReqVO extends BaseEntity {
     private String moduleName;
 
     @Schema(description = "操作类型", example = "")
-    private Long type;
+    private Integer type;
 
     @Schema(description = "操作内容", example = "")
     @NotBlank(message = "操作内容不能为空")

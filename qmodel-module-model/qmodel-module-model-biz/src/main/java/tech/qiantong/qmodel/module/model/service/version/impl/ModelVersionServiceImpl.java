@@ -374,7 +374,7 @@ public class ModelVersionServiceImpl  extends ServiceImpl<ModelVersionMapper,Mod
         operate.setCompanyId(modelReconstitution.getCompanyId());
         operate.setModuleName(modelReconstitution.getName());
         operate.setContent(operationType + "【" + modelVersion.getVersion() + "】版本");
-        operate.setType(2L);
+        operate.setType(2);
         JSONObject object = new JSONObject();
         object.put("模型名称", modelReconstitution.getName());
         object.put("启用版本", modelVersion.getVersion());

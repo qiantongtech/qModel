@@ -793,11 +793,8 @@ const submitForm = () => {
       if (valid) {
         const formData = { ...form.value }; // 创建副本以避免直接修改响应式数据
         if (formData.id != null) {
-          if (formData.type == 1) {
-            formData.multipleContent = JSON.stringify(formData.multipleContent);
-          } else if (formData.type == 0) {
-            formData.singleContent = JSON.stringify(formData.singleContent);
-          }
+          formData.multipleContent = JSON.stringify(formData.multipleContent);
+          formData.singleContent = JSON.stringify(formData.singleContent);
           updateOutput(formData).then((response) => {
             ElMessage.success("修改成功");
             open.value = false;

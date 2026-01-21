@@ -106,7 +106,7 @@ public class ModelCaclDO extends BaseEntity {
     /**
      * 计算状态
      */
-    private Long status;
+    private Integer status;
 
     /**
      * 模型输入内容

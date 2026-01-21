@@ -131,7 +131,7 @@ public class ModelServiceImpl extends ServiceImpl<ModelMapper, ModelDO> implemen
             operate.setCompanyId(createReqVO.getCompanyId());
             operate.setModuleName(createReqVO.getName());
             operate.setContent("新增了"+createReqVO.getName());
-            operate.setType(0L);
+            operate.setType(0);
             JSONObject object = new JSONObject();
             object.set("模型名称", createReqVO.getName());
             object.set("模型格式", createReqVO.getFormat() == 0 ? "文件格式" : "接口格式");
@@ -156,7 +156,7 @@ public class ModelServiceImpl extends ServiceImpl<ModelMapper, ModelDO> implemen
             operate.setCompanyId(updateReqVO.getCompanyId());
             operate.setModuleName(updateReqVO.getName());
             operate.setContent("新增了"+updateReqVO.getName());
-            operate.setType(1L);
+            operate.setType(1);
             {
                 JSONObject object = new JSONObject();
                 object.set("模型名称", updateReqVO.getName());
