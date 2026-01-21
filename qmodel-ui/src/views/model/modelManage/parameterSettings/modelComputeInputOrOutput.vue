@@ -55,10 +55,10 @@
       </el-descriptions-item>
       <el-descriptions-item>
         <template #label> 请求方式 </template>
-        <!--        <dict-tag-->
-        <!--          :options="dict.type.model_access_mode"-->
-        <!--          :value="cacl.requestMethod"-->
-        <!--        />-->
+        <dict-tag
+          :options="dict.type.model_access_mode"
+          :value="cacl.requestMethod"
+        />
       </el-descriptions-item>
       <el-descriptions-item>
         <template #label> 创建人 </template>
