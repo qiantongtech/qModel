@@ -154,7 +154,7 @@ public class ModelCaclController extends BaseController {
     @GetMapping(value = "/{id}")
     public CommonResult<ModelCaclRespVO> getInfo(@PathVariable("id") Long id) {
         ModelCaclDO modelCaclDO = modelCaclService.getModelCaclById(id);
-        if (modelCaclDO.getAddressType() == 1){
+        if (AccessModeEnum.API_INTERFACE.getValue().equals(modelCaclDO.getAddressType())){
             ModelInterfaceAddressDO interfaceAddress = modelInterfaceAddressService.getModelInterfaceAddressById(modelCaclDO.getAddressId());
             modelCaclDO.setAddress(interfaceAddress.getInterfaceAddress());
             modelCaclDO.setRequestMethod(interfaceAddress.getRequestMethod());

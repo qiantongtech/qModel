@@ -32,11 +32,13 @@
 
 package tech.qiantong.qmodel.module.model.service.modelReconstitution;
 
+import com.alibaba.fastjson2.JSONArray;
 import com.baomidou.mybatisplus.extension.service.IService;
 import tech.qiantong.qmodel.common.core.page.PageResult;
 import tech.qiantong.qmodel.module.model.controller.admin.modelReconstitution.vo.ModelReconstitutionPageReqVO;
 import tech.qiantong.qmodel.module.model.controller.admin.modelReconstitution.vo.ModelReconstitutionRespVO;
 import tech.qiantong.qmodel.module.model.controller.admin.modelReconstitution.vo.ModelReconstitutionSaveReqVO;
+import tech.qiantong.qmodel.module.model.dal.dataobject.modelReconstitution.FileItemDO;
 import tech.qiantong.qmodel.module.model.dal.dataobject.modelReconstitution.ModelReconstitutionDO;
 import tech.qiantong.qmodel.module.modelReconstitution.domain.ModelReconstitution;
 
@@ -177,5 +179,13 @@ public interface IModelReconstitutionService extends IService<ModelReconstitutio
      * @return 上周新增的模型数量
      */
     public int countLastWeek();
+
+    /**
+     * 获取压缩包内文件列表
+     *
+     * @param reqJsonStr 请求JSON字符串，包含fileUrl字段
+     * @return 文件列表的JSONArray
+     */
+    List<FileItemDO> getFileList(String reqJsonStr);
 
 }

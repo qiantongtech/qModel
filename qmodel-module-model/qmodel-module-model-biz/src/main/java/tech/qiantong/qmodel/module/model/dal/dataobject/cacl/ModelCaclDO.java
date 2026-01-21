@@ -137,7 +137,7 @@ public class ModelCaclDO extends BaseEntity {
     /**
      * 判断是文件的id还是地址的id，0:文件，1：接口
      */
-    private Long addressType;
+    private Integer addressType;
 
     /**
      * 文件计算的历史方案id
