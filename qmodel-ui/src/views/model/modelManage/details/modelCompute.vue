@@ -662,6 +662,7 @@ const handleCompute = (row) => {
 /** 操作-查看结果 */
 const handleView = (row) => {
   const id = row.id;
+  const modelId = row.modelId;
   getCacl(id).then((res) => {
     cacl.value = res.data;
     if (cacl.value.status !== 2) {
@@ -672,14 +673,11 @@ const handleView = (row) => {
     // titleParams.value = "查看结果";
     // deleteFlag.value = false;
     proxy.$tab.openPage(
-      "查看计算结果",
-      "/modelReconstitution/waterConserve/modelComputeInputOrOutput",
-      {
-        modelId: props.model.id,
-        computeId: id,
-        isInputOrOut: 1,
-        deleteFlag: false,
-      }
+      "/model/modelComputeInputOrOutput?modelId=" +
+        modelId +
+        "&computeId=" +
+        id +
+        "&isInputOrOut=1&deleteFlag:1"
     );
     /*getOutputList(id);
      */

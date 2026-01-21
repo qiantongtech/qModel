@@ -55,10 +55,7 @@
       </el-descriptions-item>
       <el-descriptions-item>
         <template #label> 请求方式 </template>
-        <dict-tag
-          :options="dict.type.model_access_mode"
-          :value="cacl.requestMethod"
-        />
+        <dict-tag :options="model_access_mode" :value="cacl.requestMethod" />
       </el-descriptions-item>
       <el-descriptions-item>
         <template #label> 创建人 </template>
@@ -147,7 +144,9 @@ import {
   getCacl,
   updateCacl,
 } from "@/api/modelReconstitution/cacl";
+import { useDict } from "@/utils/dict.js";
 
+const model_access_mode = useDict("model_access_mode").model_access_mode;
 // 获取当前实例以访问路由和其他属性
 const { proxy } = getCurrentInstance();
 const route = useRoute();

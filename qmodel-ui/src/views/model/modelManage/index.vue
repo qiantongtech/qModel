@@ -1097,14 +1097,14 @@ const submitForm = () => {
     formRef.value.validate((valid) => {
       if (valid) {
         let formData = JSON.parse(JSON.stringify(form));
-        if (
-          formData.interfaceorfileAddress &&
-          formData.interfaceorfileAddress.length > 0
-        ) {
-          formData.fileName = formData.interfaceorfileAddress[0].name;
-          formData.interfaceorfileAddress =
-            formData.interfaceorfileAddress[0].url;
-        }
+        // if (
+        //   formData.interfaceorfileAddress &&
+        //   formData.interfaceorfileAddress.length > 0
+        // ) {
+        //   formData.fileName = formData.interfaceorfileAddress[0].name;
+        //   formData.interfaceorfileAddress =
+        //     formData.interfaceorfileAddress[0].url;
+        // }
         if (formData.id != null) {
           updateModel(formData).then(() => {
             ElMessage.success("修改成功");
