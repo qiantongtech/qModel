@@ -535,7 +535,7 @@ const rowStyle = ({ row, rowIndex }) => {
 const getInputList = (param) => {
   return new Promise((resolve) => {
     findModelInputById(param).then((res) => {
-      inputList.value = res.data.modelInputList;
+      inputList.value = res.data.modelInputJson;
       for (let i = 0; i < inputList.value.length; i++) {
         inputList.value[i].singleContent = JSON.parse(
           inputList.value[i].singleContent
@@ -742,11 +742,11 @@ const setParams = async (row) => {
 
   const id = row.id;
   const modelId = row.modelId;
-  const res = await getInputList(id);
-  if (res.length == 0) {
-    ElMessage.warning(`模型名称【${row.modelName}】未设置输入参数`);
-    return;
-  }
+  // const res = await getInputList(id);
+  // if (res.length == 0) {
+  //   ElMessage.warning(`模型名称【${row.modelName}】未设置输入参数`);
+  //   return;
+  // }
   console.log(row, "zi");
 
   // Note: The tab functionality may need to be implemented differently in Vue 3

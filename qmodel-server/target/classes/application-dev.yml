@@ -1,33 +1,3 @@
-# Copyright © 2026 Qiantong Technology Co., Ltd.
-# qModel Model Platform(Open Source Edition)
-#  *
-# License:
-# Released under the Apache License, Version 2.0.
-# You may use, modify, and distribute this software for commercial purposes
-# under the terms of the License.
-#  *
-# Special Notice:
-# All derivative versions are strictly prohibited from modifying or removing
-# the default system logo and copyright information.
-# For brand customization, please apply for brand customization authorization via official channels.
-#  *
-# More information: https://qmodel.qiantong.tech/business.html
-#  *
-# ============================================================================
-#  *
-# 版权所有 © 2026 江苏千桐科技有限公司
-# qModel 模型平台（开源版）
-#  *
-# 许可协议：
-# 本项目基于 Apache License 2.0 开源协议发布，
-# 允许在遵守协议的前提下进行商用、修改和分发。
-#  *
-# 特别说明：
-# 所有衍生版本不得修改或移除系统默认的 LOGO 和版权信息；
-# 如需定制品牌，请通过官方渠道申请品牌定制授权。
-#  *
-# 更多信息请访问：https://qmodel.qiantong.tech/business.html
-
 # 主数据源选择
 datasource:
   type: dm8
@@ -119,22 +89,22 @@ mysql:
   # JDBC驱动类名
   driver-class-name: com.mysql.cj.jdbc.Driver
   # 主库JDBC连接URL
-  url: jdbc:mysql://127.0.0.1:3306/anivia_plus_dev?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8
+  url: jdbc:mysql://8.136.153.124:3306/anivia_plus_dev?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8
   # 主库用户名
-  username:
+  username: anivia_plus_dev
   # 主库密码
-  password:
+  password: anivia_plus_dev0213.
 
 # 达梦配置文件
 dm8:
   # JDBC驱动类名
   driver-class-name: dm.jdbc.driver.DmDriver
   # 主库JDBC连接URL
-  url: jdbc:dm://127.0.0.1:40013/QMODEL_DEV?STU&zeroDateTimeBehavior=convertToNull&useUnicode=true&characterEncoding=utf-8&schema=QMODEL_DEV&serverTimezone=Asia/Shanghai
+  url: jdbc:dm://110.42.38.62:40013/QMODEL_DEV?STU&zeroDateTimeBehavior=convertToNull&useUnicode=true&characterEncoding=utf-8&schema=QMODEL_DEV&serverTimezone=Asia/Shanghai
   # 主库用户名
-  username:
+  username: QMODEL_DEV
   # 主库密码
-  password:
+  password: 0Uj*_smk
 
 # 人大金仓配置文件
 kingbase8:
@@ -143,9 +113,9 @@ kingbase8:
   # 主库JDBC连接URL
   url: jdbc:kingbase8://127.0.0.1:54321/anivia_dev?characterEncoding=utf8&connectTimeout=1000&socketTimeout=3000&autoReconnect=true&useUnicode=true&useSSL=false&serverTimezone=UTC&currentSchema=anivia
   # 主库用户名
-  username:
+  username: kingbase
   # 主库密码
-  password:
+  password: 123456
 
 # Oracle12c 配置文件
 oracle:
@@ -154,9 +124,9 @@ oracle:
   # 主库JDBC连接URL
   url: jdbc:oracle:thin:@127.0.0.1:1521:xe?oracle.jdbc.timezoneAsRegion=true&oracle.jdbc.defaultTimezone=Asia/Shanghai&currentSchema=ANIVIA
   # 主库用户名
-  username:
+  username: ANIVIA
   # 主库密码
-  password:
+  password: ANIVIA
 
 ## 工作流模块的访问地址
 flow:

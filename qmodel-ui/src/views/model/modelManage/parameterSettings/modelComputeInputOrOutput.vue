@@ -179,22 +179,22 @@ const names = ref([
 ]);
 const namesTwo = ref([]);
 const jsonStr = ref({
-  success: true,
-  errorCode: "2000",
-  message: "操作成功",
-  data: [
-    {
-      buildingId: "SGJZ00000849",
-      buildingName: "西泵站 5#机组",
-      buildingType: "100008",
-      buildingTypeName: "泵站",
-      useable: true,
-      realFlow: 0,
-      pumpSate: 0,
-      maxTheoryFlow: 8,
-      minTheoryFlow: 0,
-    },
-  ],
+  // success: true,
+  // errorCode: "2000",
+  // message: "操作成功",
+  // data: [
+  //   {
+  //     buildingId: "SGJZ00000849",
+  //     buildingName: "西泵站 5#机组",
+  //     buildingType: "100008",
+  //     buildingTypeName: "泵站",
+  //     useable: true,
+  //     realFlow: 0,
+  //     pumpSate: 0,
+  //     maxTheoryFlow: 8,
+  //     minTheoryFlow: 0,
+  //   },
+  // ],
 });
 const form = ref({});
 

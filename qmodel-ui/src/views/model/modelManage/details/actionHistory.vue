@@ -69,7 +69,7 @@
       </el-table-column>
       <el-table-column label="操作时间" align="center" prop="updateTime">
         <template #default="scope">
-          <span>{{ parseTime(scope.row.updateTime, "{y}-{m}-{d}") }}</span>
+          <span>{{ scope.row.updateTime }}</span>
         </template>
       </el-table-column>
       <el-table-column label="启用版本号" align="center" prop="modelVersion">
