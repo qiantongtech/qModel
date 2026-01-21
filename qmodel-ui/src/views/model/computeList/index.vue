@@ -783,36 +783,21 @@ const handleCompute = (row) => {
 
 /** 操作-查看结果 */
 const handleView = async (row) => {
-  ElMessage.warning(
-    `由于服务器资源问题，暂不支持在演示站中计算，请在本地搭建计算。`
-  );
-  return;
+  // ElMessage.warning(
+  //   `由于服务器资源问题，暂不支持在演示站中计算，请在本地搭建计算。`
+  // );
+  // return;
+  console.log(row, "12312");
 
   const id = row.id;
-  if (row.status == 0) {
-    ElMessage.warning(`模型数据处于待开始状态，请点击计算后等待计算完成`);
-    return;
-  }
-  if (row.status == 1) {
-    ElMessage.warning(`模型数据处于计算中状态，请耐心等待计算完成`);
-    return;
-  }
-  const res = await getOutputList(id);
-  if (res.length == 0) {
-    ElMessage.warning(`模型名称【${row.modelName}】未设置输出参数`);
-    return;
-  } else {
-    // Note: The tab functionality may need to be implemented differently in Vue 3
-    // await proxy.$tab.openPage(
-    //     '查看计算结果',
-    //     '/model/waterConserve/fileInputOrOutput',
-    //     {
-    //         modelId: props.model.id,
-    //         computeId: id,
-    //         isInputOrOut: 1
-    //     }
-    // );
-  }
+  const modelId = row.modelId;
+  await proxy.$tab.openPage(
+    "/model/modelComputeInputOrOutput?modelId=" +
+      modelId +
+      "&computeId=" +
+      id +
+      "&isInputOrOut=1&deleteFlag:1"
+  );
 };
 
 /** 修改按钮操作 */
