@@ -77,7 +77,7 @@
           </el-descriptions-item>
           <el-descriptions-item label="接入方式" span="1">
             <span v-if="viewInfo.accessMode == 1">API接口</span>
-            <span v-else>单机程序（exe）</span>
+            <span v-else>python脚本</span>
           </el-descriptions-item>
 
           <!--          <el-descriptions-item label="请求方式" span="1" v-if="viewInfo.accessMode == 1">
@@ -227,7 +227,7 @@
           <el-col :span="20">
             <el-form-item label="接入方式：" prop="accessMode">
               <el-radio v-model="form.accessMode" :label="Number(0)"
-                >单机程序(exe)</el-radio
+                >python脚本</el-radio
               >
               <el-radio v-model="form.accessMode" :label="Number(1)"
                 >API接口</el-radio

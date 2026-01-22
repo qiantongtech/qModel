@@ -93,7 +93,7 @@
                 clearable
                 class="el-form-input-width"
               >
-                <el-option key="0" label="单机程序（exe）" value="0" />
+                <el-option key="0" label="python脚本" value="0" />
                 <el-option key="1" label="api接口" value="1" />
               </el-select>
             </el-form-item>
@@ -227,7 +227,7 @@
                     <div class="con-view">
                       <div class="con-view-title">接入方式</div>
                       <span v-if="item.accessMode == 1">API接口</span>
-                      <span v-else>单机程序（exe）</span>
+                      <span v-else>python脚本</span>
                     </div>
 
                     <div class="con-view">
@@ -335,7 +335,7 @@
         </el-form-item>
         <el-form-item label="接入方式：" prop="accessMode">
           <el-radio :disabled="isEdit" v-model="form.accessMode" :value="0"
-            >单机程序(exe)
+            >python脚本
           </el-radio>
           <el-radio :disabled="isEdit" v-model="form.accessMode" :value="1"
             >API接口</el-radio
@@ -508,7 +508,7 @@
                     <el-row>
                         <el-col :span="20">
                             <el-form-item label="接入方式：" prop="accessMode">
-                                <el-radio :disabled="isEdit" v-model="form.accessMode" :value="0">单机程序(exe)
+                                <el-radio :disabled="isEdit" v-model="form.accessMode" :value="0">python脚本
                                 </el-radio>
                                 <el-radio :disabled="isEdit" v-model="form.accessMode" :value="1">API接口</el-radio>
                                 <el-tooltip placement="top" v-if="mess">
