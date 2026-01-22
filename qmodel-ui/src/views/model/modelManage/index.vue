@@ -1460,6 +1460,7 @@ const handleExport = () => {
 }
 :deep(.el-card) {
   height: 178px;
+  cursor: pointer;
 }
 :deep(.el-empty) {
   height: calc(100vh - 355px);
