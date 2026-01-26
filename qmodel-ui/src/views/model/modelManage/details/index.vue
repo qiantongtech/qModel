@@ -555,7 +555,7 @@ const isWhetherPublish = () => {
       modelId: viewInfo.value.id,
       versionId: viewInfo.value.versionId,
     }).then((response) => {
-      interfaceAddressList.value = response.rows;
+      interfaceAddressList.value = response.data.rows;
       if (interfaceAddressList.value.length > 0) {
         viewInfo.value.whetherPublish = whetherPublish;
         updateModel(viewInfo.value).then((response) => {
