@@ -1,0 +1,12 @@
+include:
+  - path: ./docker-compose-base.yml
+  - path: ./docker-compose-qmodel.yml
+
+version: "1.0.1"
+
+networks:
+  qmodel_net:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.52.0.0/16
