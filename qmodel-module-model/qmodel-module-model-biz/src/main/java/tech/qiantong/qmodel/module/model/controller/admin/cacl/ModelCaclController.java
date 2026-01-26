@@ -231,7 +231,7 @@ public class ModelCaclController extends BaseController {
             }
             modelCacl.setStartTime(DateUtils.getNowDate());
             modelCacl.setEndTime(DateUtils.getNowDate());
-            modelCacl.setStatus(1); // 假设计算状态为2表示完成
+            modelCacl.setStatus(1);
             modelCacl.setOutputContent(result);
             modelCaclService.updateModelCacl(BeanUtils.toBean(modelCacl, ModelCaclSaveReqVO.class));
         } else {
