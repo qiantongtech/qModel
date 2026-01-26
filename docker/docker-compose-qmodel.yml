@@ -1,0 +1,28 @@
+version: "1.0.1"
+
+services:
+  # qmodel 后端服务
+  qmodel-api:
+    privileged: true
+    image: ${QMODEL_HUB}/qmodel-server-ce:${QMODEL_VERSION}
+    restart: always
+    profiles: [ "all" ]
+    env_file: .env
+    environment:
+      - TZ=Asia/Shanghai
+    ports:
+      - "18888:8080"
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - ./qmodel-server/logs:/usr/app/jar/logs
+      - ./qmodel-server/upload:/usr/app/jar/upload
+      - ./qmodel-server/application-prod.yml:/usr/app/jar/application-prod.yml
+    depends_on:
+      redis:
+        condition: service_healthy
+      dm8:
+        condition: service_healthy
+    networks:
+      - qmodel_net
+    extra_hosts:
+      - "host.docker.internal:host-gateway"

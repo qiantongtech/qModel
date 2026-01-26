@@ -665,7 +665,7 @@ const handleView = (row) => {
   const modelId = row.modelId;
   getCacl(id).then((res) => {
     cacl.value = res.data;
-    if (cacl.value.status !== 2) {
+    if (cacl.value.status !== 1) {
       ElMessage.error("模型还没有计算完成，请耐心等待.....");
       return;
     }
