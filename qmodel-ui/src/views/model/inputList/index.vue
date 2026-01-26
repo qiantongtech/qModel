@@ -404,12 +404,12 @@
                 :row-class-name="multipleIndex"
                 @selection-change="handleMultipleChange"
               >
-                <el-table-column label="参数名称" width="300">
+                <el-table-column label="参数名称">
                   <template #default="scope">
                     {{ scope.row.name }}
                   </template>
                 </el-table-column>
-                <el-table-column label="列排序" width="150">
+                <el-table-column label="列排序">
                   <template #default="scope">
                     {{ scope.row.order }}
                   </template>
