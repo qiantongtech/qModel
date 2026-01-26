@@ -43,7 +43,7 @@
         <el-form-item label="模型名称：" prop="modelName">
           <el-input
             v-model="queryParams.modelName"
-            placeholder="请输入模型名称："
+            placeholder="请输入模型名称"
             clearable
             @keyup.enter="handleQuery"
           />
