@@ -39,7 +39,7 @@
       v-show="showSearch"
       @submit.prevent
     >
-      <el-form-item label="版本号：" prop="modelVersion">
+      <el-form-item label="模型版本号：" prop="modelVersion">
         <el-select
           v-model="queryParams.version"
           placeholder="请输入版本号"
@@ -47,7 +47,7 @@
           class="el-form-input-width"
         >
           <el-option
-            v-for="item in versionData"
+            v-for="item in versionList"
             :key="item.id"
             :label="'Version ' + item.version"
             :value="item.version"

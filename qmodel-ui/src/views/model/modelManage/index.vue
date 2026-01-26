@@ -97,7 +97,7 @@
                 <el-option key="1" label="api接口" value="1" />
               </el-select>
             </el-form-item>
-            <el-form-item label="模型类别：" prop="type">
+            <!-- <el-form-item label="模型类别：" prop="type">
               <el-select
                 v-model="queryParams.type"
                 placeholder="请选择模型类别"
@@ -111,7 +111,7 @@
                   :value="dict.value"
                 ></el-option>
               </el-select>
-            </el-form-item>
+            </el-form-item> -->
 
             <el-form-item>
               <el-button
@@ -383,33 +383,52 @@
           prop="interfaceorfileAddress"
           v-if="form.accessMode == 1"
         >
-          <el-input
+          <!-- <el-input
             clearable
             :disabled="isEdit"
+            v-model="form.interfaceorfileAddress"
+            placeholder="请输入API接口"
+          /> -->
+          <el-input
+            clearable
             v-model="form.interfaceorfileAddress"
             placeholder="请输入API接口"
           />
         </el-form-item>
         <el-form-item label="端口号：" prop="port" v-if="form.accessMode == 1">
-          <el-input
+          <!-- <el-input
             clearable
             :disabled="isEdit"
+            v-model="form.port"
+            placeholder="请输入接口端口号"
+          /> -->
+          <el-input
+            clearable
             v-model="form.port"
             placeholder="请输入接口端口号"
           />
         </el-form-item>
         <el-form-item label="版本号：" prop="version" v-if="form.id == null">
-          <el-input
+          <!-- <el-input
             :disabled="isEdit"
             v-model="form.version"
             placeholder="请输入版本号"
           >
             <template #append>Version</template>
+          </el-input> -->
+          <el-input v-model="form.version" placeholder="请输入版本号">
+            <template #append>Version</template>
           </el-input>
         </el-form-item>
         <el-form-item label="版本发布说明：" prop="description">
-          <el-input
+          <!-- <el-input
             :disabled="isEdit"
+            v-model="form.description"
+            :rows="3"
+            type="textarea"
+            placeholder="请输入版本发布说明"
+          /> -->
+          <el-input
             v-model="form.description"
             :rows="3"
             type="textarea"
@@ -752,14 +771,14 @@ const rules = reactive({
     { required: true, message: "模型分类不能为空", trigger: "blur" },
   ],
   name: [{ required: true, message: "模型名称不能为空", trigger: "blur" }],
-  version: [{ required: true, message: "版本号不能为空", trigger: "blur" }],
-  description: [
-    { required: true, message: "版本发布说明不能为空", trigger: "blur" },
-  ],
-  interfaceorfileAddress: [
-    { required: true, message: "地址不能为空", trigger: "blur" },
-  ],
-  port: [{ required: true, message: "端口不能为空", trigger: "blur" }],
+  // version: [{ required: true, message: "版本号不能为空", trigger: "blur" }],
+  // description: [
+  //   { required: true, message: "版本发布说明不能为空", trigger: "blur" },
+  // ],
+  // interfaceorfileAddress: [
+  //   { required: true, message: "地址不能为空", trigger: "blur" },
+  // ],
+  // port: [{ required: true, message: "端口不能为空", trigger: "blur" }],
 });
 
 const model_type = useDict("model_type").model_type;

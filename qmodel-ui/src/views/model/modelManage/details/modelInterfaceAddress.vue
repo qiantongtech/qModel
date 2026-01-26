@@ -123,7 +123,10 @@
         width="150px"
       >
         <template #default="scope">
-          <dict-tag :options="model_access_mode" :value="scope.row.requestMethod" />
+          <dict-tag
+            :options="model_access_mode"
+            :value="scope.row.requestMethod"
+          />
         </template>
       </el-table-column>
       <el-table-column
@@ -231,9 +234,9 @@
                 v-model="form.interfaceAddress"
                 placeholder="请输入接口地址"
               >
-                <template #prepend>{{
+                <!-- <template #prepend>{{
                   model.interfaceorfileAddress + ":" + model.port
-                }}</template>
+                }}</template> -->
               </el-input>
             </el-form-item>
           </el-col>
@@ -471,18 +474,18 @@ const submitForm = () => {
   form.value.versionId = props.model.versionId;
   form.value.version = props.model.version;
   form.value.description = props.model.description;
-  if (!form.value.interfaceAddress.startsWith("/")) {
-    form.value.interfaceAddress = "/" + form.value.interfaceAddress;
-  }
+  // if (!form.value.interfaceAddress.startsWith("/")) {
+  //   form.value.interfaceAddress = "/" + form.value.interfaceAddress;
+  // }
   // if (props.model.interfaceorfileAddress.endsWith("/")) {
   //   props.model.interfaceorfileAddress =
   //     props.model.interfaceorfileAddress.replace(/\/$/, "");
   // }
-  form.value.interfaceAddress =
-    props.model.interfaceorfileAddress +
-    ":" +
-    props.model.port +
-    form.value.interfaceAddress;
+  // form.value.interfaceAddress =
+  //   props.model.interfaceorfileAddress +
+  //   ":" +
+  //   props.model.port +
+  //   form.value.interfaceAddress;
   // if (formRef.value) {
   //   formRef.value.validate((valid) => {
   //     if (valid) {
