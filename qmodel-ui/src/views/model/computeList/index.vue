@@ -40,21 +40,21 @@
         v-show="showSearch"
         class="btn-style"
       >
-        <el-form-item label="版本号：" prop="modelVersion">
-          <el-select
+        <el-form-item label="计算名称：" prop="modelVersion">
+          <el-input
             class="el-form-input-width"
-            v-model="queryParams.modelVersion"
-            placeholder="请输入版本号"
+            v-model="queryParams.name"
+            placeholder="请输入计算名称"
             clearable
-          >
-            <el-option
-              v-for="item in versionList"
-              :key="item.id"
-              :label="'Version ' + item.version"
-              :value="item.version"
-            >
-            </el-option>
-          </el-select>
+          />
+        </el-form-item>
+        <el-form-item label="模型名称：" prop="modelVersion">
+          <el-input
+            class="el-form-input-width"
+            v-model="queryParams.modelName"
+            placeholder="请输入模型名称"
+            clearable
+          />
         </el-form-item>
         <el-form-item label="起止时间：" prop="timer">
           <el-date-picker
@@ -590,11 +590,13 @@ const getList = () => {
 const getAllModelVersion = (param) => {
   const data = { modelId: param };
   findAllModelVersion(data).then((res) => {
-    if (param) {
-      versionList.value = res.data;
-    } else {
-      versionList.value = [];
-    }
+    console.log(res, "版本信息");
+
+    // if (param) {
+    versionList.value = res.data;
+    // } else {
+    //   versionList.value = [];
+    // }
   });
 };
 
@@ -682,6 +684,8 @@ const resetQuery = () => {
   timer.value = null;
   queryParams.endTime = null;
   queryParams.startTime = null;
+  queryParams.name = null;
+  queryParams.modelName = null;
   if (queryFormRef.value) {
     queryFormRef.value.resetFields();
   }
