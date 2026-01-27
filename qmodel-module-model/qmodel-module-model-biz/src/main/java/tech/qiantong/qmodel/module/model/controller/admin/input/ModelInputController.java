@@ -163,7 +163,6 @@ public class ModelInputController extends BaseController {
      */
     @PostMapping("/findAllModelVersion")
     public AjaxResult findAllModelVersion(@RequestBody ModelVersionDO modelVersion) {
-        modelVersion.setDelFlag(false);
         return AjaxResult.success(modelVersionService.selectModelVersionList(modelVersion));
     }
 
