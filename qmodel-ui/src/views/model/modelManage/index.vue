@@ -1469,7 +1469,7 @@ const handleExport = () => {
 }
 
 :deep(.el-button + .el-button) {
-  margin-left: 0;
+  margin-left: 12px;
 }
 :deep(.tag-rect) {
   border: 0;
