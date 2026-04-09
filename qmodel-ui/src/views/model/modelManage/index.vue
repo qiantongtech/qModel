@@ -1112,34 +1112,34 @@ const handleView = (row) => {
 
 /** 提交按钮 */
 const submitForm = () => {
-  if (formRef.value) {
-    formRef.value.validate((valid) => {
-      if (valid) {
-        let formData = JSON.parse(JSON.stringify(form));
-        // if (
-        //   formData.interfaceorfileAddress &&
-        //   formData.interfaceorfileAddress.length > 0
-        // ) {
-        //   formData.fileName = formData.interfaceorfileAddress[0].name;
-        //   formData.interfaceorfileAddress =
-        //     formData.interfaceorfileAddress[0].url;
-        // }
-        if (formData.id != null) {
-          updateModel(formData).then(() => {
-            ElMessage.success("修改成功");
-            open.value = false;
-            getList();
-          });
-        } else {
-          addModel(formData).then(() => {
-            ElMessage.success("新增成功");
-            open.value = false;
-            getList();
-          });
-        }
-      }
-    });
-  }
+    if (formRef.value) {
+        formRef.value.validate((valid) => {
+            if (valid) {
+                let formData = JSON.parse(JSON.stringify(form));
+                // 只有当 interfaceorfileAddress 是数组时才进行处理（文件上传场景）
+                // API接口场景下它是字符串，不需要处理
+                if (Array.isArray(formData.interfaceorfileAddress) &&
+                    formData.interfaceorfileAddress.length > 0) {
+                    formData.fileName = formData.interfaceorfileAddress[0].name;
+                    formData.interfaceorfileAddress =
+                        formData.interfaceorfileAddress[0].url;
+                }
+                if (formData.id != null) {
+                    updateModel(formData).then(() => {
+                        ElMessage.success("修改成功");
+                        open.value = false;
+                        getList();
+                    });
+                } else {
+                    addModel(formData).then(() => {
+                        ElMessage.success("新增成功");
+                        open.value = false;
+                        getList();
+                    });
+                }
+            }
+        });
+    }
 };
 
 /** 删除按钮操作 */

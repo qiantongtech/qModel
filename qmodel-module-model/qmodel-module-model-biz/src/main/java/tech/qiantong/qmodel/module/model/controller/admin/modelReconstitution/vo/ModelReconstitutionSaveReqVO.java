@@ -104,12 +104,10 @@ public class ModelReconstitutionSaveReqVO extends BaseEntity {
 
     /** 版本号 */
     @TableField(exist = false)
-    @NotBlank(message = "版本号不能为空")
     private String version;
 
     /** 版本发布说明 */
     @TableField(exist = false)
-    @NotBlank(message = "版本发布说明")
     private String description;
 
     @TableField(exist = false)
