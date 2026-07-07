@@ -33,121 +33,87 @@
 package tech.qiantong.qmodel.module.model.controller.admin.model.vo;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
+import io.swagger.v3.oas.annotations.media.Schema;
 import tech.qiantong.qmodel.common.annotation.Excel;
 
 import java.io.Serializable;
 import java.util.Date;
 
 /**
- * 模型管理 Response VO 对象 MODEL
+ * 模型基础信息 Response VO 对象 model
  *
- * @author qModel
- * @date 2026-01-07
+ * @author anivia
+ * @date 2026-07-07
  */
-@Schema(description = "模型管理 Response VO")
+@Schema(description = "模型基础信息 Response VO")
 @Data
 public class ModelRespVO implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-
     @Excel(name = "ID")
-    @Schema(description = "ID", example = "")
+    @Schema(description = "ID")
     private Long id;
 
-    @Excel(name = "企业id")
-    @Schema(description = "企业id", example = "")
+    @Excel(name = "企业ID")
+    @Schema(description = "企业ID", example = "")
     private Long companyId;
 
     @Excel(name = "分类id")
     @Schema(description = "分类id", example = "")
     private Long classifyId;
 
-    @Excel(name = "父级和自己id")
-    @Schema(description = "父级和自己id", example = "")
-    private String ancestors;
-
-    @Excel(name = "模型名称")
-    @Schema(description = "模型名称", example = "")
+    @Excel(name = "名称")
+    @Schema(description = "名称", example = "")
     private String name;
 
-    @Excel(name = "模型介绍")
-    @Schema(description = "模型介绍", example = "")
-    private String description;
+    @Excel(name = "编码")
+    @Schema(description = "编码", example = "")
+    private String code;
 
-    @Excel(name = "所属模型类别 0：水文，1：水动力，2：水质")
-    @Schema(description = "所属模型类别 0：水文，1：水动力，2：水质", example = "")
-    private Long type;
+    @Excel(name = "接入方式")
+    @Schema(description = "接入方式", example = "")
+    private String accessType;
 
-    @Excel(name = "所属纬度 0：一维，1：二维，2：三维")
-    @Schema(description = "所属纬度 0：一维，1：二维，2：三维", example = "")
-    private Long dimensions;
-
-    @Excel(name = "模型版本号")
-    @Schema(description = "模型版本号", example = "")
+    @Excel(name = "版本号")
+    @Schema(description = "版本号", example = "")
     private String version;
 
-    @Excel(name = "模型调用接口")
-    @Schema(description = "模型调用接口", example = "")
-    private String interfaceAddress;
+    @Excel(name = "作者")
+    @Schema(description = "作者", example = "")
+    private String author;
 
-    @Excel(name = "是否内置 0：否，1：是")
-    @Schema(description = "是否内置 0：否，1：是", example = "")
-    private Long builtin;
+    @Excel(name = "状态")
+    @Schema(description = "状态", example = "")
+    private String status;
 
-    @Excel(name = "模型格式")
-    @Schema(description = "模型格式", example = "")
-    private Long format;
+    @Excel(name = "标签")
+    @Schema(description = "标签", example = "")
+    private String tags;
 
-    @Excel(name = "模型大小 0：exe格式")
-    @Schema(description = "模型大小 0：exe格式", example = "")
-    private Long size;
+    @Excel(name = "描述")
+    @Schema(description = "描述", example = "")
+    private String description;
 
-    @Excel(name = "数据来源")
-    @Schema(description = "数据来源", example = "")
-    private String source;
-
-    @Excel(name = "上传状态")
-    @Schema(description = "上传状态", example = "")
-    private Long uploadStatus;
-
-    @Excel(name = "上传时间", width = 30, dateFormat = "yyyy-MM-dd HH:mm:ss")
-    @JsonFormat(pattern = "yyyy-dd HH:mm:ss")
-    @Schema(description = "上传时间", example = "")
-    private Date uploadTime;
-
-    @Excel(name = "上传接口")
-    @Schema(description = "上传接口", example = "")
-    private String uploadInterface;
-
-    @Excel(name = "上传文件")
-    @Schema(description = "上传文件", example = "")
-    private String uploadFile;
-
-    @Excel(name = "文件地址")
-    @Schema(description = "文件地址", example = "")
-    private String uploadLocation;
-
-    @Excel(name = "是否有效 0：无效，1：有效")
-    @Schema(description = "是否有效 0：无效，1：有效", example = "")
+    @Excel(name = "是否有效")
+    @Schema(description = "是否有效", example = "")
     private Boolean validFlag;
 
-    @Excel(name = "删除标志 1：已删除，0：未删除")
-    @Schema(description = "删除标志 1：已删除，0：未删除", example = "")
+    @Excel(name = "删除标志")
+    @Schema(description = "删除标志", example = "")
     private Boolean delFlag;
 
     @Excel(name = "创建人")
     @Schema(description = "创建人", example = "")
     private String createBy;
 
-    @Excel(name = "创建人id 创建者的sys_user_id")
-    @Schema(description = "创建人id 创建者的sys_user_id", example = "")
+    @Excel(name = "创建人id")
+    @Schema(description = "创建人id", example = "")
     private Long creatorId;
 
     @Excel(name = "创建时间", width = 30, dateFormat = "yyyy-MM-dd HH:mm:ss")
-    @JsonFormat(pattern = "yyyy-dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @Schema(description = "创建时间", example = "")
     private Date createTime;
 
@@ -155,12 +121,12 @@ public class ModelRespVO implements Serializable {
     @Schema(description = "更新人", example = "")
     private String updateBy;
 
-    @Excel(name = "更新人id 更新者的sys_user_id")
-    @Schema(description = "更新人id 更新者的sys_user_id", example = "")
+    @Excel(name = "更新人id")
+    @Schema(description = "更新人id", example = "")
     private Long updatorId;
 
     @Excel(name = "更新时间", width = 30, dateFormat = "yyyy-MM-dd HH:mm:ss")
-    @JsonFormat(pattern = "yyyy-dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @Schema(description = "更新时间", example = "")
     private Date updateTime;
 

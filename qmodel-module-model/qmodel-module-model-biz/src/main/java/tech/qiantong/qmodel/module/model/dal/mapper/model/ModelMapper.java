@@ -32,21 +32,21 @@
 
 package tech.qiantong.qmodel.module.model.dal.mapper.model;
 
-import tech.qiantong.qmodel.common.core.page.PageResult;
-import tech.qiantong.qmodel.module.model.controller.admin.model.vo.ModelPageReqVO;
 import tech.qiantong.qmodel.module.model.dal.dataobject.model.ModelDO;
+import java.util.Arrays;
+import com.github.yulichang.base.MPJBaseMapper;
+import tech.qiantong.qmodel.common.core.page.PageResult;
+import java.util.HashSet;
+import java.util.Set;
+import tech.qiantong.qmodel.module.model.controller.admin.model.vo.ModelPageReqVO;
 import tech.qiantong.qmodel.mybatis.core.mapper.BaseMapperX;
 import tech.qiantong.qmodel.mybatis.core.query.LambdaQueryWrapperX;
 
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
-
 /**
- * 模型管理Mapper接口
+ * 模型基础信息Mapper接口
  *
- * @author qModel
- * @date 2026-01-07
+ * @author anivia
+ * @date 2026-07-07
  */
 public interface ModelMapper extends BaseMapperX<ModelDO> {
 
@@ -58,24 +58,15 @@ public interface ModelMapper extends BaseMapperX<ModelDO> {
         return selectPage(reqVO, new LambdaQueryWrapperX<ModelDO>()
                 .eqIfPresent(ModelDO::getCompanyId, reqVO.getCompanyId())
                 .eqIfPresent(ModelDO::getClassifyId, reqVO.getClassifyId())
-                .eqIfPresent(ModelDO::getAncestors, reqVO.getAncestors())
                 .likeIfPresent(ModelDO::getName, reqVO.getName())
-                .eqIfPresent(ModelDO::getDescription, reqVO.getDescription())
-                .eqIfPresent(ModelDO::getType, reqVO.getType())
-                .eqIfPresent(ModelDO::getDimensions, reqVO.getDimensions())
+                .eqIfPresent(ModelDO::getCode, reqVO.getCode())
+                .eqIfPresent(ModelDO::getAccessType, reqVO.getAccessType())
                 .eqIfPresent(ModelDO::getVersion, reqVO.getVersion())
-                .eqIfPresent(ModelDO::getInterfaceAddress, reqVO.getInterfaceAddress())
-                .eqIfPresent(ModelDO::getBuiltin, reqVO.getBuiltin())
-                .eqIfPresent(ModelDO::getFormat, reqVO.getFormat())
-                .eqIfPresent(ModelDO::getSize, reqVO.getSize())
-                .eqIfPresent(ModelDO::getSource, reqVO.getSource())
-                .eqIfPresent(ModelDO::getUploadStatus, reqVO.getUploadStatus())
-                .eqIfPresent(ModelDO::getUploadTime, reqVO.getUploadTime())
-                .eqIfPresent(ModelDO::getUploadInterface, reqVO.getUploadInterface())
-                .eqIfPresent(ModelDO::getUploadFile, reqVO.getUploadFile())
-                .eqIfPresent(ModelDO::getUploadLocation, reqVO.getUploadLocation())
+                .eqIfPresent(ModelDO::getAuthor, reqVO.getAuthor())
+                .eqIfPresent(ModelDO::getStatus, reqVO.getStatus())
+                .eqIfPresent(ModelDO::getTags, reqVO.getTags())
+                .eqIfPresent(ModelDO::getDescription, reqVO.getDescription())
                 .eqIfPresent(ModelDO::getCreateTime, reqVO.getCreateTime())
-                .inIfPresent(ModelDO::getClassifyId, reqVO.getClassifyIds())
                 // 如果 reqVO.getName() 不为空，则添加 name 的精确匹配条件（name = '<name>'）
                 // .likeIfPresent(ModelDO::getName, reqVO.getName())
                 // 按照 createTime 字段降序排序

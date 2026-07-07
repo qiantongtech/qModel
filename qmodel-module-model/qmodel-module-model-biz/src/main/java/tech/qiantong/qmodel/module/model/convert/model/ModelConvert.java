@@ -32,6 +32,7 @@
 
 package tech.qiantong.qmodel.module.model.convert.model;
 
+import java.util.List;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 import tech.qiantong.qmodel.module.model.controller.admin.model.vo.ModelPageReqVO;
@@ -39,13 +40,11 @@ import tech.qiantong.qmodel.module.model.controller.admin.model.vo.ModelRespVO;
 import tech.qiantong.qmodel.module.model.controller.admin.model.vo.ModelSaveReqVO;
 import tech.qiantong.qmodel.module.model.dal.dataobject.model.ModelDO;
 
-import java.util.List;
-
 /**
- * 模型管理 Convert
+ * 模型基础信息 Convert
  *
- * @author qModel
- * @date 2026-01-07
+ * @author anivia
+ * @date 2026-07-07
  */
 @Mapper
 public interface ModelConvert {
@@ -56,26 +55,26 @@ public interface ModelConvert {
      * @param modelPageReqVO 请求参数
      * @return ModelDO
      */
-     ModelDO convertToDO(ModelPageReqVO modelPageReqVO);
+    ModelDO convertToDO(ModelPageReqVO modelPageReqVO);
 
     /**
      * SaveReqVO 转换为 DO
      * @param modelSaveReqVO 保存请求参数
      * @return ModelDO
      */
-     ModelDO convertToDO(ModelSaveReqVO modelSaveReqVO);
+    ModelDO convertToDO(ModelSaveReqVO modelSaveReqVO);
 
     /**
      * DO 转换为 RespVO
      * @param modelDO 实体对象
      * @return ModelRespVO
      */
-     ModelRespVO convertToRespVO(ModelDO modelDO);
+    ModelRespVO convertToRespVO(ModelDO modelDO);
 
     /**
      * DOList 转换为 RespVOList
      * @param modelDOList 实体对象列表
      * @return List<ModelRespVO>
      */
-     List<ModelRespVO> convertToRespVOList(List<ModelDO> modelDOList);
+    List<ModelRespVO> convertToRespVOList(List<ModelDO> modelDOList);
 }

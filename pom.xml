@@ -200,7 +200,7 @@
     <modules>
         <module>qmodel-framework</module>
         <module>qmodel-module-system</module>
-        <module>/qmodel-module-model</module>
+        <module>qmodel-module-model</module>
 
         <module>qmodel-server</module>
     </modules>

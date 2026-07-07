@@ -10,8 +10,8 @@ import tech.qiantong.qmodel.module.example.dal.dataobject.gen.ExampleDeptDO;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2026-01-26T15:16:43+0800",
-    comments = "version: 1.5.5.Final, compiler: javac, environment: Java 1.8.0_352 (Amazon.com Inc.)"
+    date = "2026-07-07T10:06:35+0800",
+    comments = "version: 1.5.5.Final, compiler: javac, environment: Java 17.0.19 (Microsoft)"
 )
 public class ExampleDeptConvertImpl implements ExampleDeptConvert {
 

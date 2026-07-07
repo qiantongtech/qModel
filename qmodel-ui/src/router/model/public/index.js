@@ -61,6 +61,12 @@ export default [
                     import('@/views/model/modelManage/parameterSettings/modelInputAndOutput.vue'),
                 name: 'modelInputAndOutput',
                 meta: { title: '模型设置参数', noCache: true }
+            },
+            {
+                path: 'modelManage/add',
+                component: () => import('@/views/model/modelManage/add/index.vue'),
+                name: 'ModelManageAdd',
+                meta: { title: '新增模型', noCache: true, activeMenu: '/model/modelManage' }
             }
         ]
     }

@@ -1,0 +1,593 @@
+<!--
+  Copyright © 2026 Qiantong Technology Co., Ltd.
+  qModel Model Platform(Open Source Edition)
+   *
+  License:
+  Released under the Apache License, Version 2.0.
+  You may use, modify, and distribute this software for commercial purposes
+  under the terms of the License.
+   *
+  Special Notice:
+  All derivative versions are strictly prohibited from modifying or removing
+  the default system logo and copyright information.
+  For brand customization, please apply for brand customization authorization via official channels.
+   *
+  More information: https://qmodel.qiantong.tech/business.html
+-->
+
+<template>
+  <div class="app-container model-add-page" ref="app-container">
+    <div class="custom-card">
+      <div class="steps-inner">
+        <ul class="zl-step">
+          <li
+            v-for="(item, index) in stepsList"
+            :key="index"
+            :class="{
+              statusEnd: activeStep === index,
+              prevStep: index < activeStep,
+              cur: index > activeStep
+            }"
+          >
+            <div
+              class="step-circle"
+              :class="{
+                active: activeStep === index,
+                prev: index < activeStep
+              }"
+            >
+              <span>{{ index + 1 }}</span>
+            </div>
+            <span class="step-name">{{ item.name }}</span>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="pagecont-top">
+      <div class="main-content">
+        <BasicInfoStep
+          v-show="activeStep === 0"
+          ref="basicStepRef"
+          v-model:form-data="form"
+          :classify-options="classifyOptions"
+          :dict-access-type="model_access_type"
+        />
+
+        <ApiConfigStep
+          v-show="activeStep === 1"
+          ref="apiStepRef"
+          v-model:form-data="form"
+          :dict-request-method="model_access_mode"
+          :dict-content-type="content_type"
+          :dict-auth-type="auth_type"
+          :dict-inject-position="auth_inject_position"
+        />
+
+        <ParamDefineStep
+          v-show="activeStep === 2"
+          ref="paramStepRef"
+          v-model:form-data="form"
+        />
+
+        <TestSaveStep
+          v-show="activeStep === 3"
+          ref="testStepRef"
+          v-model:form-data="form"
+        />
+      </div>
+    </div>
+
+    <div class="button-style">
+      <el-button @click="handleCancel">取 消</el-button>
+      <el-button v-if="activeStep > 0" @click="handlePrevStep">上一步</el-button>
+      <el-button v-if="activeStep < 3" type="primary" @click="handleNextStep">下一步</el-button>
+      <el-button v-if="activeStep === 3" type="primary" :loading="submitLoading" @click="handleSubmit">
+        保 存
+      </el-button>
+    </div>
+  </div>
+</template>
+
+<script setup name="ModelManageAdd">
+import { ref, reactive, onMounted } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
+import { ElMessage } from 'element-plus'
+import { addModel, getModel, updateModel } from '@/api/model/model'
+import { addModelConfig, listModelConfig, updateModelConfig } from '@/api/model/config'
+import { listClassify } from '@/api/modelReconstitution/classify'
+import BasicInfoStep from './BasicInfoStep.vue'
+import ApiConfigStep from './ApiConfigStep.vue'
+import ParamDefineStep from './ParamDefineStep.vue'
+import TestSaveStep from './TestSaveStep.vue'
+
+const { proxy } = getCurrentInstance()
+const route = useRoute()
+const router = useRouter()
+
+const {
+  model_access_type,
+  model_access_mode,
+  content_type,
+  auth_type,
+  auth_inject_position
+} = proxy.useDict(
+  'model_access_type',
+  'model_access_mode',
+  'content_type',
+  'auth_type',
+  'auth_inject_position'
+)
+
+const activeStep = ref(0)
+const submitLoading = ref(false)
+const classifyOptions = ref([])
+const basicStepRef = ref(null)
+const apiStepRef = ref(null)
+const paramStepRef = ref(null)
+const testStepRef = ref(null)
+const isEdit = ref(false)
+const configId = ref(null)
+
+const stepsList = [
+  { name: '基础配置', id: 0 },
+  { name: 'API 配置', id: 1 },
+  { name: '参数定义', id: 2 },
+  { name: '测试与保存', id: 3 }
+]
+
+const form = reactive({
+  // 基础配置
+  id: null,
+  companyId: null,
+  name: '',
+  code: '',
+  classifyId: null,
+  accessType: 'API',
+  version: 'V1.0',
+  author: '',
+  status: '0',
+  tags: '',
+  description: '',
+  remark: '',
+  // API 配置
+  apiUrl: '',
+  requestMethod: 'POST',
+  contentType: 'application/json',
+  timeoutSeconds: 30,
+  authType: 'NONE',
+  authInjectPosition: 'Header',
+  authKeyName: 'Authorization',
+  authTokenPrefix: '',
+  authTokenValue: '',
+  authDynamicMethod: 'POST',
+  authDynamicUrl: '',
+  authDynamicHeaders: '{"Content-Type": "application/x-www-form-urlencoded", "Tenant-Id": "", "Authorization": "Basic "}',
+  authDynamicParams: '{"grant_type": "password", "username": "", "password": "", "scope": "all"}',
+  authDynamicBody: '',
+  authExtractPath: '',
+  // 参数定义
+  inputSchema: '',
+  outputSchema: '',
+  // 测试与保存
+  testBody: ''
+})
+
+onMounted(() => {
+  getClassifyOptions()
+  const editId = route.query.id
+  if (editId) {
+    isEdit.value = true
+    loadModelData(editId)
+  }
+})
+
+const normalizeAccessType = (val) => {
+  if (val == null) return 'API'
+  const str = String(val).toUpperCase()
+  // 表结构注释：0-API接口, 1-Python本地
+  if (str === 'API' || str === '0' || str === 'API接口') return 'API'
+  if (str === 'PYTHON' || str === '1' || str === 'Python本地' || str === 'PYTHON本地') return 'PYTHON'
+  return 'API'
+}
+
+const normalizeAuthType = (val) => {
+  if (val == null) return 'NONE'
+  const str = String(val).toUpperCase()
+  if (str === 'NONE' || str === '0' || str === '无') return 'NONE'
+  if (str === 'FIXED' || str === '1' || str === '固定TOKEN' || str === '固定 Token / API Key'.toUpperCase()) return 'FIXED'
+  if (str === 'DYNAMIC' || str === '2' || str === '动态TOKEN' || str === '动态 Token API'.toUpperCase()) return 'DYNAMIC'
+  return 'NONE'
+}
+
+const loadModelData = async (id) => {
+  try {
+    const modelRes = await getModel(id)
+    const modelData = modelRes.data || {}
+    const accessType = normalizeAccessType(modelData.accessType)
+    Object.assign(form, {
+      id: modelData.id,
+      companyId: modelData.companyId,
+      name: modelData.name || '',
+      code: modelData.code || '',
+      classifyId: modelData.classifyId || null,
+      accessType,
+      version: modelData.version || 'V1.0',
+      author: modelData.author || '',
+      status: modelData.status != null ? String(modelData.status) : '0',
+      tags: modelData.tags || '',
+      description: modelData.description || '',
+      remark: modelData.remark || ''
+    })
+
+    if (accessType === 'API') {
+      const configRes = await listModelConfig({ modelId: id })
+      // listModelConfig 返回分页结构 { rows: [], total: 0 }
+      const configList = configRes.data?.rows || configRes.data || []
+      if (configList.length > 0) {
+        const config = configList[0]
+        configId.value = config.id
+        const authType = normalizeAuthType(config.authType)
+        Object.assign(form, {
+          apiUrl: config.apiUrl || '',
+          requestMethod: config.requestMethod || 'POST',
+          contentType: config.contentType || 'application/json',
+          timeoutSeconds: config.timeoutSeconds || 30,
+          authType,
+          authInjectPosition: config.authInjectPosition || 'Header',
+          authKeyName: config.authKeyName || 'Authorization',
+          authTokenPrefix: config.authTokenPrefix || '',
+          authTokenValue: config.authTokenValue || '',
+          authDynamicMethod: config.authDynamicMethod || 'POST',
+          authDynamicUrl: config.authDynamicUrl || '',
+          authDynamicHeaders: config.authDynamicHeaders || '',
+          authDynamicParams: config.authDynamicParams || '',
+          authDynamicBody: config.authDynamicBody || '',
+          authExtractPath: config.authExtractPath || '',
+          inputSchema: config.inputSchema || '',
+          outputSchema: config.outputSchema || ''
+        })
+      }
+    }
+  } catch (error) {
+    ElMessage.error('加载模型数据失败')
+    console.error(error)
+  }
+}
+
+const getClassifyOptions = () => {
+  listClassify().then((res) => {
+    const data = res.data || []
+    for (let i = 0; i < data.length; i++) {
+      const arrTemp = []
+      for (let j = 0; j < data.length; j++) {
+        if (data[i].id == data[j].parentId) {
+          data[i].children = arrTemp
+          arrTemp.push(data[j])
+        }
+      }
+    }
+    const result = []
+    for (let i = 0; i < data.length; i++) {
+      if (data[i].parentId == 0) {
+        result.push(data[i])
+      }
+    }
+    classifyOptions.value = result
+  })
+}
+
+const handleCancel = () => {
+  const message = isEdit.value ? '确认取消编辑模型吗？已修改的内容将不会保存。' : '确认取消新增模型吗？已填写的内容将不会保存。'
+  proxy.$modal
+    .confirm(message)
+    .then(() => {
+      router.push('/model/modelManage')
+    })
+    .catch(() => {})
+}
+
+const handlePrevStep = () => {
+  if (activeStep.value > 0) {
+    activeStep.value--
+  }
+}
+
+const handleNextStep = async () => {
+  try {
+    if (activeStep.value === 0) {
+      await basicStepRef.value.validate()
+    }
+    if (activeStep.value === 1) {
+      await apiStepRef.value.validate()
+    }
+    if (activeStep.value === 2) {
+      await paramStepRef.value.validate()
+    }
+    if (activeStep.value === 3) {
+      await testStepRef.value.validate()
+    }
+    if (activeStep.value < 3) {
+      activeStep.value++
+    }
+  } catch (error) {
+    ElMessage.warning(error?.message || '请检查填写内容')
+  }
+}
+
+const buildModelData = () => {
+  return {
+    id: isEdit.value ? form.id : undefined,
+    companyId: form.companyId,
+    name: form.name,
+    code: form.code,
+    classifyId: form.classifyId,
+    accessType: form.accessType,
+    version: form.version,
+    author: form.author || null,
+    status: form.status || '0',
+    tags: form.tags || null,
+    description: form.description || null,
+    remark: form.remark || null
+  }
+}
+
+const buildConfigData = (modelId) => {
+  const configData = {
+    id: isEdit.value ? configId.value : undefined,
+    companyId: form.companyId,
+    modelId: modelId,
+    apiUrl: form.apiUrl,
+    requestMethod: form.requestMethod,
+    contentType: form.contentType,
+    timeoutSeconds: form.timeoutSeconds,
+    authType: form.authType,
+    inputSchema: form.inputSchema || null,
+    outputSchema: form.outputSchema || null,
+    remark: form.remark || null
+  }
+
+  if (form.authType === 'FIXED') {
+    configData.authTokenValue = form.authTokenValue || null
+    configData.authInjectPosition = form.authInjectPosition || null
+    configData.authKeyName = form.authKeyName || null
+    configData.authTokenPrefix = form.authTokenPrefix || null
+  }
+
+  if (form.authType === 'DYNAMIC') {
+    configData.authDynamicMethod = form.authDynamicMethod || null
+    configData.authDynamicUrl = form.authDynamicUrl || null
+    configData.authDynamicHeaders = form.authDynamicHeaders || null
+    configData.authDynamicParams = form.authDynamicParams || null
+    configData.authDynamicBody = form.authDynamicBody || null
+    configData.authExtractPath = form.authExtractPath || null
+    configData.authTokenPrefix = form.authTokenPrefix || null
+    configData.authInjectPosition = form.authInjectPosition || null
+    configData.authKeyName = form.authKeyName || null
+  }
+
+  return configData
+}
+
+const handleSubmit = async () => {
+  submitLoading.value = true
+  console.log('[ModelAdd] handleSubmit start', { form, isEdit: isEdit.value })
+  try {
+    const modelData = buildModelData()
+    console.log('[ModelAdd] modelData', modelData)
+
+    let modelId
+    if (isEdit.value) {
+      await updateModel(modelData)
+      modelId = form.id
+    } else {
+      const modelRes = await addModel(modelData)
+      modelId = modelRes.data
+    }
+    console.log('[ModelAdd] modelId', modelId)
+
+    if (form.accessType === 'API' && modelId) {
+      const configData = buildConfigData(modelId)
+      if (isEdit.value && configId.value) {
+        await updateModelConfig(configData)
+      } else {
+        await addModelConfig(configData)
+      }
+    }
+
+    const successMsg = isEdit.value ? '修改模型成功' : '新增模型成功'
+    ElMessage.success(successMsg)
+    router.push('/model/modelManage')
+  } catch (error) {
+    console.error('[ModelAdd] 保存模型失败：', error)
+    ElMessage.error(error?.msg || error?.message || '保存模型失败，请检查网络或数据')
+  } finally {
+    submitLoading.value = false
+    console.log('[ModelAdd] handleSubmit end')
+  }
+}
+</script>
+
+<style lang="scss" scoped>
+.model-add-page {
+  position: relative;
+  padding-bottom: 80px;
+}
+
+.custom-card {
+  width: 100%;
+  height: 100px;
+  padding: 34px 30px 26px;
+  background: #fff;
+  box-sizing: border-box;
+  margin-bottom: 15px;
+
+  .steps-inner {
+    padding: 0 10px;
+    padding-left: 20px;
+    display: flex;
+    width: auto;
+    color: #303133;
+    transition: 0.3s;
+    transform: translateZ(0);
+
+    &::-webkit-scrollbar {
+      height: 5px;
+    }
+
+    .zl-step {
+      list-style: none;
+      width: 100%;
+      height: 20px;
+      padding: 0;
+      margin: 20px auto;
+      cursor: pointer;
+      display: flex;
+      align-items: flex-end;
+
+      li {
+        position: relative;
+        flex: 1;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #d7d8da;
+        color: #666;
+        font-weight: 500;
+        transition: background 0.3s;
+
+        &:first-child {
+          z-index: 2;
+          clip-path: polygon(
+            0 0,
+            calc(100% - 20px) 0,
+            100% 50%,
+            calc(100% - 20px) 100%,
+            0 100%
+          );
+        }
+
+        &:not(:first-child):not(:last-child) {
+          margin-left: -10px;
+          clip-path: polygon(
+            0 0,
+            calc(100% - 20px) 0,
+            100% 50%,
+            calc(100% - 20px) 100%,
+            0 100%
+          );
+          z-index: 1;
+
+          &::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 20px;
+            height: 100%;
+            background: #fff;
+            clip-path: polygon(0 0, 100% 50%, 0 100%);
+            z-index: 2;
+          }
+        }
+
+        &:last-child {
+          margin-left: -10px;
+          z-index: 0;
+          clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+
+          &::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 20px;
+            height: 100%;
+            background: #fff;
+            clip-path: polygon(0 0, 100% 50%, 0 100%);
+            z-index: 2;
+          }
+        }
+
+        &.statusEnd {
+          background: linear-gradient(270deg, #e9effe 0%, #5589fa 100%);
+          color: #2666fb !important;
+        }
+
+        &.prevStep {
+          background: #e9effe !important;
+          font-weight: normal;
+          font-size: 16px !important;
+          color: #2666fb !important;
+        }
+
+        &.cur {
+          background: #f1f1f5;
+          color: #404040;
+          font-weight: 500;
+        }
+      }
+    }
+
+    .step-circle {
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      background: #f1f1f5;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      font-weight: bold;
+      margin-right: 11px;
+      border: 1px solid #b2b2b2;
+      flex-shrink: 0;
+      transition: all 0.3s;
+
+      &.active {
+        background: #2666fb;
+        color: #fff;
+        border: 1px solid #fff;
+      }
+
+      &.prev {
+        background: #f1f1f5 !important;
+        border: 1px solid #2666fb !important;
+        color: #2666fb !important;
+      }
+    }
+
+    .step-name {
+      font-family:
+        PingFang SC,
+        PingFang SC;
+      font-weight: 500;
+      font-size: 16px;
+    }
+  }
+}
+
+.pagecont-top {
+  min-height: calc(100vh - 260px);
+  background: #fff;
+  padding: 0 25px 70px;
+}
+
+.main-content {
+  width: 100%;
+  background-color: #fff;
+}
+
+.button-style {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding: 15px 35px;
+  background: #fff;
+  text-align: right;
+  z-index: 10;
+  box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.05);
+}
+</style>

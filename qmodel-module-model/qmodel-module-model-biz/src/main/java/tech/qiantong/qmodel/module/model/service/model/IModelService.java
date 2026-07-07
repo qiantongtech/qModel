@@ -32,87 +32,80 @@
 
 package tech.qiantong.qmodel.module.model.service.model;
 
-import com.baomidou.mybatisplus.extension.service.IService;
-import tech.qiantong.qmodel.common.core.page.PageResult;
-import tech.qiantong.qmodel.module.model.controller.admin.model.vo.ModelPageReqVO;
-import tech.qiantong.qmodel.module.model.controller.admin.model.vo.ModelRespVO;
-import tech.qiantong.qmodel.module.model.controller.admin.model.vo.ModelSaveReqVO;
-import tech.qiantong.qmodel.module.model.controller.admin.version.vo.ModelVersionSaveReqVO;
-import tech.qiantong.qmodel.module.model.dal.dataobject.model.ModelDO;
-
-import java.util.Collection;
 import java.util.List;
 import java.util.Map;
-
+import java.util.Collection;
+import com.baomidou.mybatisplus.extension.service.IService;
+import tech.qiantong.qmodel.common.core.page.PageResult;
+import tech.qiantong.qmodel.module.model.controller.admin.model.vo.ModelSaveReqVO;
+import tech.qiantong.qmodel.module.model.controller.admin.model.vo.ModelPageReqVO;
+import tech.qiantong.qmodel.module.model.controller.admin.model.vo.ModelRespVO;
+import tech.qiantong.qmodel.module.model.dal.dataobject.model.ModelDO;
 /**
- * 模型管理Service接口
+ * 模型基础信息Service接口
  *
- * @author qModel
- * @date 2026-01-07
+ * @author anivia
+ * @date 2026-07-07
  */
 public interface IModelService extends IService<ModelDO> {
 
     /**
-     * 获得模型管理分页列表
+     * 获得模型基础信息分页列表
      *
      * @param pageReqVO 分页请求
-     * @return 模型管理分页列表
+     * @return 模型基础信息分页列表
      */
     PageResult<ModelDO> getModelPage(ModelPageReqVO pageReqVO);
 
     /**
-     * 创建模型管理
+     * 创建模型基础信息
      *
-     * @param createReqVO 模型管理信息
-     * @return 模型管理编号
+     * @param createReqVO 模型基础信息信息
+     * @return 模型基础信息编号
      */
-    Long createModel(ModelSaveReqVO createReqVO, ModelVersionSaveReqVO modelVersion);
+    Long createModel(ModelSaveReqVO createReqVO);
 
     /**
-     * 更新模型管理
+     * 更新模型基础信息
      *
-     * @param updateReqVO 模型管理信息
+     * @param updateReqVO 模型基础信息信息
      */
     int updateModel(ModelSaveReqVO updateReqVO);
 
-    int updateModel(ModelSaveReqVO updateReqVO, ModelVersionSaveReqVO modelVersion);
-
     /**
-     * 删除模型管理
+     * 删除模型基础信息
      *
-     * @param idList 模型管理编号
+     * @param idList 模型基础信息编号
      */
     int removeModel(Collection<Long> idList);
 
     /**
-     * 获得模型管理详情
+     * 获得模型基础信息详情
      *
-     * @param id 模型管理编号
-     * @return 模型管理
+     * @param id 模型基础信息编号
+     * @return 模型基础信息
      */
     ModelDO getModelById(Long id);
 
     /**
-     * 获得全部模型管理列表
+     * 获得全部模型基础信息列表
      *
-     * @return 模型管理列表
+     * @return 模型基础信息列表
      */
     List<ModelDO> getModelList();
 
-    List<ModelDO> getModelList(ModelPageReqVO model);
-
     /**
-     * 获得全部模型管理 Map
+     * 获得全部模型基础信息 Map
      *
-     * @return 模型管理 Map
+     * @return 模型基础信息 Map
      */
     Map<Long, ModelDO> getModelMap();
 
 
     /**
-     * 导入模型管理数据
+     * 导入模型基础信息数据
      *
-     * @param importExcelList 模型管理数据列表
+     * @param importExcelList 模型基础信息数据列表
      * @param isUpdateSupport 是否更新支持，如果已存在，则进行更新数据
      * @param operName 操作用户
      * @return 结果

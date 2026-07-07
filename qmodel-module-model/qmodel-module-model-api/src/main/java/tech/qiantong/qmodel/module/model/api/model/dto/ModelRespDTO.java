@@ -32,15 +32,13 @@
 
 package tech.qiantong.qmodel.module.model.api.model.dto;
 
-import lombok.Data;
-
-import java.util.Date;
+import lombok.*;
 
 /**
- * 模型管理 DTO 对象 MODEL
+ * 模型基础信息 DTO 对象 model
  *
- * @author qModel
- * @date 2026-01-07
+ * @author anivia
+ * @date 2026-07-07
  */
 @Data
 public class ModelRespDTO {
@@ -50,64 +48,40 @@ public class ModelRespDTO {
     /** ID */
     private Long id;
 
-    /** 企业id */
+    /** 企业ID */
     private Long companyId;
 
     /** 分类id */
     private Long classifyId;
 
-    /** 父级和自己id */
-    private String ancestors;
-
-    /** 模型名称 */
+    /** 名称 */
     private String name;
 
-    /** 模型介绍 */
-    private String description;
+    /** 编码 */
+    private String code;
 
-    /** 所属模型类别 0：水文，1：水动力，2：水质 */
-    private Long type;
+    /** 接入方式 */
+    private String accessType;
 
-    /** 所属纬度 0：一维，1：二维，2：三维 */
-    private Long dimensions;
-
-    /** 模型版本号 */
+    /** 版本号 */
     private String version;
 
-    /** 模型调用接口 */
-    private String interfaceAddress;
+    /** 作者 */
+    private String author;
 
-    /** 是否内置 0：否，1：是 */
-    private Long builtin;
+    /** 状态 */
+    private String status;
 
-    /** 模型格式 */
-    private Long format;
+    /** 标签 */
+    private String tags;
 
-    /** 模型大小 0：exe格式 */
-    private Long size;
+    /** 描述 */
+    private String description;
 
-    /** 数据来源 */
-    private String source;
-
-    /** 上传状态 */
-    private Long uploadStatus;
-
-    /** 上传时间 */
-    private Date uploadTime;
-
-    /** 上传接口 */
-    private String uploadInterface;
-
-    /** 上传文件 */
-    private String uploadFile;
-
-    /** 文件地址 */
-    private String uploadLocation;
-
-    /** 是否有效 0：无效，1：有效 */
+    /** 是否有效 */
     private Boolean validFlag;
 
-    /** 删除标志 1：已删除，0：未删除 */
+    /** 删除标志 */
     private Boolean delFlag;
 
 
