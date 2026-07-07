@@ -1,0 +1,234 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+  Copyright © 2026 Qiantong Technology Co., Ltd.
+  qModel Model Platform(Open Source Edition)
+   *
+  License:
+  Released under the Apache License, Version 2.0.
+  You may use, modify, and distribute this software for commercial purposes
+  under the terms of the License.
+   *
+  Special Notice:
+  All derivative versions are strictly prohibited from modifying or removing
+  the default system logo and copyright information.
+  For brand customization, please apply for brand customization authorization via official channels.
+   *
+  More information: https://qmodel.qiantong.tech/business.html
+   *
+  ============================================================================
+   *
+  版权所有 © 2026 江苏千桐科技有限公司
+  qModel 模型平台（开源版）
+   *
+  许可协议：
+  本项目基于 Apache License 2.0 开源协议发布，
+  允许在遵守协议的前提下进行商用、修改和分发。
+   *
+  特别说明：
+  所有衍生版本不得修改或移除系统默认的 LOGO 和版权信息；
+  如需定制品牌，请通过官方渠道申请品牌定制授权。
+   *
+  更多信息请访问：https://qmodel.qiantong.tech/business.html
+-->
+
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="tech.qiantong.qmodel.module.model.dal.mapper.fileResource.ModelFileResourceMapper">
+
+    <resultMap type="ModelFileResourceDO" id="ModelFileResourceResult">
+        <result property="id"    column="id"    />
+        <result property="modelId"    column="model_id"    />
+        <result property="fileName"    column="file_name"    />
+        <result property="scriptName"    column="script_name"    />
+        <result property="filePath"    column="file_path"    />
+        <result property="depsFilePath"    column="deps_file_path"    />
+        <result property="modelVersion"    column="model_version"    />
+        <result property="resourceType"    column="resource_type"    />
+        <result property="fileSize"    column="file_size"    />
+        <result property="logFilePath"    column="log_file_path"    />
+        <result property="execTimeout"    column="exec_timeout"    />
+        <result property="dockerFilePath"    column="docker_file_path"    />
+        <result property="imageTag"    column="image_tag"    />
+        <result property="imageVersion"    column="image_version"    />
+        <result property="imageBuildStatus"    column="image_build_status"    />
+        <result property="imageBuildTime"    column="image_build_time"    />
+        <result property="imageBuildLog"    column="image_build_log"    />
+        <result property="resourceLimit"    column="resource_limit"    />
+        <result property="containerEnv"    column="container_env"    />
+        <result property="containerMounts"    column="container_mounts"    />
+        <result property="containerPorts"    column="container_ports"    />
+        <result property="mappedHostPort"    column="mapped_host_port"    />
+        <result property="containerStatus"    column="container_status"    />
+        <result property="containerId"    column="container_id"    />
+        <result property="validFlag"    column="valid_flag"    />
+        <result property="delFlag"    column="del_flag"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="creatorId"    column="creator_id"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updatorId"    column="updator_id"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="remark"    column="remark"    />
+    </resultMap>
+
+    <sql id="selectModelFileResourceVo">
+        select id, model_id, file_name, script_name, file_path, deps_file_path, model_version, resource_type, file_size, log_file_path, exec_timeout, docker_file_path, image_tag, image_version, image_build_status, image_build_time, image_build_log, resource_limit, container_env, container_mounts, container_ports, mapped_host_port, container_status, container_id, valid_flag, del_flag, create_by, creator_id, create_time, update_by, updator_id, update_time, remark from model_file_resource
+    </sql>
+
+    <select id="selectModelFileResourceList" parameterType="ModelFileResourceDO" resultMap="ModelFileResourceResult">
+        <include refid="selectModelFileResourceVo"/>
+        <where>
+            <if test="fileName != null  and fileName != ''"> and file_name like concat('%', #{fileName}, '%')</if>
+            <if test="scriptName != null  and scriptName != ''"> and script_name like concat('%', #{scriptName}, '%')</if>
+            <if test="filePath != null  and filePath != ''"> and file_path = #{filePath}</if>
+            <if test="depsFilePath != null  and depsFilePath != ''"> and deps_file_path = #{depsFilePath}</if>
+            <if test="modelVersion != null "> and model_version = #{modelVersion}</if>
+            <if test="resourceType != null  and resourceType != ''"> and resource_type = #{resourceType}</if>
+            <if test="fileSize != null "> and file_size = #{fileSize}</if>
+            <if test="logFilePath != null  and logFilePath != ''"> and log_file_path = #{logFilePath}</if>
+            <if test="execTimeout != null "> and exec_timeout = #{execTimeout}</if>
+            <if test="dockerFilePath != null  and dockerFilePath != ''"> and docker_file_path = #{dockerFilePath}</if>
+            <if test="imageTag != null  and imageTag != ''"> and image_tag = #{imageTag}</if>
+            <if test="imageVersion != null  and imageVersion != ''"> and image_version = #{imageVersion}</if>
+            <if test="imageBuildStatus != null  and imageBuildStatus != ''"> and image_build_status = #{imageBuildStatus}</if>
+            <if test="imageBuildTime != null "> and image_build_time = #{imageBuildTime}</if>
+            <if test="imageBuildLog != null  and imageBuildLog != ''"> and image_build_log = #{imageBuildLog}</if>
+            <if test="resourceLimit != null  and resourceLimit != ''"> and resource_limit = #{resourceLimit}</if>
+            <if test="containerEnv != null  and containerEnv != ''"> and container_env = #{containerEnv}</if>
+            <if test="containerMounts != null  and containerMounts != ''"> and container_mounts = #{containerMounts}</if>
+            <if test="containerPorts != null "> and container_ports = #{containerPorts}</if>
+            <if test="mappedHostPort != null "> and mapped_host_port = #{mappedHostPort}</if>
+            <if test="containerStatus != null  and containerStatus != ''"> and container_status = #{containerStatus}</if>
+            <if test="containerId != null  and containerId != ''"> and container_id = #{containerId}</if>
+            <if test="createTime != null "> and create_time = #{createTime}</if>
+        </where>
+    </select>
+
+    <select id="selectModelFileResourceById" parameterType="Long" resultMap="ModelFileResourceResult">
+        <include refid="selectModelFileResourceVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertModelFileResource" parameterType="ModelFileResourceDO" useGeneratedKeys="true" keyProperty="id">
+        insert into model_file_resource
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="modelId != null">model_id,</if>
+            <if test="fileName != null">file_name,</if>
+            <if test="scriptName != null">script_name,</if>
+            <if test="filePath != null">file_path,</if>
+            <if test="depsFilePath != null">deps_file_path,</if>
+            <if test="modelVersion != null">model_version,</if>
+            <if test="resourceType != null">resource_type,</if>
+            <if test="fileSize != null">file_size,</if>
+            <if test="logFilePath != null">log_file_path,</if>
+            <if test="execTimeout != null">exec_timeout,</if>
+            <if test="dockerFilePath != null">docker_file_path,</if>
+            <if test="imageTag != null">image_tag,</if>
+            <if test="imageVersion != null">image_version,</if>
+            <if test="imageBuildStatus != null">image_build_status,</if>
+            <if test="imageBuildTime != null">image_build_time,</if>
+            <if test="imageBuildLog != null">image_build_log,</if>
+            <if test="resourceLimit != null">resource_limit,</if>
+            <if test="containerEnv != null">container_env,</if>
+            <if test="containerMounts != null">container_mounts,</if>
+            <if test="containerPorts != null">container_ports,</if>
+            <if test="mappedHostPort != null">mapped_host_port,</if>
+            <if test="containerStatus != null">container_status,</if>
+            <if test="containerId != null">container_id,</if>
+            <if test="validFlag != null">valid_flag,</if>
+            <if test="delFlag != null">del_flag,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="creatorId != null">creator_id,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updatorId != null">updator_id,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="remark != null">remark,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="modelId != null">#{modelId},</if>
+            <if test="fileName != null">#{fileName},</if>
+            <if test="scriptName != null">#{scriptName},</if>
+            <if test="filePath != null">#{filePath},</if>
+            <if test="depsFilePath != null">#{depsFilePath},</if>
+            <if test="modelVersion != null">#{modelVersion},</if>
+            <if test="resourceType != null">#{resourceType},</if>
+            <if test="fileSize != null">#{fileSize},</if>
+            <if test="logFilePath != null">#{logFilePath},</if>
+            <if test="execTimeout != null">#{execTimeout},</if>
+            <if test="dockerFilePath != null">#{dockerFilePath},</if>
+            <if test="imageTag != null">#{imageTag},</if>
+            <if test="imageVersion != null">#{imageVersion},</if>
+            <if test="imageBuildStatus != null">#{imageBuildStatus},</if>
+            <if test="imageBuildTime != null">#{imageBuildTime},</if>
+            <if test="imageBuildLog != null">#{imageBuildLog},</if>
+            <if test="resourceLimit != null">#{resourceLimit},</if>
+            <if test="containerEnv != null">#{containerEnv},</if>
+            <if test="containerMounts != null">#{containerMounts},</if>
+            <if test="containerPorts != null">#{containerPorts},</if>
+            <if test="mappedHostPort != null">#{mappedHostPort},</if>
+            <if test="containerStatus != null">#{containerStatus},</if>
+            <if test="containerId != null">#{containerId},</if>
+            <if test="validFlag != null">#{validFlag},</if>
+            <if test="delFlag != null">#{delFlag},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="creatorId != null">#{creatorId},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updatorId != null">#{updatorId},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null">#{remark},</if>
+         </trim>
+    </insert>
+
+    <update id="updateModelFileResource" parameterType="ModelFileResourceDO">
+        update model_file_resource
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="modelId != null">model_id = #{modelId},</if>
+            <if test="fileName != null">file_name = #{fileName},</if>
+            <if test="scriptName != null">script_name = #{scriptName},</if>
+            <if test="filePath != null">file_path = #{filePath},</if>
+            <if test="depsFilePath != null">deps_file_path = #{depsFilePath},</if>
+            <if test="modelVersion != null">model_version = #{modelVersion},</if>
+            <if test="resourceType != null">resource_type = #{resourceType},</if>
+            <if test="fileSize != null">file_size = #{fileSize},</if>
+            <if test="logFilePath != null">log_file_path = #{logFilePath},</if>
+            <if test="execTimeout != null">exec_timeout = #{execTimeout},</if>
+            <if test="dockerFilePath != null">docker_file_path = #{dockerFilePath},</if>
+            <if test="imageTag != null">image_tag = #{imageTag},</if>
+            <if test="imageVersion != null">image_version = #{imageVersion},</if>
+            <if test="imageBuildStatus != null">image_build_status = #{imageBuildStatus},</if>
+            <if test="imageBuildTime != null">image_build_time = #{imageBuildTime},</if>
+            <if test="imageBuildLog != null">image_build_log = #{imageBuildLog},</if>
+            <if test="resourceLimit != null">resource_limit = #{resourceLimit},</if>
+            <if test="containerEnv != null">container_env = #{containerEnv},</if>
+            <if test="containerMounts != null">container_mounts = #{containerMounts},</if>
+            <if test="containerPorts != null">container_ports = #{containerPorts},</if>
+            <if test="mappedHostPort != null">mapped_host_port = #{mappedHostPort},</if>
+            <if test="containerStatus != null">container_status = #{containerStatus},</if>
+            <if test="containerId != null">container_id = #{containerId},</if>
+            <if test="validFlag != null">valid_flag = #{validFlag},</if>
+            <if test="delFlag != null">del_flag = #{delFlag},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="creatorId != null">creator_id = #{creatorId},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updatorId != null">updator_id = #{updatorId},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteModelFileResourceById" parameterType="Long">
+        delete from model_file_resource where id = #{id}
+    </delete>
+
+    <delete id="deleteModelFileResourceByIds" parameterType="String">
+        delete from model_file_resource where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>
