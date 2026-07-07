@@ -64,7 +64,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <sql id="selectModelCaclVo">
-        select ID, COMPANY_ID, CODE, NAME, MODEL_ID, MODEL_NAME, MODEL_VERSION, START_TIME, END_TIME, STATUS, INPUT_CONTENT, OUTPUT_CONTENT, VALID_FLAG, DEL_FLAG, CREATE_BY, CREATOR_ID, CREATE_TIME, UPDATE_BY, UPDATOR_ID, UPDATE_TIME, REMARK, ADDRESS_ID, ADDRESS_TYPE, MP_PROGRAMME_ID from MODEL_CACL_RECONSTITUTION
+        select ID, COMPANY_ID, CODE, NAME, MODEL_ID, MODEL_NAME, MODEL_VERSION, START_TIME, END_TIME, STATUS, INPUT_CONTENT, OUTPUT_CONTENT, VALID_FLAG, DEL_FLAG, CREATE_BY, CREATOR_ID, CREATE_TIME, UPDATE_BY, UPDATOR_ID, UPDATE_TIME, REMARK, ADDRESS_ID, ADDRESS_TYPE, MP_PROGRAMME_ID from MODEL_CACL
     </sql>
 
     <select id="selectModelCaclList" parameterType="ModelCaclDO" resultMap="ModelCaclResult">
@@ -94,7 +94,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </select>
 
     <insert id="insertModelCacl" parameterType="ModelCaclDO">
-        insert into MODEL_CACL_RECONSTITUTION
+        insert into MODEL_CACL
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="id != null">ID,</if>
             <if test="companyId != null">COMPANY_ID,</if>
@@ -150,7 +150,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </insert>
 
     <update id="updateModelCacl" parameterType="ModelCaclDO">
-        update MODEL_CACL_RECONSTITUTION
+        update MODEL_CACL
         <trim prefix="SET" suffixOverrides=",">
             <if test="companyId != null">COMPANY_ID = #{companyId},</if>
             <if test="code != null">CODE = #{code},</if>
@@ -180,11 +180,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </update>
 
     <delete id="deleteModelCaclByID" parameterType="Long">
-        delete from MODEL_CACL_RECONSTITUTION where ID = #{id}
+        delete from MODEL_CACL where ID = #{id}
     </delete>
 
     <delete id="deleteModelCaclByIDs" parameterType="String">
-        delete from MODEL_CACL_RECONSTITUTION where ID in
+        delete from MODEL_CACL where ID in
         <foreach item="ID" collection="array" open="(" separator="," close=")">
             #{ID}
         </foreach>
