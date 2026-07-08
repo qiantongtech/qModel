@@ -142,9 +142,7 @@ public class ModelFileResourceController extends BaseController {
     @PreAuthorize("@ss.hasPermi('model:fileResource:fileresource:add')")
     @PostMapping("/checkUploadFile")
     public CommonResult<Map<String, Object>> checkUploadFile(@RequestParam("file") MultipartFile file) {
-        Map<String, Object> result = modelFileResourceService.checkZipFile(file);
-        boolean pass = (Boolean) result.get("pass");
-        return CommonResult.success(result);
+        return CommonResult.success(modelFileResourceService.checkZipFile(file));
     }
 
 }

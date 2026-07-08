@@ -45,11 +45,13 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.util.regex.Pattern;
+
 import org.springframework.transaction.support.TransactionSynchronizationManager;
 import org.springframework.transaction.support.TransactionSynchronization;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.extern.slf4j.Slf4j;
+
 import javax.annotation.Resource;
 
 import org.springframework.web.multipart.MultipartFile;
@@ -66,6 +68,7 @@ import tech.qiantong.qmodel.module.model.controller.admin.fileResource.vo.ModelF
 import tech.qiantong.qmodel.module.model.dal.dataobject.fileResource.ModelFileResourceDO;
 import tech.qiantong.qmodel.module.model.dal.mapper.fileResource.ModelFileResourceMapper;
 import tech.qiantong.qmodel.module.model.service.fileResource.IModelFileResourceService;
+
 /**
  * 模型文件部署Service业务层处理
  *
@@ -75,7 +78,7 @@ import tech.qiantong.qmodel.module.model.service.fileResource.IModelFileResource
 @Slf4j
 @Service
 @Transactional(rollbackFor = Exception.class)
-public class ModelFileResourceServiceImpl  extends ServiceImpl<ModelFileResourceMapper,ModelFileResourceDO> implements IModelFileResourceService {
+public class ModelFileResourceServiceImpl extends ServiceImpl<ModelFileResourceMapper, ModelFileResourceDO> implements IModelFileResourceService {
     @Resource
     private ModelFileResourceMapper modelFileResourceMapper;
 
@@ -117,6 +120,7 @@ public class ModelFileResourceServiceImpl  extends ServiceImpl<ModelFileResource
         }
         return result;
     }
+
     @Override
     public int removeModelFileResource(Collection<Long> idList) {
         // 批量删除模型文件部署
@@ -146,75 +150,80 @@ public class ModelFileResourceServiceImpl  extends ServiceImpl<ModelFileResource
     }
 
 
-        /**
-         * 导入模型文件部署数据
-         *
-         * @param importExcelList 模型文件部署数据列表
-         * @param isUpdateSupport 是否更新支持，如果已存在，则进行更新数据
-         * @param operName 操作用户
-         * @return 结果
-         */
-        @Override
-        public String importModelFileResource(List<ModelFileResourceRespVO> importExcelList, boolean isUpdateSupport, String operName) {
-            if (StringUtils.isNull(importExcelList) || importExcelList.size() == 0) {
-                throw new ServiceException("导入数据不能为空！");
-            }
-
-            int successNum = 0;
-            int failureNum = 0;
-            List<String> successMessages = new ArrayList<>();
-            List<String> failureMessages = new ArrayList<>();
-
-            for (ModelFileResourceRespVO respVO : importExcelList) {
-                try {
-                    ModelFileResourceDO modelFileResourceDO = BeanUtils.toBean(respVO, ModelFileResourceDO.class);
-                    Long modelFileResourceId = respVO.getId();
-                    if (isUpdateSupport) {
-                        if (modelFileResourceId != null) {
-                            ModelFileResourceDO existingModelFileResource = modelFileResourceMapper.selectById(modelFileResourceId);
-                            if (existingModelFileResource != null) {
-                                modelFileResourceMapper.updateById(modelFileResourceDO);
-                                successNum++;
-                                successMessages.add("数据更新成功，ID为 " + modelFileResourceId + " 的模型文件部署记录。");
-                            } else {
-                                failureNum++;
-                                failureMessages.add("数据更新失败，ID为 " + modelFileResourceId + " 的模型文件部署记录不存在。");
-                            }
-                        } else {
-                            failureNum++;
-                            failureMessages.add("数据更新失败，某条记录的ID不存在。");
-                        }
-                    } else {
-                        QueryWrapper<ModelFileResourceDO> queryWrapper = new QueryWrapper<>();
-                        queryWrapper.eq("id", modelFileResourceId);
-                        ModelFileResourceDO existingModelFileResource = modelFileResourceMapper.selectOne(queryWrapper);
-                        if (existingModelFileResource == null) {
-                            modelFileResourceMapper.insert(modelFileResourceDO);
-                            successNum++;
-                            successMessages.add("数据插入成功，ID为 " + modelFileResourceId + " 的模型文件部署记录。");
-                        } else {
-                            failureNum++;
-                            failureMessages.add("数据插入失败，ID为 " + modelFileResourceId + " 的模型文件部署记录已存在。");
-                        }
-                    }
-                } catch (Exception e) {
-                    failureNum++;
-                    String errorMsg = "数据导入失败，错误信息：" + e.getMessage();
-                    failureMessages.add(errorMsg);
-                    log.error(errorMsg, e);
-                }
-            }
-            StringBuilder resultMsg = new StringBuilder();
-            if (failureNum > 0) {
-                resultMsg.append("很抱歉，导入失败！共 ").append(failureNum).append(" 条数据格式不正确，错误如下：");
-                resultMsg.append("<br/>").append(String.join("<br/>", failureMessages));
-                throw new ServiceException(resultMsg.toString());
-            } else {
-                resultMsg.append("恭喜您，数据已全部导入成功！共 ").append(successNum).append(" 条。");
-            }
-            return resultMsg.toString();
+    /**
+     * 导入模型文件部署数据
+     *
+     * @param importExcelList 模型文件部署数据列表
+     * @param isUpdateSupport 是否更新支持，如果已存在，则进行更新数据
+     * @param operName        操作用户
+     * @return 结果
+     */
+    @Override
+    public String importModelFileResource(List<ModelFileResourceRespVO> importExcelList, boolean isUpdateSupport, String operName) {
+        if (StringUtils.isNull(importExcelList) || importExcelList.size() == 0) {
+            throw new ServiceException("导入数据不能为空！");
         }
 
+        int successNum = 0;
+        int failureNum = 0;
+        List<String> successMessages = new ArrayList<>();
+        List<String> failureMessages = new ArrayList<>();
+
+        for (ModelFileResourceRespVO respVO : importExcelList) {
+            try {
+                ModelFileResourceDO modelFileResourceDO = BeanUtils.toBean(respVO, ModelFileResourceDO.class);
+                Long modelFileResourceId = respVO.getId();
+                if (isUpdateSupport) {
+                    if (modelFileResourceId != null) {
+                        ModelFileResourceDO existingModelFileResource = modelFileResourceMapper.selectById(modelFileResourceId);
+                        if (existingModelFileResource != null) {
+                            modelFileResourceMapper.updateById(modelFileResourceDO);
+                            successNum++;
+                            successMessages.add("数据更新成功，ID为 " + modelFileResourceId + " 的模型文件部署记录。");
+                        } else {
+                            failureNum++;
+                            failureMessages.add("数据更新失败，ID为 " + modelFileResourceId + " 的模型文件部署记录不存在。");
+                        }
+                    } else {
+                        failureNum++;
+                        failureMessages.add("数据更新失败，某条记录的ID不存在。");
+                    }
+                } else {
+                    QueryWrapper<ModelFileResourceDO> queryWrapper = new QueryWrapper<>();
+                    queryWrapper.eq("id", modelFileResourceId);
+                    ModelFileResourceDO existingModelFileResource = modelFileResourceMapper.selectOne(queryWrapper);
+                    if (existingModelFileResource == null) {
+                        modelFileResourceMapper.insert(modelFileResourceDO);
+                        successNum++;
+                        successMessages.add("数据插入成功，ID为 " + modelFileResourceId + " 的模型文件部署记录。");
+                    } else {
+                        failureNum++;
+                        failureMessages.add("数据插入失败，ID为 " + modelFileResourceId + " 的模型文件部署记录已存在。");
+                    }
+                }
+            } catch (Exception e) {
+                failureNum++;
+                String errorMsg = "数据导入失败，错误信息：" + e.getMessage();
+                failureMessages.add(errorMsg);
+                log.error(errorMsg, e);
+            }
+        }
+        StringBuilder resultMsg = new StringBuilder();
+        if (failureNum > 0) {
+            resultMsg.append("很抱歉，导入失败！共 ").append(failureNum).append(" 条数据格式不正确，错误如下：");
+            resultMsg.append("<br/>").append(String.join("<br/>", failureMessages));
+            throw new ServiceException(resultMsg.toString());
+        } else {
+            resultMsg.append("恭喜您，数据已全部导入成功！共 ").append(successNum).append(" 条。");
+        }
+        return resultMsg.toString();
+    }
+
+    /**
+     * 检测上传的ZIP文件是否符合模型文件部署的要求
+     * @param file 上传的ZIP文件
+     * @return
+     */
     @Override
     public Map<String, Object> checkZipFile(MultipartFile file) {
         Map<String, Object> result = new HashMap<>();
@@ -224,8 +233,7 @@ public class ModelFileResourceServiceImpl  extends ServiceImpl<ModelFileResource
         String fileName = file.getOriginalFilename();
         if (fileName == null || !fileName.toLowerCase().endsWith(".zip")) {
             errors.add("文件类型错误，仅支持ZIP格式");
-            pass = false;
-            result.put("pass", pass);
+            result.put("pass", false);
             result.put("errors", errors);
             return result;
         }
@@ -293,8 +301,8 @@ public class ModelFileResourceServiceImpl  extends ServiceImpl<ModelFileResource
         return result;
     }
 
-        @Override
-        public void triggerDepsCheck(Long fileResourceId) {
-            depsCheckHandler.checkDependencies(fileResourceId);
-        }
+    @Override
+    public void triggerDepsCheck(Long fileResourceId) {
+        depsCheckHandler.checkDependencies(fileResourceId);
+    }
 }

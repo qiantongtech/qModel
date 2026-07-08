@@ -775,7 +775,7 @@
 </template>
 
 <script setup name="ModelFileResource">
-  import { listModelFileResource, getModelFileResource, delModelFileResource, addModelFileResource, updateModelFileResource } from "@/api/model/fileResource/modelFileResource";
+  import { listModelFileResource, getModelFileResource, delModelFileResource, addModelFileResource, updateModelFileResource } from "@/api/model/modelFileResource";
   import {getToken} from "@/utils/auth.js";
 
   const { proxy } = getCurrentInstance();

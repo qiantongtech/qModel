@@ -569,7 +569,7 @@
 </template>
 
 <script setup name="ComponentOne">
-  import { listModelFileResource, getModelFileResource, delModelFileResource, addModelFileResource, updateModelFileResource } from "@/api/model/fileResource/modelFileResource";
+  import { listModelFileResource, getModelFileResource, delModelFileResource, addModelFileResource, updateModelFileResource } from "@/api/model/modelFileResource";
 
   const { proxy } = getCurrentInstance();
 

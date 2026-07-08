@@ -374,7 +374,7 @@
 </template>
 
 <script setup name="ModelFileResourceSingle">
-  import { listModelFileResource } from "@/api/model/fileResource/modelFileResource";
+  import { listModelFileResource } from "@/api/model/modelFileResource";
   import { ref } from "vue";
   const { proxy } = getCurrentInstance();
 

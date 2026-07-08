@@ -282,7 +282,7 @@
 </template>
 
 <script setup name="ModelFileResource">
-  import {getModelFileResource } from "@/api/model/fileResource/modelFileResource";
+  import {getModelFileResource } from "@/api/model/modelFileResource";
   import { useRoute } from 'vue-router';
   import ComponentOne from "@/views/model/fileResource/detail/componentOne.vue";
   import ComponentTwo from "@/views/model/fileResource/detail/componentTwo.vue";
