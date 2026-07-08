@@ -36,6 +36,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Collection;
 import com.baomidou.mybatisplus.extension.service.IService;
+import org.springframework.web.multipart.MultipartFile;
 import tech.qiantong.qmodel.common.core.page.PageResult;
 import tech.qiantong.qmodel.module.model.controller.admin.fileResource.vo.ModelFileResourceSaveReqVO;
 import tech.qiantong.qmodel.module.model.controller.admin.fileResource.vo.ModelFileResourcePageReqVO;
@@ -111,5 +112,22 @@ public interface IModelFileResourceService extends IService<ModelFileResourceDO>
      * @return 结果
      */
     String importModelFileResource(List<ModelFileResourceRespVO> importExcelList, boolean isUpdateSupport, String operName);
+
+    /**
+     * 检测上传的ZIP压缩包
+     * 验证ZIP包内是否包含main.py、requirements.txt文件，以及main.py中是否包含predict函数
+     *
+     * @param file 上传的ZIP文件
+     * @return 检测结果Map，包含pass(是否通过)、errors(错误列表)
+     */
+    Map<String, Object> checkZipFile(MultipartFile file);
+
+    /**
+     * 触发异步依赖检测
+     * 在模型文件资源保存到数据库后调用，异步启动依赖检测和安装
+     *
+     * @param fileResourceId 文件资源ID
+     */
+    void triggerDepsCheck(Long fileResourceId);
 
 }

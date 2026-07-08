@@ -55,13 +55,19 @@
         />
 
         <ApiConfigStep
-          v-show="activeStep === 1"
+          v-show="activeStep === 1 && form.accessType === 'API'"
           ref="apiStepRef"
           v-model:form-data="form"
           :dict-request-method="model_access_mode"
           :dict-content-type="content_type"
           :dict-auth-type="auth_type"
           :dict-inject-position="auth_inject_position"
+        />
+
+        <CheckUploadFile
+          v-show="activeStep === 1 && form.accessType === 'PYTHON'"
+          ref="checkUploadFileRef"
+          @file-checked="handleFileChecked"
         />
 
         <ParamDefineStep
@@ -90,7 +96,7 @@
 </template>
 
 <script setup name="ModelManageAdd">
-import { ref, reactive, onMounted } from 'vue'
+import { ref, reactive, computed, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { ElMessage } from 'element-plus'
 import { addModel, getModel, updateModel } from '@/api/model/model'
@@ -98,6 +104,7 @@ import { addModelConfig, listModelConfig, updateModelConfig } from '@/api/model/
 import { listClassify } from '@/api/modelReconstitution/classify'
 import BasicInfoStep from './BasicInfoStep.vue'
 import ApiConfigStep from './ApiConfigStep.vue'
+import CheckUploadFile from './checkUploadFile.vue'
 import ParamDefineStep from './ParamDefineStep.vue'
 import TestSaveStep from './TestSaveStep.vue'
 
@@ -124,17 +131,28 @@ const submitLoading = ref(false)
 const classifyOptions = ref([])
 const basicStepRef = ref(null)
 const apiStepRef = ref(null)
+const checkUploadFileRef = ref(null)
 const paramStepRef = ref(null)
 const testStepRef = ref(null)
 const isEdit = ref(false)
 const configId = ref(null)
 
-const stepsList = [
-  { name: '基础配置', id: 0 },
-  { name: 'API 配置', id: 1 },
-  { name: '参数定义', id: 2 },
-  { name: '测试与保存', id: 3 }
-]
+const stepsList = computed(() => {
+  if (form.accessType === 'PYTHON') {
+    return [
+      { name: '基础配置', id: 0 },
+      { name: '文件上传与校验', id: 1 },
+      { name: '参数定义', id: 2 },
+      { name: '测试与保存', id: 3 }
+    ]
+  }
+  return [
+    { name: '基础配置', id: 0 },
+    { name: 'API 配置', id: 1 },
+    { name: '参数定义', id: 2 },
+    { name: '测试与保存', id: 3 }
+  ]
+})
 
 const form = reactive({
   // 基础配置
@@ -299,7 +317,14 @@ const handleNextStep = async () => {
       await basicStepRef.value.validate()
     }
     if (activeStep.value === 1) {
-      await apiStepRef.value.validate()
+      if (form.accessType === 'API') {
+        await apiStepRef.value.validate()
+      } else if (form.accessType === 'PYTHON') {
+        if (!checkUploadFileRef.value || !checkUploadFileRef.value.validate()) {
+          ElMessage.warning('请上传并检测通过 ZIP 模型包')
+          throw new Error('请上传并检测通过 ZIP 模型包')
+        }
+      }
     }
     if (activeStep.value === 2) {
       await paramStepRef.value.validate()

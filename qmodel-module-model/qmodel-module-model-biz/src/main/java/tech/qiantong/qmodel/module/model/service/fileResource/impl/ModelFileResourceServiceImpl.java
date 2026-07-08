@@ -36,11 +36,23 @@ import java.util.Collection;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Map;
+import java.util.HashMap;
 import java.util.stream.Collectors;
+import java.util.zip.ZipInputStream;
+import java.util.zip.ZipEntry;
+import java.io.InputStream;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
+import java.util.regex.Pattern;
+import org.springframework.transaction.support.TransactionSynchronizationManager;
+import org.springframework.transaction.support.TransactionSynchronization;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import javax.annotation.Resource;
+
+import org.springframework.web.multipart.MultipartFile;
 import tech.qiantong.qmodel.common.core.page.PageResult;
 import tech.qiantong.qmodel.common.utils.object.BeanUtils;
 import tech.qiantong.qmodel.common.utils.StringUtils;
@@ -67,6 +79,9 @@ public class ModelFileResourceServiceImpl  extends ServiceImpl<ModelFileResource
     @Resource
     private ModelFileResourceMapper modelFileResourceMapper;
 
+    @Resource
+    private tech.qiantong.qmodel.module.model.service.fileResource.handler.ModelFileResourceDepsCheckHandler depsCheckHandler;
+
     @Override
     public PageResult<ModelFileResourceDO> getModelFileResourcePage(ModelFileResourcePageReqVO pageReqVO) {
         return modelFileResourceMapper.selectPage(pageReqVO);
@@ -75,17 +90,32 @@ public class ModelFileResourceServiceImpl  extends ServiceImpl<ModelFileResource
     @Override
     public Long createModelFileResource(ModelFileResourceSaveReqVO createReqVO) {
         ModelFileResourceDO dictType = BeanUtils.toBean(createReqVO, ModelFileResourceDO.class);
+        dictType.setImageBuildStatus("0");
         modelFileResourceMapper.insert(dictType);
+        final Long fileResourceId = dictType.getId();
+        TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronization() {
+            @Override
+            public void afterCommit() {
+                depsCheckHandler.checkDependencies(fileResourceId);
+            }
+        });
         return dictType.getId();
     }
 
     @Override
     public int updateModelFileResource(ModelFileResourceSaveReqVO updateReqVO) {
-        // 相关校验
-
-        // 更新模型文件部署
         ModelFileResourceDO updateObj = BeanUtils.toBean(updateReqVO, ModelFileResourceDO.class);
-        return modelFileResourceMapper.updateById(updateObj);
+        int result = modelFileResourceMapper.updateById(updateObj);
+        if (result > 0 && updateObj.getId() != null) {
+            final Long fileResourceId = updateObj.getId();
+            TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronization() {
+                @Override
+                public void afterCommit() {
+                    depsCheckHandler.checkDependencies(fileResourceId);
+                }
+            });
+        }
+        return result;
     }
     @Override
     public int removeModelFileResource(Collection<Long> idList) {
@@ -183,5 +213,88 @@ public class ModelFileResourceServiceImpl  extends ServiceImpl<ModelFileResource
                 resultMsg.append("恭喜您，数据已全部导入成功！共 ").append(successNum).append(" 条。");
             }
             return resultMsg.toString();
+        }
+
+    @Override
+    public Map<String, Object> checkZipFile(MultipartFile file) {
+        Map<String, Object> result = new HashMap<>();
+        List<String> errors = new ArrayList<>();
+        boolean pass = true;
+
+        String fileName = file.getOriginalFilename();
+        if (fileName == null || !fileName.toLowerCase().endsWith(".zip")) {
+            errors.add("文件类型错误，仅支持ZIP格式");
+            pass = false;
+            result.put("pass", pass);
+            result.put("errors", errors);
+            return result;
+        }
+
+        boolean hasMainPy = false;
+        boolean hasRequirementsTxt = false;
+        boolean hasPredictFunction = false;
+        ZipInputStream zipInputStream = null;
+
+        try {
+            InputStream inputStream = file.getInputStream();
+            zipInputStream = new ZipInputStream(inputStream);
+            ZipEntry entry;
+            Pattern predictPattern = Pattern.compile("\\s*def\\s+predict\\s*\\(");
+
+            while ((entry = zipInputStream.getNextEntry()) != null) {
+                String entryName = entry.getName();
+                if (!entry.isDirectory()) {
+                    if (entryName.endsWith("main.py")) {
+                        hasMainPy = true;
+                        // 直接读取内容到字节数组，避免关闭底层流
+                        byte[] content = new byte[(int) entry.getSize()];
+                        zipInputStream.read(content);
+                        String contentStr = new String(content, StandardCharsets.UTF_8);
+                        if (predictPattern.matcher(contentStr).find()) {
+                            hasPredictFunction = true;
+                        }
+                    } else if (entryName.endsWith("requirements.txt")) {
+                        hasRequirementsTxt = true;
+                    }
+                }
+            }
+        } catch (Exception e) {
+            log.error("检测ZIP文件失败", e);
+            errors.add("ZIP文件解析失败：" + e.getMessage());
+            pass = false;
+        } finally {
+            if (zipInputStream != null) {
+                try {
+                    zipInputStream.close();
+                } catch (Exception e) {
+                    log.error("关闭ZipInputStream失败", e);
+                }
+            }
+        }
+
+        if (!hasMainPy) {
+            errors.add("压缩包内缺少main.py文件");
+            pass = false;
+        }
+        if (!hasRequirementsTxt) {
+            errors.add("压缩包内缺少requirements.txt文件");
+            pass = false;
+        }
+        if (hasMainPy && !hasPredictFunction) {
+            errors.add("main.py中缺少predict函数定义");
+            pass = false;
+        }
+
+        result.put("pass", pass);
+        result.put("errors", errors);
+        result.put("mainPy", hasMainPy);
+        result.put("requirementsTxt", hasRequirementsTxt);
+        result.put("predictFunction", hasPredictFunction);
+        return result;
+    }
+
+        @Override
+        public void triggerDepsCheck(Long fileResourceId) {
+            depsCheckHandler.checkDependencies(fileResourceId);
         }
 }

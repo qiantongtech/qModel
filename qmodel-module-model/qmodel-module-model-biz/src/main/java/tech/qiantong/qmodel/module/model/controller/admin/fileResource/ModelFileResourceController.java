@@ -37,6 +37,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -135,6 +136,15 @@ public class ModelFileResourceController extends BaseController {
     @DeleteMapping("/{ids}")
     public CommonResult<Integer> remove(@PathVariable Long[] ids) {
         return CommonResult.toAjax(modelFileResourceService.removeModelFileResource(Arrays.asList(ids)));
+    }
+
+    @Operation(summary = "检测上传文件")
+    @PreAuthorize("@ss.hasPermi('model:fileResource:fileresource:add')")
+    @PostMapping("/checkUploadFile")
+    public CommonResult<Map<String, Object>> checkUploadFile(@RequestParam("file") MultipartFile file) {
+        Map<String, Object> result = modelFileResourceService.checkZipFile(file);
+        boolean pass = (Boolean) result.get("pass");
+        return CommonResult.success(result);
     }
 
 }
