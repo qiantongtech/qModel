@@ -74,3 +74,11 @@ export function updateFileResource(data) {
     data: data
   })
 }
+
+export function getBuildEnvInfo(filePath) {
+  return request({
+    url: '/model/modelFileResource/getBuildEnvInfo',
+    method: 'get',
+    params: { filePath }
+  })
+}

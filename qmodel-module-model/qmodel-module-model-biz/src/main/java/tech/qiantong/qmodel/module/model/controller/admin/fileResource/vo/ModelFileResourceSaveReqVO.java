@@ -59,6 +59,7 @@ public class ModelFileResourceSaveReqVO extends BaseEntity {
 
     @Excel(name = "模型id")
     @Schema(description = "模型id", example = "")
+    @NotNull(message = "模型id不能为空")
     private Long modelId;
 
     @Schema(description = "原始上传文件名", example = "")
@@ -67,7 +68,6 @@ public class ModelFileResourceSaveReqVO extends BaseEntity {
     private String fileName;
 
     @Schema(description = "脚本名称(入口文件)", example = "")
-    @NotBlank(message = "脚本名称(入口文件)不能为空")
     @Size(max = 32, message = "脚本名称(入口文件)长度不能超过32个字符")
     private String scriptName;
 
@@ -77,7 +77,6 @@ public class ModelFileResourceSaveReqVO extends BaseEntity {
     private String filePath;
 
     @Schema(description = "依赖文件路径", example = "")
-    @NotBlank(message = "依赖文件路径不能为空")
     @Size(max = 256, message = "依赖文件路径长度不能超过256个字符")
     private String depsFilePath;
 

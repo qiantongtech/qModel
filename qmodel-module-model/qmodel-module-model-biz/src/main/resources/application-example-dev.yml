@@ -28,3 +28,5 @@
 #  *
 # 更多信息请访问：https://qmodel.qiantong.tech/business.html
 
+python:
+  version: 3.13.13

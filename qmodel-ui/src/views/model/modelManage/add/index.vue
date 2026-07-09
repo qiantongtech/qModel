@@ -85,6 +85,7 @@
         <ConfirmBuildStep
           v-show="activeStep === 3 && form.accessType === 'PYTHON'"
           ref="confirmBuildStepRef"
+          :file-path="form.filePath"
         />
       </div>
     </div>
@@ -198,7 +199,10 @@ const form = reactive({
   inputSchema: '',
   outputSchema: '',
   // 测试与保存
-  testBody: ''
+  testBody: '',
+  // Python 文件上传
+  uploadedFile: null,
+  filePath: ''
 })
 
 onMounted(() => {
@@ -303,6 +307,17 @@ const getClassifyOptions = () => {
     }
     classifyOptions.value = result
   })
+}
+
+const handleFileChecked = (result) => {
+  console.log('[ModelAdd] handleFileChecked', result)
+  if (result.pass) {
+    form.uploadedFile = result.file
+    form.filePath = result.filePath || ''
+  } else {
+    form.uploadedFile = null
+    form.filePath = ''
+  }
 }
 
 const handleCancel = () => {
@@ -426,6 +441,25 @@ const handleSubmit = async () => {
         await updateModelConfig(configData)
       } else {
         await addModelConfig(configData)
+      }
+    }
+
+    if (form.accessType === 'PYTHON' && modelId && form.filePath) {
+      const fileData = {
+        modelId: modelId,
+        fileName: form.uploadedFile?.name || '',
+        filePath: form.filePath,
+        fileSize: Math.round(form.uploadedFile?.size / (1024 * 1024)) || 0,
+        scriptName: 'main.py',
+        resourceType: '2',
+        modelVersion: 1
+      }
+      
+      if (isEdit.value && form.fileResourceId) {
+        fileData.id = form.fileResourceId
+        await updateFileResource(fileData)
+      } else {
+        await addFileResource(fileData)
       }
     }
 

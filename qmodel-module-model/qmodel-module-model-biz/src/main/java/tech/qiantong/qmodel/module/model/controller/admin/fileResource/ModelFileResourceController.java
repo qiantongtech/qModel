@@ -145,4 +145,11 @@ public class ModelFileResourceController extends BaseController {
         return CommonResult.success(modelFileResourceService.checkZipFile(file));
     }
 
+    @Operation(summary = "获取构建环境信息")
+    @PreAuthorize("@ss.hasPermi('model:fileResource:fileresource:add')")
+    @GetMapping("/getBuildEnvInfo")
+    public CommonResult<Map<String, Object>> getBuildEnvInfo(@RequestParam("filePath") String filePath) {
+        return CommonResult.success(modelFileResourceService.getBuildEnvInfo(filePath));
+    }
+
 }

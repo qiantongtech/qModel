@@ -43,6 +43,7 @@ import java.util.zip.ZipEntry;
 import java.io.InputStream;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.io.FileInputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.regex.Pattern;
 
@@ -62,12 +63,16 @@ import tech.qiantong.qmodel.common.exception.ServiceException;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import tech.qiantong.qmodel.config.PythonConfig;
 import tech.qiantong.qmodel.module.model.controller.admin.fileResource.vo.ModelFileResourcePageReqVO;
 import tech.qiantong.qmodel.module.model.controller.admin.fileResource.vo.ModelFileResourceRespVO;
 import tech.qiantong.qmodel.module.model.controller.admin.fileResource.vo.ModelFileResourceSaveReqVO;
 import tech.qiantong.qmodel.module.model.dal.dataobject.fileResource.ModelFileResourceDO;
 import tech.qiantong.qmodel.module.model.dal.mapper.fileResource.ModelFileResourceMapper;
 import tech.qiantong.qmodel.module.model.service.fileResource.IModelFileResourceService;
+import tech.qiantong.qmodel.file.util.FileUploadUtil;
+import org.dromara.x.file.storage.core.FileInfo;
+
 
 /**
  * 模型文件部署Service业务层处理
@@ -84,6 +89,9 @@ public class ModelFileResourceServiceImpl extends ServiceImpl<ModelFileResourceM
 
     @Resource
     private tech.qiantong.qmodel.module.model.service.fileResource.handler.ModelFileResourceDepsCheckHandler depsCheckHandler;
+
+    @Resource
+    private PythonConfig pythonConfig;
 
     @Override
     public PageResult<ModelFileResourceDO> getModelFileResourcePage(ModelFileResourcePageReqVO pageReqVO) {
@@ -298,11 +306,65 @@ public class ModelFileResourceServiceImpl extends ServiceImpl<ModelFileResourceM
         result.put("mainPy", hasMainPy);
         result.put("requirementsTxt", hasRequirementsTxt);
         result.put("predictFunction", hasPredictFunction);
+
+        if (pass) {
+            try {
+                FileInfo fileInfo = FileUploadUtil.upload(file, "temp/");
+                if (fileInfo != null) {
+                    String relativePath = fileInfo.getPath() + fileInfo.getFilename();
+                    result.put("filePath", relativePath);
+                    log.debug("文件校验通过并上传到临时目录: {}", relativePath);
+                } else {
+                    errors.add("文件上传失败");
+                    result.put("pass", false);
+                }
+            } catch (Exception e) {
+                log.error("上传文件到临时目录失败", e);
+                errors.add("文件上传失败：" + e.getMessage());
+                result.put("pass", false);
+            }
+        }
+
         return result;
     }
 
     @Override
     public void triggerDepsCheck(Long fileResourceId) {
         depsCheckHandler.checkDependencies(fileResourceId);
+    }
+
+    @Override
+    public Map<String, Object> getBuildEnvInfo(String filePath) {
+        Map<String, Object> result = new HashMap<>();
+        List<String> requirements = new ArrayList<>();
+
+        String storagePath = System.getProperty("user.dir") + "/upload/";
+        String fullPath = storagePath + filePath;
+
+        try (InputStream is = new FileInputStream(fullPath);
+             ZipInputStream zis = new ZipInputStream(is, StandardCharsets.UTF_8)) {
+
+            ZipEntry entry;
+            while ((entry = zis.getNextEntry()) != null) {
+                if (!entry.isDirectory() && entry.getName().endsWith("requirements.txt")) {
+                    BufferedReader reader = new BufferedReader(new InputStreamReader(zis, StandardCharsets.UTF_8));
+                    String line;
+                    while ((line = reader.readLine()) != null) {
+                        line = line.trim();
+                        if (!line.isEmpty() && !line.startsWith("#")) {
+                            requirements.add(line);
+                        }
+                    }
+                    reader.close();
+                    break;
+                }
+            }
+        } catch (Exception e) {
+            log.error("读取requirements.txt失败", e);
+        }
+
+        result.put("pythonVersion", pythonConfig.getVersion());
+        result.put("requirements", requirements);
+        return result;
     }
 }

@@ -36,27 +36,68 @@
         <span>模型运行环境</span>
       </div>
       <div class="dockerfile-preview">
-        <div v-if="!dockerfileContent" class="dockerfile-empty">
+        <div v-if="loading" class="dockerfile-empty">
           <el-icon size="48" class="empty-icon"><Loading /></el-icon>
           <div class="empty-text">加载中...</div>
         </div>
-        <pre v-else class="dockerfile-content">{{ dockerfileContent }}</pre>
+        <pre v-else class="dockerfile-content">{{ envContent }}</pre>
       </div>
     </div>
   </div>
 </template>
 
 <script setup name="ConfirmBuildStep">
-import { ref } from 'vue'
+import { ref, computed, onMounted, watch } from 'vue'
 import { InfoFilled, Document, Loading } from '@element-plus/icons-vue'
+import { ElMessage } from 'element-plus'
+import { getBuildEnvInfo } from '@/api/model/fileResource'
 
-const dockerfileContent = ref(`python:3.11-alpine
-json5:0.9.14
-fastapi:0.103.0
-uvicorn:0.27.1
-onnxruntime:1.15.0
-numpy:1.26.2
-`)
+const props = defineProps({
+  filePath: {
+    type: String,
+    default: ''
+  }
+})
+
+const loading = ref(false)
+const pythonVersion = ref('')
+const requirements = ref([])
+
+const envContent = computed(() => {
+  if (!pythonVersion.value && requirements.value.length === 0) {
+    return ''
+  }
+  let content = `python:${pythonVersion.value}-alpine\n`
+  requirements.value.forEach(req => {
+    content += `${req}\n`
+  })
+  return content
+})
+
+const fetchEnvInfo = async () => {
+  if (!props.filePath) return
+  
+  loading.value = true
+  try {
+    const result = await getBuildEnvInfo(props.filePath)
+    const data = result.data || {}
+    pythonVersion.value = data.pythonVersion || '3.11'
+    requirements.value = data.requirements || []
+  } catch (error) {
+    console.error('[ConfirmBuildStep] 获取构建环境信息失败:', error)
+    requirements.value = []
+  } finally {
+    loading.value = false
+  }
+}
+
+onMounted(() => {
+  fetchEnvInfo()
+})
+
+watch(() => props.filePath, () => {
+  fetchEnvInfo()
+})
 
 const validate = () => {
   return Promise.resolve()

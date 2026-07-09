@@ -160,7 +160,7 @@ const handleCheckResult = (result) => {
     checkDetail.mainPy = true
     checkDetail.predictFunction = true
     checkDetail.requirementsTxt = true
-    emit('fileChecked', { pass: true, file: uploadedFile.value })
+    emit('fileChecked', { pass: true, file: uploadedFile.value, filePath: data.filePath })
   } else {
     checkStatus.value = 'failed'
     checkDetail.mainPy = data.mainPy || false

@@ -130,4 +130,13 @@ public interface IModelFileResourceService extends IService<ModelFileResourceDO>
      */
     void triggerDepsCheck(Long fileResourceId);
 
+    /**
+     * 获取构建环境信息
+     * 从上传的ZIP文件中读取requirements.txt内容
+     *
+     * @param filePath 文件相对路径
+     * @return 构建环境信息，包含pythonVersion和requirements列表
+     */
+    Map<String, Object> getBuildEnvInfo(String filePath);
+
 }

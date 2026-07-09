@@ -64,6 +64,8 @@ public class ModelFileResourceDepsCheckHandler {
     private static final String STATUS_CHECKING = "1";
     private static final String STATUS_SUCCESS = "2";
     private static final String STATUS_FAILED = "3";
+    
+    private static final String STORAGE_PATH = System.getProperty("user.dir") + "/upload/";
 
     @Async("threadPoolTaskExecutor")
     public void checkDependencies(Long fileResourceId) {
@@ -78,12 +80,15 @@ public class ModelFileResourceDepsCheckHandler {
 
             updateStatus(fileResourceId, STATUS_CHECKING);
 
-            String zipFilePath = fileResource.getFilePath();
-            if (zipFilePath == null || zipFilePath.isEmpty()) {
+            String relativePath = fileResource.getFilePath();
+            if (relativePath == null || relativePath.isEmpty()) {
                 log.warn("文件路径为空，fileResourceId: {}", fileResourceId);
                 updateStatus(fileResourceId, STATUS_FAILED);
                 return;
             }
+            
+            String zipFilePath = STORAGE_PATH + relativePath;
+            log.info("ZIP文件完整路径: {}", zipFilePath);
 
             List<String> requirements = parseRequirementsFromZip(zipFilePath);
             if (requirements.isEmpty()) {
