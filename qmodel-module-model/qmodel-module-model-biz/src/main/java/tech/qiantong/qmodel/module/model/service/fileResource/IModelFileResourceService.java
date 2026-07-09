@@ -41,6 +41,7 @@ import tech.qiantong.qmodel.common.core.page.PageResult;
 import tech.qiantong.qmodel.module.model.controller.admin.fileResource.vo.ModelFileResourceSaveReqVO;
 import tech.qiantong.qmodel.module.model.controller.admin.fileResource.vo.ModelFileResourcePageReqVO;
 import tech.qiantong.qmodel.module.model.controller.admin.fileResource.vo.ModelFileResourceRespVO;
+import tech.qiantong.qmodel.module.model.controller.admin.model.vo.ModelSaveReqVO;
 import tech.qiantong.qmodel.module.model.dal.dataobject.fileResource.ModelFileResourceDO;
 /**
  * 模型文件部署Service接口
@@ -138,5 +139,47 @@ public interface IModelFileResourceService extends IService<ModelFileResourceDO>
      * @return 构建环境信息，包含pythonVersion和requirements列表
      */
     Map<String, Object> getBuildEnvInfo(String filePath);
+
+    /**
+     * 从模型保存请求中保存文件资源
+     * 根据 ModelSaveReqVO 中的文件资源字段创建或更新文件资源记录
+     * 并注册事务提交后异步触发依赖检测
+     *
+     * @param saveReqVO 模型保存请求
+     * @param modelId 模型ID
+     */
+    void saveFileResourceFromModel(ModelSaveReqVO saveReqVO, Long modelId);
+
+    /**
+     * 执行模型脚本
+     * 根据模型ID查询对应的Python脚本信息，执行main.py并返回结果
+     *
+     * @param modelId 模型ID
+     * @param inputParam 输入参数（JSON格式）
+     * @return 脚本执行结果
+     */
+    String runModelScript(Long modelId, Map<String, Object> inputParam);
+
+    /**
+     * 执行模型脚本（支持文件参数）
+     * 根据模型ID查询对应的Python脚本信息，执行main.py并返回结果
+     * 支持传入JSON参数和文件参数
+     *
+     * @param modelId 模型ID
+     * @param paramsJson JSON参数字符串
+     * @param fileKeys 文件参数的key列表，逗号分隔
+     * @param files 文件列表
+     * @return 脚本执行结果
+     */
+    String runModelScript(Long modelId, String paramsJson, String fileKeys, List<MultipartFile> files);
+
+    /**
+     * 保存文件到临时目录
+     * 将上传的文件保存到临时目录，返回文件绝对路径
+     *
+     * @param file 上传的文件
+     * @return 文件绝对路径
+     */
+    String saveFileToTemp(MultipartFile file);
 
 }

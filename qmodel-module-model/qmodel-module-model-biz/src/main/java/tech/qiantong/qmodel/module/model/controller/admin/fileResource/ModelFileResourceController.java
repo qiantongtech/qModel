@@ -44,6 +44,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.http.MediaType;
 import tech.qiantong.qmodel.common.core.page.PageParam;
 import tech.qiantong.qmodel.common.core.domain.AjaxResult;
 import tech.qiantong.qmodel.common.annotation.Log;
@@ -150,6 +151,17 @@ public class ModelFileResourceController extends BaseController {
     @GetMapping("/getBuildEnvInfo")
     public CommonResult<Map<String, Object>> getBuildEnvInfo(@RequestParam("filePath") String filePath) {
         return CommonResult.success(modelFileResourceService.getBuildEnvInfo(filePath));
+    }
+
+    @Operation(summary = "执行模型脚本")
+    @PreAuthorize("@ss.hasPermi('model:fileResource:fileresource:add')")
+    @PostMapping(value = "/runScript/{modelId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public CommonResult<String> runScript(
+            @PathVariable("modelId") Long modelId,
+            @RequestParam(value = "params", required = false) String paramsJson,
+            @RequestParam(value = "fileKeys", required = false) String fileKeys,
+            @RequestParam(value = "files", required = false) List<MultipartFile> files) {
+        return CommonResult.success(modelFileResourceService.runModelScript(modelId, paramsJson, fileKeys, files));
     }
 
 }

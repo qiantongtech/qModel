@@ -207,7 +207,8 @@ const form = reactive({
   testBody: '',
   // Python 文件上传
   uploadedFile: null,
-  filePath: ''
+  filePath: '',
+  fileResourceId: null
 })
 
 onMounted(() => {
@@ -284,6 +285,18 @@ const loadModelData = async (id) => {
           authExtractPath: config.authExtractPath || '',
           inputSchema: config.inputSchema || '',
           outputSchema: config.outputSchema || ''
+        })
+      }
+    } else if (accessType === 'PYTHON') {
+      const fileResRes = await listModelFileResource({ modelId: id })
+      const fileResList = fileResRes.data?.rows || fileResRes.data || []
+      if (fileResList.length > 0) {
+        const fileRes = fileResList[0]
+        Object.assign(form, {
+          fileResourceId: fileRes.id,
+          filePath: fileRes.filePath || '',
+          inputSchema: fileRes.inputSchema || '',
+          outputSchema: fileRes.outputSchema || ''
         })
       }
     }
@@ -371,7 +384,7 @@ const handleNextStep = async () => {
 }
 
 const buildModelData = () => {
-  return {
+  const modelData = {
     id: isEdit.value ? form.id : undefined,
     companyId: form.companyId,
     name: form.name,
@@ -385,6 +398,19 @@ const buildModelData = () => {
     description: form.description || null,
     remark: form.remark || null
   }
+
+  if (form.accessType === 'PYTHON') {
+    modelData.filePath = form.filePath || undefined
+    modelData.fileName = form.uploadedFile?.name || undefined
+    modelData.fileSize = form.uploadedFile?.size ? Math.round(form.uploadedFile.size / (1024 * 1024)) : undefined
+    modelData.scriptName = 'main.py'
+    modelData.resourceType = '2'
+    modelData.modelVersion = 1
+    modelData.fileResourceId = isEdit.value ? form.fileResourceId : undefined
+    modelData.accessType = 1
+  }
+
+  return modelData
 }
 
 const buildConfigData = (modelId) => {

@@ -93,5 +93,36 @@ public class ModelSaveReqVO extends BaseEntity {
     @Schema(description = "备注", example = "")
     private String remark;
 
+    @Schema(description = "文件存储路径(PYTHON类型专用)", example = "")
+    @Size(max = 256, message = "文件存储路径长度不能超过256个字符")
+    private String filePath;
+
+    @Schema(description = "原始上传文件名(PYTHON类型专用)", example = "")
+    @Size(max = 32, message = "原始上传文件名长度不能超过32个字符")
+    private String fileName;
+
+    @Schema(description = "文件大小MB(PYTHON类型专用)", example = "")
+    private Long fileSize;
+
+    @Schema(description = "脚本名称(入口文件)(PYTHON类型专用)", example = "")
+    @Size(max = 32, message = "脚本名称长度不能超过32个字符")
+    private String scriptName;
+
+    @Schema(description = "资源类型：1=模型文件(onnx/pth/safetensors)，2=Python算法脚本(.py)(PYTHON类型专用)", example = "")
+    private String resourceType;
+
+    @Schema(description = "模型版本号(PYTHON类型专用)", example = "")
+    private Long modelVersion;
+
+    @Schema(description = "输入参数Schema(PYTHON类型专用)", example = "")
+    @Size(max = 3072, message = "输入参数Schema长度不能超过3072个字符")
+    private String inputSchema;
+
+    @Schema(description = "输出参数Schema(PYTHON类型专用)", example = "")
+    @Size(max = 3072, message = "输出参数Schema长度不能超过3072个字符")
+    private String outputSchema;
+
+    @Schema(description = "文件资源ID(编辑模式下使用)", example = "")
+    private Long fileResourceId;
 
 }

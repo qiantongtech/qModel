@@ -59,18 +59,18 @@ import tech.qiantong.qmodel.module.model.dal.mapper.config.ModelConfigMapper;
 import tech.qiantong.qmodel.module.model.dal.mapper.model.ModelMapper;
 import tech.qiantong.qmodel.module.model.service.config.IModelConfigService;
 import tech.qiantong.qmodel.module.model.service.model.IModelService;
-/**
- * 模型基础信息Service业务层处理
- *
- * @author anivia
- * @date 2026-07-07
- */
+import tech.qiantong.qmodel.module.model.service.fileResource.IModelFileResourceService;
+
 @Slf4j
 @Service
 @Transactional(rollbackFor = Exception.class)
-public class ModelServiceImpl  extends ServiceImpl<ModelMapper,ModelDO> implements IModelService {
+public class ModelServiceImpl extends ServiceImpl<ModelMapper, ModelDO> implements IModelService {
     @Resource
     private ModelMapper modelMapper;
+    @Resource
+    private IModelFileResourceService modelFileResourceService;
+
+    private static final String ACCESS_TYPE_PYTHON = "1";
 
     @Resource
     private ModelConfigMapper modelConfigMapper;
@@ -85,22 +85,35 @@ public class ModelServiceImpl  extends ServiceImpl<ModelMapper,ModelDO> implemen
 
     @Override
     public Long createModel(ModelSaveReqVO createReqVO) {
-        ModelDO dictType = BeanUtils.toBean(createReqVO, ModelDO.class);
-        modelMapper.insert(dictType);
-        return dictType.getId();
+        ModelDO modelDO = BeanUtils.toBean(createReqVO, ModelDO.class);
+        modelMapper.insert(modelDO);
+        Long modelId = modelDO.getId();
+
+        if (ACCESS_TYPE_PYTHON.equals(createReqVO.getAccessType())) {
+            if (StringUtils.isEmpty(createReqVO.getFilePath())) {
+                throw new ServiceException("Python类型模型必须上传文件");
+            }
+            modelFileResourceService.saveFileResourceFromModel(createReqVO, modelId);
+        }
+
+        return modelId;
     }
 
     @Override
     public int updateModel(ModelSaveReqVO updateReqVO) {
-        // 相关校验
-
-        // 更新模型基础信息
         ModelDO updateObj = BeanUtils.toBean(updateReqVO, ModelDO.class);
-        return modelMapper.updateById(updateObj);
+        modelMapper.updateById(updateObj);
+        Long modelId = updateReqVO.getId();
+
+        if (ACCESS_TYPE_PYTHON.equals(updateReqVO.getAccessType())) {
+            modelFileResourceService.saveFileResourceFromModel(updateReqVO, modelId);
+        }
+
+        return 1;
     }
+
     @Override
     public int removeModel(Collection<Long> idList) {
-        // 批量删除模型基础信息
         return modelMapper.deleteBatchIds(idList);
     }
 
@@ -121,20 +134,10 @@ public class ModelServiceImpl  extends ServiceImpl<ModelMapper,ModelDO> implemen
                 .collect(Collectors.toMap(
                         ModelDO::getId,
                         modelDO -> modelDO,
-                        // 保留已存在的值
                         (existing, replacement) -> existing
                 ));
     }
 
-
-    /**
-     * 导入模型基础信息数据
-     *
-     * @param importExcelList 模型基础信息数据列表
-     * @param isUpdateSupport 是否更新支持，如果已存在，则进行更新数据
-     * @param operName 操作用户
-     * @return 结果
-     */
     @Override
     public String importModel(List<ModelRespVO> importExcelList, boolean isUpdateSupport, String operName) {
         if (StringUtils.isNull(importExcelList) || importExcelList.size() == 0) {

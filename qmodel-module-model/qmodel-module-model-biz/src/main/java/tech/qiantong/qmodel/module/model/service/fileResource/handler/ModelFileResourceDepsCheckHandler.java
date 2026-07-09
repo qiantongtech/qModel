@@ -32,6 +32,7 @@
 
 package tech.qiantong.qmodel.module.model.service.fileResource.handler;
 
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
@@ -64,13 +65,13 @@ public class ModelFileResourceDepsCheckHandler {
     private static final String STATUS_CHECKING = "1";
     private static final String STATUS_SUCCESS = "2";
     private static final String STATUS_FAILED = "3";
-    
+
     private static final String STORAGE_PATH = System.getProperty("user.dir") + "/upload/";
 
     @Async("threadPoolTaskExecutor")
     public void checkDependencies(Long fileResourceId) {
         log.info("开始异步检测依赖，fileResourceId: {}", fileResourceId);
-        
+
         try {
             ModelFileResourceDO fileResource = modelFileResourceMapper.selectById(fileResourceId);
             if (fileResource == null) {
@@ -78,22 +79,34 @@ public class ModelFileResourceDepsCheckHandler {
                 return;
             }
 
-            updateStatus(fileResourceId, STATUS_CHECKING);
+            updateStatus(fileResourceId, STATUS_CHECKING, null, null);
 
             String relativePath = fileResource.getFilePath();
             if (relativePath == null || relativePath.isEmpty()) {
                 log.warn("文件路径为空，fileResourceId: {}", fileResourceId);
-                updateStatus(fileResourceId, STATUS_FAILED);
+                updateStatus(fileResourceId, STATUS_FAILED, null, null);
                 return;
             }
-            
+
             String zipFilePath = STORAGE_PATH + relativePath;
             log.info("ZIP文件完整路径: {}", zipFilePath);
 
-            List<String> requirements = parseRequirementsFromZip(zipFilePath);
+            String extractDir = extractZipToTemp(zipFilePath, fileResourceId);
+            if (extractDir == null) {
+                log.warn("解压ZIP文件失败，fileResourceId: {}", fileResourceId);
+                updateStatus(fileResourceId, STATUS_FAILED, null, null);
+                return;
+            }
+
+            String scriptPath = findMainPyPath(extractDir);
+            String depsPath = findRequirementsTxtPath(extractDir);
+
+            log.info("找到入口文件: {}, 依赖文件: {}", scriptPath, depsPath);
+
+            List<String> requirements = parseRequirements(depsPath);
             if (requirements.isEmpty()) {
                 log.warn("requirements.txt为空或不存在，fileResourceId: {}", fileResourceId);
-                updateStatus(fileResourceId, STATUS_SUCCESS);
+                updateStatus(fileResourceId, STATUS_SUCCESS, scriptPath, depsPath);
                 return;
             }
 
@@ -101,15 +114,15 @@ public class ModelFileResourceDepsCheckHandler {
             boolean allInstalled = checkAllDependenciesInstalled(requirements, installedPackages);
 
             if (allInstalled) {
-                updateStatus(fileResourceId, STATUS_SUCCESS);
+                updateStatus(fileResourceId, STATUS_SUCCESS, scriptPath, depsPath);
                 log.info("依赖检测通过，fileResourceId: {}", fileResourceId);
             } else {
                 boolean installSuccess = installMissingDependencies(requirements, installedPackages);
                 if (installSuccess) {
-                    updateStatus(fileResourceId, STATUS_SUCCESS);
+                    updateStatus(fileResourceId, STATUS_SUCCESS, scriptPath, depsPath);
                     log.info("依赖安装成功，fileResourceId: {}", fileResourceId);
                 } else {
-                    updateStatus(fileResourceId, STATUS_FAILED);
+                    updateStatus(fileResourceId, STATUS_FAILED, scriptPath, depsPath);
                     log.warn("依赖安装失败，fileResourceId: {}", fileResourceId);
                 }
             }
@@ -117,58 +130,152 @@ public class ModelFileResourceDepsCheckHandler {
         } catch (Exception e) {
             log.error("依赖检测异常，fileResourceId: {}", fileResourceId, e);
             try {
-                updateStatus(fileResourceId, STATUS_FAILED);
+                updateStatus(fileResourceId, STATUS_FAILED, null, null);
             } catch (Exception updateEx) {
                 log.error("更新状态失败，fileResourceId: {}", fileResourceId, updateEx);
             }
         }
     }
 
-    private List<String> parseRequirementsFromZip(String zipFilePath) throws IOException {
+    private String extractZipToTemp(String zipFilePath, Long fileResourceId) {
+        String extractDir = STORAGE_PATH + "temp/extract/" + fileResourceId + "/";
+        Path extractPath = Paths.get(extractDir);
+
+        try {
+            if (Files.exists(extractPath)) {
+                deleteDirectory(extractPath.toFile());
+            }
+            Files.createDirectories(extractPath);
+
+            try (InputStream is = Files.newInputStream(Paths.get(zipFilePath));
+                 ZipInputStream zis = new ZipInputStream(is, StandardCharsets.UTF_8)) {
+
+                ZipEntry entry;
+                while ((entry = zis.getNextEntry()) != null) {
+                    Path entryPath = extractPath.resolve(entry.getName()).normalize();
+
+                    if (!entryPath.startsWith(extractPath)) {
+                        log.warn("ZIP条目路径超出解压目录: {}", entry.getName());
+                        continue;
+                    }
+
+                    if (entry.isDirectory()) {
+                        Files.createDirectories(entryPath);
+                    } else {
+                        Files.createDirectories(entryPath.getParent());
+                        Files.copy(zis, entryPath);
+                    }
+                    zis.closeEntry();
+                }
+            }
+
+            log.info("ZIP文件解压成功，解压目录: {}", extractDir);
+            return extractDir;
+        } catch (Exception e) {
+            log.error("解压ZIP文件失败，fileResourceId: {}", fileResourceId, e);
+            return null;
+        }
+    }
+
+    private void deleteDirectory(File directory) {
+        if (directory.exists()) {
+            File[] files = directory.listFiles();
+            if (files != null) {
+                for (File file : files) {
+                    if (file.isDirectory()) {
+                        deleteDirectory(file);
+                    } else {
+                        file.delete();
+                    }
+                }
+            }
+            directory.delete();
+        }
+    }
+
+    private String findMainPyPath(String extractDir) {
+        Path extractPath = Paths.get(extractDir);
+        try {
+            return Files.walk(extractPath)
+                    .filter(Files::isRegularFile)
+                    .filter(p -> p.getFileName().toString().equals("main.py"))
+                    .findFirst()
+                    .map(p -> getRelativePath(p.toString()))
+                    .orElse(null);
+        } catch (Exception e) {
+            log.error("查找main.py失败", e);
+            return null;
+        }
+    }
+
+    private String findRequirementsTxtPath(String extractDir) {
+        Path extractPath = Paths.get(extractDir);
+        try {
+            return Files.walk(extractPath)
+                    .filter(Files::isRegularFile)
+                    .filter(p -> p.getFileName().toString().equals("requirements.txt"))
+                    .findFirst()
+                    .map(p -> getRelativePath(p.toString()))
+                    .orElse(null);
+        } catch (Exception e) {
+            log.error("查找requirements.txt失败", e);
+            return null;
+        }
+    }
+
+    /**
+     * 将绝对路径转换为相对于 STORAGE_PATH 的相对路径
+     * @param absolutePath 绝对路径
+     * @return 相对路径
+     */
+    private String getRelativePath(String absolutePath) {
+        if (absolutePath == null || STORAGE_PATH == null) {
+            return absolutePath;
+        }
+        // 移除 STORAGE_PATH 前缀，得到相对路径
+        if (absolutePath.startsWith(STORAGE_PATH)) {
+            return absolutePath.substring(STORAGE_PATH.length());
+        }
+        return absolutePath;
+    }
+
+    private List<String> parseRequirements(String requirementsPath) {
         List<String> requirements = new ArrayList<>();
-        Path zipPath = Paths.get(zipFilePath);
-        
-        if (!Files.exists(zipPath)) {
-            log.warn("ZIP文件不存在: {}", zipFilePath);
+
+        if (requirementsPath == null || requirementsPath.isEmpty()) {
             return requirements;
         }
 
-        try (InputStream is = Files.newInputStream(zipPath);
-             ZipInputStream zis = new ZipInputStream(is, StandardCharsets.UTF_8)) {
-            
-            ZipEntry entry;
-            while ((entry = zis.getNextEntry()) != null) {
-                if (!entry.isDirectory() && entry.getName().endsWith("requirements.txt")) {
-                    BufferedReader reader = new BufferedReader(new InputStreamReader(zis, StandardCharsets.UTF_8));
-                    String line;
-                    while ((line = reader.readLine()) != null) {
-                        line = line.trim();
-                        if (!line.isEmpty() && !line.startsWith("#")) {
-                            Matcher matcher = REQUIREMENT_PATTERN.matcher(line);
-                            if (matcher.matches()) {
-                                requirements.add(line);
-                            }
-                        }
+        try (BufferedReader reader = new BufferedReader(
+                new InputStreamReader(new FileInputStream(requirementsPath), StandardCharsets.UTF_8))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                line = line.trim();
+                if (!line.isEmpty() && !line.startsWith("#")) {
+                    Matcher matcher = REQUIREMENT_PATTERN.matcher(line);
+                    if (matcher.matches()) {
+                        requirements.add(line);
                     }
-                    reader.close();
-                    break;
                 }
             }
+        } catch (Exception e) {
+            log.error("读取requirements.txt失败，路径: {}", requirementsPath, e);
         }
+
         return requirements;
     }
 
     private Set<String> getInstalledPackages() {
         Set<String> installedPackages = new HashSet<>();
         String pythonCmd = getPythonCommand();
-        
+
         try {
             ProcessBuilder pb = new ProcessBuilder(pythonCmd, "-m", "pip", "list", "--format=freeze");
             setupProcessBuilder(pb);
-            
+
             Process process = pb.start();
             boolean completed = process.waitFor(5, TimeUnit.MINUTES);
-            
+
             if (completed && process.exitValue() == 0) {
                 BufferedReader reader = new BufferedReader(
                         new InputStreamReader(process.getInputStream(), StandardCharsets.UTF_8));
@@ -231,18 +338,18 @@ public class ModelFileResourceDepsCheckHandler {
         try {
             ProcessBuilder pb = new ProcessBuilder(cmdArgs);
             setupProcessBuilder(pb);
-            
+
             log.info("开始安装依赖包: {}", missingPackages);
             Process process = pb.start();
             boolean completed = process.waitFor(15, TimeUnit.MINUTES);
-            
+
             if (completed && process.exitValue() == 0) {
                 log.info("依赖包安装成功");
                 return true;
             } else {
                 StringBuilder errorOutput = new StringBuilder();
                 BufferedReader errorReader = new BufferedReader(
-                        new InputStreamReader(process.getInputStream(), StandardCharsets.UTF_8));
+                        new InputStreamReader(process.getErrorStream(), StandardCharsets.UTF_8));
                 String line;
                 while ((line = errorReader.readLine()) != null) {
                     errorOutput.append(line).append("\n");
@@ -272,12 +379,12 @@ public class ModelFileResourceDepsCheckHandler {
     private void setupProcessBuilder(ProcessBuilder pb) {
         Map<String, String> env = pb.environment();
         env.put("PYTHONIOENCODING", "UTF-8");
-        
+
         String osName = System.getProperty("os.name").toLowerCase();
         if (!osName.contains("win")) {
             env.put("LANG", "en_US.UTF-8");
         }
-        
+
         pb.redirectErrorStream(true);
     }
 
@@ -293,10 +400,21 @@ public class ModelFileResourceDepsCheckHandler {
         return name.toLowerCase().replace("-", "_");
     }
 
-    private void updateStatus(Long fileResourceId, String status) {
-        ModelFileResourceDO updateObj = new ModelFileResourceDO();
-        updateObj.setId(fileResourceId);
-        updateObj.setImageBuildStatus(status);
-        modelFileResourceMapper.updateById(updateObj);
+    private void updateStatus(Long fileResourceId, String status, String scriptPath, String depsPath) {
+        UpdateWrapper<ModelFileResourceDO> wrapper = new UpdateWrapper<>();
+        wrapper.eq("id", fileResourceId)
+                .set("image_build_status", status)
+                .set("update_by", "system")
+                .set("updator_id", 1L);
+
+        if (scriptPath != null) {
+            wrapper.set("docker_file_path", scriptPath);
+        }
+        if (depsPath != null) {
+            wrapper.set("deps_file_path", depsPath);
+        }
+
+        modelFileResourceMapper.update(null, wrapper);
     }
+
 }
