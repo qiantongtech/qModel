@@ -48,11 +48,16 @@ import tech.qiantong.qmodel.common.exception.ServiceException;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import tech.qiantong.qmodel.module.model.controller.admin.config.vo.ModelConfigSaveReqVO;
 import tech.qiantong.qmodel.module.model.controller.admin.model.vo.ModelPageReqVO;
 import tech.qiantong.qmodel.module.model.controller.admin.model.vo.ModelRespVO;
 import tech.qiantong.qmodel.module.model.controller.admin.model.vo.ModelSaveReqVO;
+import tech.qiantong.qmodel.module.model.controller.admin.model.vo.ModelSaveWithConfigReqVO;
+import tech.qiantong.qmodel.module.model.dal.dataobject.config.ModelConfigDO;
 import tech.qiantong.qmodel.module.model.dal.dataobject.model.ModelDO;
+import tech.qiantong.qmodel.module.model.dal.mapper.config.ModelConfigMapper;
 import tech.qiantong.qmodel.module.model.dal.mapper.model.ModelMapper;
+import tech.qiantong.qmodel.module.model.service.config.IModelConfigService;
 import tech.qiantong.qmodel.module.model.service.model.IModelService;
 /**
  * 模型基础信息Service业务层处理
@@ -66,6 +71,12 @@ import tech.qiantong.qmodel.module.model.service.model.IModelService;
 public class ModelServiceImpl  extends ServiceImpl<ModelMapper,ModelDO> implements IModelService {
     @Resource
     private ModelMapper modelMapper;
+
+    @Resource
+    private ModelConfigMapper modelConfigMapper;
+
+    @Resource
+    private IModelConfigService modelConfigService;
 
     @Override
     public PageResult<ModelDO> getModelPage(ModelPageReqVO pageReqVO) {
@@ -183,5 +194,41 @@ public class ModelServiceImpl  extends ServiceImpl<ModelMapper,ModelDO> implemen
             resultMsg.append("恭喜您，数据已全部导入成功！共 ").append(successNum).append(" 条。");
         }
         return resultMsg.toString();
+    }
+
+    @Override
+    public Long saveModelWithConfig(ModelSaveWithConfigReqVO saveReqVO) {
+        ModelSaveReqVO modelReq = saveReqVO.getModel();
+        ModelConfigSaveReqVO configReq = saveReqVO.getConfig();
+
+        // 1. 保存模型基础信息
+        Long modelId;
+        if (modelReq.getId() != null) {
+            updateModel(modelReq);
+            modelId = modelReq.getId();
+        } else {
+            modelId = createModel(modelReq);
+        }
+
+        // 2. 处理模型配置详情
+        if (configReq != null) {
+            configReq.setModelId(modelId);
+            configReq.setCompanyId(modelReq.getCompanyId());
+
+            ModelConfigDO existingConfig = modelConfigMapper.selectOne(
+                    new QueryWrapper<ModelConfigDO>()
+                            .eq("model_id", modelId)
+                            .eq("del_flag", 0)
+            );
+
+            if (existingConfig != null) {
+                configReq.setId(existingConfig.getId());
+                modelConfigService.updateModelConfig(configReq);
+            } else {
+                modelConfigService.createModelConfig(configReq);
+            }
+        }
+
+        return modelId;
     }
 }

@@ -67,6 +67,15 @@ export function updateModel(data) {
   })
 }
 
+// 保存模型基础信息及配置详情
+export function saveModelWithConfig(data) {
+  return request({
+    url: '/model/model/saveWithConfig',
+    method: 'post',
+    data: data
+  })
+}
+
 // 删除模型基础信息
 export function delModel(id) {
   return request({

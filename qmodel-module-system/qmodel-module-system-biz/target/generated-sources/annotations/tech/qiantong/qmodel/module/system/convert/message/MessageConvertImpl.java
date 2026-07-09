@@ -10,8 +10,8 @@ import tech.qiantong.qmodel.module.system.dal.dataobject.message.MessageDO;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2026-07-08T15:23:35+0800",
-    comments = "version: 1.5.5.Final, compiler: javac, environment: Java 1.8.0_212 (Oracle Corporation)"
+    date = "2026-07-08T09:04:47+0800",
+    comments = "version: 1.5.5.Final, compiler: javac, environment: Java 1.8.0_492 (Amazon.com Inc.)"
 )
 public class MessageConvertImpl implements MessageConvert {
 

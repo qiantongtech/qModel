@@ -21,14 +21,12 @@
       ref="apiFormRef"
       :model="formData"
       :rules="rules"
-      label-width="150px"
+      label-width="170px"
+      style="padding-right: 90px"
       class="api-form"
     >
       <div class="section-block">
-        <div class="section-title">
-          <span class="title-line"></span>
-          <span>基础请求配置</span>
-        </div>
+        <div class="h2-titles">基础请求配置</div>
 
         <el-form-item label="接口地址（URL）" prop="apiUrl">
           <div class="url-input-group">
@@ -76,10 +74,7 @@
       </div>
 
       <div class="section-block">
-        <div class="section-title">
-          <span class="title-line"></span>
-          <span>鉴权配置</span>
-        </div>
+        <div class="h2-titles">鉴权配置</div>
 
         <el-form-item label="鉴权类型" prop="authType">
           <el-radio-group v-model="formData.authType">
@@ -94,32 +89,46 @@
         </div>
 
         <template v-if="formData.authType === 'FIXED'">
-          <el-form-item label="Token 内容" prop="authTokenValue">
-            <el-input
-              v-model="formData.authTokenValue"
-              placeholder="请输入 Token 内容，如 sk-xxxxx"
-            />
+          <el-form-item label="鉴权方式" prop="authMethod">
+            <el-select v-model="formData.authMethod" placeholder="请选择" style="width: 100%">
+              <el-option label="Bearer Token" value="bearer" />
+              <el-option label="API Key" value="apiKey" />
+            </el-select>
           </el-form-item>
 
-          <el-row :gutter="20">
-            <el-col :span="12">
-              <el-form-item label="注入位置" prop="authInjectPosition">
-                <el-select v-model="formData.authInjectPosition" placeholder="请选择" style="width: 100%">
-                  <el-option
-                    v-for="item in injectPositionOptions"
-                    :key="item.value"
-                    :label="item.label"
-                    :value="item.value"
-                  />
-                </el-select>
-              </el-form-item>
-            </el-col>
-            <el-col :span="12">
-              <el-form-item label="注入参数名" prop="authKeyName">
-                <el-input v-model="formData.authKeyName" placeholder="请输入注入参数名" />
-              </el-form-item>
-            </el-col>
-          </el-row>
+          <template v-if="formData.authMethod === 'bearer'">
+            <el-form-item label="Token 内容" prop="authTokenValue">
+              <el-input
+                v-model="formData.authTokenValue"
+                placeholder="请输入 Token 内容"
+              />
+            </el-form-item>
+          </template>
+
+          <template v-if="formData.authMethod === 'apiKey'">
+            <el-row :gutter="20">
+              <el-col :span="12">
+                <el-form-item label="注入位置" prop="authInjectPosition">
+                  <el-select v-model="formData.authInjectPosition" placeholder="请选择" style="width: 100%">
+                    <el-option
+                      v-for="item in injectPositionOptions"
+                      :key="item.value"
+                      :label="item.label"
+                      :value="item.value"
+                    />
+                  </el-select>
+                </el-form-item>
+              </el-col>
+              <el-col :span="12">
+                <el-form-item label="Key" prop="authKeyName">
+                  <el-input v-model="formData.authKeyName" placeholder="请输入 Key" />
+                </el-form-item>
+              </el-col>
+            </el-row>
+            <el-form-item label="Value" prop="authTokenValue">
+              <el-input v-model="formData.authTokenValue" placeholder="请输入 Value" />
+            </el-form-item>
+          </template>
         </template>
 
         <template v-if="formData.authType === 'DYNAMIC'">
@@ -147,8 +156,8 @@
                 <el-input
                   v-model="formData.authDynamicHeaders"
                   type="textarea"
-                  :rows="5"
-                  placeholder='{"Content-Type": "application/x-www-form-urlencoded", "Tenant-Id": "xxx", "Authorization": "Basic xxx"}'
+                  :rows="8"
+                  placeholder='请输入请求头'
                 />
               </el-form-item>
             </el-col>
@@ -157,31 +166,22 @@
                 <el-input
                   v-model="formData.authDynamicParams"
                   type="textarea"
-                  :rows="5"
-                  placeholder='{"grant_type": "password", "username": "xxx", "password": "xxx", "scope": "all"}'
+                  :rows="8"
+                  placeholder='请输入 Query 参数'
                 />
               </el-form-item>
             </el-col>
           </el-row>
 
-          <el-form-item label="请求体（Body）" prop="authDynamicBody">
-            <el-input
-              v-model="formData.authDynamicBody"
-              type="textarea"
-              :rows="3"
-              placeholder='如 Token 接口不需要 Body 则留空，或填写 form/json 内容'
-            />
-          </el-form-item>
-
           <el-row :gutter="20">
             <el-col :span="12">
               <el-form-item label="Token 提取路径" prop="authExtractPath">
-                <el-input v-model="formData.authExtractPath" placeholder="如 data.access_token" />
+                <el-input v-model="formData.authExtractPath" placeholder="请输入 Token 提取路径" />
               </el-form-item>
             </el-col>
             <el-col :span="12">
-              <el-form-item label="值前缀（可选）" prop="authTokenPrefix">
-                <el-input v-model="formData.authTokenPrefix" placeholder="如 Bearer" />
+              <el-form-item label="值前缀" prop="authTokenPrefix">
+                <el-input v-model="formData.authTokenPrefix" placeholder="请输入值前缀" />
               </el-form-item>
             </el-col>
           </el-row>
@@ -219,6 +219,11 @@ const formData = defineModel('formData', {
   required: true
 })
 
+const authBackup = ref({
+  FIXED: {},
+  DYNAMIC: {}
+})
+
 const props = defineProps({
   dictRequestMethod: {
     type: Array,
@@ -243,7 +248,6 @@ const apiFormRef = ref(null)
 const requestMethodOptions = computed(() => {
   if (props.dictRequestMethod && props.dictRequestMethod.length > 0) {
     return props.dictRequestMethod.map((item) => {
-      // 兼容数字字典（0/1/2/3）和字符串字典（GET/POST）
       const isNumberValue = /^\d+$/.test(String(item.value))
       const label = item.label.toUpperCase()
       const value = isNumberValue ? label : String(item.value).toUpperCase()
@@ -288,18 +292,38 @@ const injectPositionOptions = computed(() => {
 
 watch(
   () => formData.value.authType,
+  (newVal, oldVal) => {
+    console.log(formData.value,'cjyyyyyyyyyyyyyy');
+    if (oldVal === 'FIXED' || oldVal === 'DYNAMIC') {
+      authBackup.value[oldVal] = {
+        authTokenValue: formData.value.authTokenValue,
+        authInjectPosition: formData.value.authInjectPosition,
+        authKeyName: formData.value.authKeyName,
+        authTokenPrefix: formData.value.authTokenPrefix,
+        authDynamicMethod: formData.value.authDynamicMethod,
+        authDynamicUrl: formData.value.authDynamicUrl,
+        authDynamicHeaders: formData.value.authDynamicHeaders,
+        authDynamicParams: formData.value.authDynamicParams,
+        authDynamicBody: formData.value.authDynamicBody,
+        authExtractPath: formData.value.authExtractPath,
+        authMethod: formData.value.authMethod
+      }
+    }
+    if (newVal === 'FIXED' || newVal === 'DYNAMIC') {
+      const backup = authBackup.value[newVal]
+      if (backup && Object.keys(backup).length > 0) {
+        Object.assign(formData.value, backup)
+      }
+    }
+  }
+)
+
+watch(
+  () => formData.value.authMethod,
   (newVal) => {
-    if (newVal === 'NONE') {
-      formData.value.authTokenValue = ''
-      formData.value.authInjectPosition = ''
-      formData.value.authKeyName = ''
-      formData.value.authTokenPrefix = ''
-      formData.value.authDynamicMethod = ''
-      formData.value.authDynamicUrl = ''
-      formData.value.authDynamicHeaders = ''
-      formData.value.authDynamicParams = ''
-      formData.value.authDynamicBody = ''
-      formData.value.authExtractPath = ''
+    if (newVal === 'bearer') {
+      formData.value.authKeyName = 'Blade-Auth'
+      formData.value.authInjectPosition = 'Header'
     }
   }
 )
@@ -314,9 +338,12 @@ const rules = computed(() => {
   }
 
   if (formData.value.authType === 'FIXED') {
+    baseRules.authMethod = [{ required: true, message: '请选择鉴权方式', trigger: 'change' }]
     baseRules.authTokenValue = [{ required: true, message: '请输入 Token 内容', trigger: 'blur' }]
-    baseRules.authInjectPosition = [{ required: true, message: '请选择注入位置', trigger: 'change' }]
-    baseRules.authKeyName = [{ required: true, message: '请输入注入参数名', trigger: 'blur' }]
+    if (formData.value.authMethod === 'apiKey') {
+      baseRules.authInjectPosition = [{ required: true, message: '请选择注入位置', trigger: 'change' }]
+      baseRules.authKeyName = [{ required: true, message: '请输入 Key', trigger: 'blur' }]
+    }
   }
 
   if (formData.value.authType === 'DYNAMIC') {
@@ -336,39 +363,56 @@ const validate = () => {
   return apiFormRef.value.validate()
 }
 
+const clearAuthState = () => {
+  authBackup.value = {
+    FIXED: {},
+    DYNAMIC: {}
+  }
+  formData.value.authMethod = 'apiKey'
+  formData.value.authTokenValue = ''
+  formData.value.authInjectPosition = 'Header'
+  formData.value.authKeyName = null
+  formData.value.authTokenPrefix = ''
+  formData.value.authDynamicMethod = 'POST'
+  formData.value.authDynamicUrl = ''
+  formData.value.authDynamicHeaders = ''
+  formData.value.authDynamicParams = ''
+  formData.value.authDynamicBody = ''
+  formData.value.authExtractPath = ''
+}
+
 defineExpose({
-  validate
+  validate,
+  clearAuthState
 })
 </script>
 
 <style lang="scss" scoped>
-.api-config-step {
-  padding: 20px 0;
-}
-
 .api-form {
   width: 100%;
+
+  :deep(.el-textarea__inner) {
+    height: auto;
+  }
 }
 
-.section-block {
-  margin-bottom: 30px;
-}
-
-.section-title {
+.h2-titles {
+  font-size: 16px;
+  color: rgba(0, 0, 0, 0.85);
   display: flex;
   align-items: center;
-  font-size: 16px;
   font-weight: 500;
-  color: #303133;
-  margin-bottom: 20px;
+  margin: 8px 0;
+}
 
-  .title-line {
-    width: 4px;
-    height: 16px;
-    background-color: #409eff;
-    margin-right: 8px;
-    border-radius: 2px;
-  }
+.h2-titles::before {
+  display: inline-block;
+  content: '';
+  width: 6px;
+  height: 16px;
+  border-radius: 3px;
+  background: var(--el-color-primary);
+  margin-right: 8px;
 }
 
 .url-input-group {

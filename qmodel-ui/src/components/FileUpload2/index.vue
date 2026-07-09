@@ -48,8 +48,13 @@
       :data="uploadData"
       :drag="dragFlag"
     >
-      <el-icon class="el-icon--upload"><upload-filled /></el-icon>
-      <div class="el-upload__text" style="width: 100%;">将文件拖到此处，或<em>点击上传</em></div>
+      <template v-if="dragFlag">
+        <el-icon class="el-icon--upload"><upload-filled /></el-icon>
+        <div class="el-upload__text" style="width: 100%;">将文件拖到此处，或<em>点击上传</em></div>
+      </template>
+      <el-button v-else type="primary" size="small">
+        <el-icon><Upload /></el-icon>上传
+      </el-button>
     </el-upload>
     <!-- 上传提示 -->
 <!--    <div class="el-upload__tip" v-if="showTip">-->
@@ -83,6 +88,7 @@
 
 <script setup>
 import { getToken } from "@/utils/auth";
+import { Upload } from '@element-plus/icons-vue'
 
 const props = defineProps({
   modelValue: [String, Object, Array],
@@ -99,7 +105,7 @@ const props = defineProps({
   // 文件类型, 例如['png', 'jpg', 'jpeg']
   fileType: {
     type: Array,
-    default: () => ["doc", "xls", "ppt", "txt", "pdf", "docx"],
+    default: () => ["doc", "xls", "ppt", "txt", "pdf", "docx", "csv"],
   },
   // 是否显示提示
   isShowTip: {

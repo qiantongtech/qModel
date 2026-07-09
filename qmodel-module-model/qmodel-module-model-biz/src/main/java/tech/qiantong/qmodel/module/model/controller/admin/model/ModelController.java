@@ -56,6 +56,7 @@ import tech.qiantong.qmodel.common.exception.enums.GlobalErrorCodeConstants;
 import tech.qiantong.qmodel.module.model.controller.admin.model.vo.ModelPageReqVO;
 import tech.qiantong.qmodel.module.model.controller.admin.model.vo.ModelRespVO;
 import tech.qiantong.qmodel.module.model.controller.admin.model.vo.ModelSaveReqVO;
+import tech.qiantong.qmodel.module.model.controller.admin.model.vo.ModelSaveWithConfigReqVO;
 import tech.qiantong.qmodel.module.model.convert.model.ModelConvert;
 import tech.qiantong.qmodel.module.model.dal.dataobject.model.ModelDO;
 import tech.qiantong.qmodel.module.model.service.model.IModelService;
@@ -127,6 +128,14 @@ public class ModelController extends BaseController {
     @PutMapping
     public CommonResult<Integer> edit(@Valid @RequestBody ModelSaveReqVO model) {
         return CommonResult.toAjax(modelService.updateModel(model));
+    }
+
+    @Operation(summary = "保存模型基础信息及配置详情")
+    @PreAuthorize("@ss.hasPermi('model:model:add') || @ss.hasPermi('model:model:edit')")
+    @Log(title = "模型基础信息", businessType = BusinessType.UPDATE)
+    @PostMapping("/saveWithConfig")
+    public CommonResult<Long> saveWithConfig(@Valid @RequestBody ModelSaveWithConfigReqVO saveReqVO) {
+        return CommonResult.success(modelService.saveModelWithConfig(saveReqVO));
     }
 
     @Operation(summary = "删除模型基础信息")

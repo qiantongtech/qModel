@@ -70,6 +70,9 @@ public class ModelConfigPageReqVO extends PageParam {
     @Schema(description = "鉴权类型", example = "")
     private String authType;
 
+    @Schema(description = "鉴权方式（bearer / apiKey）", example = "bearer")
+    private String authMethod;
+
     @Schema(description = "注入位置", example = "")
     private String authInjectPosition;
 

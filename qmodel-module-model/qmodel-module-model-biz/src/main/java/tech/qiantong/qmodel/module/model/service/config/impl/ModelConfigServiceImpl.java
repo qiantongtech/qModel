@@ -34,20 +34,27 @@ package tech.qiantong.qmodel.module.model.service.config.impl;
 
 import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.JSONObject;
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import java.io.File;
 import java.util.Map;
 import java.util.stream.Collectors;
+import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.FileSystemResource;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.client.SimpleClientHttpRequestFactory;
+import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestClientResponseException;
@@ -79,6 +86,12 @@ public class ModelConfigServiceImpl  extends ServiceImpl<ModelConfigMapper,Model
     @Resource
     private ModelConfigMapper modelConfigMapper;
 
+    @Resource
+    private tech.qiantong.qmodel.config.ServerConfig serverConfig;
+
+    @Value("${dromara.x-file-storage.local-plus[0].storage-path:${user.dir}/upload/}")
+    private String storagePath;
+
     @Override
     public PageResult<ModelConfigDO> getModelConfigPage(ModelConfigPageReqVO pageReqVO) {
         return modelConfigMapper.selectPage(pageReqVO);
@@ -87,18 +100,53 @@ public class ModelConfigServiceImpl  extends ServiceImpl<ModelConfigMapper,Model
     @Override
     public Long createModelConfig(ModelConfigSaveReqVO createReqVO) {
         ModelConfigDO dictType = BeanUtils.toBean(createReqVO, ModelConfigDO.class);
+        clearAuthFieldsIfNone(dictType);
         modelConfigMapper.insert(dictType);
         return dictType.getId();
     }
 
     @Override
     public int updateModelConfig(ModelConfigSaveReqVO updateReqVO) {
-        // 相关校验
-
-        // 更新模型配置详情
         ModelConfigDO updateObj = BeanUtils.toBean(updateReqVO, ModelConfigDO.class);
+        if ("NONE".equals(updateObj.getAuthType())) {
+            LambdaUpdateWrapper<ModelConfigDO> wrapper = new LambdaUpdateWrapper<>();
+            wrapper.eq(ModelConfigDO::getId, updateObj.getId())
+                    .set(ModelConfigDO::getAuthMethod, null)
+                    .set(ModelConfigDO::getAuthTokenValue, null)
+                    .set(ModelConfigDO::getAuthInjectPosition, null)
+                    .set(ModelConfigDO::getAuthKeyName, null)
+                    .set(ModelConfigDO::getAuthTokenPrefix, null)
+                    .set(ModelConfigDO::getAuthDynamicMethod, null)
+                    .set(ModelConfigDO::getAuthDynamicUrl, null)
+                    .set(ModelConfigDO::getAuthDynamicHeaders, null)
+                    .set(ModelConfigDO::getAuthDynamicParams, null)
+                    .set(ModelConfigDO::getAuthDynamicBody, null)
+                    .set(ModelConfigDO::getAuthExtractPath, null);
+            modelConfigMapper.updateById(updateObj);
+            modelConfigMapper.update(null, wrapper);
+            return 1;
+        }
+
         return modelConfigMapper.updateById(updateObj);
     }
+
+    private void clearAuthFieldsIfNone(ModelConfigDO config) {
+        if (config == null || !"NONE".equals(config.getAuthType())) {
+            return;
+        }
+        config.setAuthMethod(null);
+        config.setAuthTokenValue(null);
+        config.setAuthInjectPosition(null);
+        config.setAuthKeyName(null);
+        config.setAuthTokenPrefix(null);
+        config.setAuthDynamicMethod(null);
+        config.setAuthDynamicUrl(null);
+        config.setAuthDynamicHeaders(null);
+        config.setAuthDynamicParams(null);
+        config.setAuthDynamicBody(null);
+        config.setAuthExtractPath(null);
+    }
+
     @Override
     public int removeModelConfig(Collection<Long> idList) {
         // 批量删除模型配置详情
@@ -147,10 +195,12 @@ public class ModelConfigServiceImpl  extends ServiceImpl<ModelConfigMapper,Model
         try {
             // 1. 处理鉴权
             String authToken = null;
+            String authKeyName = testReqVO.getAuthKeyName();
             if ("FIXED".equals(testReqVO.getAuthType())) {
-                authToken = StringUtils.isNotBlank(testReqVO.getAuthTokenPrefix())
-                        ? testReqVO.getAuthTokenPrefix() + testReqVO.getAuthTokenValue()
-                        : testReqVO.getAuthTokenValue();
+                if ("bearer".equalsIgnoreCase(testReqVO.getAuthMethod()) && StringUtils.isBlank(authKeyName)) {
+                    authKeyName = "Blade-Auth";
+                }
+                authToken = testReqVO.getAuthTokenValue();
                 logs.add("使用固定 Token 鉴权");
             } else if ("DYNAMIC".equals(testReqVO.getAuthType())) {
                 logs.add("开始动态获取 Token...");
@@ -169,19 +219,52 @@ public class ModelConfigServiceImpl  extends ServiceImpl<ModelConfigMapper,Model
             }
 
             String targetUrl = testReqVO.getApiUrl();
-            if (StringUtils.isNotBlank(authToken) && StringUtils.isNotBlank(testReqVO.getAuthKeyName())) {
+            if (StringUtils.isNotBlank(authToken) && StringUtils.isNotBlank(authKeyName)) {
                 if ("Query".equalsIgnoreCase(testReqVO.getAuthInjectPosition())) {
                     String connector = targetUrl.contains("?") ? "&" : "?";
-                    targetUrl = targetUrl + connector + testReqVO.getAuthKeyName() + "=" + authToken;
-                    logs.add("Token 已注入 Query 参数：" + testReqVO.getAuthKeyName());
+                    targetUrl = targetUrl + connector + authKeyName + "=" + authToken;
+                    logs.add("Token 已注入 Query 参数：" + authKeyName);
                 } else {
-                    headers.set(testReqVO.getAuthKeyName(), authToken);
-                    logs.add("Token 已注入 Header：" + testReqVO.getAuthKeyName());
+                    headers.set(authKeyName, authToken);
+                    logs.add("Token 已注入 Header：" + authKeyName);
                 }
             }
 
             HttpMethod method = HttpMethod.valueOf(testReqVO.getRequestMethod().toUpperCase());
-            HttpEntity<String> entity = new HttpEntity<>(testReqVO.getTestBody(), headers);
+            HttpEntity<?> entity;
+
+            String contentType = testReqVO.getContentType() != null ? testReqVO.getContentType().toLowerCase() : "";
+            if (contentType.contains("multipart/form-data") || contentType.contains("application/x-www-form-urlencoded")) {
+                String testBody = testReqVO.getTestBody();
+                if (StringUtils.isNotBlank(testBody)) {
+                    try {
+                        JSONObject bodyJson = JSON.parseObject(testBody);
+                        LinkedMultiValueMap<String, Object> formData = new LinkedMultiValueMap<>();
+                        bodyJson.forEach((k, v) -> {
+                            if (v != null) {
+                                String value = String.valueOf(v);
+                                File file = resolveLocalFile(value);
+                                if (file != null && file.exists()) {
+                                    formData.add(k, new FileSystemResource(file));
+                                    logs.add("文件字段 " + k + " 已加载本地文件：" + file.getAbsolutePath());
+                                } else {
+                                    formData.add(k, value);
+                                }
+                            }
+                        });
+                        headers.setContentType(MediaType.MULTIPART_FORM_DATA);
+                        entity = new HttpEntity<>(formData, headers);
+                        logs.add("请求体已转换为 multipart/form-data 格式");
+                    } catch (Exception e) {
+                        entity = new HttpEntity<>(testBody, headers);
+                        logs.add("请求体 JSON 解析失败，保留原样发送");
+                    }
+                } else {
+                    entity = new HttpEntity<>(headers);
+                }
+            }  else {
+                entity = new HttpEntity<>(testReqVO.getTestBody(), headers);
+            }
 
             logs.add("发送 " + method.name() + " 请求：" + targetUrl);
             ResponseEntity<String> response = restTemplate.exchange(targetUrl, method, entity, String.class);
@@ -240,10 +323,18 @@ public class ModelConfigServiceImpl  extends ServiceImpl<ModelConfigMapper,Model
             throw new ServiceException("未从 Token 接口响应中提取到 Token，路径：" + testReqVO.getAuthExtractPath());
         }
 
-        if (StringUtils.isNotBlank(testReqVO.getAuthTokenPrefix())) {
-            token = testReqVO.getAuthTokenPrefix() + token;
+        return buildAuthToken(testReqVO.getAuthTokenPrefix(), token);
+    }
+
+    private String buildAuthToken(String prefix, String token) {
+        if (StringUtils.isBlank(prefix)) {
+            return token;
         }
-        return token;
+        String normalizedPrefix = prefix.trim();
+        if (!normalizedPrefix.endsWith(" ")) {
+            normalizedPrefix = normalizedPrefix + " ";
+        }
+        return normalizedPrefix + (token == null ? "" : token.trim());
     }
 
     private String extractByPath(JSONObject json, String path) {
@@ -260,6 +351,32 @@ public class ModelConfigServiceImpl  extends ServiceImpl<ModelConfigMapper,Model
             }
         }
         return current == null ? null : String.valueOf(current);
+    }
+
+    private File resolveLocalFile(String filePath) {
+        if (StringUtils.isBlank(filePath)) {
+            return null;
+        }
+        filePath = filePath.trim();
+        String currentServerUrl = serverConfig.getUrl();
+        if (StringUtils.isNotBlank(currentServerUrl) && filePath.startsWith(currentServerUrl)) {
+            String relativePath = filePath.substring(currentServerUrl.length());
+            if (relativePath.startsWith("/profile/")) {
+                relativePath = relativePath.substring("/profile/".length());
+            } else if (relativePath.startsWith("/")) {
+                relativePath = relativePath.substring(1);
+            }
+            String localPath = storagePath + relativePath;
+            File file = new File(localPath);
+            if (file.exists()) {
+                return file;
+            }
+        }
+        File file = new File(filePath);
+        if (file.exists()) {
+            return file;
+        }
+        return null;
     }
 
     /**

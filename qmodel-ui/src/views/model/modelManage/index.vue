@@ -51,15 +51,15 @@
                 style="width: 180px"
               />
             </el-form-item>
-            <el-form-item label="模型接入方式：" prop="accessMode">
+            <el-form-item label="模型接入方式：" prop="accessType">
               <el-select
-                v-model="queryParams.accessMode"
+                v-model="queryParams.accessType"
                 placeholder="请选择模型类别"
                 clearable
                 class="el-form-input-width"
               >
-                <el-option key="0" label="python脚本" value="0" />
-                <el-option key="1" label="api接口" value="1" />
+                <el-option key="0" label="python脚本" value="PYTHON" />
+                <el-option key="1" label="api接口" value="API" />
               </el-select>
             </el-form-item>
             <el-form-item>
@@ -355,7 +355,6 @@ const handleDelete = (row) => {
   padding: 0;
   height: calc(100vh - 355px);
   overflow: auto;
-  // height: 100px;
 }
 .pagefy {
   position: absolute;

@@ -84,6 +84,10 @@ public class ModelConfigRespVO implements Serializable {
     @Schema(description = "鉴权类型", example = "")
     private String authType;
 
+    @Excel(name = "鉴权方式")
+    @Schema(description = "鉴权方式（bearer / apiKey）", example = "bearer")
+    private String authMethod;
+
     @Excel(name = "注入位置")
     @Schema(description = "注入位置", example = "")
     private String authInjectPosition;

@@ -38,6 +38,7 @@ import java.util.Collection;
 import com.baomidou.mybatisplus.extension.service.IService;
 import tech.qiantong.qmodel.common.core.page.PageResult;
 import tech.qiantong.qmodel.module.model.controller.admin.model.vo.ModelSaveReqVO;
+import tech.qiantong.qmodel.module.model.controller.admin.model.vo.ModelSaveWithConfigReqVO;
 import tech.qiantong.qmodel.module.model.controller.admin.model.vo.ModelPageReqVO;
 import tech.qiantong.qmodel.module.model.controller.admin.model.vo.ModelRespVO;
 import tech.qiantong.qmodel.module.model.dal.dataobject.model.ModelDO;
@@ -111,5 +112,13 @@ public interface IModelService extends IService<ModelDO> {
      * @return 结果
      */
     String importModel(List<ModelRespVO> importExcelList, boolean isUpdateSupport, String operName);
+
+    /**
+     * 保存模型基础信息及配置详情
+     *
+     * @param saveReqVO 模型基础信息 + 配置详情
+     * @return 模型基础信息编号
+     */
+    Long saveModelWithConfig(ModelSaveWithConfigReqVO saveReqVO);
 
 }

@@ -34,64 +34,31 @@ package tech.qiantong.qmodel.module.model.controller.admin.model.vo;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
+import tech.qiantong.qmodel.module.model.controller.admin.config.vo.ModelConfigSaveReqVO;
 
-import javax.validation.constraints.NotBlank;
+import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
-
-import tech.qiantong.qmodel.common.core.domain.BaseEntity;
+import java.io.Serializable;
 
 /**
- * 模型基础信息 创建/修改 Request VO model
+ * 模型基础信息 + 配置详情 合并保存 Request VO
  *
  * @author anivia
  * @date 2026-07-07
  */
-@Schema(description = "模型基础信息 Response VO")
+@Schema(description = "模型基础信息 + 配置详情 合并保存 Request VO")
 @Data
-public class ModelSaveReqVO extends BaseEntity {
+public class ModelSaveWithConfigReqVO implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    @Schema(description = "ID")
-    private Long id;
+    @Schema(description = "模型基础信息", requiredMode = Schema.RequiredMode.REQUIRED)
+    @NotNull(message = "模型基础信息不能为空")
+    @Valid
+    private ModelSaveReqVO model;
 
-    @Schema(description = "企业ID", example = "")
-    private Long companyId;
-
-    @Schema(description = "分类id", example = "")
-    private Long classifyId;
-
-    @Schema(description = "名称", example = "")
-    @NotBlank(message = "名称不能为空")
-    private String name;
-
-    @Schema(description = "编码", example = "")
-    @NotBlank(message = "编码不能为空")
-    private String code;
-
-    @Schema(description = "接入方式", example = "")
-    @NotBlank(message = "接入方式不能为空")
-    private String accessType;
-
-    @Schema(description = "版本号", example = "")
-    @NotBlank(message = "版本号不能为空")
-    private String version;
-
-    @Schema(description = "作者", example = "")
-    private String author;
-
-    @Schema(description = "状态", example = "")
-    private String status;
-
-    @Schema(description = "标签", example = "")
-    private String tags;
-
-    @Schema(description = "描述", example = "")
-    private String description;
-
-    @Schema(description = "备注", example = "")
-    private String remark;
-
+    @Schema(description = "模型配置详情")
+    @Valid
+    private ModelConfigSaveReqVO config;
 
 }

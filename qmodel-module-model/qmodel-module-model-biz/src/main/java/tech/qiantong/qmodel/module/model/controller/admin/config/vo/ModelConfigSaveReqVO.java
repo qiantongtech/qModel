@@ -84,6 +84,10 @@ public class ModelConfigSaveReqVO extends BaseEntity {
     @NotBlank(message = "鉴权类型不能为空")
     private String authType;
 
+    @Schema(description = "鉴权方式（bearer / apiKey）", example = "bearer")
+    @Size(max = 32, message = "鉴权方式长度不能超过32个字符")
+    private String authMethod;
+
     @Schema(description = "注入位置", example = "")
     @Size(max = 32, message = "注入位置长度不能超过32个字符")
     private String authInjectPosition;

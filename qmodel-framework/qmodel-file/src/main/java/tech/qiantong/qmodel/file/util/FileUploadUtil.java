@@ -100,6 +100,7 @@ public class FileUploadUtil {
         }
         FileInfo fileInfo = fileStorageService.of(file)
                 .setPath(path)
+                .setSaveFilename(file.getOriginalFilename())
                 .upload();
         String url = serverConfig.getUrl() + Constants.RESOURCE_PREFIX + fileInfo.getUrl();
         fileInfo.setUrl(url);
@@ -132,10 +133,12 @@ public class FileUploadUtil {
              fileInfo = fileStorageService.of(file)
                     .setPlatform(platform)
                     .setPath(path)
+                    .setSaveFilename(file.getOriginalFilename())
                     .upload();
         } else {
              fileInfo = fileStorageService.of(file)
                     .setPath(path)
+                    .setSaveFilename(file.getOriginalFilename())
                     .upload();
             String url = serverConfig.getUrl() + Constants.RESOURCE_PREFIX + fileInfo.getUrl();
             fileInfo.setUrl(url);

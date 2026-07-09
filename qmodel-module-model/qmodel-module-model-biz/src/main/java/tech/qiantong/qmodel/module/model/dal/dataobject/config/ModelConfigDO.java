@@ -83,6 +83,9 @@ public class ModelConfigDO extends BaseEntity {
     /** 鉴权类型 */
     private String authType;
 
+    /** 鉴权方式（bearer / apiKey） */
+    private String authMethod;
+
     /** 注入位置 */
     private String authInjectPosition;
 

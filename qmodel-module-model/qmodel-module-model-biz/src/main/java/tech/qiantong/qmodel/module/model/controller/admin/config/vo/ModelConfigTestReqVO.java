@@ -65,6 +65,9 @@ public class ModelConfigTestReqVO {
     @NotBlank(message = "鉴权类型不能为空")
     private String authType;
 
+    @Schema(description = "鉴权方式（bearer / apiKey）", example = "bearer")
+    private String authMethod;
+
     @Schema(description = "注入位置", example = "Header")
     private String authInjectPosition;
 

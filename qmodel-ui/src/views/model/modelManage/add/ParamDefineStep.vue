@@ -17,37 +17,19 @@
 
 <template>
   <div class="param-define-step">
-    <div class="section-title">
-      <span class="title-line"></span>
-      <span>参数定义</span>
-      <el-tooltip content="不会写 JSON Schema？可点击右上角导入示例数据自动生成">
-        <el-icon class="title-tip"><QuestionFilled /></el-icon>
-      </el-tooltip>
-    </div>
-
-    <div class="toolbar">
-      <el-radio-group v-model="activeTab" size="small">
-        <el-radio-button label="input">入参 Schema</el-radio-button>
-        <el-radio-button label="output">出参 Schema</el-radio-button>
-      </el-radio-group>
-      <div class="toolbar-actions">
-        <el-button size="small" :icon="MagicStick" @click="openGenDialog">
-          导入示例数据生成
-        </el-button>
-        <el-button size="small" type="primary" :icon="Brush" @click="formatCurrentSchema">
-          格式化 Schema
-        </el-button>
-      </div>
-    </div>
+    <div class="h2-titles">参数定义</div>
 
     <el-row :gutter="20" class="schema-row">
       <el-col :span="12">
         <div class="editor-card">
           <div class="editor-header">
             <span><el-icon><Document /></el-icon> JSON Schema 编辑区</span>
+            <el-button size="small" type="primary" :icon="Brush" @click="formatCurrentSchema">
+              格式化 Schema
+            </el-button>
           </div>
           <el-input
-            v-model="currentSchemaText"
+            v-model="formData.inputSchema"
             type="textarea"
             :rows="22"
             placeholder='请输入 JSON Schema，例如：&#10;{&#10;  "type": "object",&#10;  "properties": {&#10;    "name": { "type": "string" }&#10;  }&#10;}'
@@ -71,26 +53,14 @@
       </el-col>
     </el-row>
 
-    <el-dialog v-model="genDialogVisible" title="导入示例数据生成 Schema" width="600px">
-      <el-input
-        v-model="sampleJsonText"
-        type="textarea"
-        :rows="12"
-        placeholder='请输入示例 JSON，例如：&#10;{&#10;  "name": "",&#10;  "age": 0&#10;}'
-      />
-      <div v-if="sampleError" class="dialog-error">{{ sampleError }}</div>
-      <template #footer>
-        <el-button @click="genDialogVisible = false">取消</el-button>
-        <el-button type="primary" @click="generateFromSample">生成并覆盖</el-button>
-      </template>
-    </el-dialog>
+
   </div>
 </template>
 
 <script setup name="ParamDefineStep">
 import { ref, computed, watch } from 'vue'
 import { ElMessage } from 'element-plus'
-import { Document, View, Brush, MagicStick, Warning, QuestionFilled } from '@element-plus/icons-vue'
+import { Document, View, Brush, Warning, QuestionFilled } from '@element-plus/icons-vue'
 import SchemaPreview from './SchemaPreview.vue'
 
 const formData = defineModel('formData', {
@@ -98,21 +68,15 @@ const formData = defineModel('formData', {
   required: true
 })
 
-const activeTab = ref('input')
 const parseError = ref('')
 const parsedSchema = ref(null)
-const genDialogVisible = ref(false)
-const sampleJsonText = ref('')
-const sampleError = ref('')
-
-const schemaKey = computed(() => (activeTab.value === 'input' ? 'inputSchema' : 'outputSchema'))
 
 const currentSchemaText = computed({
   get() {
-    return formData.value[schemaKey.value] || ''
+    return formData.value.inputSchema || ''
   },
   set(val) {
-    formData.value[schemaKey.value] = val
+    formData.value.inputSchema = val
   }
 })
 
@@ -137,17 +101,6 @@ const updateParsedSchema = () => {
 
 watch(currentSchemaText, updateParsedSchema, { immediate: true })
 
-watch(activeTab, () => {
-  parseError.value = ''
-  updateParsedSchema()
-})
-
-const openGenDialog = () => {
-  sampleJsonText.value = ''
-  sampleError.value = ''
-  genDialogVisible.value = true
-}
-
 const formatCurrentSchema = () => {
   const text = currentSchemaText.value?.trim()
   if (!text) return
@@ -159,63 +112,17 @@ const formatCurrentSchema = () => {
   }
 }
 
-const generateFromSample = () => {
-  sampleError.value = ''
-  const text = sampleJsonText.value.trim()
-  if (!text) {
-    sampleError.value = '请输入示例 JSON'
-    return
-  }
-  try {
-    const data = JSON.parse(text)
-    const schema = inferSchema(data)
-    currentSchemaText.value = JSON.stringify(schema, null, 2)
-    genDialogVisible.value = false
-    sampleJsonText.value = ''
-    ElMessage.success('Schema 生成成功')
-  } catch (e) {
-    sampleError.value = 'JSON 解析失败：' + e.message
-  }
-}
-
-function inferSchema(data) {
-  if (data === null) return { type: 'null' }
-  if (Array.isArray(data)) {
-    const items = data.length > 0 ? inferSchema(data[0]) : {}
-    return { type: 'array', items }
-  }
-  if (typeof data === 'object') {
-    const properties = {}
-    const required = Object.keys(data)
-    for (const key of required) {
-      properties[key] = inferSchema(data[key])
-    }
-    return { type: 'object', properties, required }
-  }
-  return { type: typeof data }
-}
-
 const validate = () => {
-  const errors = []
-  const tabs = [
-    { key: 'inputSchema', label: '入参 Schema' },
-    { key: 'outputSchema', label: '出参 Schema' }
-  ]
-  for (const tab of tabs) {
-    const text = (formData.value[tab.key] || '').trim()
-    if (text) {
-      try {
-        const parsed = JSON.parse(text)
-        if (!parsed || typeof parsed !== 'object') {
-          errors.push(`${tab.label} 必须是 JSON 对象`)
-        }
-      } catch {
-        errors.push(`${tab.label} JSON 格式错误`)
+  const text = (formData.value.inputSchema || '').trim()
+  if (text) {
+    try {
+      const parsed = JSON.parse(text)
+      if (!parsed || typeof parsed !== 'object') {
+        return Promise.reject('入参 Schema 必须是 JSON 对象')
       }
+    } catch {
+      return Promise.reject('入参 Schema JSON 格式错误')
     }
-  }
-  if (errors.length > 0) {
-    return Promise.reject(errors.join('；'))
   }
   return Promise.resolve()
 }
@@ -226,43 +133,23 @@ defineExpose({
 </script>
 
 <style lang="scss" scoped>
-.param-define-step {
-  padding: 20px 0;
-}
-
-.section-title {
-  display: flex;
-  align-items: center;
+.h2-titles {
   font-size: 16px;
+  color: rgba(0, 0, 0, 0.85);
+  display: flex;
+  align-items: center;
   font-weight: 500;
-  color: #303133;
-  margin-bottom: 20px;
-
-  .title-line {
-    width: 4px;
-    height: 16px;
-    background-color: #409eff;
-    margin-right: 8px;
-    border-radius: 2px;
-  }
-
-  .title-tip {
-    margin-left: 8px;
-    color: #909399;
-    cursor: pointer;
-  }
+  margin: 8px 0;
 }
 
-.toolbar {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 15px;
-
-  .toolbar-actions {
-    display: flex;
-    gap: 10px;
-  }
+.h2-titles::before {
+  display: inline-block;
+  content: '';
+  width: 6px;
+  height: 16px;
+  border-radius: 3px;
+  background: var(--el-color-primary);
+  margin-right: 8px;
 }
 
 .schema-row {
@@ -287,7 +174,10 @@ defineExpose({
     color: #303133;
     display: flex;
     align-items: center;
+    justify-content: space-between;
     gap: 6px;
+    height: 48px;
+    box-sizing: border-box;
   }
 
   .schema-textarea {
@@ -318,11 +208,5 @@ defineExpose({
     align-items: center;
     gap: 6px;
   }
-}
-
-.dialog-error {
-  margin-top: 10px;
-  color: #f56c6c;
-  font-size: 13px;
 }
 </style>

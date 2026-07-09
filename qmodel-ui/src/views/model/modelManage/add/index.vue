@@ -23,11 +23,14 @@
           <li
             v-for="(item, index) in stepsList"
             :key="index"
-            :class="{
-              statusEnd: activeStep === index,
-              prevStep: index < activeStep,
-              cur: index > activeStep
-            }"
+            :class="[
+              {
+                statusEnd: activeStep === index,
+                prevStep: index < activeStep,
+                cur: index > activeStep
+              },
+              `step-${index + 1}`
+            ]"
           >
             <div
               class="step-circle"
@@ -45,7 +48,7 @@
     </div>
 
     <div class="pagecont-top">
-      <div class="main-content">
+      <div class="main" :class="{ 'no-scroll': activeStep >= 2 }">
         <BasicInfoStep
           v-show="activeStep === 0"
           ref="basicStepRef"
@@ -91,11 +94,11 @@
     </div>
 
     <div class="button-style">
-      <el-button @click="handleCancel">取 消</el-button>
+      <el-button type="primary" @click="handleCancel">返回列表</el-button>
       <el-button v-if="activeStep > 0" @click="handlePrevStep">上一步</el-button>
       <el-button v-if="activeStep < 3" type="primary" @click="handleNextStep">下一步</el-button>
       <el-button v-if="activeStep === 3 && form.accessType === 'API'" type="primary" :loading="submitLoading" @click="handleSubmit">
-        保 存
+        确定并退出
       </el-button>
       <el-button v-if="activeStep === 3 && form.accessType === 'PYTHON'" type="primary" :loading="submitLoading" @click="handleSubmit">
         确认并开始构建
@@ -108,8 +111,8 @@
 import { ref, reactive, computed, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { ElMessage } from 'element-plus'
-import { addModel, getModel, updateModel } from '@/api/model/model'
-import { addModelConfig, listModelConfig, updateModelConfig } from '@/api/model/config'
+import { addModel, getModel, updateModel, saveModelWithConfig } from '@/api/model/model'
+import { addModelConfig, listModelConfig, updateModelConfig} from '@/api/model/config'
 import { listClassify } from '@/api/modelReconstitution/classify'
 import BasicInfoStep from './BasicInfoStep.vue'
 import ApiConfigStep from './ApiConfigStep.vue'
@@ -117,6 +120,7 @@ import CheckUploadFile from './checkUploadFile.vue'
 import ParamDefineStep from './ParamDefineStep.vue'
 import TestSaveStep from './TestSaveStep.vue'
 import ConfirmBuildStep from './ConfirmBuildStep.vue'
+import {addFileResource, updateFileResource} from "@/api/model/fileResource.js";
 
 const { proxy } = getCurrentInstance()
 const route = useRoute()
@@ -173,7 +177,7 @@ const form = reactive({
   code: '',
   classifyId: null,
   accessType: 'API',
-  version: 'V1.0',
+  version: null,
   author: '',
   status: '0',
   tags: '',
@@ -185,14 +189,15 @@ const form = reactive({
   contentType: 'application/json',
   timeoutSeconds: 30,
   authType: 'NONE',
+  authMethod: 'bearer',
   authInjectPosition: 'Header',
-  authKeyName: 'Authorization',
+  authKeyName: null,
   authTokenPrefix: '',
   authTokenValue: '',
   authDynamicMethod: 'POST',
   authDynamicUrl: '',
-  authDynamicHeaders: '{"Content-Type": "application/x-www-form-urlencoded", "Tenant-Id": "", "Authorization": "Basic "}',
-  authDynamicParams: '{"grant_type": "password", "username": "", "password": "", "scope": "all"}',
+  authDynamicHeaders: '',
+  authDynamicParams: '',
   authDynamicBody: '',
   authExtractPath: '',
   // 参数定义
@@ -266,8 +271,9 @@ const loadModelData = async (id) => {
           contentType: config.contentType || 'application/json',
           timeoutSeconds: config.timeoutSeconds || 30,
           authType,
+          authMethod: config.authMethod || 'apiKey',
           authInjectPosition: config.authInjectPosition || 'Header',
-          authKeyName: config.authKeyName || 'Authorization',
+          authKeyName: config.authKeyName,
           authTokenPrefix: config.authTokenPrefix || '',
           authTokenValue: config.authTokenValue || '',
           authDynamicMethod: config.authDynamicMethod || 'POST',
@@ -325,7 +331,7 @@ const handleCancel = () => {
   proxy.$modal
     .confirm(message)
     .then(() => {
-      router.push('/model/modelManage')
+      router.push('/model/version')
     })
     .catch(() => {})
 }
@@ -397,6 +403,7 @@ const buildConfigData = (modelId) => {
   }
 
   if (form.authType === 'FIXED') {
+    configData.authMethod = form.authMethod || null
     configData.authTokenValue = form.authTokenValue || null
     configData.authInjectPosition = form.authInjectPosition || null
     configData.authKeyName = form.authKeyName || null
@@ -426,12 +433,25 @@ const handleSubmit = async () => {
     console.log('[ModelAdd] modelData', modelData)
 
     let modelId
-    if (isEdit.value) {
-      await updateModel(modelData)
-      modelId = form.id
+    if (form.accessType === 'API') {
+      const configData = buildConfigData(modelData.id)
+      const payload = {
+        model: modelData,
+        config: configData
+      }
+      const res = await saveModelWithConfig(payload)
+      modelId = res.data
+      if (form.authType === 'NONE') {
+        apiStepRef.value?.clearAuthState()
+      }
     } else {
-      const modelRes = await addModel(modelData)
-      modelId = modelRes.data
+      if (isEdit.value) {
+        await updateModel(modelData)
+        modelId = form.id
+      } else {
+        const modelRes = await addModel(modelData)
+        modelId = modelRes.data
+      }
     }
     console.log('[ModelAdd] modelId', modelId)
 
@@ -454,7 +474,7 @@ const handleSubmit = async () => {
         resourceType: '2',
         modelVersion: 1
       }
-      
+
       if (isEdit.value && form.fileResourceId) {
         fileData.id = form.fileResourceId
         await updateFileResource(fileData)
@@ -465,7 +485,7 @@ const handleSubmit = async () => {
 
     const successMsg = isEdit.value ? '修改模型成功' : '新增模型成功'
     ElMessage.success(successMsg)
-    router.push('/model/modelManage')
+    router.push('/model/version')
   } catch (error) {
     console.error('[ModelAdd] 保存模型失败：', error)
     ElMessage.error(error?.msg || error?.message || '保存模型失败，请检查网络或数据')
@@ -479,13 +499,14 @@ const handleSubmit = async () => {
 <style lang="scss" scoped>
 .model-add-page {
   position: relative;
-  padding-bottom: 80px;
+  background-color: #f0f2f5;
+  overflow: hidden;
 }
 
 .custom-card {
   width: 100%;
   height: 100px;
-  padding: 34px 30px 26px;
+  padding: 34px 177px 26px 189px;
   background: #fff;
   box-sizing: border-box;
   margin-bottom: 15px;
@@ -506,12 +527,12 @@ const handleSubmit = async () => {
     .zl-step {
       list-style: none;
       width: 100%;
-      height: 20px;
+      height: 40px;
       padding: 0;
-      margin: 20px auto;
+      margin: 0 auto;
       cursor: pointer;
       display: flex;
-      align-items: flex-end;
+      align-items: center;
 
       li {
         position: relative;
@@ -525,27 +546,27 @@ const handleSubmit = async () => {
         font-weight: 500;
         transition: background 0.3s;
 
-        &:first-child {
-          z-index: 2;
+        &.step-1 {
+          z-index: 4;
           clip-path: polygon(
-            0 0,
-            calc(100% - 20px) 0,
-            100% 50%,
-            calc(100% - 20px) 100%,
-            0 100%
+              0 0,
+              calc(100% - 20px) 0,
+              100% 50%,
+              calc(100% - 20px) 100%,
+              0 100%
           );
         }
 
-        &:not(:first-child):not(:last-child) {
+        &.step-2 {
+          z-index: 3;
           margin-left: -10px;
           clip-path: polygon(
-            0 0,
-            calc(100% - 20px) 0,
-            100% 50%,
-            calc(100% - 20px) 100%,
-            0 100%
+              0 0,
+              calc(100% - 20px) 0,
+              100% 50%,
+              calc(100% - 20px) 100%,
+              0 100%
           );
-          z-index: 1;
 
           &::before {
             content: '';
@@ -560,11 +581,39 @@ const handleSubmit = async () => {
           }
         }
 
-        &:last-child {
+        &.step-3 {
+          z-index: 2;
           margin-left: -10px;
-          z-index: 0;
-          clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+          clip-path: polygon(
+              0 0,
+              calc(100% - 20px) 0,
+              100% 50%,
+              calc(100% - 20px) 100%,
+              0 100%
+          );
 
+          &::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 20px;
+            height: 100%;
+            background: #fff;
+            clip-path: polygon(0 0, 100% 50%, 0 100%);
+            z-index: 2;
+          }
+        }
+
+        &.step-4 {
+          z-index: 1;
+          margin-left: -10px;
+          clip-path: polygon(
+              0 0,
+              100% 0,
+              100% 100%,
+              0 100%
+          );
           &::before {
             content: '';
             position: absolute;
@@ -628,8 +677,8 @@ const handleSubmit = async () => {
 
     .step-name {
       font-family:
-        PingFang SC,
-        PingFang SC;
+          PingFang SC,
+          PingFang SC;
       font-weight: 500;
       font-size: 16px;
     }
@@ -637,25 +686,29 @@ const handleSubmit = async () => {
 }
 
 .pagecont-top {
-  min-height: calc(100vh - 260px);
-  background: #fff;
-  padding: 0 25px 70px;
+  height: 74vh;
+  position: relative;
 }
 
-.main-content {
-  width: 100%;
-  background-color: #fff;
+.main {
+  height: 90%;
+  background-color: white;
+  padding: 0px 25px 0;
+  overflow-y: auto;
+
+  &.no-scroll {
+    overflow-y: visible;
+  }
 }
 
 .button-style {
-  position: fixed;
+  position: absolute;
   left: 0;
   right: 0;
   bottom: 0;
-  padding: 15px 35px;
+  padding: 0px 35px 25px 0px;
   background: #fff;
   text-align: right;
   z-index: 10;
-  box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.05);
 }
 </style>
