@@ -39,6 +39,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import tech.qiantong.qmodel.common.annotation.Excel;
 import tech.qiantong.qmodel.common.core.domain.BaseEntity;
 
 /**
@@ -55,6 +56,10 @@ public class ModelFileResourceSaveReqVO extends BaseEntity {
 
     @Schema(description = "ID")
     private Long id;
+
+    @Excel(name = "模型id")
+    @Schema(description = "模型id", example = "")
+    private Long modelId;
 
     @Schema(description = "原始上传文件名", example = "")
     @NotBlank(message = "原始上传文件名不能为空")
@@ -87,7 +92,6 @@ public class ModelFileResourceSaveReqVO extends BaseEntity {
     private Long fileSize;
 
     @Schema(description = "运行日志文件路径", example = "")
-    @NotBlank(message = "运行日志文件路径不能为空")
     @Size(max = 256, message = "运行日志文件路径长度不能超过256个字符")
     private String logFilePath;
 
@@ -95,44 +99,36 @@ public class ModelFileResourceSaveReqVO extends BaseEntity {
     private Long execTimeout;
 
     @Schema(description = "自动生成dockerFile文件地址", example = "")
-    @NotBlank(message = "自动生成dockerFile文件地址不能为空")
     @Size(max = 256, message = "自动生成dockerFile文件地址长度不能超过256个字符")
     private String dockerFilePath;
 
     @Schema(description = "构建镜像标签", example = "")
-    @NotBlank(message = "构建镜像标签不能为空")
     @Size(max = 256, message = "构建镜像标签长度不能超过256个字符")
     private String imageTag;
 
     @Schema(description = "镜像版本", example = "")
-    @NotBlank(message = "镜像版本不能为空")
     @Size(max = 32, message = "镜像版本长度不能超过32个字符")
     private String imageVersion;
 
     @Schema(description = "镜像构建状态", example = "")
-    @NotBlank(message = "镜像构建状态不能为空")
     private String imageBuildStatus;
 
     @Schema(description = "镜像构建时间", example = "")
     private Long imageBuildTime;
 
     @Schema(description = "镜像构建日志文件地址", example = "")
-    @NotBlank(message = "镜像构建日志文件地址不能为空")
     @Size(max = 256, message = "镜像构建日志文件地址长度不能超过256个字符")
     private String imageBuildLog;
 
     @Schema(description = "容器硬件资源配额JSON，gpu_num/gpu_mem_gb/cpu_core/mem_gb", example = "")
-    @NotBlank(message = "容器硬件资源配额JSON，gpu_num/gpu_mem_gb/cpu_core/mem_gb不能为空")
     @Size(max = 3072, message = "容器硬件资源配额JSON，gpu_num/gpu_mem_gb/cpu_core/mem_gb长度不能超过3072个字符")
     private String resourceLimit;
 
     @Schema(description = "容器自定义环境变量，JSON数组格式", example = "")
-    @NotBlank(message = "容器自定义环境变量，JSON数组格式不能为空")
     @Size(max = 3072, message = "容器自定义环境变量，JSON数组格式长度不能超过3072个字符")
     private String containerEnv;
 
     @Schema(description = "容器额外挂载目录配置，JSON数组格式", example = "")
-    @NotBlank(message = "容器额外挂载目录配置，JSON数组格式不能为空")
     @Size(max = 3072, message = "容器额外挂载目录配置，JSON数组格式长度不能超过3072个字符")
     private String containerMounts;
 
@@ -143,16 +139,13 @@ public class ModelFileResourceSaveReqVO extends BaseEntity {
     private Long mappedHostPort;
 
     @Schema(description = "容器运行状态(容器运行状态：0=待启动，1=运行中，2=运行成功，3=运行失败，4=手动停止，5=已销毁)", example = "")
-    @NotBlank(message = "容器运行状态(容器运行状态：0=待启动，1=运行中，2=运行成功，3=运行失败，4=手动停止，5=已销毁)不能为空")
     private String containerStatus;
 
     @Schema(description = "容器id", example = "")
-    @NotBlank(message = "容器id不能为空")
     @Size(max = 128, message = "容器id长度不能超过128个字符")
     private String containerId;
 
     @Schema(description = "备注", example = "")
-    @NotBlank(message = "备注不能为空")
     @Size(max = 512, message = "备注长度不能超过512个字符")
     private String remark;
 

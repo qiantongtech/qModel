@@ -34,6 +34,7 @@ package tech.qiantong.qmodel.module.model.controller.admin.fileResource.vo;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
+import tech.qiantong.qmodel.common.annotation.Excel;
 import tech.qiantong.qmodel.common.core.page.PageParam;
 
 /**
@@ -49,6 +50,10 @@ public class ModelFileResourcePageReqVO extends PageParam {
     private static final long serialVersionUID = 1L;
     @Schema(description = "ID", example = "")
     private Long id;
+
+    @Excel(name = "模型id")
+    @Schema(description = "模型id", example = "")
+    private Long modelId;
 
     @Schema(description = "原始上传文件名", example = "")
     private String fileName;

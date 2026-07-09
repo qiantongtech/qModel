@@ -10,8 +10,8 @@ import tech.qiantong.qmodel.module.system.dal.dataobject.message.MessageTemplate
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2026-07-07T10:11:23+0800",
-    comments = "version: 1.5.5.Final, compiler: Eclipse JDT (IDE) 3.46.0.v20260407-0427, environment: Java 21.0.10 (Eclipse Adoptium)"
+    date = "2026-07-08T15:23:35+0800",
+    comments = "version: 1.5.5.Final, compiler: javac, environment: Java 1.8.0_212 (Oracle Corporation)"
 )
 public class MessageTemplateConvertImpl implements MessageTemplateConvert {
 
@@ -23,13 +23,13 @@ public class MessageTemplateConvertImpl implements MessageTemplateConvert {
 
         MessageTemplateDO.MessageTemplateDOBuilder messageTemplateDO = MessageTemplateDO.builder();
 
-        messageTemplateDO.category( messageTemplatePageReqVO.getCategory() );
-        messageTemplateDO.content( messageTemplatePageReqVO.getContent() );
-        messageTemplateDO.delFlag( messageTemplatePageReqVO.getDelFlag() );
         messageTemplateDO.id( messageTemplatePageReqVO.getId() );
-        messageTemplateDO.msgLevel( messageTemplatePageReqVO.getMsgLevel() );
         messageTemplateDO.title( messageTemplatePageReqVO.getTitle() );
+        messageTemplateDO.content( messageTemplatePageReqVO.getContent() );
+        messageTemplateDO.category( messageTemplatePageReqVO.getCategory() );
+        messageTemplateDO.msgLevel( messageTemplatePageReqVO.getMsgLevel() );
         messageTemplateDO.validFlag( messageTemplatePageReqVO.getValidFlag() );
+        messageTemplateDO.delFlag( messageTemplatePageReqVO.getDelFlag() );
 
         return messageTemplateDO.build();
     }
@@ -42,11 +42,11 @@ public class MessageTemplateConvertImpl implements MessageTemplateConvert {
 
         MessageTemplateDO.MessageTemplateDOBuilder messageTemplateDO = MessageTemplateDO.builder();
 
-        messageTemplateDO.category( messageTemplateSaveReqVO.getCategory() );
-        messageTemplateDO.content( messageTemplateSaveReqVO.getContent() );
         messageTemplateDO.id( messageTemplateSaveReqVO.getId() );
-        messageTemplateDO.msgLevel( messageTemplateSaveReqVO.getMsgLevel() );
         messageTemplateDO.title( messageTemplateSaveReqVO.getTitle() );
+        messageTemplateDO.content( messageTemplateSaveReqVO.getContent() );
+        messageTemplateDO.category( messageTemplateSaveReqVO.getCategory() );
+        messageTemplateDO.msgLevel( messageTemplateSaveReqVO.getMsgLevel() );
 
         return messageTemplateDO.build();
     }
@@ -59,20 +59,20 @@ public class MessageTemplateConvertImpl implements MessageTemplateConvert {
 
         MessageTemplateRespVO messageTemplateRespVO = new MessageTemplateRespVO();
 
-        messageTemplateRespVO.setCategory( messageTemplateDO.getCategory() );
-        messageTemplateRespVO.setContent( messageTemplateDO.getContent() );
-        messageTemplateRespVO.setCreateBy( messageTemplateDO.getCreateBy() );
-        messageTemplateRespVO.setCreateTime( messageTemplateDO.getCreateTime() );
-        messageTemplateRespVO.setCreatorId( messageTemplateDO.getCreatorId() );
-        messageTemplateRespVO.setDelFlag( messageTemplateDO.getDelFlag() );
         messageTemplateRespVO.setId( messageTemplateDO.getId() );
-        messageTemplateRespVO.setMsgLevel( messageTemplateDO.getMsgLevel() );
-        messageTemplateRespVO.setRemark( messageTemplateDO.getRemark() );
         messageTemplateRespVO.setTitle( messageTemplateDO.getTitle() );
-        messageTemplateRespVO.setUpdateBy( messageTemplateDO.getUpdateBy() );
-        messageTemplateRespVO.setUpdateTime( messageTemplateDO.getUpdateTime() );
-        messageTemplateRespVO.setUpdatorId( messageTemplateDO.getUpdatorId() );
+        messageTemplateRespVO.setContent( messageTemplateDO.getContent() );
+        messageTemplateRespVO.setCategory( messageTemplateDO.getCategory() );
+        messageTemplateRespVO.setMsgLevel( messageTemplateDO.getMsgLevel() );
         messageTemplateRespVO.setValidFlag( messageTemplateDO.getValidFlag() );
+        messageTemplateRespVO.setDelFlag( messageTemplateDO.getDelFlag() );
+        messageTemplateRespVO.setCreateBy( messageTemplateDO.getCreateBy() );
+        messageTemplateRespVO.setCreatorId( messageTemplateDO.getCreatorId() );
+        messageTemplateRespVO.setCreateTime( messageTemplateDO.getCreateTime() );
+        messageTemplateRespVO.setUpdateBy( messageTemplateDO.getUpdateBy() );
+        messageTemplateRespVO.setUpdatorId( messageTemplateDO.getUpdatorId() );
+        messageTemplateRespVO.setUpdateTime( messageTemplateDO.getUpdateTime() );
+        messageTemplateRespVO.setRemark( messageTemplateDO.getRemark() );
 
         return messageTemplateRespVO;
     }

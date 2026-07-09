@@ -10,8 +10,8 @@ import tech.qiantong.qmodel.module.system.dal.dataobject.message.MessageDO;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2026-07-07T10:11:23+0800",
-    comments = "version: 1.5.5.Final, compiler: Eclipse JDT (IDE) 3.46.0.v20260407-0427, environment: Java 21.0.10 (Eclipse Adoptium)"
+    date = "2026-07-08T15:23:35+0800",
+    comments = "version: 1.5.5.Final, compiler: javac, environment: Java 1.8.0_212 (Oracle Corporation)"
 )
 public class MessageConvertImpl implements MessageConvert {
 
@@ -23,21 +23,21 @@ public class MessageConvertImpl implements MessageConvert {
 
         MessageDO.MessageDOBuilder messageDO = MessageDO.builder();
 
-        messageDO.category( messagePageReqVO.getCategory() );
+        messageDO.id( messagePageReqVO.getId() );
+        messageDO.senderId( messagePageReqVO.getSenderId() );
+        messageDO.receiverId( messagePageReqVO.getReceiverId() );
+        messageDO.title( messagePageReqVO.getTitle() );
         messageDO.content( messagePageReqVO.getContent() );
-        messageDO.delFlag( messagePageReqVO.getDelFlag() );
-        messageDO.entityId( messagePageReqVO.getEntityId() );
+        messageDO.category( messagePageReqVO.getCategory() );
+        messageDO.msgLevel( messagePageReqVO.getMsgLevel() );
+        messageDO.module( messagePageReqVO.getModule() );
         messageDO.entityType( messagePageReqVO.getEntityType() );
+        messageDO.entityId( messagePageReqVO.getEntityId() );
         messageDO.entityUrl( messagePageReqVO.getEntityUrl() );
         messageDO.hasRead( messagePageReqVO.getHasRead() );
         messageDO.hasRetraction( messagePageReqVO.getHasRetraction() );
-        messageDO.id( messagePageReqVO.getId() );
-        messageDO.module( messagePageReqVO.getModule() );
-        messageDO.msgLevel( messagePageReqVO.getMsgLevel() );
-        messageDO.receiverId( messagePageReqVO.getReceiverId() );
-        messageDO.senderId( messagePageReqVO.getSenderId() );
-        messageDO.title( messagePageReqVO.getTitle() );
         messageDO.validFlag( messagePageReqVO.getValidFlag() );
+        messageDO.delFlag( messagePageReqVO.getDelFlag() );
 
         return messageDO.build();
     }
@@ -50,17 +50,17 @@ public class MessageConvertImpl implements MessageConvert {
 
         MessageDO.MessageDOBuilder messageDO = MessageDO.builder();
 
-        messageDO.delFlag( messageSaveReqVO.getDelFlag() );
-        messageDO.entityId( messageSaveReqVO.getEntityId() );
-        messageDO.entityType( messageSaveReqVO.getEntityType() );
-        messageDO.entityUrl( messageSaveReqVO.getEntityUrl() );
-        messageDO.hasRead( messageSaveReqVO.getHasRead() );
         if ( messageSaveReqVO.getId() != null ) {
             messageDO.id( Long.parseLong( messageSaveReqVO.getId() ) );
         }
-        messageDO.module( messageSaveReqVO.getModule() );
-        messageDO.receiverId( messageSaveReqVO.getReceiverId() );
         messageDO.senderId( messageSaveReqVO.getSenderId() );
+        messageDO.receiverId( messageSaveReqVO.getReceiverId() );
+        messageDO.module( messageSaveReqVO.getModule() );
+        messageDO.entityType( messageSaveReqVO.getEntityType() );
+        messageDO.entityId( messageSaveReqVO.getEntityId() );
+        messageDO.entityUrl( messageSaveReqVO.getEntityUrl() );
+        messageDO.hasRead( messageSaveReqVO.getHasRead() );
+        messageDO.delFlag( messageSaveReqVO.getDelFlag() );
 
         return messageDO.build();
     }
@@ -73,28 +73,28 @@ public class MessageConvertImpl implements MessageConvert {
 
         MessageRespVO messageRespVO = new MessageRespVO();
 
-        messageRespVO.setCategory( messageDO.getCategory() );
+        messageRespVO.setId( messageDO.getId() );
+        messageRespVO.setSenderId( messageDO.getSenderId() );
+        messageRespVO.setReceiverId( messageDO.getReceiverId() );
+        messageRespVO.setTitle( messageDO.getTitle() );
         messageRespVO.setContent( messageDO.getContent() );
-        messageRespVO.setCreateBy( messageDO.getCreateBy() );
-        messageRespVO.setCreateTime( messageDO.getCreateTime() );
-        messageRespVO.setCreatorId( messageDO.getCreatorId() );
-        messageRespVO.setDelFlag( messageDO.getDelFlag() );
-        messageRespVO.setEntityId( messageDO.getEntityId() );
+        messageRespVO.setCategory( messageDO.getCategory() );
+        messageRespVO.setMsgLevel( messageDO.getMsgLevel() );
+        messageRespVO.setModule( messageDO.getModule() );
         messageRespVO.setEntityType( messageDO.getEntityType() );
+        messageRespVO.setEntityId( messageDO.getEntityId() );
         messageRespVO.setEntityUrl( messageDO.getEntityUrl() );
         messageRespVO.setHasRead( messageDO.getHasRead() );
         messageRespVO.setHasRetraction( messageDO.getHasRetraction() );
-        messageRespVO.setId( messageDO.getId() );
-        messageRespVO.setModule( messageDO.getModule() );
-        messageRespVO.setMsgLevel( messageDO.getMsgLevel() );
-        messageRespVO.setReceiverId( messageDO.getReceiverId() );
-        messageRespVO.setRemark( messageDO.getRemark() );
-        messageRespVO.setSenderId( messageDO.getSenderId() );
-        messageRespVO.setTitle( messageDO.getTitle() );
-        messageRespVO.setUpdateBy( messageDO.getUpdateBy() );
-        messageRespVO.setUpdateTime( messageDO.getUpdateTime() );
-        messageRespVO.setUpdatorId( messageDO.getUpdatorId() );
         messageRespVO.setValidFlag( messageDO.getValidFlag() );
+        messageRespVO.setDelFlag( messageDO.getDelFlag() );
+        messageRespVO.setCreateBy( messageDO.getCreateBy() );
+        messageRespVO.setCreatorId( messageDO.getCreatorId() );
+        messageRespVO.setCreateTime( messageDO.getCreateTime() );
+        messageRespVO.setUpdateBy( messageDO.getUpdateBy() );
+        messageRespVO.setUpdatorId( messageDO.getUpdatorId() );
+        messageRespVO.setUpdateTime( messageDO.getUpdateTime() );
+        messageRespVO.setRemark( messageDO.getRemark() );
 
         return messageRespVO;
     }

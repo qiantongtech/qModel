@@ -77,9 +77,14 @@
         />
 
         <TestSaveStep
-          v-show="activeStep === 3"
+          v-show="activeStep === 3 && form.accessType === 'API'"
           ref="testStepRef"
           v-model:form-data="form"
+        />
+
+        <ConfirmBuildStep
+          v-show="activeStep === 3 && form.accessType === 'PYTHON'"
+          ref="confirmBuildStepRef"
         />
       </div>
     </div>
@@ -88,8 +93,11 @@
       <el-button @click="handleCancel">取 消</el-button>
       <el-button v-if="activeStep > 0" @click="handlePrevStep">上一步</el-button>
       <el-button v-if="activeStep < 3" type="primary" @click="handleNextStep">下一步</el-button>
-      <el-button v-if="activeStep === 3" type="primary" :loading="submitLoading" @click="handleSubmit">
+      <el-button v-if="activeStep === 3 && form.accessType === 'API'" type="primary" :loading="submitLoading" @click="handleSubmit">
         保 存
+      </el-button>
+      <el-button v-if="activeStep === 3 && form.accessType === 'PYTHON'" type="primary" :loading="submitLoading" @click="handleSubmit">
+        确认并开始构建
       </el-button>
     </div>
   </div>
@@ -107,6 +115,7 @@ import ApiConfigStep from './ApiConfigStep.vue'
 import CheckUploadFile from './checkUploadFile.vue'
 import ParamDefineStep from './ParamDefineStep.vue'
 import TestSaveStep from './TestSaveStep.vue'
+import ConfirmBuildStep from './ConfirmBuildStep.vue'
 
 const { proxy } = getCurrentInstance()
 const route = useRoute()
@@ -134,6 +143,7 @@ const apiStepRef = ref(null)
 const checkUploadFileRef = ref(null)
 const paramStepRef = ref(null)
 const testStepRef = ref(null)
+const confirmBuildStepRef = ref(null)
 const isEdit = ref(false)
 const configId = ref(null)
 
@@ -143,7 +153,7 @@ const stepsList = computed(() => {
       { name: '基础配置', id: 0 },
       { name: '文件上传与校验', id: 1 },
       { name: '参数定义', id: 2 },
-      { name: '测试与保存', id: 3 }
+      { name: '确认构建', id: 3 }
     ]
   }
   return [
@@ -321,7 +331,6 @@ const handleNextStep = async () => {
         await apiStepRef.value.validate()
       } else if (form.accessType === 'PYTHON') {
         if (!checkUploadFileRef.value || !checkUploadFileRef.value.validate()) {
-          ElMessage.warning('请上传并检测通过 ZIP 模型包')
           throw new Error('请上传并检测通过 ZIP 模型包')
         }
       }
