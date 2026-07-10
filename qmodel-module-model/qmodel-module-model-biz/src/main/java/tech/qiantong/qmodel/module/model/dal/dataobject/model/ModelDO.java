@@ -32,6 +32,7 @@
 
 package tech.qiantong.qmodel.module.model.dal.dataobject.model;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
@@ -39,6 +40,8 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableLogic;
 import com.baomidou.mybatisplus.annotation.TableName;
 import tech.qiantong.qmodel.common.core.domain.BaseEntity;
+import tech.qiantong.qmodel.module.model.controller.admin.fileResource.vo.ModelFileResourceRespVO;
+import tech.qiantong.qmodel.module.model.dal.dataobject.fileResource.ModelFileResourceDO;
 
 /**
  * 模型基础信息 DO 对象 model
@@ -89,6 +92,9 @@ public class ModelDO extends BaseEntity {
     /** 标签 */
     private String tags;
 
+    /** 标签 */
+    private String icon;
+
     /** 描述 */
     private String description;
 
@@ -98,6 +104,10 @@ public class ModelDO extends BaseEntity {
     /** 删除标志 */
     @TableLogic
     private Boolean delFlag;
+
+
+    @TableField(exist = false)
+    private ModelFileResourceDO modelFileResourceRespVO;
 
 
 }

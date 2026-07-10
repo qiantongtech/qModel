@@ -32,10 +32,13 @@
 
 package tech.qiantong.qmodel.module.model.controller.admin.model.vo;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 import io.swagger.v3.oas.annotations.media.Schema;
 import tech.qiantong.qmodel.common.annotation.Excel;
+import tech.qiantong.qmodel.module.model.controller.admin.fileResource.vo.ModelFileResourceRespVO;
+import tech.qiantong.qmodel.module.model.dal.dataobject.fileResource.ModelFileResourceDO;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -92,6 +95,11 @@ public class ModelRespVO implements Serializable {
     @Schema(description = "标签", example = "")
     private String tags;
 
+    @Excel(name = "图标")
+    @Schema(description = "图标", example = "")
+    private String icon;
+
+
     @Excel(name = "描述")
     @Schema(description = "描述", example = "")
     private String description;
@@ -134,4 +142,7 @@ public class ModelRespVO implements Serializable {
     @Schema(description = "备注", example = "")
     private String remark;
 
+    @Schema(description = "模型文件资源信息 Response VO", example = "")
+    @TableField(exist = false)
+    private ModelFileResourceDO modelFileResourceRespVO;
 }

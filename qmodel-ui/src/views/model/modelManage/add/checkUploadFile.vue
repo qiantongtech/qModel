@@ -64,7 +64,7 @@
         <div class="status-icon success">
           <el-icon size="48"><CircleCheck /></el-icon>
         </div>
-        <div class="status-text success">算法包校验通过</div>
+        <div class="status-text success"><span class="file-name">{{fileName}}</span>  算法包校验通过</div>
       </div>
       <div class="check-results">
         <span class="result-tag success">✓ main.py 存在</span>
@@ -79,7 +79,7 @@
         <div class="status-icon failed">
           <el-icon size="48"><CircleClose /></el-icon>
         </div>
-        <div class="status-text failed">算法包校验未通过</div>
+        <div class="status-text failed"><span class="file-name">{{fileName}}</span> 算法包校验未通过</div>
       </div>
       <div class="check-results">
         <span class="result-tag" :class="checkDetail.mainPy ? 'success' : 'failed'">
@@ -97,14 +97,23 @@
 </template>
 
 <script setup name="CheckUploadFile">
-import { ref, reactive } from 'vue'
+import { ref, reactive, watch } from 'vue'
 import { Upload, Loading, CircleCheck, CircleClose } from '@element-plus/icons-vue'
 import { checkUploadFile } from '@/api/model/fileResource'
 import { ElMessage } from 'element-plus'
 
 const emit = defineEmits(['fileChecked'])
 
+const props = defineProps({
+  fileResource: {
+    type: Object,
+    default: null
+  }
+})
+
 const fileInputRef = ref(null)
+const fileName = ref('')
+const filePath = ref('')
 const uploadedFile = ref(null)
 const checkStatus = ref('initial')
 const checkDetail = reactive({
@@ -112,6 +121,18 @@ const checkDetail = reactive({
   predictFunction: false,
   requirementsTxt: false
 })
+
+watch(() => props.fileResource, (val) => {
+  if (val && val.fileName && val.filePath) {
+    fileName.value = val.fileName
+    filePath.value = val.filePath
+    checkStatus.value = 'success'
+    checkDetail.mainPy = true
+    checkDetail.predictFunction = true
+    checkDetail.requirementsTxt = true
+    emit('fileChecked', { pass: true, filePath: val.filePath })
+  }
+}, { immediate: true })
 
 const triggerFileInput = () => {
   fileInputRef.value?.click()
@@ -155,11 +176,14 @@ const processFile = async (file) => {
 
 const handleCheckResult = (result) => {
   const data = result.data || {}
+  fileName.value = data.fileName || ''
+  filePath.value = data.filePath || ''
   if (data.pass) {
     checkStatus.value = 'success'
     checkDetail.mainPy = true
     checkDetail.predictFunction = true
     checkDetail.requirementsTxt = true
+
     emit('fileChecked', { pass: true, file: uploadedFile.value, filePath: data.filePath })
   } else {
     checkStatus.value = 'failed'
@@ -219,7 +243,9 @@ const validate = () => {
 
 defineExpose({
   validate,
-  checkStatus
+  checkStatus,
+  fileName,
+  filePath
 })
 </script>
 
@@ -379,6 +405,11 @@ defineExpose({
   &.success {
     color: #67c23a;
     font-weight: 600;
+  }
+
+  .file-name {
+    font-weight: 700;
+    color: black;
   }
 
   &.failed {

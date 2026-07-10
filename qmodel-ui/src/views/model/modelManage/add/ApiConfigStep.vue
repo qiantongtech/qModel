@@ -24,6 +24,7 @@
       label-width="170px"
       style="padding-right: 90px"
       class="api-form"
+      :validate-on-rule-change="false"
     >
       <div class="section-block">
         <div class="h2-titles">基础请求配置</div>
@@ -218,7 +219,7 @@
 </template>
 
 <script setup name="ApiConfigStep">
-import { ref, computed, watch } from 'vue'
+import { ref, computed, watch, nextTick } from 'vue'
 
 const formData = defineModel('formData', {
   type: Object,
@@ -299,7 +300,6 @@ const injectPositionOptions = computed(() => {
 watch(
   () => formData.value.authType,
   (newVal, oldVal) => {
-    console.log(formData.value,'cjyyyyyyyyyyyyyy');
     if (oldVal === 'FIXED' || oldVal === 'DYNAMIC') {
       authBackup.value[oldVal] = {
         authTokenValue: formData.value.authTokenValue,
@@ -321,6 +321,9 @@ watch(
         Object.assign(formData.value, backup)
       }
     }
+    nextTick(() => {
+      apiFormRef.value?.clearValidate()
+    })
   }
 )
 
@@ -331,6 +334,9 @@ watch(
       formData.value.authKeyName = 'Blade-Auth'
       formData.value.authInjectPosition = 'Header'
     }
+    nextTick(() => {
+      apiFormRef.value?.clearValidate()
+    })
   }
 )
 
@@ -419,8 +425,21 @@ defineExpose({
 </script>
 
 <style lang="scss" scoped>
+.api-config-step {
+  height: 100%;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+}
+
 .api-form {
   width: 100%;
+  flex: 1;
+  min-height: 0;
+
+  :deep(.el-form-item) {
+    margin-bottom: 14px;
+  }
 
   :deep(.el-textarea__inner) {
     height: auto;

@@ -44,7 +44,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.http.MediaType;
 import tech.qiantong.qmodel.common.core.page.PageParam;
 import tech.qiantong.qmodel.common.core.domain.AjaxResult;
 import tech.qiantong.qmodel.common.annotation.Log;
@@ -54,7 +53,6 @@ import tech.qiantong.qmodel.common.core.page.PageResult;
 import tech.qiantong.qmodel.common.enums.BusinessType;
 import tech.qiantong.qmodel.common.utils.object.BeanUtils;
 import tech.qiantong.qmodel.common.utils.poi.ExcelUtil;
-import tech.qiantong.qmodel.common.exception.enums.GlobalErrorCodeConstants;
 import tech.qiantong.qmodel.module.model.controller.admin.fileResource.vo.ModelFileResourcePageReqVO;
 import tech.qiantong.qmodel.module.model.controller.admin.fileResource.vo.ModelFileResourceRespVO;
 import tech.qiantong.qmodel.module.model.controller.admin.fileResource.vo.ModelFileResourceSaveReqVO;
@@ -155,13 +153,18 @@ public class ModelFileResourceController extends BaseController {
 
     @Operation(summary = "执行模型脚本")
     @PreAuthorize("@ss.hasPermi('model:fileResource:fileresource:add')")
-    @PostMapping(value = "/runScript/{modelId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public CommonResult<String> runScript(
-            @PathVariable("modelId") Long modelId,
-            @RequestParam(value = "params", required = false) String paramsJson,
-            @RequestParam(value = "fileKeys", required = false) String fileKeys,
-            @RequestParam(value = "files", required = false) List<MultipartFile> files) {
-        return CommonResult.success(modelFileResourceService.runModelScript(modelId, paramsJson, fileKeys, files));
+    @PostMapping("/runScript/{modelId}")
+    public CommonResult<Object> runScript(@PathVariable("modelId") Long modelId, @RequestBody(required = false) Map<String, Object> inputParam) {
+        return CommonResult.success(modelFileResourceService.runModelScript(modelId, inputParam));
     }
+
+    @Operation(summary = "调用模型参数文件上传")
+    @PostMapping("/uploadParamFile")
+    public CommonResult<Map<String, Object>> uploadParamFile(
+            @RequestParam("file") MultipartFile file,
+            @RequestParam("modelId") Long modelId) {
+        return CommonResult.success(modelFileResourceService.uploadParamFile(file, modelId));
+    }
+
 
 }

@@ -59,6 +59,15 @@ export function checkUploadFile(file) {
   })
 }
 
+// 查询模型文件部署列表
+export function listModelFileResource(query) {
+  return request({
+    url: '/model/modelFileResource/list',
+    method: 'get',
+    params: query
+  })
+}
+
 export function addFileResource(data) {
   return request({
     url: '/model/modelFileResource',

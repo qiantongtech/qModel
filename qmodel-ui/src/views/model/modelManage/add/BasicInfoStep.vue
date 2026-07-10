@@ -22,6 +22,7 @@
     :rules="rules"
     label-width="170px"
     style="padding-right: 90px"
+    class="basic-info-step"
   >
     <div class="h2-titles">模型接入方式</div>
 
@@ -294,6 +295,17 @@ defineExpose({
 </script>
 
 <style lang="scss" scoped>
+.basic-info-step {
+  height: 100%;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+
+  :deep(.el-form-item) {
+    margin-bottom: 14px;
+  }
+}
+
 .h2-titles {
   font-size: 16px;
   color: rgba(0, 0, 0, 0.85);

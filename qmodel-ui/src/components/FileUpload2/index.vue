@@ -53,7 +53,7 @@
         <div class="el-upload__text" style="width: 100%;">将文件拖到此处，或<em>点击上传</em></div>
       </template>
       <el-button v-else type="primary" size="small">
-        <el-icon><Upload /></el-icon>上传
+        <el-icon style="margin-right: 4px;"><Upload /></el-icon>上传
       </el-button>
     </el-upload>
     <!-- 上传提示 -->

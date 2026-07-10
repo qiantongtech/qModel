@@ -38,6 +38,7 @@ import java.util.ArrayList;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import cn.hutool.core.util.ObjectUtil;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import javax.annotation.Resource;
@@ -54,6 +55,7 @@ import tech.qiantong.qmodel.module.model.controller.admin.model.vo.ModelRespVO;
 import tech.qiantong.qmodel.module.model.controller.admin.model.vo.ModelSaveReqVO;
 import tech.qiantong.qmodel.module.model.controller.admin.model.vo.ModelSaveWithConfigReqVO;
 import tech.qiantong.qmodel.module.model.dal.dataobject.config.ModelConfigDO;
+import tech.qiantong.qmodel.module.model.dal.dataobject.fileResource.ModelFileResourceDO;
 import tech.qiantong.qmodel.module.model.dal.dataobject.model.ModelDO;
 import tech.qiantong.qmodel.module.model.dal.mapper.config.ModelConfigMapper;
 import tech.qiantong.qmodel.module.model.dal.mapper.model.ModelMapper;
@@ -119,7 +121,14 @@ public class ModelServiceImpl extends ServiceImpl<ModelMapper, ModelDO> implemen
 
     @Override
     public ModelDO getModelById(Long id) {
-        return modelMapper.selectById(id);
+        ModelDO modelDO = modelMapper.selectById(id);
+        if(ObjectUtil.isNotNull(modelDO)&&ACCESS_TYPE_PYTHON.equals(modelDO.getAccessType())){
+            //关联模型文件资源信息
+            ModelFileResourceDO one = modelFileResourceService.getOne(new QueryWrapper<ModelFileResourceDO>()
+                    .eq("model_id",id));
+            modelDO.setModelFileResourceRespVO(one);
+        }
+        return modelDO;
     }
 
     @Override

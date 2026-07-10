@@ -476,7 +476,6 @@ defineExpose({
 }
 
 .log-body {
-  flex: 1;
   background-color: #1e1e1e;
   color: #d4d4d4;
   padding: 15px;
@@ -485,7 +484,7 @@ defineExpose({
   line-height: 1.6;
   border-radius: 4px;
   overflow-y: auto;
-  min-height: 0;
+  height: 320px;
 }
 
 .log-line {

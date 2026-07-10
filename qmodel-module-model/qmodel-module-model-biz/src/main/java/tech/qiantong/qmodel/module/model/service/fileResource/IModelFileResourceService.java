@@ -158,7 +158,7 @@ public interface IModelFileResourceService extends IService<ModelFileResourceDO>
      * @param inputParam 输入参数（JSON格式）
      * @return 脚本执行结果
      */
-    String runModelScript(Long modelId, Map<String, Object> inputParam);
+    Object runModelScript(Long modelId, Map<String, Object> inputParam);
 
     /**
      * 执行模型脚本（支持文件参数）
@@ -171,7 +171,7 @@ public interface IModelFileResourceService extends IService<ModelFileResourceDO>
      * @param files 文件列表
      * @return 脚本执行结果
      */
-    String runModelScript(Long modelId, String paramsJson, String fileKeys, List<MultipartFile> files);
+    Object runModelScript(Long modelId, String paramsJson, String fileKeys, List<MultipartFile> files);
 
     /**
      * 保存文件到临时目录
@@ -181,5 +181,15 @@ public interface IModelFileResourceService extends IService<ModelFileResourceDO>
      * @return 文件绝对路径
      */
     String saveFileToTemp(MultipartFile file);
+
+    /**
+     * 上传模型参数文件
+     * 将参数文件上传到指定模型的临时目录，返回文件路径信息
+     *
+     * @param file 上传的文件
+     * @param modelId 模型ID
+     * @return 文件路径信息，包含absolutePath(完整URL)、relativePath(相对路径)、filename(文件名)
+     */
+    Map<String, Object> uploadParamFile(MultipartFile file, Long modelId);
 
 }

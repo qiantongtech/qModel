@@ -70,6 +70,7 @@
         <CheckUploadFile
           v-show="activeStep === 1 && form.accessType === 'PYTHON'"
           ref="checkUploadFileRef"
+          :file-resource="fileResource"
           @file-checked="handleFileChecked"
         />
 
@@ -121,7 +122,7 @@ import CheckUploadFile from './checkUploadFile.vue'
 import ParamDefineStep from './ParamDefineStep.vue'
 import TestSaveStep from './TestSaveStep.vue'
 import ConfirmBuildStep from './ConfirmBuildStep.vue'
-import {addFileResource, updateFileResource} from "@/api/model/fileResource.js";
+import {addFileResource, updateFileResource,listModelFileResource} from "@/api/model/fileResource.js";
 
 const { proxy } = getCurrentInstance()
 const route = useRoute()
@@ -158,6 +159,7 @@ const testStepRef = ref(null)
 const confirmBuildStepRef = ref(null)
 const isEdit = ref(false)
 const configId = ref(null)
+const fileResource = ref(null)
 
 const stepsList = computed(() => {
   if (form.accessType === 'PYTHON') {
@@ -223,7 +225,7 @@ onMounted(() => {
   const editId = route.query.id
   if (editId) {
     isEdit.value = true
-    updateRouteTitle('编辑模型')
+    updateRouteTitle('修改模型')
     loadModelData(editId)
   } else {
     updateRouteTitle('新增模型')
@@ -302,6 +304,7 @@ const loadModelData = async (id) => {
       const fileResList = fileResRes.data?.rows || fileResRes.data || []
       if (fileResList.length > 0) {
         const fileRes = fileResList[0]
+        fileResource.value = fileRes
         Object.assign(form, {
           fileResourceId: fileRes.id,
           filePath: fileRes.filePath || '',
@@ -350,7 +353,7 @@ const handleFileChecked = (result) => {
 }
 
 const handleCancel = () => {
-  const message = isEdit.value ? '确认取消编辑模型吗？已修改的内容将不会保存。' : '确认取消新增模型吗？已填写的内容将不会保存。'
+  const message = isEdit.value ? '确认取消修改模型吗？已修改的内容将不会保存。' : '确认取消新增模型吗？已填写的内容将不会保存。'
   proxy.$modal
     .confirm(message)
     .then(() => {
@@ -489,24 +492,13 @@ const handleSubmit = async () => {
         modelId = modelRes.data
       }
     }
-    console.log('[ModelAdd] modelId', modelId)
 
-    if (form.accessType === 'PYTHON' && modelId && form.filePath) {
-      const fileData = {
-        modelId: modelId,
-        fileName: form.uploadedFile?.name || '',
-        filePath: form.filePath,
-        fileSize: Math.round(form.uploadedFile?.size / (1024 * 1024)) || 0,
-        scriptName: 'main.py',
-        resourceType: '2',
-        modelVersion: 1
-      }
-
-      if (isEdit.value && form.fileResourceId) {
-        fileData.id = form.fileResourceId
-        await updateFileResource(fileData)
+    if (form.accessType === 'API' && modelId) {
+      const configData = buildConfigData(modelId)
+      if (isEdit.value && configId.value) {
+        await updateModelConfig(configData)
       } else {
-        await addFileResource(fileData)
+        await addModelConfig(configData)
       }
     }
 
@@ -528,6 +520,9 @@ const handleSubmit = async () => {
   position: relative;
   background-color: #f0f2f5;
   overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
 }
 
 .custom-card {
@@ -713,15 +708,18 @@ const handleSubmit = async () => {
 }
 
 .pagecont-top {
-  height: 74vh;
+  flex: 1;
+  height: auto;
+  min-height: 0;
   position: relative;
 }
 
 .main {
-  height: 90%;
+  height: 100%;
   background-color: white;
   padding: 0px 25px 0;
   overflow-y: auto;
+  box-sizing: border-box;
 
   &.no-scroll {
     overflow-y: visible;
