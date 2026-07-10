@@ -34,7 +34,7 @@
         <!-- Docker 镜像构建配置 -->
         <docker.hub>crpi-kf13onfj0v8f6jax.cn-shanghai.personal.cr.aliyuncs.com/qiantongkeji</docker.hub>
         <!-- 镜像仓库名：默认使用模块名称（module name） -->
-        <docker.repo>${project.name}</docker.repo>
+        <docker.repo>${project.name}-ce</docker.repo>
         <!-- 镜像版本号：默认使用当前模块版本 -->
         <docker.tag>${project.version}</docker.tag>
         <!-- 是否打印构建命令（默认打印，便于调试，不执行实际构建） -->
