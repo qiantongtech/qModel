@@ -28,21 +28,23 @@
       <div class="section-block">
         <div class="h2-titles">基础请求配置</div>
 
-        <el-form-item label="接口地址（URL）" prop="apiUrl">
-          <div class="url-input-group">
-            <el-select v-model="formData.requestMethod" style="width: 100px">
-              <el-option
-                v-for="item in requestMethodOptions"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value"
+        <el-form-item label="接口地址" prop="apiUrl">
+          <div class="default-wrap">
+            <div class="url-input-group">
+              <el-select v-model="formData.requestMethod" style="width: 100px">
+                <el-option
+                  v-for="item in requestMethodOptions"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value"
+                />
+              </el-select>
+              <el-input
+                v-model="formData.apiUrl"
+                placeholder="请输入接口地址"
+                style="flex: 1"
               />
-            </el-select>
-            <el-input
-              v-model="formData.apiUrl"
-              placeholder="请输入接口地址"
-              style="flex: 1"
-            />
+            </div>
           </div>
         </el-form-item>
 
@@ -153,22 +155,26 @@
           <el-row :gutter="20">
             <el-col :span="12">
               <el-form-item label="请求头（Headers）" prop="authDynamicHeaders">
-                <el-input
-                  v-model="formData.authDynamicHeaders"
-                  type="textarea"
-                  :rows="8"
-                  placeholder='请输入请求头'
-                />
+                <div class="default-wrap">
+                  <el-input
+                    v-model="formData.authDynamicHeaders"
+                    type="textarea"
+                    :rows="8"
+                    placeholder='请输入请求头（Headers）'
+                  />
+                </div>
               </el-form-item>
             </el-col>
             <el-col :span="12">
               <el-form-item label="Query 参数" prop="authDynamicParams">
-                <el-input
-                  v-model="formData.authDynamicParams"
-                  type="textarea"
-                  :rows="8"
-                  placeholder='请输入 Query 参数'
-                />
+                <div class="default-wrap">
+                  <el-input
+                    v-model="formData.authDynamicParams"
+                    type="textarea"
+                    :rows="8"
+                    placeholder='请输入 Query 参数'
+                  />
+                </div>
               </el-form-item>
             </el-col>
           </el-row>
@@ -328,9 +334,24 @@ watch(
   }
 )
 
+const jsonValidator = (rule, value, callback) => {
+  if (!value || !String(value).trim()) {
+    return callback()
+  }
+  try {
+    JSON.parse(value)
+    callback()
+  } catch {
+    callback(new Error('请输入合法的 JSON 格式'))
+  }
+}
+
 const rules = computed(() => {
   const baseRules = {
-    apiUrl: [{ required: true, message: '请输入接口地址', trigger: 'blur' }],
+    apiUrl: [
+      { required: true, message: '请输入接口地址', trigger: 'blur' },
+      { pattern: /^[^\u4e00-\u9fa5]+$/, message: '接口地址不能包含中文', trigger: 'blur' }
+    ],
     requestMethod: [{ required: true, message: '请选择请求方式', trigger: 'change' }],
     contentType: [{ required: true, message: '请选择 Content-Type', trigger: 'change' }],
     timeoutSeconds: [{ required: true, message: '请输入超时时间', trigger: 'blur' }],
@@ -339,7 +360,8 @@ const rules = computed(() => {
 
   if (formData.value.authType === 'FIXED') {
     baseRules.authMethod = [{ required: true, message: '请选择鉴权方式', trigger: 'change' }]
-    baseRules.authTokenValue = [{ required: true, message: '请输入 Token 内容', trigger: 'blur' }]
+    const tokenValueMsg = formData.value.authMethod === 'bearer' ? '请输入 Token 内容' : '请输入 Value'
+    baseRules.authTokenValue = [{ required: true, message: tokenValueMsg, trigger: 'blur' }]
     if (formData.value.authMethod === 'apiKey') {
       baseRules.authInjectPosition = [{ required: true, message: '请选择注入位置', trigger: 'change' }]
       baseRules.authKeyName = [{ required: true, message: '请输入 Key', trigger: 'blur' }]
@@ -347,10 +369,19 @@ const rules = computed(() => {
   }
 
   if (formData.value.authType === 'DYNAMIC') {
-    baseRules.authDynamicUrl = [{ required: true, message: '请输入 Token 接口地址', trigger: 'blur' }]
+    baseRules.authDynamicUrl = [
+      { required: true, message: '请输入 Token 接口地址', trigger: 'blur' },
+      { pattern: /^[^\u4e00-\u9fa5]+$/, message: 'Token 接口地址不能包含中文', trigger: 'blur' }
+    ]
     baseRules.authDynamicMethod = [{ required: true, message: '请选择获取 Token 方式', trigger: 'change' }]
-    baseRules.authDynamicHeaders = [{ required: true, message: '请输入请求头', trigger: 'blur' }]
-    baseRules.authDynamicParams = [{ required: true, message: '请输入 Query 参数', trigger: 'blur' }]
+    baseRules.authDynamicHeaders = [
+      { required: true, message: '请输入请求头', trigger: 'blur' },
+      { validator: jsonValidator, trigger: 'blur' }
+    ]
+    baseRules.authDynamicParams = [
+      { required: true, message: '请输入 Query 参数', trigger: 'blur' },
+      { validator: jsonValidator, trigger: 'blur' }
+    ]
     baseRules.authExtractPath = [{ required: true, message: '请输入 Token 提取路径', trigger: 'blur' }]
     baseRules.authInjectPosition = [{ required: true, message: '请选择注入位置', trigger: 'change' }]
     baseRules.authKeyName = [{ required: true, message: '请输入注入参数名', trigger: 'blur' }]
@@ -432,5 +463,23 @@ defineExpose({
   color: #909399;
   font-size: 14px;
   margin-bottom: 20px;
+}
+
+.default-wrap {
+  width: 100%;
+
+  .tip-content {
+    display: flex;
+    gap: 4px;
+    color: #888;
+    font-size: 12px;
+    line-height: 1.5;
+    padding-top: 4px;
+
+    :deep(.el-icon) {
+      margin-top: 2px;
+      flex-shrink: 0;
+    }
+  }
 }
 </style>

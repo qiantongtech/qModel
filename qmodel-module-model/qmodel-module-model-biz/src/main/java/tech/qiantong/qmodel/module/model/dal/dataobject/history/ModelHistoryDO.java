@@ -47,7 +47,7 @@ import java.util.Date;
  * @date 2026-01-09
  */
 @Data
-@TableName(value = "MODEL_HISTORY")
+@TableName(value = "model_history")
 // 用于 Oracle、PostgreSQL、Kingbase、DB2、H2 数据库的主键自增。如果是 MySQL 等数据库，可不写。
 // @KeySequence("MODEL_HISTORY_seq")
 @Builder

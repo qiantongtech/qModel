@@ -61,7 +61,7 @@
             v-model="queryParams.accessType"
             placeholder="请选择接入方式"
             clearable
-            style="width: 186px"
+            style="width: 210px"
           >
             <el-option key="API" label="API" value="API" />
             <el-option key="PYTHON" label="Python" value="PYTHON" />
@@ -72,7 +72,7 @@
             v-model="queryParams.status"
             placeholder="请选择状态"
             clearable
-            style="width: 186px"
+            style="width: 210px"
           >
             <el-option key="0" label="停用" value="0" />
             <el-option key="1" label="启用中" value="1" />
@@ -124,15 +124,25 @@
                   <img src="@/assets/system/images/model/version/card-title.svg" alt="" />
                 </div>
                 <div class="top-info">
-                  <div class="top-name ellipsis" :title="item.name">{{ item.name }}</div>
+                  <el-tooltip
+                    :content="item.name"
+                    placement="top"
+                    effect="light"
+                    :disabled="!nameOverflowMap[index]"
+                  >
+                    <div
+                      class="top-name ellipsis"
+                      @mouseenter="(e) => checkNameOverflow(e, index)"
+                    >{{ item.name }}</div>
+                  </el-tooltip>
                   <div class="top-tags">
-                    <span
-                      class="tag author-tag"
+                    <el-tag
                       v-for="(tag, idx) in parseTags(item.tags)"
                       :key="idx"
                       :title="tag.name"
-                    >{{ tag.name }}</span>
-                    <span class="tag version-tag">{{ formatVersion(item.version) }}</span>
+                      type="primary"
+                    >{{ tag.name }}</el-tag>
+                    <el-tag type="info">{{ formatVersion(item.version) }}</el-tag>
                   </div>
                 </div>
                 <div class="top-status" :class="getStatusClass(item.status)">
@@ -151,7 +161,7 @@
                 </div>
                 <div class="con-row">
                   <span class="con-label">创建时间</span>
-                  <span class="con-value">{{ item.createTime || '-' }}</span>
+                  <span class="con-value">{{ parseTime(item.createTime, '{y}-{m}-{d} {h}:{i}') }}</span>
                 </div>
               </div>
               <div class="item-btns">
@@ -167,7 +177,7 @@
                   link
                   type="primary"
                   icon="VideoPlay"
-                  :disabled="String(item.status) === '2'"
+                  :disabled="String(item.status) === '2' || String(item.status) === '3'"
                   @click.stop="handleTest(item)"
                 >测试</el-button>
                 <div class="btn-divider"></div>
@@ -175,7 +185,7 @@
                   link
                   :type="String(item.status) === '1' ? 'info' : 'primary'"
                   :icon="String(item.status) === '1' ? 'CircleClose' : 'CircleCheck'"
-                  :disabled="String(item.status) === '2'"
+                  :disabled="String(item.status) === '2' || String(item.status) === '3'"
                   @click.stop="handleToggleStatus(item)"
                 >{{ String(item.status) === '1' ? '停用' : '启用' }}</el-button>
                 <div class="btn-divider"></div>
@@ -233,6 +243,7 @@ const loading = ref(true);
 const showSearch = ref(true);
 const total = ref(0);
 const modelList = ref([]);
+const nameOverflowMap = reactive({});
 
 const queryParams = reactive({
   pageNum: 1,
@@ -301,6 +312,13 @@ const parseTags = (tags) => {
   }
 };
 
+const checkNameOverflow = (event, index) => {
+  const el = event.target;
+  if (el) {
+    nameOverflowMap[index] = el.scrollWidth > el.clientWidth;
+  }
+};
+
 const handleAdd = () => {
   proxy.$router.push({
     path: "/model/modelManage/add"
@@ -349,7 +367,7 @@ const handleDelete = (row) => {
     }).catch(() => {});
   } else {
     ElMessageBox.confirm(
-      "是否确认删除名称为【" + name + "】的模型数据吗？",
+      "是否确认删除模型名称为【" + name + "】的模型数据吗？",
       "警告",
       {
         confirmButtonText: "确定",
@@ -387,9 +405,14 @@ const handleDelete = (row) => {
 }
 
 .search-form {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px 24px;
+
   :deep(.el-form-item) {
     margin-bottom: 0;
-    margin-right: 24px;
+    margin-right: 0;
   }
   :deep(.el-form-item__label) {
     font-size: 14px;
@@ -510,7 +533,7 @@ const handleDelete = (row) => {
 
       .top-name {
         font-size: 16px;
-        font-family: "PingFang SC-Medium", "Microsoft YaHei", sans-serif;
+        font-family: "PingFang SC", "PingFang SC";
         font-weight: 500;
         color: rgba(0, 0, 0, 0.85);
         line-height: 24px;
@@ -522,26 +545,9 @@ const handleDelete = (row) => {
         align-items: center;
         gap: 8px;
 
-        .tag {
-          display: inline-flex;
-          align-items: center;
-          height: 24px;
-          padding: 0 8px;
-          border-radius: 4px;
-          font-size: 12px;
-          line-height: 22px;
-        }
-
-        .author-tag {
-          color: #135afb;
-          background: rgba(19, 90, 251, 0.058824);
-          border: 1px solid rgba(19, 90, 251, 0.101961);
-        }
-
-        .version-tag {
-          color: rgba(0, 0, 0, 0.45);
-          background: rgba(0, 0, 0, 0.02);
-          border: 1px solid rgba(0, 0, 0, 0.101961);
+        :deep(.el-tag) {
+          min-width: 50px;
+          justify-content: center;
         }
       }
     }
@@ -625,6 +631,7 @@ const handleDelete = (row) => {
         width: 72px;
         color: rgba(0, 0, 0, 0.65);
         flex-shrink: 0;
+        font-family: "PingFang SC", "PingFang SC";
       }
 
       .con-value {

@@ -99,10 +99,10 @@
         </el-table>
 
         <el-empty v-else description="请在第三步定义入参 JSON Schema" />
+      </div>
 
-        <div v-if="validateError" class="error-msg">
-          <el-icon><Warning /></el-icon> {{ validateError }}
-        </div>
+      <div v-if="validateError" class="error-msg">
+        <el-icon><Warning /></el-icon> {{ validateError }}
       </div>
     </div>
 

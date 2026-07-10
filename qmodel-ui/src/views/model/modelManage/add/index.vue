@@ -111,8 +111,9 @@
 import { ref, reactive, computed, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { ElMessage } from 'element-plus'
+import useTagsViewStore from '@/store/system/tagsView'
 import { addModel, getModel, updateModel, saveModelWithConfig } from '@/api/model/model'
-import { addModelConfig, listModelConfig, updateModelConfig} from '@/api/model/config'
+import { listModelConfig } from '@/api/model/config'
 import { listClassify } from '@/api/modelReconstitution/classify'
 import BasicInfoStep from './BasicInfoStep.vue'
 import ApiConfigStep from './ApiConfigStep.vue'
@@ -125,6 +126,12 @@ import {addFileResource, updateFileResource} from "@/api/model/fileResource.js";
 const { proxy } = getCurrentInstance()
 const route = useRoute()
 const router = useRouter()
+const tagsViewStore = useTagsViewStore()
+
+const updateRouteTitle = (title) => {
+  route.meta.title = title
+  tagsViewStore.updateVisitedView(route)
+}
 
 const {
   model_access_type,
@@ -216,7 +223,10 @@ onMounted(() => {
   const editId = route.query.id
   if (editId) {
     isEdit.value = true
+    updateRouteTitle('编辑模型')
     loadModelData(editId)
+  } else {
+    updateRouteTitle('新增模型')
   }
 })
 
@@ -480,15 +490,6 @@ const handleSubmit = async () => {
       }
     }
     console.log('[ModelAdd] modelId', modelId)
-
-    if (form.accessType === 'API' && modelId) {
-      const configData = buildConfigData(modelId)
-      if (isEdit.value && configId.value) {
-        await updateModelConfig(configData)
-      } else {
-        await addModelConfig(configData)
-      }
-    }
 
     if (form.accessType === 'PYTHON' && modelId && form.filePath) {
       const fileData = {

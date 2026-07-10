@@ -1155,7 +1155,7 @@ const handleDelete = (row) => {
     }).catch(() => {});
   } else {
     ElMessageBox.confirm(
-      "是否确认删除名称为【" + name + "】的模型数据吗？",
+      "是否确认删除模型名称为【" + name + "】的模型数据吗？",
       "警告",
       {
         confirmButtonText: "确定",

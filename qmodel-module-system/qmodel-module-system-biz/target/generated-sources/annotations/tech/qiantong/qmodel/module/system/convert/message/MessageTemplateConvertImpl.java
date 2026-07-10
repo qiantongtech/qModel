@@ -10,7 +10,7 @@ import tech.qiantong.qmodel.module.system.dal.dataobject.message.MessageTemplate
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2026-07-08T09:04:47+0800",
+    date = "2026-07-10T14:10:24+0800",
     comments = "version: 1.5.5.Final, compiler: javac, environment: Java 1.8.0_492 (Amazon.com Inc.)"
 )
 public class MessageTemplateConvertImpl implements MessageTemplateConvert {

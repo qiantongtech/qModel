@@ -19,48 +19,53 @@
   <div class="param-define-step">
     <div class="h2-titles">参数定义</div>
 
-    <el-row :gutter="20" class="schema-row">
-      <el-col :span="12">
-        <div class="editor-card">
-          <div class="editor-header">
-            <span><el-icon><Document /></el-icon> JSON Schema 编辑区</span>
-            <el-button size="small" type="primary" :icon="Brush" @click="formatCurrentSchema">
-              格式化 Schema
-            </el-button>
+    <el-form
+      ref="paramFormRef"
+      :model="formData"
+      :rules="rules"
+      label-width="0"
+      class="param-form"
+    >
+      <el-row :gutter="20" class="schema-row">
+        <el-col :span="12">
+          <el-form-item prop="inputSchema" class="schema-form-item">
+            <div class="editor-card">
+              <div class="editor-header">
+                <span><el-icon><Document /></el-icon> JSON Schema 编辑区</span>
+                <el-button size="small" type="primary" :icon="Brush" @click="formatCurrentSchema">
+                  格式化 Schema
+                </el-button>
+              </div>
+              <el-input
+                v-model="formData.inputSchema"
+                type="textarea"
+                :rows="22"
+                placeholder='请输入 JSON Schema，例如：&#10;{&#10;  "type": "object",&#10;  "properties": {&#10;    "name": { "type": "string" }&#10;  }&#10;}'
+                class="schema-textarea"
+              />
+            </div>
+          </el-form-item>
+        </el-col>
+        <el-col :span="12">
+          <div class="preview-card">
+            <div class="preview-header">
+              <span><el-icon><View /></el-icon> 实时结构预览</span>
+            </div>
+            <div class="preview-body">
+              <SchemaPreview v-if="currentSchema" :schema="currentSchema" />
+              <el-empty v-else description="左侧输入合法的 JSON Schema 后，此处将实时展示结构" />
+            </div>
           </div>
-          <el-input
-            v-model="formData.inputSchema"
-            type="textarea"
-            :rows="22"
-            placeholder='请输入 JSON Schema，例如：&#10;{&#10;  "type": "object",&#10;  "properties": {&#10;    "name": { "type": "string" }&#10;  }&#10;}'
-            class="schema-textarea"
-          />
-          <div v-if="parseError" class="error-msg">
-            <el-icon><Warning /></el-icon> {{ parseError }}
-          </div>
-        </div>
-      </el-col>
-      <el-col :span="12">
-        <div class="preview-card">
-          <div class="preview-header">
-            <span><el-icon><View /></el-icon> 实时结构预览</span>
-          </div>
-          <div class="preview-body">
-            <SchemaPreview v-if="currentSchema" :schema="currentSchema" />
-            <el-empty v-else description="左侧输入合法的 JSON Schema 后，此处将实时展示结构" />
-          </div>
-        </div>
-      </el-col>
-    </el-row>
-
-
+        </el-col>
+      </el-row>
+    </el-form>
   </div>
 </template>
 
 <script setup name="ParamDefineStep">
 import { ref, computed, watch } from 'vue'
 import { ElMessage } from 'element-plus'
-import { Document, View, Brush, Warning, QuestionFilled } from '@element-plus/icons-vue'
+import { Document, View, Brush } from '@element-plus/icons-vue'
 import SchemaPreview from './SchemaPreview.vue'
 
 const formData = defineModel('formData', {
@@ -70,6 +75,33 @@ const formData = defineModel('formData', {
 
 const parseError = ref('')
 const parsedSchema = ref(null)
+const paramFormRef = ref(null)
+
+const validateInputSchema = (rule, value, callback) => {
+  const text = (value || '').trim()
+  if (!text) {
+    return callback(new Error('请输入 JSON Schema 参数'))
+  }
+  try {
+    const parsed = JSON.parse(text)
+    if (!parsed || typeof parsed !== 'object') {
+      return callback(new Error('入参 Schema 必须是 JSON 对象'))
+    }
+    if (parsed.type !== 'object') {
+      return callback(new Error('入参 Schema 根节点 type 必须为 object'))
+    }
+    if (!parsed.properties || Object.keys(parsed.properties).length === 0) {
+      return callback(new Error('入参 Schema 至少需要定义一个参数'))
+    }
+    callback()
+  } catch (e) {
+    callback(new Error('入参 Schema JSON 格式错误：' + e.message))
+  }
+}
+
+const rules = {
+  inputSchema: [{ required: true, validator: validateInputSchema, trigger: ['change', 'blur'] }]
+}
 
 const currentSchemaText = computed({
   get() {
@@ -113,18 +145,7 @@ const formatCurrentSchema = () => {
 }
 
 const validate = () => {
-  const text = (formData.value.inputSchema || '').trim()
-  if (text) {
-    try {
-      const parsed = JSON.parse(text)
-      if (!parsed || typeof parsed !== 'object') {
-        return Promise.reject('入参 Schema 必须是 JSON 对象')
-      }
-    } catch {
-      return Promise.reject('入参 Schema JSON 格式错误')
-    }
-  }
-  return Promise.resolve()
+  return paramFormRef.value.validate()
 }
 
 defineExpose({
@@ -180,6 +201,20 @@ defineExpose({
     box-sizing: border-box;
   }
 
+  .schema-form-item {
+    width: 100%;
+    margin-bottom: 18px;
+
+    :deep(.el-form-item__content) {
+      display: block;
+      line-height: normal;
+    }
+
+    &.is-error .editor-card {
+      border-color: var(--el-color-danger);
+    }
+  }
+
   .schema-textarea {
     flex: 1;
 
@@ -197,16 +232,6 @@ defineExpose({
     flex: 1;
     padding: 15px;
     overflow: auto;
-  }
-
-  .error-msg {
-    padding: 8px 12px;
-    color: #f56c6c;
-    font-size: 13px;
-    background-color: #fef0f0;
-    display: flex;
-    align-items: center;
-    gap: 6px;
   }
 }
 </style>
