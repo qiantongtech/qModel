@@ -70,6 +70,7 @@
         <CheckUploadFile
           v-show="activeStep === 1 && form.accessType === 'PYTHON'"
           ref="checkUploadFileRef"
+          :file-resource="fileResource"
           @file-checked="handleFileChecked"
         />
 
@@ -121,7 +122,7 @@ import CheckUploadFile from './checkUploadFile.vue'
 import ParamDefineStep from './ParamDefineStep.vue'
 import TestSaveStep from './TestSaveStep.vue'
 import ConfirmBuildStep from './ConfirmBuildStep.vue'
-import {addFileResource, updateFileResource} from "@/api/model/fileResource.js";
+import {addFileResource, updateFileResource,listModelFileResource} from "@/api/model/fileResource.js";
 
 const { proxy } = getCurrentInstance()
 const route = useRoute()
@@ -158,6 +159,7 @@ const testStepRef = ref(null)
 const confirmBuildStepRef = ref(null)
 const isEdit = ref(false)
 const configId = ref(null)
+const fileResource = ref(null)
 
 const stepsList = computed(() => {
   if (form.accessType === 'PYTHON') {
@@ -302,6 +304,7 @@ const loadModelData = async (id) => {
       const fileResList = fileResRes.data?.rows || fileResRes.data || []
       if (fileResList.length > 0) {
         const fileRes = fileResList[0]
+        fileResource.value = fileRes
         Object.assign(form, {
           fileResourceId: fileRes.id,
           filePath: fileRes.filePath || '',
@@ -489,24 +492,13 @@ const handleSubmit = async () => {
         modelId = modelRes.data
       }
     }
-    console.log('[ModelAdd] modelId', modelId)
 
-    if (form.accessType === 'PYTHON' && modelId && form.filePath) {
-      const fileData = {
-        modelId: modelId,
-        fileName: form.uploadedFile?.name || '',
-        filePath: form.filePath,
-        fileSize: Math.round(form.uploadedFile?.size / (1024 * 1024)) || 0,
-        scriptName: 'main.py',
-        resourceType: '2',
-        modelVersion: 1
-      }
-
-      if (isEdit.value && form.fileResourceId) {
-        fileData.id = form.fileResourceId
-        await updateFileResource(fileData)
+    if (form.accessType === 'API' && modelId) {
+      const configData = buildConfigData(modelId)
+      if (isEdit.value && configId.value) {
+        await updateModelConfig(configData)
       } else {
-        await addFileResource(fileData)
+        await addModelConfig(configData)
       }
     }
 

@@ -32,16 +32,11 @@
 
 package tech.qiantong.qmodel.module.model.service.fileResource.impl;
 
+import java.io.*;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipEntry;
-import java.io.InputStream;
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.io.FileInputStream;
-import java.io.OutputStream;
-import java.io.File;
 import java.nio.charset.StandardCharsets;
 import java.util.regex.Pattern;
 import java.util.concurrent.TimeUnit;
@@ -242,6 +237,7 @@ public class ModelFileResourceServiceImpl extends ServiceImpl<ModelFileResourceM
         boolean pass = true;
 
         String fileName = file.getOriginalFilename();
+        result.put("fileName", fileName);
         if (fileName == null || !fileName.toLowerCase().endsWith(".zip")) {
             errors.add("文件类型错误，仅支持ZIP格式");
             result.put("pass", false);
@@ -265,10 +261,18 @@ public class ModelFileResourceServiceImpl extends ServiceImpl<ModelFileResourceM
                 if (!entry.isDirectory()) {
                     if (entryName.endsWith("main.py")) {
                         hasMainPy = true;
-                        // 直接读取内容到字节数组，避免关闭底层流
-                        byte[] content = new byte[(int) entry.getSize()];
-                        zipInputStream.read(content);
+
+                        // 使用 ByteArrayOutputStream 完整读取文件内容
+                        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                        byte[] buffer = new byte[8192];
+                        int len;
+                        while ((len = zipInputStream.read(buffer)) != -1) {
+                            baos.write(buffer, 0, len);
+                        }
+                        byte[] content = baos.toByteArray();
                         String contentStr = new String(content, StandardCharsets.UTF_8);
+
+                        // 正则检查 predict 函数
                         if (predictPattern.matcher(contentStr).find()) {
                             hasPredictFunction = true;
                         }
@@ -331,11 +335,18 @@ public class ModelFileResourceServiceImpl extends ServiceImpl<ModelFileResourceM
         return result;
     }
 
+
     @Override
     public void triggerDepsCheck(Long fileResourceId) {
         depsCheckHandler.checkDependencies(fileResourceId);
     }
 
+    /**
+     * 获取模型文件部署环境信息
+     *
+     * @param filePath 模型文件路径
+     * @return 环境信息Map，包含pythonVersion(Python版本)、requirements(requirements.txt)
+     */
     @Override
     public Map<String, Object> getBuildEnvInfo(String filePath) {
         Map<String, Object> result = new HashMap<>();
@@ -417,7 +428,7 @@ public class ModelFileResourceServiceImpl extends ServiceImpl<ModelFileResourceM
     }
 
     @Override
-    public String runModelScript(Long modelId, Map<String, Object> inputParam) {
+    public Object runModelScript(Long modelId, Map<String, Object> inputParam) {
         if (inputParam == null) {
             inputParam = new HashMap<>();
         }
@@ -501,8 +512,11 @@ public class ModelFileResourceServiceImpl extends ServiceImpl<ModelFileResourceM
             }
 
             log.info("模型脚本执行成功，modelId: {}", modelId);
-            return output.toString().trim();
-
+            try {
+                return JSON.parse(output.toString().trim());  // 使用 FastJSON 解析
+            } catch (Exception e) {
+                return output.toString().trim();
+            }
         } catch (ServiceException e) {
             throw e;
         } catch (Exception e) {
@@ -521,7 +535,7 @@ public class ModelFileResourceServiceImpl extends ServiceImpl<ModelFileResourceM
     }
 
     @Override
-    public String runModelScript(Long modelId, String paramsJson, String fileKeys, List<MultipartFile> files) {
+    public Object runModelScript(Long modelId, String paramsJson, String fileKeys, List<MultipartFile> files) {
         Map<String, Object> inputParam = new HashMap<>();
 
         if (StringUtils.isNotBlank(paramsJson)) {
@@ -568,5 +582,25 @@ public class ModelFileResourceServiceImpl extends ServiceImpl<ModelFileResourceM
             log.error("文件保存失败", e);
             throw new ServiceException("文件保存失败: " + e.getMessage());
         }
+    }
+
+    @Override
+    public Map<String, Object> uploadParamFile(MultipartFile file, Long modelId) {
+        String basePath = "temp/extract/" + modelId + "/tempParamFile/";
+
+        FileInfo fileInfo = FileUploadUtil.upload(file, basePath);
+
+        String fullPath = fileInfo.getPath();
+        String modelDirPrefix = "temp/extract/" + modelId + "/";
+
+        String relativePathPart = fullPath.replace(modelDirPrefix, "");
+        String relativePath = "." + File.separator + relativePathPart + fileInfo.getFilename();
+
+        Map<String, Object> result = new HashMap<>();
+        result.put("relativePath", relativePath);
+        result.put("filename", fileInfo.getFilename());
+
+        log.info("模型参数文件上传成功，modelId: {}, relativePath: {}", modelId, relativePath);
+        return result;
     }
 }
