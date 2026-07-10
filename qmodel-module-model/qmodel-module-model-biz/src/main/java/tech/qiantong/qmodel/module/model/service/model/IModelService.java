@@ -121,4 +121,12 @@ public interface IModelService extends IService<ModelDO> {
      */
     Long saveModelWithConfig(ModelSaveWithConfigReqVO saveReqVO);
 
+    /**
+     * 更新模型状态
+     *
+     * @param id 模型基础信息编号
+     * @param status 状态
+     */
+    void updateModelStatus(Long id, String status);
+
 }

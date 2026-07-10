@@ -64,51 +64,41 @@ public class ModelConfigSaveReqVO extends BaseEntity {
 
     @Schema(description = "业务接口地址", example = "")
     @NotBlank(message = "业务接口地址不能为空")
-    @Size(max = 3072, message = "业务接口地址长度不能超过3072个字符")
     private String apiUrl;
 
     @Schema(description = "请求方式", example = "")
     @NotBlank(message = "请求方式不能为空")
-    @Size(max = 128, message = "请求方式长度不能超过128个字符")
     private String requestMethod;
 
     @Schema(description = "请求内容类型例", example = "")
     @NotBlank(message = "请求内容类型例不能为空")
-    @Size(max = 128, message = "请求内容类型例长度不能超过128个字符")
     private String contentType;
 
     @Schema(description = "超时时间单位秒", example = "")
     private Long timeoutSeconds;
 
     @Schema(description = "鉴权类型", example = "")
-    @NotBlank(message = "鉴权类型不能为空")
     private String authType;
 
     @Schema(description = "鉴权方式（bearer / apiKey）", example = "bearer")
-    @Size(max = 32, message = "鉴权方式长度不能超过32个字符")
     private String authMethod;
 
     @Schema(description = "注入位置", example = "")
-    @Size(max = 32, message = "注入位置长度不能超过32个字符")
     private String authInjectPosition;
 
     @Schema(description = "鉴权键名例", example = "")
-    @Size(max = 128, message = "鉴权键名例长度不能超过128个字符")
     private String authKeyName;
 
     @Schema(description = "Token前缀", example = "")
-    @Size(max = 128, message = "Token前缀长度不能超过128个字符")
     private String authTokenPrefix;
 
     @Schema(description = "固定Token值或APIKey", example = "")
-    @Size(max = 512, message = "固定Token值或APIKey长度不能超过512个字符")
     private String authTokenValue;
 
     @Schema(description = "获取Token方式", example = "")
     private String authDynamicMethod;
 
     @Schema(description = "获取Token的URL地址", example = "")
-    @Size(max = 3072, message = "获取Token的URL地址长度不能超过3072个字符")
     private String authDynamicUrl;
 
     @Schema(description = "获取Token时的请求头", example = "")
@@ -121,7 +111,6 @@ public class ModelConfigSaveReqVO extends BaseEntity {
     private String authDynamicBody;
 
     @Schema(description = "Token提取路径", example = "")
-    @Size(max = 256, message = "Token提取路径长度不能超过256个字符")
     private String authExtractPath;
 
     @Schema(description = "入参JSONSchema定义", example = "")
@@ -131,7 +120,6 @@ public class ModelConfigSaveReqVO extends BaseEntity {
     private String outputSchema;
 
     @Schema(description = "备注", example = "")
-    @Size(max = 512, message = "备注长度不能超过512个字符")
     private String remark;
 
 

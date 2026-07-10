@@ -146,4 +146,13 @@ public class ModelController extends BaseController {
         return CommonResult.toAjax(modelService.removeModel(Arrays.asList(ids)));
     }
 
+    @Operation(summary = "修改模型状态")
+    @PreAuthorize("@ss.hasPermi('model:model:edit')")
+    @Log(title = "模型基础信息", businessType = BusinessType.UPDATE)
+    @PutMapping("/{id}/status/{status}")
+    public CommonResult<Boolean> updateStatus(@PathVariable("id") Long id, @PathVariable("status") String status) {
+        modelService.updateModelStatus(id, status);
+        return CommonResult.success(true);
+    }
+
 }

@@ -31,171 +31,181 @@
 -->
 
 <template>
-  <div class="app-container">
-    <el-container>
-      <el-main>
-        <div class="pagecont-top" v-show="showSearch">
-          <el-form
-            :model="queryParams"
-            ref="queryFormRef"
-            :inline="true"
-            v-show="showSearch"
-            class="btn-style"
+  <div class="app-container model-manage-page">
+    <div class="pagecont-top" v-show="showSearch">
+      <el-form
+        :model="queryParams"
+        ref="queryFormRef"
+        :inline="true"
+        v-show="showSearch"
+        class="search-form btn-style"
+      >
+        <el-form-item label="模型名称" prop="name">
+          <el-input
+            v-model="queryParams.name"
+            placeholder="请输入模型名称"
+            clearable
+            @keyup.enter="handleQuery"
+          />
+        </el-form-item>
+         <el-form-item label="模型编码" prop="code">
+          <el-input
+            v-model="queryParams.code"
+            placeholder="请输入模型编码"
+            clearable
+            @keyup.enter="handleQuery"
+          />
+        </el-form-item>
+        <el-form-item label="接入方式" prop="accessType">
+          <el-select
+            v-model="queryParams.accessType"
+            placeholder="请选择接入方式"
+            clearable
+            style="width: 186px"
           >
-            <el-form-item label="模型名称：" prop="name">
-              <el-input
-                v-model="queryParams.name"
-                placeholder="请输入模型名称"
-                clearable
-                @keyup.enter="handleQuery"
-                style="width: 180px"
-              />
-            </el-form-item>
-            <el-form-item label="模型接入方式：" prop="accessType">
-              <el-select
-                v-model="queryParams.accessType"
-                placeholder="请选择模型类别"
-                clearable
-                class="el-form-input-width"
-              >
-                <el-option key="0" label="python脚本" value="PYTHON" />
-                <el-option key="1" label="api接口" value="API" />
-              </el-select>
-            </el-form-item>
-            <el-form-item>
-              <el-button
-                plain
-                type="primary"
-                @click="handleQuery"
-                @mousedown="(e) => e.preventDefault()"
-              >
-                <i class="iconfont-mini icon-a-zu22377 mr5"></i>查询
-              </el-button>
-              <el-button
-                @click="resetQuery"
-                @mousedown="(e) => e.preventDefault()"
-                class="btn"
-              >
-                <i class="iconfont-mini icon-a-zu22378 mr5"></i>重置
-              </el-button>
-            </el-form-item>
-          </el-form>
-        </div>
-        <div class="pagecont-bottom">
-          <div class="justify-between mb15">
-            <el-row :gutter="10" class="btn-style">
-              <el-col :span="1.5">
-                <el-button
-                  type="primary"
-                  plain
-                  @click="handleAdd"
-                  v-hasPermi="['model:model:add']"
-                >
-                  <i class="iconfont-mini icon-xinzeng"></i>新增
-                </el-button>
-              </el-col>
-              <el-col :span="1.5"></el-col>
-            </el-row>
-            <right-toolbar
-              v-model:showSearch="showSearch"
-              @queryTable="getList"
-            ></right-toolbar>
-          </div>
-          <div class="card-box" v-loading="loading" v-if="total > 0">
-            <el-card
-              :body-style="{ padding: '16px 16px 0' }"
-              shadow="never"
-              v-for="(item, index) in modelList"
-              :key="index"
-            >
-              <div class="card-item" @click="handleView(item)">
-                <div class="item-top">
-                  <div class="top-title ellipsis">
-                    <img
-                      src="@/assets/system/images/model/version/card-title.svg"
-                      alt=""
-                    /><span class="title-name">{{ item.name }}</span>
-                  </div>
-                  <el-popover
-                    placement="bottom"
-                    trigger="click"
-                    popper-class="custom-popover-width"
-                    :popper-style="{ minWidth: '60px', width: '90px' }"
-                  >
-                    <template #reference>
-                      <div class="imgbox" @click.stop>
-                        <img
-                          src="@/assets/system/images/model/version/more.svg"
-                          alt=""
-                        />
-                      </div>
-                    </template>
-                    <div class="popover-content">
-                      <el-button
-                        type="primary"
-                        text
-                        @click="handleUpdate(item)"
-                      >
-                        <Edit class="icon-mini" />
-                        编辑</el-button
-                      >
-                      <el-button type="danger" text @click="handleDelete(item)">
-                        <Delete class="icon-mini" />
-                        删除</el-button
-                      >
-                    </div>
-                  </el-popover>
+            <el-option key="API" label="API" value="API" />
+            <el-option key="PYTHON" label="Python" value="PYTHON" />
+          </el-select>
+        </el-form-item>
+        <el-form-item label="状态" prop="status">
+          <el-select
+            v-model="queryParams.status"
+            placeholder="请选择状态"
+            clearable
+            style="width: 186px"
+          >
+            <el-option key="0" label="停用" value="0" />
+            <el-option key="1" label="启用中" value="1" />
+            <el-option key="2" label="构建部署中" value="2" />
+            <el-option key="3" label="构建失败" value="3" />
+          </el-select>
+        </el-form-item>
+        <el-form-item>
+          <el-button
+            plain
+            type="primary"
+            @click="handleQuery"
+            @mousedown="(e) => e.preventDefault()"
+          >
+            <i class="iconfont-mini icon-a-zu22377 mr5"></i>查询
+          </el-button>
+          <el-button
+            @click="resetQuery"
+            @mousedown="(e) => e.preventDefault()"
+            class="btn"
+          >
+            <i class="iconfont-mini icon-a-zu22378 mr5"></i>重置
+          </el-button>
+        </el-form-item>
+      </el-form>
+      <div class="btn-style">
+        <el-button
+          type="primary"
+          @click="handleAdd"
+          plain
+          v-hasPermi="['model:model:add']"
+          @mousedown="(e) => e.preventDefault()"
+        >
+          <i class="iconfont-mini icon-xinzeng"></i>新增模型
+        </el-button>
+      </div>
+    </div>
+    <div class="pagecont-bottom" v-loading="loading">
+      <div class="card-scroll">
+        <div class="card-box" v-if="total > 0">
+          <el-card
+            shadow="never"
+            v-for="(item, index) in modelList"
+            :key="index"
+          >
+            <div class="card-item">
+              <div class="item-top">
+                <div class="top-icon">
+                  <img src="@/assets/system/images/model/version/card-title.svg" alt="" />
                 </div>
-                <div
-                  v-if="false"
-                  class="item-desc ellipsis-3"
-                  :title="item.description"
-                >
-                  {{ item.description }}
-                </div>
-                <div class="item-con">
-                  <div class="con-l">
-                    <div class="con-view">
-                      <div class="con-view-title">版本号</div>
-                      <tag
-                        size="small"
-                        type="primary"
-                        :name="'Version' + item.version"
-                      ></tag>
-                    </div>
-                    <div class="con-view">
-                      <div class="con-view-title">接入方式</div>
-                      <span v-if="String(item.accessType) === 'API' || String(item.accessType) === '0'">API接口</span>
-                      <span v-else>python脚本</span>
-                    </div>
-
-                    <div class="con-view">
-                      <div class="con-view-title">发布时间</div>
-                      <span v-if="item.publishTime == null">-,-</span>
-                      <span v-else>{{ item.publishTime }}</span>
-                    </div>
+                <div class="top-info">
+                  <div class="top-name ellipsis" :title="item.name">{{ item.name }}</div>
+                  <div class="top-tags">
+                    <span
+                      class="tag author-tag"
+                      v-for="(tag, idx) in parseTags(item.tags)"
+                      :key="idx"
+                      :title="tag.name"
+                    >{{ tag.name }}</span>
+                    <span class="tag version-tag">{{ formatVersion(item.version) }}</span>
                   </div>
+                </div>
+                <div class="top-status" :class="getStatusClass(item.status)">
+                  <span class="status-dot"></span>
+                  <span class="status-name">{{ getStatusText(item.status) }}</span>
                 </div>
               </div>
-            </el-card>
-          </div>
-
-          <el-empty
-            description="暂无数据，请添加模型"
-            v-if="total == 0"
-          ></el-empty>
-          <div class="pagefy" v-if="total > 0">
-            <pagination
-              :pageSizes="[12, 24, 36, 48]"
-              :total="total"
-              v-model:page="queryParams.pageNum"
-              v-model:limit="queryParams.pageSize"
-              @pagination="getList"
-            />
-          </div>
+              <div class="item-con">
+                <div class="con-row">
+                  <span class="con-label">模型编码</span>
+                  <span class="con-value ellipsis" :title="item.code">{{ item.code || '-' }}</span>
+                </div>
+                <div class="con-row">
+                  <span class="con-label">接入方式</span>
+                  <dict-tag :options="model_access_type" :value="item.accessType" class="con-value access-tag" />
+                </div>
+                <div class="con-row">
+                  <span class="con-label">创建时间</span>
+                  <span class="con-value">{{ item.createTime || '-' }}</span>
+                </div>
+              </div>
+              <div class="item-btns">
+                <el-button
+                  link
+                  type="primary"
+                  icon="Edit"
+                  :disabled="['1', '2'].includes(String(item.status))"
+                  @click.stop="handleUpdate(item)"
+                >编辑</el-button>
+                <div class="btn-divider"></div>
+                <el-button
+                  link
+                  type="primary"
+                  icon="VideoPlay"
+                  :disabled="String(item.status) === '2'"
+                  @click.stop="handleTest(item)"
+                >测试</el-button>
+                <div class="btn-divider"></div>
+                <el-button
+                  link
+                  :type="String(item.status) === '1' ? 'info' : 'primary'"
+                  :icon="String(item.status) === '1' ? 'CircleClose' : 'CircleCheck'"
+                  :disabled="String(item.status) === '2'"
+                  @click.stop="handleToggleStatus(item)"
+                >{{ String(item.status) === '1' ? '停用' : '启用' }}</el-button>
+                <div class="btn-divider"></div>
+                <el-button
+                  link
+                  type="danger"
+                  icon="Delete"
+                  :disabled="['1', '2'].includes(String(item.status))"
+                  @click.stop="handleDelete(item)"
+                >删除</el-button>
+              </div>
+            </div>
+          </el-card>
         </div>
-      </el-main>
-    </el-container>
+
+        <el-empty
+          description="暂无数据，请添加模型"
+          v-if="total == 0 && !loading"
+        ></el-empty>
+      </div>
+      <div class="pagefy" v-if="total > 0">
+        <pagination
+          :pageSizes="[12, 24, 36, 48]"
+          :total="total"
+          v-model:page="queryParams.pageNum"
+          v-model:limit="queryParams.pageSize"
+          @pagination="getList"
+        />
+      </div>
+    </div>
   </div>
 </template>
 
@@ -207,35 +217,26 @@ import {
   ref,
 } from "vue";
 import {
-  delModel,
   listModel,
+  delModel,
+  updateModelStatus,
 } from "@/api/model/model";
-import { Edit, Delete } from "@element-plus/icons-vue";
 import { ElMessage, ElMessageBox } from "element-plus";
 
 const { proxy } = getCurrentInstance();
 
+const { model_access_type } = proxy.useDict('model_access_type');
+
 const queryFormRef = ref(null);
 
-// 遮罩层
 const loading = ref(true);
-// 选中数组
-const ids = ref([]);
-// 非单个禁用
-const single = ref(true);
-// 非多个禁用
-const multiple = ref(true);
-// 显示搜索条件
 const showSearch = ref(true);
-// 总条数
 const total = ref(0);
-// 模型管理 表格数据
 const modelList = ref([]);
 
-// 查询参数
 const queryParams = reactive({
   pageNum: 1,
-  pageSize: 10,
+  pageSize: 12,
   orderByColumn: "create_time",
   isAsc: "desc",
 });
@@ -244,7 +245,6 @@ onMounted(() => {
   getList();
 });
 
-/** 查询模型管理 列表 */
 const getList = () => {
   loading.value = true;
   listModel(queryParams).then((response) => {
@@ -254,13 +254,11 @@ const getList = () => {
   });
 };
 
-/** 搜索按钮操作 */
 const handleQuery = () => {
   queryParams.pageNum = 1;
   getList();
 };
 
-/** 重置按钮操作 */
 const resetQuery = () => {
   if (queryFormRef.value) {
     queryFormRef.value.resetFields();
@@ -269,46 +267,79 @@ const resetQuery = () => {
   handleQuery();
 };
 
-// 多选框选中数据
-const handleSelectionChange = (selection) => {
-  ids.value = selection.map((item) => item.id);
-  single.value = selection.length !== 1;
-  multiple.value = !selection.length;
+const getStatusText = (val) => {
+  const str = String(val);
+  if (str === "3") return "构建失败";
+  if (str === "2") return "构建部署中";
+  if (str === "1") return "启用中";
+  if (str === "0") return "停用";
+  return "未知";
 };
 
-/** 新增按钮操作 */
+const getStatusClass = (val) => {
+  const str = String(val);
+  if (str === "1") return "status-active";
+  if (str === "0") return "status-inactive";
+  if (str === "2") return "status-building";
+  if (str === "3") return "status-failed";
+  return "";
+};
+
+const formatVersion = (val) => {
+  if (!val) return "V1.0";
+  const versionStr = String(val);
+  return versionStr.toUpperCase().startsWith("V") ? versionStr.toUpperCase() : "V" + versionStr;
+};
+
+const parseTags = (tags) => {
+  if (!tags) return [];
+  try {
+    const arr = typeof tags === "string" ? JSON.parse(tags) : tags;
+    return Array.isArray(arr) ? arr : [];
+  } catch {
+    return [];
+  }
+};
+
 const handleAdd = () => {
   proxy.$router.push({
     path: "/model/modelManage/add"
   });
 };
 
-/** 修改按钮操作 */
 const handleUpdate = (row) => {
-  const id = row.id || ids.value;
   proxy.$router.push({
     path: "/model/modelManage/add",
-    query: { id }
+    query: { id: row.id }
   });
 };
 
-// 详情
-const handleView = (row) => {
-  const modelId = row.id;
-  const modelName = row.name;
-  proxy.$router.push({
-    path: "/model/modelManageView",
-    query: {
-      modelId,
-      modelName,
-      pageNum: queryParams.pageNum,
-    },
-  });
+const handleTest = () => {
+  ElMessage.warning("测试功能正在开发中");
 };
 
-/** 删除按钮操作 */
+const handleToggleStatus = (row) => {
+  const newStatus = String(row.status) === "1" ? "0" : "1";
+  const text = newStatus === "1" ? "启用" : "停用";
+  ElMessageBox.confirm(
+    "是否确认" + text + "名称为【" + row.name + "】的模型？",
+    "警告",
+    {
+      confirmButtonText: "确定",
+      cancelButtonText: "取消",
+      type: "warning",
+    }
+  )
+    .then(() => updateModelStatus(row.id, newStatus))
+    .then(() => {
+      getList();
+      ElMessage.success(text + "成功");
+    })
+    .catch(() => {});
+};
+
 const handleDelete = (row) => {
-  const id = row.id || ids.value;
+  const id = row.id;
   const name = row.name;
   if (row.status == 1) {
     ElMessageBox.confirm("【" + name + "】模型已启用，请先停用！", "警告", {
@@ -338,226 +369,314 @@ const handleDelete = (row) => {
 };
 </script>
 <style lang="scss" scoped>
-.pagecont-bottom {
-  position: relative;
-  flex: 1;
-  min-height: calc(100vh - 250px);
-  padding: 0px;
-  background-color: transparent;
-  border-radius: 2px;
-  box-shadow: 0 5px 8px rgba(128, 145, 165, 0.1);
+.model-manage-page {
+  display: flex;
+  flex-direction: column;
+  height: calc(100vh - 124px);
+  overflow: hidden;
 }
+
+.pagecont-top {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #fff;
+  border-radius: 2px;
+  padding: 16px 20px;
+}
+
+.search-form {
+  :deep(.el-form-item) {
+    margin-bottom: 0;
+    margin-right: 24px;
+  }
+  :deep(.el-form-item__label) {
+    font-size: 14px;
+    color: #333;
+    padding-right: 8px;
+  }
+}
+
+.add-btn-top {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0 16px;
+  height: 32px;
+  border-radius: 4px;
+
+  .add-icon {
+    width: 16px;
+    height: 16px;
+  }
+}
+
+.pagecont-bottom {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  min-height: 0;
+  background-color: transparent;
+  border-radius: 0;
+  box-shadow: none;
+  margin-top: 15px;
+  padding: 0;
+  margin-bottom: 60px;
+}
+
+.card-scroll {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  min-height: 0;
+}
+
 .card-box {
   width: 100%;
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   grid-gap: 15px;
   padding: 0;
-  height: calc(100vh - 355px);
-  overflow: auto;
+  align-content: flex-start;
 }
+
 .pagefy {
-  position: absolute;
-  bottom: 0;
-  width: 100%;
-  background: #fff;
-  padding: 11px 15px;
-}
-
-::v-deep {
-  .selectlist .el-tag.el-tag--info {
-    background: #f3f8ff !important;
-    border: 0px solid #6ba7ff !important;
-    color: #2666fb !important;
-  }
-}
-
-
-.el-main {
-  padding: 2px 0px;
-  // box-shadow: 1px 1px 3px rgba(0, 0, 0, .2);
-}
-
-.el-aside {
-  padding: 2px 0px;
-  margin-bottom: 0px;
-  background-color: #f0f2f5;
-}
-
-
-//上传附件样式调整
-:deep {
-  // .el-upload-list{
-  //    display: flex;
-  // }
-  .el-upload-list__item {
+    position: fixed;
+    bottom: 0;
     width: 100%;
-    height: 25px;
+    left: 0;
+    height: 60px;
+    background: #ffffff;
+    border-radius: 2px 2px 2px 2px;
+    line-height: 60px;
+    margin: 0;
+    padding: 0 18px 0 0;
+    flex: none;
+    .pagination-container {
+        margin-top: 0;
+    }
+}
+
+:deep(.el-card) {
+  border: 1px solid rgba(0, 0, 0, 0.098039);
+  border-radius: 4px !important;
+  height: 242px;
+  cursor: pointer;
+  transition: box-shadow 0.2s;
+
+  &:hover {
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
   }
 
-  .el-tree--highlight-current
-    .el-tree-node.is-current
-    > .el-tree-node__content {
-    background-color: var(--el-color-primary-light-9) !important;
-    border-right: 2px solid var(--el-color-primary);
-    color: var(--el-color-primary);
+  .el-card__body {
+    padding: 0 !important;
+    height: 100%;
   }
 }
 
 .card-item {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding: 20px;
+
   .item-top {
     display: flex;
-    align-items: center;
-    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 16px;
 
-    .top-title {
-      width: 85%;
-      font-weight: bold;
-      font-size: 16px;
-      display: flex;
-      align-items: center;
-      // line-height: 22px;
-      // i {
-      //   vertical-align: middle;
-      // }
-      span {
-        margin-left: 11px;
+    .top-icon {
+      width: 56px;
+      height: 56px;
+      border-radius: 10px;
+      overflow: hidden;
+      flex-shrink: 0;
+      margin-right: 16px;
+
+      img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
       }
     }
-    .imgbox {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      width: 40px;
-      height: 40px;
-      // background: #2666fb;
+
+    .top-info {
+      flex: 1;
+      min-width: 0;
+      padding-top: 2px;
+
+      .top-name {
+        font-size: 16px;
+        font-family: "PingFang SC-Medium", "Microsoft YaHei", sans-serif;
+        font-weight: 500;
+        color: rgba(0, 0, 0, 0.85);
+        line-height: 24px;
+        margin-bottom: 8px;
+      }
+
+      .top-tags {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+
+        .tag {
+          display: inline-flex;
+          align-items: center;
+          height: 24px;
+          padding: 0 8px;
+          border-radius: 4px;
+          font-size: 12px;
+          line-height: 22px;
+        }
+
+        .author-tag {
+          color: #135afb;
+          background: rgba(19, 90, 251, 0.058824);
+          border: 1px solid rgba(19, 90, 251, 0.101961);
+        }
+
+        .version-tag {
+          color: rgba(0, 0, 0, 0.45);
+          background: rgba(0, 0, 0, 0.02);
+          border: 1px solid rgba(0, 0, 0, 0.101961);
+        }
+      }
     }
 
     .top-status {
-      width: 25%;
-      display: flex;
+      display: inline-flex;
       align-items: center;
+      height: 24px;
+      padding: 0 10px 0 8px;
+      border-radius: 14px;
+      font-size: 14px;
+      font-family: "PingFang SC-Regular", "Microsoft YaHei", sans-serif;
+      flex-shrink: 0;
+      margin-left: 8px;
 
-      .status-icon {
-        margin-right: 3px;
-        width: 7px;
-        height: 7px;
+      .status-dot {
+        width: 6px;
+        height: 6px;
         border-radius: 50%;
-        // background-color: rgb(255, 217, 74);
-      }
-
-      .status-name {
-        // color: rgb(255, 217, 74);
-        font-size: 14px;
-        font-weight: bold;
+        margin-right: 6px;
       }
     }
-  }
 
-  .item-desc {
-    min-height: 52px;
-    color: #999;
-    font-size: 14px;
-    font-weight: 400;
-    margin: 10px 0;
-    line-height: 1.2;
+    .status-active {
+      color: #35bf53;
+      background: rgba(53, 191, 83, 0.062745);
+      border: 1px solid rgba(53, 191, 83, 0.14902);
+
+      .status-dot {
+        background: #35bf53;
+      }
+    }
+
+    .status-inactive {
+      color: rgba(0, 0, 0, 0.45);
+      background: rgba(0, 0, 0, 0.02);
+      border: 1px solid rgba(0, 0, 0, 0.06);
+
+      .status-dot {
+        background: rgba(0, 0, 0, 0.25);
+      }
+    }
+
+    .status-building {
+      color: #2666fb;
+      background: rgba(38, 102, 251, 0.062745);
+      border: 1px solid rgba(38, 102, 251, 0.14902);
+
+      .status-dot {
+        background: #2666fb;
+      }
+    }
+
+    .status-failed {
+      color: #f2657d;
+      background: rgba(242, 101, 125, 0.062745);
+      border: 1px solid rgba(242, 101, 125, 0.14902);
+
+      .status-dot {
+        background: #f2657d;
+      }
+    }
   }
 
   .item-con {
-    display: flex;
-    align-items: center;
-    border-top: 1px solid #ebeef5;
-    // border-bottom: 1px solid #ebeef5;
-    // padding: 10px 0;
-    margin-top: 14px;
+    flex: 1;
+    padding-bottom: 6px;
 
-    .con-l {
-      width: 100%;
-      margin-top: 5px;
-      .con-view {
-        display: flex;
-        align-items: center;
-        text-align: left;
-        font-weight: 400;
-        margin-top: 11px;
-        font-size: 14px;
+    .con-row {
+      display: flex;
+      align-items: center;
+      font-size: 14px;
+      line-height: 24px;
+      margin-bottom: 10px;
 
-        &:last-child {
-          padding-bottom: 0px;
-        }
+      &:last-child {
+        margin-bottom: 0;
+      }
 
-        .con-view-title {
-          width: 72px;
-          color: rgb(144, 136, 156);
-        }
+      .con-label {
+        width: 72px;
+        color: rgba(0, 0, 0, 0.65);
+        flex-shrink: 0;
+      }
 
-        ::v-deep .el-tag {
-          height: 17px;
-          line-height: 15px;
-          margin-bottom: 3px;
+      .con-value {
+        flex: 1;
+        min-width: 0;
+        color: rgba(0, 0, 0, 0.65);
+        text-align: right;
+
+        &:deep(.el-tag) {
+          margin-left: 0;
         }
       }
     }
   }
-}
 
-.card-btns {
-  width: 100%;
-  display: flex;
-  justify-content: flex-end;
-  align-items: center;
-  padding: 6px 0 10px;
-}
+  .item-btns {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-top: 12px;
+    margin-top: auto;
+    position: relative;
 
-.formClass {
-  ::v-deep .vue-treeselect--disabled .vue-treeselect__control {
-    background-color: #f5f7fa;
+    &::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background-color: rgba(0, 0, 0, 0.062745);
+    }
+
+    :deep(.el-button) {
+      flex: 1;
+      justify-content: center;
+      font-size: 14px;
+    }
+
+    .btn-divider {
+      width: 1px;
+      height: 20px;
+      background: rgba(0, 0, 0, 0.06);
+      flex-shrink: 0;
+    }
   }
-
-  ::v-deep .vue-treeselect--disabled .vue-treeselect__single-value {
-    color: #c0c4cc;
-  }
-}
-:deep(.left-tree) {
-  padding: 15px;
-  overflow: hidden;
-}
-.head-container {
-  ::v-deep
-    .el-tree--highlight-current
-    .el-tree-node.is-current
-    > .el-tree-node__content {
-    background-color: #cee5ff;
-  }
-}
-:deep(.el-tree) {
-  height: calc(100vh - 210px);
-  overflow: auto;
-}
-:deep(.pagination-container) {
-  margin-top: 4px !important;
-  background: transparent;
-}
-:deep(.justify-between) {
-  padding: 13px 15px;
-  background: #fff;
-}
-:deep(.el-card) {
-  border: 0px;
-  border-radius: 2px 2px 2px 2px !important;
-}
-:deep(.el-col) {
-  cursor: pointer;
 }
 
-.popover-content {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  // padding: 10px 0;
-  min-width: 60px;
+:deep(.el-empty) {
+  height: 100%;
 }
+
 .btn {
   margin-left: 12px !important;
 }
@@ -565,17 +684,14 @@ const handleDelete = (row) => {
 :deep(.el-button + .el-button) {
   margin-left: 12px;
 }
-:deep(.tag-rect) {
-  border: 0;
+
+.mr5 {
+  margin-right: 5px;
 }
-:deep(.el-card__body) {
-  padding: 12px 20px 13px 20px !important;
-}
-:deep(.el-card) {
-  height: 178px;
-  cursor: pointer;
-}
-:deep(.el-empty) {
-  height: calc(100vh - 355px);
+
+.ellipsis {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 </style>

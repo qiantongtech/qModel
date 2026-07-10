@@ -84,6 +84,14 @@ export function delModel(id) {
   })
 }
 
+// 修改模型状态
+export function updateModelStatus(id, status) {
+  return request({
+    url: '/model/model/' + id + '/status/' + status,
+    method: 'put'
+  })
+}
+
 // 导出模型基础信息
 export function exportModel(query) {
   return request({

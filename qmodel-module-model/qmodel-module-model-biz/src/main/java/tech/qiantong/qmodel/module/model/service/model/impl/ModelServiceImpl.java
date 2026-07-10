@@ -200,6 +200,14 @@ public class ModelServiceImpl extends ServiceImpl<ModelMapper, ModelDO> implemen
     }
 
     @Override
+    public void updateModelStatus(Long id, String status) {
+        ModelDO updateObj = new ModelDO();
+        updateObj.setId(id);
+        updateObj.setStatus(status);
+        modelMapper.updateById(updateObj);
+    }
+
+    @Override
     public Long saveModelWithConfig(ModelSaveWithConfigReqVO saveReqVO) {
         ModelSaveReqVO modelReq = saveReqVO.getModel();
         ModelConfigSaveReqVO configReq = saveReqVO.getConfig();

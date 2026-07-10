@@ -96,7 +96,7 @@
     <div class="button-style">
       <el-button type="primary" @click="handleCancel">返回列表</el-button>
       <el-button v-if="activeStep > 0" @click="handlePrevStep">上一步</el-button>
-      <el-button v-if="activeStep < 3" type="primary" @click="handleNextStep">下一步</el-button>
+      <el-button v-if="activeStep < 3" @click="handleNextStep">下一步</el-button>
       <el-button v-if="activeStep === 3 && form.accessType === 'API'" type="primary" :loading="submitLoading" @click="handleSubmit">
         确定并退出
       </el-button>

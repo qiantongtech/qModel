@@ -33,15 +33,19 @@
           class="access-type-row"
         >
           <div
-            class="access-type-item"
-            :class="{ active: formData.accessType === item.value }"
-            @click="handleAccessTypeChange(item.value)"
-          >
-            <el-radio
-              v-model="formData.accessType"
-              :label="item.value"
-              class="radio-label-hidden"
-            />
+          class="access-type-item"
+          :class="{
+            active: formData.accessType === item.value,
+            disabled: item.value === 'PYTHON'
+          }"
+          @click="handleAccessTypeChange(item.value)"
+        >
+          <el-radio
+            v-model="formData.accessType"
+            :label="item.value"
+            class="radio-label-hidden"
+            :disabled="item.value === 'PYTHON'"
+          />
             <div class="access-type-title">
               <span>{{ item.label }}</span>
             </div>
@@ -276,6 +280,7 @@ const rules = {
 }
 
 const handleAccessTypeChange = (value) => {
+  if (value === 'PYTHON') return
   formData.value.accessType = value
 }
 
@@ -329,6 +334,11 @@ defineExpose({
     cursor: pointer;
     transition: all 0.2s;
     margin-left: 17px;
+
+    &.disabled {
+      cursor: not-allowed;
+      opacity: 0.6;
+    }
 
     .access-type-title {
       min-width: 110px;

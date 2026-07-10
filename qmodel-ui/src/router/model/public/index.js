@@ -66,7 +66,7 @@ export default [
                 path: 'modelManage/add',
                 component: () => import('@/views/model/modelManage/add/index.vue'),
                 name: 'ModelManageAdd',
-                meta: { title: '新增模型', noCache: true, activeMenu: '/model/modelManage' }
+                meta: { title: '新增模型', noCache: true, activeMenu: '/model/version' }
             }
         ]
     }
