@@ -37,7 +37,7 @@
     <parent>
         <artifactId>qmodel-framework</artifactId>
         <groupId>tech.qiantong</groupId>
-        <version>1.0.1</version>
+        <version>1.1.0</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -57,7 +57,7 @@
         <dependency>
             <groupId>tech.qiantong</groupId>
             <artifactId>qmodel-security</artifactId>
-            <version>1.0.1</version>
+            <version>1.1.0</version>
         </dependency>
 
         <!-- 通用工具-->
