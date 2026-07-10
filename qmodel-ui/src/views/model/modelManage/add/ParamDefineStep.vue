@@ -174,13 +174,15 @@ defineExpose({
 }
 
 .schema-row {
+  align-items: stretch;
+
   .editor-card,
   .preview-card {
     border: 1px solid #e4e7ed;
     border-radius: 4px;
     overflow: hidden;
     height: 100%;
-    min-height: 520px;
+    min-height: 560px;
     display: flex;
     flex-direction: column;
   }
@@ -199,15 +201,31 @@ defineExpose({
     gap: 6px;
     height: 48px;
     box-sizing: border-box;
+
+    span {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
   }
 
   .schema-form-item {
     width: 100%;
-    margin-bottom: 18px;
+    margin-bottom: 0;
+    height: 100%;
+    position: relative;
 
     :deep(.el-form-item__content) {
       display: block;
       line-height: normal;
+      height: 100%;
+    }
+
+    :deep(.el-form-item__error) {
+      position: absolute;
+      bottom: -22px;
+      left: 0;
+      padding-top: 2px;
     }
 
     &.is-error .editor-card {
@@ -224,7 +242,7 @@ defineExpose({
       font-family: 'Consolas', 'Monaco', monospace;
       resize: none;
       height: 100% !important;
-      min-height: 470px;
+      min-height: 510px;
     }
   }
 

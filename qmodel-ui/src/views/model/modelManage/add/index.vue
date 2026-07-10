@@ -225,7 +225,7 @@ onMounted(() => {
   const editId = route.query.id
   if (editId) {
     isEdit.value = true
-    updateRouteTitle('编辑模型')
+    updateRouteTitle('修改模型')
     loadModelData(editId)
   } else {
     updateRouteTitle('新增模型')
@@ -353,7 +353,7 @@ const handleFileChecked = (result) => {
 }
 
 const handleCancel = () => {
-  const message = isEdit.value ? '确认取消编辑模型吗？已修改的内容将不会保存。' : '确认取消新增模型吗？已填写的内容将不会保存。'
+  const message = isEdit.value ? '确认取消修改模型吗？已修改的内容将不会保存。' : '确认取消新增模型吗？已填写的内容将不会保存。'
   proxy.$modal
     .confirm(message)
     .then(() => {
@@ -520,6 +520,9 @@ const handleSubmit = async () => {
   position: relative;
   background-color: #f0f2f5;
   overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
 }
 
 .custom-card {
@@ -705,15 +708,18 @@ const handleSubmit = async () => {
 }
 
 .pagecont-top {
-  height: 74vh;
+  flex: 1;
+  height: auto;
+  min-height: 0;
   position: relative;
 }
 
 .main {
-  height: 90%;
+  height: 100%;
   background-color: white;
   padding: 0px 25px 0;
   overflow-y: auto;
+  box-sizing: border-box;
 
   &.no-scroll {
     overflow-y: visible;

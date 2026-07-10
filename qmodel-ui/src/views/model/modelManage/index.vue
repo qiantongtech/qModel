@@ -75,7 +75,7 @@
             style="width: 210px"
           >
             <el-option key="0" label="停用" value="0" />
-            <el-option key="1" label="启用中" value="1" />
+            <el-option key="1" label="启用" value="1" />
             <el-option key="2" label="构建部署中" value="2" />
             <el-option key="3" label="构建失败" value="3" />
           </el-select>
@@ -121,7 +121,8 @@
             <div class="card-item">
               <div class="item-top">
                 <div class="top-icon">
-                  <img src="@/assets/system/images/model/version/card-title.svg" alt="" />
+                  <img :src="getImage(item)" alt="应用图标" @error="handleImageError" />
+<!--                  <img src="@/assets/system/images/model/version/card-title.svg" alt="" />-->
                 </div>
                 <div class="top-info">
                   <el-tooltip
@@ -136,13 +137,8 @@
                     >{{ item.name }}</div>
                   </el-tooltip>
                   <div class="top-tags">
-                    <el-tag
-                      v-for="(tag, idx) in parseTags(item.tags)"
-                      :key="idx"
-                      :title="tag.name"
-                      type="primary"
-                    >{{ tag.name }}</el-tag>
-                    <el-tag type="info">{{ formatVersion(item.version) }}</el-tag>
+                    <dict-tag :options="buildTagOptions(item.tags)" :value="buildTagValues(item.tags)" separator="," />
+                    <dict-tag :options="[{ value: formatVersion(item.version), label: formatVersion(item.version), elTagType: 'info' }]" :value="formatVersion(item.version)" />
                   </div>
                 </div>
                 <div class="top-status" :class="getStatusClass(item.status)">
@@ -153,7 +149,7 @@
               <div class="item-con">
                 <div class="con-row">
                   <span class="con-label">模型编码</span>
-                  <span class="con-value ellipsis" :title="item.code">{{ item.code || '-' }}</span>
+                  <span class="con-value ellipsis">{{ item.code || '-' }}</span>
                 </div>
                 <div class="con-row">
                   <span class="con-label">接入方式</span>
@@ -169,9 +165,9 @@
                   link
                   type="primary"
                   icon="Edit"
-                  :disabled="['1', '2'].includes(String(item.status))"
+                  :disabled="['1', '2', '3'].includes(String(item.status))"
                   @click.stop="handleUpdate(item)"
-                >编辑</el-button>
+                >修改</el-button>
                 <div class="btn-divider"></div>
                 <el-button
                   link
@@ -179,7 +175,7 @@
                   icon="VideoPlay"
                   :disabled="String(item.status) === '2' || String(item.status) === '3'"
                   @click.stop="handleTest(item)"
-                >测试</el-button>
+                >调试</el-button>
                 <div class="btn-divider"></div>
                 <el-button
                   link
@@ -193,7 +189,7 @@
                   link
                   type="danger"
                   icon="Delete"
-                  :disabled="['1', '2'].includes(String(item.status))"
+                  :disabled="['1', '2', '3'].includes(String(item.status))"
                   @click.stop="handleDelete(item)"
                 >删除</el-button>
               </div>
@@ -232,6 +228,8 @@ import {
   updateModelStatus,
 } from "@/api/model/model";
 import { ElMessage, ElMessageBox } from "element-plus";
+import DictTag from '@/components/DictTag'
+import defaultCover from '@/assets/system/images/model/version/card-title.svg';
 
 const { proxy } = getCurrentInstance();
 
@@ -282,7 +280,7 @@ const getStatusText = (val) => {
   const str = String(val);
   if (str === "3") return "构建失败";
   if (str === "2") return "构建部署中";
-  if (str === "1") return "启用中";
+  if (str === "1") return "启用";
   if (str === "0") return "停用";
   return "未知";
 };
@@ -312,6 +310,18 @@ const parseTags = (tags) => {
   }
 };
 
+const buildTagOptions = (tags) => {
+  return parseTags(tags).map(tag => ({
+    value: tag.name,
+    label: tag.name,
+    elTagType: 'primary'
+  }))
+}
+
+const buildTagValues = (tags) => {
+  return parseTags(tags).map(tag => tag.name)
+}
+
 const checkNameOverflow = (event, index) => {
   const el = event.target;
   if (el) {
@@ -327,13 +337,13 @@ const handleAdd = () => {
 
 const handleUpdate = (row) => {
   proxy.$router.push({
-    path: "/model/modelManage/add",
+    path: "/model/modelManage/edit",
     query: { id: row.id }
   });
 };
 
 const handleTest = () => {
-  ElMessage.warning("测试功能正在开发中");
+  ElMessage.warning("调试功能正在开发中");
 };
 
 const handleToggleStatus = (row) => {
@@ -385,6 +395,19 @@ const handleDelete = (row) => {
       .catch(() => {});
   }
 };
+
+const handleImageError = (event) => {
+  event.target.src = defaultCover
+}
+
+function getImage(row) {
+  if (!row.icon) {
+    return defaultCover;
+  }
+  const icon = row.icon.startsWith('/') ? row.icon : `/${row.icon}`
+  return `${import.meta.env.VITE_APP_BASE_API}/profile${icon}`;
+}
+
 </script>
 <style lang="scss" scoped>
 .model-manage-page {
@@ -545,9 +568,16 @@ const handleDelete = (row) => {
         align-items: center;
         gap: 8px;
 
+        > div {
+          display: inline-flex;
+          align-items: center;
+          gap: 8px;
+        }
+
         :deep(.el-tag) {
           min-width: 50px;
           justify-content: center;
+          margin-left: 0 !important;
         }
       }
     }
@@ -568,6 +598,10 @@ const handleDelete = (row) => {
         height: 6px;
         border-radius: 50%;
         margin-right: 6px;
+      }
+      .status-name {
+        font-size: 14px;
+        margin-bottom: 1px;
       }
     }
 

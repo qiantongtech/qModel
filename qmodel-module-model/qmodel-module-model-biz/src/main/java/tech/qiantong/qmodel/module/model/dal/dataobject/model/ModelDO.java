@@ -92,6 +92,9 @@ public class ModelDO extends BaseEntity {
     /** 标签 */
     private String tags;
 
+    /** 标签 */
+    private String icon;
+
     /** 描述 */
     private String description;
 

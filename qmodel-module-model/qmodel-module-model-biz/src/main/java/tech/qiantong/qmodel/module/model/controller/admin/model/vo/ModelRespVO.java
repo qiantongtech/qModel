@@ -95,6 +95,11 @@ public class ModelRespVO implements Serializable {
     @Schema(description = "标签", example = "")
     private String tags;
 
+    @Excel(name = "图标")
+    @Schema(description = "图标", example = "")
+    private String icon;
+
+
     @Excel(name = "描述")
     @Schema(description = "描述", example = "")
     private String description;
