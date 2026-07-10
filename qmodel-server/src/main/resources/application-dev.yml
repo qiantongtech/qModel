@@ -1,6 +1,6 @@
 # 主数据源选择
 datasource:
-  type: dm8
+  type: mysql
 
 # Spring配置
 spring:
@@ -100,7 +100,7 @@ dm8:
   # JDBC驱动类名
   driver-class-name: dm.jdbc.driver.DmDriver
   # 主库JDBC连接URL
-  url: jdbc:dm://110.42.38.62:40013/QMODEL_DEV?STU&zeroDateTimeBehavior=convertToNull&useUnicode=true&characterEncoding=utf-8&schema=QMODEL_DEV&serverTimezone=Asia/Shanghai
+  url: jdbc:dm://env.qiantong.tech:40013/QMODEL_DEV?STU&zeroDateTimeBehavior=convertToNull&useUnicode=true&characterEncoding=utf-8&schema=QMODEL_DEV&serverTimezone=Asia/Shanghai
   # 主库用户名
   username: QMODEL_DEV
   # 主库密码
