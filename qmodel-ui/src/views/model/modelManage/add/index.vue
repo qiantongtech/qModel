@@ -114,7 +114,7 @@ import { useRoute, useRouter } from 'vue-router'
 import { ElMessage } from 'element-plus'
 import useTagsViewStore from '@/store/system/tagsView'
 import { addModel, getModel, updateModel, saveModelWithConfig } from '@/api/model/model'
-import {addModelConfig, listModelConfig, updateModelConfig} from '@/api/model/config'
+import { listModelConfig } from '@/api/model/config'
 import { listClassify } from '@/api/modelReconstitution/classify'
 import BasicInfoStep from './BasicInfoStep.vue'
 import ApiConfigStep from './ApiConfigStep.vue'
@@ -122,7 +122,7 @@ import CheckUploadFile from './checkUploadFile.vue'
 import ParamDefineStep from './ParamDefineStep.vue'
 import TestSaveStep from './TestSaveStep.vue'
 import ConfirmBuildStep from './ConfirmBuildStep.vue'
-import {addFileResource, updateFileResource,listModelFileResource} from "@/api/model/fileResource.js";
+import { listModelFileResource } from "@/api/model/fileResource.js";
 
 const { proxy } = getCurrentInstance()
 const route = useRoute()
@@ -190,6 +190,7 @@ const form = reactive({
   author: '',
   status: '0',
   tags: '',
+  icon: '',
   description: '',
   remark: '',
   // API 配置
@@ -266,6 +267,7 @@ const loadModelData = async (id) => {
       author: modelData.author || '',
       status: modelData.status != null ? String(modelData.status) : '0',
       tags: modelData.tags || '',
+      icon: modelData.icon || '',
       description: modelData.description || '',
       remark: modelData.remark || ''
     })
@@ -408,6 +410,7 @@ const buildModelData = () => {
     author: form.author || null,
     status: form.status || '0',
     tags: form.tags || null,
+    icon: form.icon || null,
     description: form.description || null,
     remark: form.remark || null
   }
@@ -471,34 +474,21 @@ const handleSubmit = async () => {
     const modelData = buildModelData()
     console.log('[ModelAdd] modelData', modelData)
 
-    let modelId
     if (form.accessType === 'API') {
       const configData = buildConfigData(modelData.id)
       const payload = {
         model: modelData,
         config: configData
       }
-      const res = await saveModelWithConfig(payload)
-      modelId = res.data
+      await saveModelWithConfig(payload)
       if (form.authType === 'NONE') {
         apiStepRef.value?.clearAuthState()
       }
     } else {
       if (isEdit.value) {
         await updateModel(modelData)
-        modelId = form.id
       } else {
-        const modelRes = await addModel(modelData)
-        modelId = modelRes.data
-      }
-    }
-
-    if (form.accessType === 'API' && modelId) {
-      const configData = buildConfigData(modelId)
-      if (isEdit.value && configId.value) {
-        await updateModelConfig(configData)
-      } else {
-        await addModelConfig(configData)
+        await addModel(modelData)
       }
     }
 

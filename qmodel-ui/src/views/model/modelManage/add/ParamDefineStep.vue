@@ -32,7 +32,7 @@
             <div class="editor-card">
               <div class="editor-header">
                 <span><el-icon><Document /></el-icon> JSON Schema 编辑区</span>
-                <el-button size="small" type="primary" :icon="Brush" @click="formatCurrentSchema">
+                <el-button size="small" type="primary" :icon="Brush" :disabled="!canFormat" @click="formatCurrentSchema">
                   格式化 Schema
                 </el-button>
               </div>
@@ -133,6 +133,17 @@ const updateParsedSchema = () => {
 
 watch(currentSchemaText, updateParsedSchema, { immediate: true })
 
+const canFormat = computed(() => {
+  const text = (formData.value.inputSchema || '').trim()
+  if (!text) return false
+  try {
+    JSON.parse(text)
+    return true
+  } catch {
+    return false
+  }
+})
+
 const formatCurrentSchema = () => {
   const text = currentSchemaText.value?.trim()
   if (!text) return
@@ -223,13 +234,14 @@ defineExpose({
 
     :deep(.el-form-item__error) {
       position: absolute;
-      bottom: -22px;
+      bottom: -26px;
       left: 0;
-      padding-top: 2px;
+      padding-top: 4px;
+      font-size: 14px;
     }
 
-    &.is-error .editor-card {
-      border-color: var(--el-color-danger);
+    &.is-error .schema-textarea :deep(.el-textarea__inner) {
+      border: 1px solid var(--el-color-danger);
     }
   }
 

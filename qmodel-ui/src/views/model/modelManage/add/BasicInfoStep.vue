@@ -144,6 +144,13 @@
     </el-row>
     <el-row :gutter="20">
       <el-col :span="24">
+        <el-form-item label="图标" prop="icon">
+          <image-upload v-model="formData.icon" :limit="1" :file-size="5" />
+        </el-form-item>
+      </el-col>
+    </el-row>
+    <el-row :gutter="20">
+      <el-col :span="24">
         <el-form-item label="描述" prop="description">
           <el-input
             v-model="formData.description"
@@ -177,6 +184,7 @@
 <script setup name="BasicInfoStep">
 import { ref, computed, watch, nextTick } from 'vue'
 import { WarningFilled } from '@element-plus/icons-vue'
+import ImageUpload from '@/components/ImageUpload'
 
 const formData = defineModel('formData', {
   type: Object,

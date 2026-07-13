@@ -401,11 +401,20 @@ const handleImageError = (event) => {
 }
 
 function getImage(row) {
-  if (!row.icon) {
+  const image = row?.icon;
+  if (!image) {
     return defaultCover;
   }
-  const icon = row.icon.startsWith('/') ? row.icon : `/${row.icon}`
-  return `${import.meta.env.VITE_APP_BASE_API}/profile${icon}`;
+  if (/^https?:\/\//.test(image)) {
+    return image;
+  }
+  if (image.startsWith('/profile')) {
+    return `${import.meta.env.VITE_APP_BASE_API}${image}`;
+  }
+  if (image.startsWith('/')) {
+    return `${import.meta.env.VITE_APP_BASE_API}/profile${image}`;
+  }
+  return `${import.meta.env.VITE_APP_BASE_API}/profile/${image}`;
 }
 
 </script>

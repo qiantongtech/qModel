@@ -39,8 +39,13 @@
           style="width: 100%"
           max-height="200"
         >
-          <el-table-column label="参数名" prop="key" min-width="180" />
-          <el-table-column label="参数值" min-width="240">
+          <el-table-column label="参数名" prop="key" min-width="160" />
+          <el-table-column label="是否必填" min-width="90" align="center">
+            <template #default="{ row }">
+              <span>{{ row.required ? '是' : '否' }}</span>
+            </template>
+          </el-table-column>
+          <el-table-column label="参数值" min-width="220" >
             <template #default="{ row }">
               <el-input
                 v-if="row.displayType === 'string'"

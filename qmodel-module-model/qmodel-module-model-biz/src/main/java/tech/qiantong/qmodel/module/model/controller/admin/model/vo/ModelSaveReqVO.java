@@ -87,6 +87,10 @@ public class ModelSaveReqVO extends BaseEntity {
     @Schema(description = "标签", example = "")
     private String tags;
 
+    @Schema(description = "图标", example = "")
+    @Size(max = 256, message = "图标路径长度不能超过256个字符")
+    private String icon;
+
     @Schema(description = "描述", example = "")
     private String description;
 

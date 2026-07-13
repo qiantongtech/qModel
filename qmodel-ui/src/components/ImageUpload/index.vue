@@ -140,35 +140,36 @@ const showTip = computed(
   () => props.isShowTip && (props.fileType || props.fileSize)
 );
 
-watch(() => props.modelValue, val => {
-  if (val) {
-    // 首先将值转为数组
-    const list = Array.isArray(val) ? val : props.modelValue.split(",");
-    // 然后将数组转为对象数组
-    fileList.value = list.map(item => {
-      // 如果 item 是字符串，统一处理成对象
-      if (typeof item === "string") {
-        const url = item.indexOf(baseUrl) === -1 && props.platForm === '' ? baseUrl + item : item;
-        return { name: url, url };
-      }
-      // 如果 item 已经是对象，直接返回
-      return item;
-    });
-    // fileList.value = list.map(item => {
-    //   if (typeof item === "string") {
-    //     if (item.indexOf(baseUrl) === -1) {
-    //       item = { name: baseUrl + item, url: baseUrl + item };
-    //     } else {
-    //       item = { name: item, url: item };
-    //     }
-    //   }
-    //   return item;
-    // });
-  } else {
-    fileList.value = [];
-    return [];
-  }
-},{ deep: true, immediate: true });
+watch(
+  () => props.modelValue,
+  (val) => {
+    if (val) {
+      // 首先将值转为数组
+      const list = Array.isArray(val) ? val : props.modelValue.split(",");
+      // 然后将数组转为对象数组
+      fileList.value = list.map((item) => {
+        // 如果 item 是字符串，统一处理成对象
+        if (typeof item === "string") {
+          const url =
+            item.indexOf(baseUrl) === -1 && props.platForm === ""
+              ? baseUrl + item
+              : item;
+          if (url.indexOf("http") === -1) {
+            const path = import.meta.env.VITE_APP_BASE_API + "/profile" + url;
+            return { name: url, url: path };
+          }
+          return { name: url, url };
+        }
+        // 如果 item 已经是对象，直接返回
+        return item;
+      });
+    } else {
+      fileList.value = [];
+      return [];
+    }
+  },
+  { deep: true, immediate: true }
+);
 
 // 上传前loading加载
 function handleBeforeUpload(file) {
@@ -251,12 +252,13 @@ function handleUploadError() {
 
 // 预览
 function handlePictureCardPreview(file) {
-  dialogImageUrl.value = file.url.replace(baseUrl, "");
+  dialogImageUrl.value = file.url;
   dialogVisible.value = true;
+  imagePreviewList.value = [];
   fileList.value.forEach((item, index) => {
-    imagePreviewList.value.push(item.url.replace(baseUrl, ""))
+    imagePreviewList.value.push(item.url)
     //获取点击预览图片的下标
-    if (dialogImageUrl.value === item.url.replace(baseUrl, "")) {
+    if (dialogImageUrl.value === item.url) {
       currentIndex.value = index;
     }
   })
@@ -270,10 +272,10 @@ function onClosePreView() {
 // 对象转成指定字符串分隔
 function listToString(list, separator) {
   let strs = "";
-  separator = separator || ",";
+  const sep = separator || ",";
   for (let i in list) {
     if (undefined !== list[i].url && list[i].url.indexOf("blob:") !== 0) {
-      strs += list[i].url.replace(baseUrl, "") + separator;
+      strs += list[i].url.replace(baseUrl, "") + sep;
     }
   }
   return strs != "" ? strs.substr(0, strs.length - 1) : "";
