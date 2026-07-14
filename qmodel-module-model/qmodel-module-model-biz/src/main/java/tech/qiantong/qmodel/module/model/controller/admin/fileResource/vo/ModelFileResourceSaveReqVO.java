@@ -144,6 +144,14 @@ public class ModelFileResourceSaveReqVO extends BaseEntity {
     @Size(max = 128, message = "容器id长度不能超过128个字符")
     private String containerId;
 
+    @Schema(description = "入参JSONSchema定义", example = "")
+    @Size(max = 8192, message = "入参JSONSchema定义长度不能超过8192个字符")
+    private String inputSchema;
+
+    @Schema(description = "出参JSONSchema定义", example = "")
+    @Size(max = 8192, message = "出参JSONSchema定义长度不能超过8192个字符")
+    private String outputSchema;
+
     @Schema(description = "备注", example = "")
     @Size(max = 512, message = "备注长度不能超过512个字符")
     private String remark;

@@ -148,6 +148,14 @@ public class ModelFileResourceRespVO implements Serializable {
     @Schema(description = "容器id", example = "")
     private String containerId;
 
+    @Excel(name = "入参JSONSchema定义")
+    @Schema(description = "入参JSONSchema定义", example = "")
+    private String inputSchema;
+
+    @Excel(name = "出参JSONSchema定义")
+    @Schema(description = "出参JSONSchema定义", example = "")
+    private String outputSchema;
+
     @Excel(name = "是否有效")
     @Schema(description = "是否有效", example = "")
     private Boolean validFlag;

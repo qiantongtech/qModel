@@ -131,6 +131,12 @@ public class ModelFileResourceDO extends BaseEntity {
     /** 容器id */
     private String containerId;
 
+    /** 入参JSONSchema定义 */
+    private String inputSchema;
+
+    /** 出参JSONSchema定义 */
+    private String outputSchema;
+
     /** 是否有效 */
     private Boolean validFlag;
 

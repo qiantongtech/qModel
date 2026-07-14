@@ -50,7 +50,7 @@ import tech.qiantong.qmodel.module.model.dal.dataobject.fileResource.ModelFileRe
  * @date 2026-07-07
  */
 @Data
-@TableName(value = "model")
+@TableName(value = "\"MODEL\"")
 // 用于 Oracle、PostgreSQL、Kingbase、DB2、H2 数据库的主键自增。如果是 MySQL 等数据库，可不写。
 // @KeySequence("model_seq")
 @Builder

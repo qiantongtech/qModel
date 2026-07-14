@@ -61,6 +61,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="mappedHostPort"    column="mapped_host_port"    />
         <result property="containerStatus"    column="container_status"    />
         <result property="containerId"    column="container_id"    />
+        <result property="inputSchema"    column="input_schema"    />
+        <result property="outputSchema"    column="output_schema"    />
         <result property="validFlag"    column="valid_flag"    />
         <result property="delFlag"    column="del_flag"    />
         <result property="createBy"    column="create_by"    />
@@ -73,7 +75,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <sql id="selectModelFileResourceVo">
-        select id, model_id, file_name, script_name, file_path, deps_file_path, model_version, resource_type, file_size, log_file_path, exec_timeout, docker_file_path, image_tag, image_version, image_build_status, image_build_time, image_build_log, resource_limit, container_env, container_mounts, container_ports, mapped_host_port, container_status, container_id, valid_flag, del_flag, create_by, creator_id, create_time, update_by, updator_id, update_time, remark from model_file_resource
+        select id, model_id, file_name, script_name, file_path, deps_file_path, model_version, resource_type, file_size, log_file_path, exec_timeout, docker_file_path, image_tag, image_version, image_build_status, image_build_time, image_build_log, resource_limit, container_env, container_mounts, container_ports, mapped_host_port, container_status, container_id, input_schema, output_schema, valid_flag, del_flag, create_by, creator_id, create_time, update_by, updator_id, update_time, remark from model_file_resource
     </sql>
 
     <select id="selectModelFileResourceList" parameterType="ModelFileResourceDO" resultMap="ModelFileResourceResult">
@@ -136,6 +138,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="mappedHostPort != null">mapped_host_port,</if>
             <if test="containerStatus != null">container_status,</if>
             <if test="containerId != null">container_id,</if>
+            <if test="inputSchema != null">input_schema,</if>
+            <if test="outputSchema != null">output_schema,</if>
             <if test="validFlag != null">valid_flag,</if>
             <if test="delFlag != null">del_flag,</if>
             <if test="createBy != null">create_by,</if>
@@ -170,6 +174,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="mappedHostPort != null">#{mappedHostPort},</if>
             <if test="containerStatus != null">#{containerStatus},</if>
             <if test="containerId != null">#{containerId},</if>
+            <if test="inputSchema != null">#{inputSchema},</if>
+            <if test="outputSchema != null">#{outputSchema},</if>
             <if test="validFlag != null">#{validFlag},</if>
             <if test="delFlag != null">#{delFlag},</if>
             <if test="createBy != null">#{createBy},</if>
@@ -208,6 +214,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="mappedHostPort != null">mapped_host_port = #{mappedHostPort},</if>
             <if test="containerStatus != null">container_status = #{containerStatus},</if>
             <if test="containerId != null">container_id = #{containerId},</if>
+            <if test="inputSchema != null">input_schema = #{inputSchema},</if>
+            <if test="outputSchema != null">output_schema = #{outputSchema},</if>
             <if test="validFlag != null">valid_flag = #{validFlag},</if>
             <if test="delFlag != null">del_flag = #{delFlag},</if>
             <if test="createBy != null">create_by = #{createBy},</if>

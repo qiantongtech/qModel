@@ -422,6 +422,8 @@ const buildModelData = () => {
     modelData.scriptName = 'main.py'
     modelData.resourceType = '2'
     modelData.modelVersion = 1
+    modelData.inputSchema = form.inputSchema || undefined
+    modelData.outputSchema = form.outputSchema || undefined
     modelData.fileResourceId = isEdit.value ? form.fileResourceId : undefined
     modelData.accessType = 1
   }

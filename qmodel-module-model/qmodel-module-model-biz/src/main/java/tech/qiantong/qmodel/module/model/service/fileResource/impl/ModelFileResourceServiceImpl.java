@@ -397,6 +397,8 @@ public class ModelFileResourceServiceImpl extends ServiceImpl<ModelFileResourceM
         fileResourceDO.setScriptName(StringUtils.isNotEmpty(saveReqVO.getScriptName()) ? saveReqVO.getScriptName() : "main.py");
         fileResourceDO.setResourceType(StringUtils.isNotEmpty(saveReqVO.getResourceType()) ? saveReqVO.getResourceType() : "2");
         fileResourceDO.setModelVersion(saveReqVO.getModelVersion() != null ? saveReqVO.getModelVersion() : 1L);
+        fileResourceDO.setInputSchema(saveReqVO.getInputSchema());
+        fileResourceDO.setOutputSchema(saveReqVO.getOutputSchema());
         fileResourceDO.setImageBuildStatus("1");
         fileResourceDO.setValidFlag(true);
 
