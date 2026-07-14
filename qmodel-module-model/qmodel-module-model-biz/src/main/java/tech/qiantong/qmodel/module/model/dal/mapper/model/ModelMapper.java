@@ -58,6 +58,7 @@ public interface ModelMapper extends BaseMapperX<ModelDO> {
         return selectPage(reqVO, new LambdaQueryWrapperX<ModelDO>()
                 .eqIfPresent(ModelDO::getCompanyId, reqVO.getCompanyId())
                 .eqIfPresent(ModelDO::getClassifyId, reqVO.getClassifyId())
+                .inIfPresent(ModelDO::getClassifyId, reqVO.getClassifyIdList())
                 .likeIfPresent(ModelDO::getName, reqVO.getName())
                 .eqIfPresent(ModelDO::getCode, reqVO.getCode())
                 .eqIfPresent(ModelDO::getAccessType, reqVO.getAccessType())

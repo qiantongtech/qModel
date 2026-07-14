@@ -48,7 +48,7 @@
     </div>
 
     <div class="pagecont-top">
-      <div class="main" :class="{ 'no-scroll': activeStep >= 2 }">
+      <div class="main" :class="{ 'step-3': activeStep === 2 }">
         <BasicInfoStep
           v-show="activeStep === 0"
           ref="basicStepRef"
@@ -94,7 +94,7 @@
       </div>
     </div>
 
-    <div class="button-style">
+    <div class="button-style" :class="{ 'step-3': activeStep === 2 }">
       <el-button type="primary" @click="handleCancel">返回列表</el-button>
       <el-button v-if="activeStep > 0" @click="handlePrevStep">上一步</el-button>
       <el-button v-if="activeStep < 3" @click="handleNextStep">下一步</el-button>
@@ -186,7 +186,7 @@ const form = reactive({
   code: '',
   classifyId: null,
   accessType: 'API',
-  version: null,
+  version: 'V1.0',
   author: '',
   status: '0',
   tags: '',
@@ -541,7 +541,7 @@ const handleSubmit = async () => {
     .zl-step {
       list-style: none;
       width: 100%;
-      height: 40px;
+      height: 30px;
       padding: 0;
       margin: 0 auto;
       cursor: pointer;
@@ -704,17 +704,19 @@ const handleSubmit = async () => {
   height: auto;
   min-height: 0;
   position: relative;
+  overflow: hidden;
+  background-color: #fff;
 }
 
 .main {
   height: 100%;
   background-color: white;
-  padding: 0px 25px 0;
+  padding: 0px 25px 70px;
   overflow-y: auto;
   box-sizing: border-box;
 
-  &.no-scroll {
-    overflow-y: visible;
+  &.step-3 {
+    padding-bottom: 90px;
   }
 }
 
@@ -723,9 +725,17 @@ const handleSubmit = async () => {
   left: 0;
   right: 0;
   bottom: 0;
-  padding: 0px 35px 25px 0px;
+  padding: 15px 35px 25px 0px;
   background: #fff;
   text-align: right;
   z-index: 10;
+
+  &.step-3 {
+    height: 64px;
+    padding: 0 35px 18px 0;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+  }
 }
 </style>

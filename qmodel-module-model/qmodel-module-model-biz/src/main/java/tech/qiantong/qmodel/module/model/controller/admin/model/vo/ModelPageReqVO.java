@@ -36,6 +36,8 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import tech.qiantong.qmodel.common.core.page.PageParam;
 
+import java.util.List;
+
 /**
  * 模型基础信息 Request VO 对象 model
  *
@@ -54,6 +56,9 @@ public class ModelPageReqVO extends PageParam {
 
     @Schema(description = "分类id", example = "")
     private Long classifyId;
+
+    @Schema(description = "分类id列表", example = "")
+    private List<Long> classifyIdList;
 
     @Schema(description = "名称", example = "")
     private String name;

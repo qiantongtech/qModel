@@ -89,6 +89,8 @@ public class ModelClassifyServiceImpl extends ServiceImpl<ModelClassifyMapper, M
         LambdaQueryWrapperX<ModelClassifyDO> queryWrapperX = new LambdaQueryWrapperX<>();
         queryWrapperX.likeIfPresent(ModelClassifyDO::getName, reqVO.getName())
                 .likeRightIfPresent(ModelClassifyDO::getAncestors, reqVO.getAncestors())
+                .eqIfPresent(ModelClassifyDO::getParentId, reqVO.getParentId())
+                .orderByAsc(ModelClassifyDO::getOrderNum)
                 .orderByAsc(ModelClassifyDO::getCreateTime);
         return modelClassifyMapper.selectList(queryWrapperX);
     }

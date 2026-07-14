@@ -31,24 +31,25 @@
 -->
 
 <template>
-  <div class="app-container">
+  <div class="app-container" ref="app-container">
     <div class="pagecont-top" v-show="showSearch">
       <el-form
-        :model="queryParams"
-        ref="queryFormRef"
-        :inline="true"
-        label-width="68px"
         class="btn-style"
+        :model="queryParams"
+        ref="queryRef"
+        :inline="true"
+        v-show="showSearch"
+        @submit.prevent
       >
         <el-form-item label="分类名称" prop="name">
           <el-input
+            class="el-form-input-width"
             v-model="queryParams.name"
             placeholder="请输入分类名称"
             clearable
             @keyup.enter="handleQuery"
           />
         </el-form-item>
-
         <el-form-item>
           <el-button
             plain
@@ -67,71 +68,128 @@
 
     <div class="pagecont-bottom">
       <div class="justify-between mb15">
-        <el-row :gutter="10" class="btn-style">
+        <el-row :gutter="15" class="btn-style">
           <el-col :span="1.5">
             <el-button
               type="primary"
               plain
               @click="handleAdd"
               v-hasPermi="['model:classify:add']"
+              @mousedown="(e) => e.preventDefault()"
             >
-              <i class="iconfont-mini icon-xinzeng"></i>新增
+              <i class="iconfont-mini icon-xinzeng mr5"></i>新增
             </el-button>
           </el-col>
           <el-col :span="1.5">
-            <el-button type="info" plain @click="toggleExpandAll">
-              <i class="iconfont-mini icon-paixubiaozhi"></i>展开/折叠
+            <el-button class="toggle-expand-all" type="primary" plain @click="toggleExpandAll">
+              <svg-icon v-if="isExpandAll" icon-class="toggle" />
+              <svg-icon v-else icon-class="expand" />
+              <span>{{ isExpandAll ? ' 折叠' : ' 展开' }}</span>
             </el-button>
           </el-col>
         </el-row>
-        <right-toolbar
-          v-model:showSearch="showSearch"
-          @queryTable="getList"
-        ></right-toolbar>
+        <div class="justify-end top-right-btn">
+          <right-toolbar
+            v-model:showSearch="showSearch"
+            @queryTable="getList"
+            :columns="columns"
+          ></right-toolbar>
+        </div>
       </div>
-
       <el-table
         v-if="refreshTable"
         v-loading="loading"
         :data="classifyList"
         row-key="id"
-        :default-expand-all="isExpandAll"
         :tree-props="{ children: 'children', hasChildren: 'hasChildren' }"
+        :default-expand-all="isExpandAll"
       >
-        <el-table-column label="分类名称" prop="name" />
-        <el-table-column label="分类描述" align="center" prop="description" />
-        <el-table-column label="备注" align="center" prop="remark" />
         <el-table-column
+          v-if="getColumnVisibility(1)"
+          label="分类名称"
+          prop="name"
+          align="left"
+          width="250px"
+          :show-overflow-tooltip="true"
+        >
+          <template #default="scope">
+            {{ scope.row.name || '-' }}
+          </template>
+        </el-table-column>
+        <el-table-column
+          v-if="getColumnVisibility(2)"
+          label="显示顺序"
+          align="center"
+          prop="orderNum"
+          width="100px"
+        >
+          <template #default="scope">
+            {{ scope.row.orderNum !== null ? scope.row.orderNum : '-' }}
+          </template>
+        </el-table-column>
+        <el-table-column
+          v-if="getColumnVisibility(3)"
+          label="备注"
+          align="left"
+          prop="remark"
+          :show-overflow-tooltip="{ effect: 'light' }"
+        >
+          <template #default="scope">
+            {{ scope.row.remark || '-' }}
+          </template>
+        </el-table-column>
+        <el-table-column
+          v-if="getColumnVisibility(4)"
+          label="创建人"
+          align="center"
+          prop="createBy"
+          width="100px"
+        >
+          <template #default="scope">
+            {{ scope.row.createBy || '-' }}
+          </template>
+        </el-table-column>
+        <el-table-column
+          v-if="getColumnVisibility(5)"
+          label="创建时间"
+          align="center"
+          prop="createTime"
+          width="180"
+        >
+          <template #default="scope">
+            <span>{{ parseTime(scope.row.createTime, '{y}-{m}-{d} {h}:{i}') }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column
+          v-if="getColumnVisibility(6)"
           label="操作"
           align="center"
           class-name="small-padding fixed-width"
+          fixed="right"
+          width="240"
         >
           <template #default="scope">
             <el-button
               link
               type="primary"
+              icon="Plus"
               @click="handleAdd(scope.row)"
               v-hasPermi="['model:classify:add']"
-            >
-              <i class="iconfont-mini icon-xinzeng"></i>新增
-            </el-button>
+            >新增</el-button>
             <el-button
               link
               type="primary"
+              icon="Edit"
               @click="handleUpdate(scope.row)"
               v-hasPermi="['model:classify:edit']"
-            >
-              <i class="iconfont-mini icon-a-xiugaixianxing"></i>修改
-            </el-button>
-
+            >修改</el-button>
             <el-button
               link
               type="danger"
+              icon="Delete"
               @click="handleDelete(scope.row)"
               v-hasPermi="['model:classify:remove']"
-            >
-              <i class="iconfont-mini icon-a-shanchuxianxing"></i>删除
-            </el-button>
+            >删除</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -145,6 +203,7 @@
       />
     </div>
 
+    <!-- 添加或修改模型分类对话框 -->
     <el-dialog
       :title="title"
       v-model="open"
@@ -152,41 +211,66 @@
       append-to="body"
       draggable
     >
-      <template #header="{ close, titleId, titleClass }">
+      <template #header>
         <span role="heading" aria-level="2" class="el-dialog__title">
           {{ title }}
         </span>
       </template>
-      <el-form ref="formRef" :model="form" :rules="rules" label-width="80px">
-        <el-form-item label="上级分类" prop="parentId">
-          <el-tree-select
-            v-model="form.parentId"
-            :data="classifyOptions"
-            :props="{ value: 'id', label: 'name', children: 'children' }"
-            placeholder="请选择上级分类"
-          />
-        </el-form-item>
-        <el-form-item label="分类名称" prop="name">
-          <el-input v-model="form.name" placeholder="请输入分类名称" />
-        </el-form-item>
-        <el-form-item label="分类描述" prop="description">
-          <el-input
-            v-model="form.description"
-            type="textarea"
-            placeholder="请输入内容"
-            maxlength="200"
-            show-word-limit
-          />
-        </el-form-item>
-        <el-form-item label="备注" prop="remark">
-          <el-input
-            v-model="form.remark"
-            type="textarea"
-            placeholder="请输入内容"
-            maxlength="200"
-            show-word-limit
-          />
-        </el-form-item>
+      <el-form
+        ref="classifyRef"
+        :model="form"
+        :rules="rules"
+        label-width="80px"
+        @submit.prevent
+      >
+        <el-row :gutter="20">
+          <el-col :span="24">
+            <el-form-item label="上级分类" prop="parentId">
+              <el-tree-select
+                v-model="form.parentId"
+                :data="categoryOptions"
+                :props="{ value: 'id', label: 'name', children: 'children' }"
+                value-key="id"
+                placeholder="选择上级分类"
+                check-strictly
+                clearable
+              />
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row :gutter="20">
+          <el-col :span="24">
+            <el-form-item label="分类名称" prop="name">
+              <el-input v-model="form.name" placeholder="请输入分类名称" />
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row :gutter="20">
+          <el-col :span="24">
+            <el-form-item label="显示顺序" prop="orderNum">
+              <el-input-number
+                style="width: 100%"
+                v-model="form.orderNum"
+                placeholder="请输入显示顺序"
+                controls-position="right"
+                :min="0"
+              />
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row :gutter="20">
+          <el-col :span="24">
+            <el-form-item label="备注" prop="remark">
+              <el-input
+                v-model="form.remark"
+                type="textarea"
+                placeholder="请输入备注"
+                maxlength="256"
+                show-word-limit
+              />
+            </el-form-item>
+          </el-col>
+        </el-row>
       </el-form>
       <template #footer>
         <div class="dialog-footer">
@@ -198,8 +282,8 @@
   </div>
 </template>
 
-<script setup>
-import { ref, reactive, onMounted, nextTick, getCurrentInstance } from "vue";
+<script setup name="ModelClassify">
+import { ref, reactive, toRefs, nextTick, getCurrentInstance } from "vue";
 import {
   listClassify,
   getClassify,
@@ -207,127 +291,81 @@ import {
   addClassify,
   updateClassify,
 } from "@/api/modelReconstitution/classify";
+import { parseTime } from "@/utils/anivia.js";
 import { ElMessage, ElMessageBox } from "element-plus";
 
-// Get access to the current instance to use globally registered functions
 const { proxy } = getCurrentInstance();
 
-// Define refs for form elements
-const queryFormRef = ref(null);
-const formRef = ref(null);
-
-// 遮罩层
-const loading = ref(true);
-// 显示搜索条件
-const showSearch = ref(true);
-// 模型分类表格数据
 const classifyList = ref([]);
-// 模型分类树选项
-const classifyOptions = ref([]);
-// 弹出层标题
-const title = ref("");
-// 是否显示弹出层
+
+// 列显隐信息
+const columns = ref([
+  { key: 1, label: "分类名称", visible: true },
+  { key: 2, label: "显示顺序", visible: true },
+  { key: 3, label: "备注", visible: true },
+  { key: 4, label: "创建人", visible: true },
+  { key: 5, label: "创建时间", visible: true },
+  { key: 6, label: "操作", visible: true },
+]);
+
+const getColumnVisibility = (key) => {
+  const column = columns.value.find((col) => col.key === key);
+  if (!column) return true;
+  return column.visible;
+};
+
 const open = ref(false);
-// 是否展开，默认全部展开
-const isExpandAll = ref(false);
-// 重新渲染表格状态
-const refreshTable = ref(true);
+const loading = ref(true);
+const showSearch = ref(true);
 const total = ref(0);
+const title = ref("");
+const categoryOptions = ref([]);
+const refreshTable = ref(true);
+const isExpandAll = ref(true);
 
-// 查询参数
-const queryParams = reactive({
-  parentId: null,
-  ancestors: null,
-  name: null,
-  description: null,
-  validFlag: null,
-  creatorId: null,
-  updatorId: null,
-  pageNum: 1,
-  pageSize: 10,
+const data = reactive({
+  form: {},
+  queryParams: {
+    pageNum: 1,
+    pageSize: 10,
+    parentId: null,
+    name: null,
+  },
+  rules: {
+    name: [{ required: true, message: "分类名称不能为空", trigger: "blur" }],
+    orderNum: [
+      { required: true, message: "显示顺序不能为空", trigger: "blur" },
+      { type: "number", message: "显示顺序必须为数字", trigger: "blur" },
+    ],
+  },
 });
 
-// 表单参数
-const form = reactive({
-  id: null,
-  companyId: null,
-  parentId: null,
-  ancestors: null,
-  name: null,
-  description: null,
-  validFlag: null,
-  delFlag: null,
-  createBy: null,
-  creatorId: null,
-  createTime: null,
-  updateBy: null,
-  updatorId: null,
-  updateTime: null,
-  remark: null,
-});
-
-// 表单校验
-const rules = reactive({
-  validFlag: [
-    {
-      required: true,
-      message: "是否有效 0：无效，1：有效不能为空",
-      trigger: "blur",
-    },
-  ],
-  delFlag: [
-    {
-      required: true,
-      message: "删除标志 1：已删除，0：未删除不能为空",
-      trigger: "blur",
-    },
-  ],
-  createTime: [
-    { required: true, message: "创建时间不能为空", trigger: "blur" },
-  ],
-  updateTime: [
-    { required: true, message: "更新时间不能为空", trigger: "blur" },
-  ],
-});
-
-onMounted(() => {
-  getList();
-});
+const { queryParams, form, rules } = toRefs(data);
 
 /** 查询模型分类列表 */
-const getList = () => {
+function getList() {
   loading.value = true;
-  listClassify(queryParams).then((response) => {
+  listClassify(queryParams.value).then((response) => {
     classifyList.value = proxy.handleTree(response.data, "id", "parentId");
     loading.value = false;
   });
-};
-
-/** 查询模型分类下拉树结构 */
-const getTreeselect = () => {
-  listClassify().then((response) => {
-    classifyOptions.value = [];
-    const data = { id: 0, name: "顶级节点", children: [] };
-    data.children = proxy.handleTree(response.data, "id", "parentId");
-    classifyOptions.value.push(data);
-  });
-};
+}
 
 // 取消按钮
-const cancel = () => {
+function cancel() {
   open.value = false;
   reset();
-};
+}
 
 // 表单重置
-const reset = () => {
-  Object.assign(form, {
+function reset() {
+  form.value = {
     id: null,
     companyId: null,
     parentId: null,
     ancestors: null,
     name: null,
-    description: null,
+    orderNum: 0,
     validFlag: null,
     delFlag: null,
     createBy: null,
@@ -337,103 +375,129 @@ const reset = () => {
     updatorId: null,
     updateTime: null,
     remark: null,
-  });
-  if (formRef.value) {
-    formRef.value.clearValidate();
+  };
+  if (proxy.$refs.classifyRef) {
+    proxy.$refs.classifyRef.resetFields();
   }
-};
+}
 
 /** 搜索按钮操作 */
-const handleQuery = () => {
-  queryParams.pageNum = 1;
+function handleQuery() {
+  queryParams.value.pageNum = 1;
   getList();
-};
+}
 
 /** 重置按钮操作 */
-const resetQuery = () => {
-  if (queryFormRef.value) {
-    queryFormRef.value.resetFields();
-  }
+function resetQuery() {
+  proxy.resetForm("queryRef");
   handleQuery();
-};
+}
 
 /** 新增按钮操作 */
-const handleAdd = (row) => {
+function handleAdd(row) {
   reset();
-  getTreeselect();
-  if (row != null && row.id) {
-    form.parentId = row.id;
-  } else {
-    form.parentId = 0;
+  listClassify().then((response) => {
+    categoryOptions.value = [];
+    const top = { id: 0, name: "顶级节点", children: [] };
+    top.children = proxy.handleTree(response.data, "id", "parentId");
+    categoryOptions.value.push(top);
+  });
+  if (row) {
+    form.value.parentId = row.id;
   }
   open.value = true;
-  title.value = "添加模型分类";
-};
+  title.value = "新增模型分类";
+}
+
+/** 修改按钮操作 */
+function handleUpdate(row) {
+  reset();
+  listClassify().then((response) => {
+    categoryOptions.value = [];
+    const top = { id: 0, name: "顶级节点", children: [] };
+    top.children = proxy.handleTree(response.data, "id", "parentId");
+    categoryOptions.value.push(top);
+  });
+  const _id = row.id;
+  getClassify(_id).then((response) => {
+    form.value = response.data;
+    if (form.value.orderNum == null) {
+      form.value.orderNum = 0;
+    }
+    open.value = true;
+    title.value = "修改模型分类";
+  });
+}
+
+/** 提交按钮 */
+function submitForm() {
+  proxy.$refs["classifyRef"].validate((valid) => {
+    if (valid) {
+      if (form.value.parentId == null) {
+        form.value.parentId = 0;
+      }
+      if (form.value.id != null) {
+        updateClassify(form.value).then(() => {
+          ElMessage.success("修改成功");
+          open.value = false;
+          getList();
+        });
+      } else {
+        addClassify(form.value).then(() => {
+          ElMessage.success("新增成功");
+          open.value = false;
+          getList();
+        });
+      }
+    }
+  });
+}
+
+/** 删除按钮操作 */
+function handleDelete(row) {
+  const name = row.name;
+
+  // 先检查是否存在子分类
+  listClassify({ parentId: row.id }).then((res) => {
+    console.log(res,'res11111')
+    if (res.data && res.data.length > 0) {
+      ElMessage.warning("该分类下存有子分类，不可删除");
+      return;
+    }
+    ElMessageBox.confirm(
+      '是否确认删除模型分类名称为"' + name + '"的数据项？',
+      "警告",
+      {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning",
+      }
+    )
+      .then(() => delClassify(row.id))
+      .then(() => {
+        getList();
+        ElMessage.success("删除成功");
+      })
+      .catch(() => {});
+  });
+}
 
 /** 展开/折叠操作 */
-const toggleExpandAll = () => {
+function toggleExpandAll() {
   refreshTable.value = false;
   isExpandAll.value = !isExpandAll.value;
   nextTick(() => {
     refreshTable.value = true;
   });
-};
+}
 
-/** 修改按钮操作 */
-const handleUpdate = (row) => {
-  reset();
-  getTreeselect();
-  if (row != null) {
-    form.parentId = row.id;
-  }
-  getClassify(row.id).then((response) => {
-    Object.assign(form, response.data);
-    open.value = true;
-    title.value = "修改模型分类";
-  });
-};
-
-/** 提交按钮 */
-const submitForm = () => {
-  if (formRef.value) {
-    formRef.value.validate((valid) => {
-      if (valid) {
-        if (form.id != null) {
-          updateClassify(form).then((response) => {
-            ElMessage.success("修改成功");
-            open.value = false;
-            getList();
-          });
-        } else {
-          addClassify(form).then((response) => {
-            ElMessage.success("新增成功");
-            open.value = false;
-            getList();
-          });
-        }
-      }
-    });
-  }
-};
-
-/** 删除按钮操作 */
-const handleDelete = (row) => {
-  ElMessageBox.confirm(
-    '是否确认删除模型分类名称为"' + row.name + '"的数据项？',
-    "警告",
-    {
-      confirmButtonText: "确定",
-      cancelButtonText: "取消",
-      type: "warning",
-    }
-  )
-    .then(() => {
-      return delClassify(row.id);
-    })
-    .then(() => {
-      getList();
-      ElMessage.success("删除成功");
-    })
-    .catch(() => {});
-};
+getList();
 </script>
+<style lang="scss" scoped>
+  .toggle-expand-all {
+    .svg-icon {
+      font-size: 12px;
+      margin-right: 6px;
+    }
+  }
+</style>

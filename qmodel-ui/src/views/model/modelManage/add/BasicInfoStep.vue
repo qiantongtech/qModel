@@ -131,7 +131,7 @@
                 @blur="handleTagConfirm"
             />
             <el-button
-                v-else
+                v-else-if="canAddTag"
                 class="button-new-tag"
                 size="small"
                 @click="showTagInput"
@@ -183,6 +183,7 @@
 
 <script setup name="BasicInfoStep">
 import { ref, computed, watch, nextTick } from 'vue'
+import { ElMessage } from 'element-plus'
 import { WarningFilled } from '@element-plus/icons-vue'
 import ImageUpload from '@/components/ImageUpload'
 
@@ -195,6 +196,9 @@ const tagsList = ref([])
 const inputVisible = ref(false)
 const inputTagValue = ref('')
 const tagInputRef = ref(null)
+
+const MAX_TAG_COUNT = 2
+const canAddTag = computed(() => tagsList.value.length < MAX_TAG_COUNT)
 
 const parseTags = (val) => {
   if (!val) return []
@@ -227,6 +231,10 @@ const handleCloseTag = (tag) => {
 }
 
 const showTagInput = () => {
+  if (!canAddTag.value) {
+    ElMessage.warning(`最多只能添加 ${MAX_TAG_COUNT} 个标签`)
+    return
+  }
   inputVisible.value = true
   nextTick(() => {
     tagInputRef.value?.input?.focus()
@@ -235,11 +243,20 @@ const showTagInput = () => {
 
 const handleTagConfirm = () => {
   const value = inputTagValue.value.trim()
-  if (value) {
-    if (!tagsList.value.some((item) => item.name === value)) {
-      tagsList.value.push({ name: value })
-      syncTags()
-    }
+  if (!value) {
+    inputVisible.value = false
+    inputTagValue.value = ''
+    return
+  }
+  if (!canAddTag.value) {
+    ElMessage.warning(`最多只能添加 ${MAX_TAG_COUNT} 个标签`)
+    inputVisible.value = false
+    inputTagValue.value = ''
+    return
+  }
+  if (!tagsList.value.some((item) => item.name === value)) {
+    tagsList.value.push({ name: value })
+    syncTags()
   }
   inputVisible.value = false
   inputTagValue.value = ''
@@ -310,7 +327,7 @@ defineExpose({
   flex-direction: column;
 
   :deep(.el-form-item) {
-    margin-bottom: 14px;
+    margin-bottom: 10px;
   }
 }
 

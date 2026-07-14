@@ -69,6 +69,9 @@ public class ModelClassifySaveReqVO extends BaseEntity {
     @Schema(description = "分类描述", example = "")
     private String description;
 
+    @Schema(description = "显示顺序", example = "")
+    private Integer orderNum;
+
     @Schema(description = "备注", example = "")
     private String remark;
 

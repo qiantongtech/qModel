@@ -77,6 +77,10 @@ public class ModelClassifyRespVO implements Serializable {
     @Schema(description = "分类描述", example = "")
     private String description;
 
+    @Excel(name = "显示顺序")
+    @Schema(description = "显示顺序", example = "")
+    private Integer orderNum;
+
     @Excel(name = "是否有效 0：无效，1：有效")
     @Schema(description = "是否有效 0：无效，1：有效", example = "")
     private Boolean validFlag;

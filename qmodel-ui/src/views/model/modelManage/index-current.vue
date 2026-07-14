@@ -32,207 +32,185 @@
 
 <template>
   <div class="app-container model-manage-page">
-    <el-container>
-      <!-- 左侧分类树 -->
-      <DeptTree
-        ref="deptTreeRef"
-        :deptOptions="classifyOptions"
-        :leftWidth="leftWidth"
-        placeholder="请输入分类名称"
-        @nodeClick="handleNodeClick"
-      />
-
-      <!-- 右侧模型卡片 -->
-      <el-main>
-        <div class="pagecont-top" v-show="showSearch">
-          <el-form
-            :model="queryParams"
-            ref="queryFormRef"
-            :inline="true"
-            v-show="showSearch"
-            class="search-form btn-style"
+    <div class="pagecont-top" v-show="showSearch">
+      <el-form
+        :model="queryParams"
+        ref="queryFormRef"
+        :inline="true"
+        v-show="showSearch"
+        class="search-form btn-style"
+      >
+        <el-form-item label="模型名称" prop="name">
+          <el-input
+            v-model="queryParams.name"
+            placeholder="请输入模型名称"
+            clearable
+            @keyup.enter="handleQuery"
+          />
+        </el-form-item>
+         <el-form-item label="模型编码" prop="code">
+          <el-input
+            v-model="queryParams.code"
+            placeholder="请输入模型编码"
+            clearable
+            @keyup.enter="handleQuery"
+          />
+        </el-form-item>
+        <el-form-item label="接入方式" prop="accessType">
+          <el-select
+            v-model="queryParams.accessType"
+            placeholder="请选择接入方式"
+            clearable
+            style="width: 210px"
           >
-            <el-form-item label="模型名称" prop="name">
-              <el-input
-                v-model="queryParams.name"
-                placeholder="请输入模型名称"
-                clearable
-                @keyup.enter="handleQuery"
-              />
-            </el-form-item>
-            <el-form-item label="模型编码" prop="code">
-              <el-input
-                v-model="queryParams.code"
-                placeholder="请输入模型编码"
-                clearable
-                @keyup.enter="handleQuery"
-              />
-            </el-form-item>
-            <el-form-item label="接入方式" prop="accessType">
-              <el-select
-                v-model="queryParams.accessType"
-                placeholder="请选择接入方式"
-                clearable
-                style="width: 210px"
-              >
-                <el-option key="API" label="API" value="API" />
-                <el-option key="PYTHON" label="Python" value="PYTHON" />
-              </el-select>
-            </el-form-item>
-            <el-form-item label="状态" prop="status">
-              <el-select
-                v-model="queryParams.status"
-                placeholder="请选择状态"
-                clearable
-                style="width: 210px"
-              >
-                <el-option key="0" label="停用" value="0" />
-                <el-option key="1" label="启用" value="1" />
-                <el-option key="2" label="构建部署中" value="2" />
-                <el-option key="3" label="构建失败" value="3" />
-              </el-select>
-            </el-form-item>
-            <el-form-item>
-              <el-button
-                plain
-                type="primary"
-                @click="handleQuery"
-                @mousedown="(e) => e.preventDefault()"
-              >
-                <i class="iconfont-mini icon-a-zu22377 mr5"></i>查询
-              </el-button>
-              <el-button
-                @click="resetQuery"
-                @mousedown="(e) => e.preventDefault()"
-                class="btn"
-              >
-                <i class="iconfont-mini icon-a-zu22378 mr5"></i>重置
-              </el-button>
-            </el-form-item>
-          </el-form>
-        </div>
-        <div class="content-panel" :class="{ 'has-search': showSearch }">
-          <div class="toolbar-row">
-            <div class="btn-style">
-            <el-button
-              type="primary"
-              @click="handleAdd"
-              plain
-              v-hasPermi="['model:model:add']"
-              @mousedown="(e) => e.preventDefault()"
-            >
-              <i class="iconfont-mini icon-xinzeng"></i>新增模型
-            </el-button>
-          </div>
-          <right-toolbar
-            v-model:showSearch="showSearch"
-            @queryTable="getList"
-          ></right-toolbar>
-        </div>
-        <div class="pagecont-bottom" v-loading="loading">
-          <div class="card-scroll">
-            <div class="card-box" v-if="total > 0">
-              <el-card
-                shadow="never"
-                v-for="(item, index) in modelList"
-                :key="index"
-              >
-                <div class="card-item">
-                  <div class="item-top">
-                    <div class="top-icon">
-                      <img :src="getImage(item)" alt="应用图标" @error="handleImageError" />
-                    </div>
-                    <div class="top-info">
-                      <el-tooltip
-                        :content="item.name"
-                        placement="top"
-                        effect="light"
-                        :disabled="!nameOverflowMap[index]"
-                      >
-                        <div
-                          class="top-name ellipsis"
-                          @mouseenter="(e) => checkNameOverflow(e, index)"
-                        >{{ item.name }}</div>
-                      </el-tooltip>
-                      <div class="top-tags">
-                        <dict-tag :options="buildTagOptions(item.tags)" :value="buildTagValues(item.tags)" separator="," />
-                        <dict-tag :options="[{ value: formatVersion(item.version), label: formatVersion(item.version), elTagType: 'info' }]" :value="formatVersion(item.version)" />
-                      </div>
-                    </div>
-                    <div class="top-status" :class="getStatusClass(item.status)">
-                      <span class="status-dot"></span>
-                      <span class="status-name">{{ getStatusText(item.status) }}</span>
-                    </div>
-                  </div>
-                  <div class="item-con">
-                    <div class="con-row">
-                      <span class="con-label">模型编码</span>
-                      <span class="con-value ellipsis">{{ item.code || '-' }}</span>
-                    </div>
-                    <div class="con-row">
-                      <span class="con-label">接入方式</span>
-                      <dict-tag :options="model_access_type" :value="item.accessType" class="con-value access-tag" />
-                    </div>
-                    <div class="con-row">
-                      <span class="con-label">创建时间</span>
-                      <span class="con-value">{{ parseTime(item.createTime, '{y}-{m}-{d} {h}:{i}') }}</span>
-                    </div>
-                  </div>
-                  <div class="item-btns">
-                    <el-button
-                      link
-                      type="primary"
-                      icon="Edit"
-                      :disabled="['1', '2', '3'].includes(String(item.status))"
-                      @click.stop="handleUpdate(item)"
-                    >修改</el-button>
-                    <div class="btn-divider"></div>
-                    <el-button
-                      link
-                      type="primary"
-                      icon="VideoPlay"
-                      :disabled="String(item.status) === '2' || String(item.status) === '3'"
-                      @click.stop="handleTest(item)"
-                    >调试</el-button>
-                    <div class="btn-divider"></div>
-                    <el-button
-                      link
-                      :type="String(item.status) === '1' ? 'info' : 'primary'"
-                      :icon="String(item.status) === '1' ? 'CircleClose' : 'CircleCheck'"
-                      :disabled="String(item.status) === '2' || String(item.status) === '3'"
-                      @click.stop="handleToggleStatus(item)"
-                    >{{ String(item.status) === '1' ? '停用' : '启用' }}</el-button>
-                    <div class="btn-divider"></div>
-                    <el-button
-                      link
-                      type="danger"
-                      icon="Delete"
-                      :disabled="['1', '2', '3'].includes(String(item.status))"
-                      @click.stop="handleDelete(item)"
-                    >删除</el-button>
+            <el-option key="API" label="API" value="API" />
+            <el-option key="PYTHON" label="Python" value="PYTHON" />
+          </el-select>
+        </el-form-item>
+        <el-form-item label="状态" prop="status">
+          <el-select
+            v-model="queryParams.status"
+            placeholder="请选择状态"
+            clearable
+            style="width: 210px"
+          >
+            <el-option key="0" label="停用" value="0" />
+            <el-option key="1" label="启用" value="1" />
+            <el-option key="2" label="构建部署中" value="2" />
+            <el-option key="3" label="构建失败" value="3" />
+          </el-select>
+        </el-form-item>
+        <el-form-item>
+          <el-button
+            plain
+            type="primary"
+            @click="handleQuery"
+            @mousedown="(e) => e.preventDefault()"
+          >
+            <i class="iconfont-mini icon-a-zu22377 mr5"></i>查询
+          </el-button>
+          <el-button
+            @click="resetQuery"
+            @mousedown="(e) => e.preventDefault()"
+            class="btn"
+          >
+            <i class="iconfont-mini icon-a-zu22378 mr5"></i>重置
+          </el-button>
+        </el-form-item>
+      </el-form>
+      <div class="btn-style">
+        <el-button
+          type="primary"
+          @click="handleAdd"
+          plain
+          v-hasPermi="['model:model:add']"
+          @mousedown="(e) => e.preventDefault()"
+        >
+          <i class="iconfont-mini icon-xinzeng"></i>新增模型
+        </el-button>
+      </div>
+    </div>
+    <div class="pagecont-bottom" v-loading="loading">
+      <div class="card-scroll">
+        <div class="card-box" v-if="total > 0">
+          <el-card
+            shadow="never"
+            v-for="(item, index) in modelList"
+            :key="index"
+          >
+            <div class="card-item">
+              <div class="item-top">
+                <div class="top-icon">
+                  <img :src="getImage(item)" alt="应用图标" @error="handleImageError" />
+                </div>
+                <div class="top-info">
+                  <el-tooltip
+                    :content="item.name"
+                    placement="top"
+                    effect="light"
+                    :disabled="!nameOverflowMap[index]"
+                  >
+                    <div
+                      class="top-name ellipsis"
+                      @mouseenter="(e) => checkNameOverflow(e, index)"
+                    >{{ item.name }}</div>
+                  </el-tooltip>
+                  <div class="top-tags">
+                    <dict-tag :options="buildTagOptions(item.tags)" :value="buildTagValues(item.tags)" separator="," />
+                    <dict-tag :options="[{ value: formatVersion(item.version), label: formatVersion(item.version), elTagType: 'info' }]" :value="formatVersion(item.version)" />
                   </div>
                 </div>
-              </el-card>
+                <div class="top-status" :class="getStatusClass(item.status)">
+                  <span class="status-dot"></span>
+                  <span class="status-name">{{ getStatusText(item.status) }}</span>
+                </div>
+              </div>
+              <div class="item-con">
+                <div class="con-row">
+                  <span class="con-label">模型编码</span>
+                  <span class="con-value ellipsis">{{ item.code || '-' }}</span>
+                </div>
+                <div class="con-row">
+                  <span class="con-label">接入方式</span>
+                  <dict-tag :options="model_access_type" :value="item.accessType" class="con-value access-tag" />
+                </div>
+                <div class="con-row">
+                  <span class="con-label">创建时间</span>
+                  <span class="con-value">{{ parseTime(item.createTime, '{y}-{m}-{d} {h}:{i}') }}</span>
+                </div>
+              </div>
+              <div class="item-btns">
+                <el-button
+                  link
+                  type="primary"
+                  icon="Edit"
+                  :disabled="['1', '2', '3'].includes(String(item.status))"
+                  @click.stop="handleUpdate(item)"
+                >修改</el-button>
+                <div class="btn-divider"></div>
+                <el-button
+                  link
+                  type="primary"
+                  icon="VideoPlay"
+                  :disabled="String(item.status) === '2' || String(item.status) === '3'"
+                  @click.stop="handleTest(item)"
+                >调试</el-button>
+                <div class="btn-divider"></div>
+                <el-button
+                  link
+                  :type="String(item.status) === '1' ? 'info' : 'primary'"
+                  :icon="String(item.status) === '1' ? 'CircleClose' : 'CircleCheck'"
+                  :disabled="String(item.status) === '2' || String(item.status) === '3'"
+                  @click.stop="handleToggleStatus(item)"
+                >{{ String(item.status) === '1' ? '停用' : '启用' }}</el-button>
+                <div class="btn-divider"></div>
+                <el-button
+                  link
+                  type="danger"
+                  icon="Delete"
+                  :disabled="['1', '2', '3'].includes(String(item.status))"
+                  @click.stop="handleDelete(item)"
+                >删除</el-button>
+              </div>
             </div>
+          </el-card>
+        </div>
 
-            <el-empty
-              description="暂无数据，请添加模型"
-              v-if="total == 0 && !loading"
-            ></el-empty>
-          </div>
-          <div class="pagefy" v-if="total > 0">
-            <pagination
-              :pageSizes="[12, 24, 36, 48]"
-              :total="total"
-              v-model:page="queryParams.pageNum"
-              v-model:limit="queryParams.pageSize"
-              @pagination="getList"
-            />
-          </div>
-        </div>
-        </div>
-      </el-main>
-    </el-container>
+        <el-empty
+          description="暂无数据，请添加模型"
+          v-if="total == 0 && !loading"
+        ></el-empty>
+      </div>
+      <div class="pagefy" v-if="total > 0">
+        <pagination
+          :pageSizes="[12, 24, 36, 48]"
+          :total="total"
+          v-model:page="queryParams.pageNum"
+          v-model:limit="queryParams.pageSize"
+          @pagination="getList"
+        />
+      </div>
+    </div>
   </div>
 </template>
 
@@ -248,8 +226,6 @@ import {
   delModel,
   updateModelStatus,
 } from "@/api/model/model";
-import { listClassify } from "@/api/model/classify";
-import DeptTree from "@/components/DeptTree";
 import { ElMessage, ElMessageBox } from "element-plus";
 import DictTag from '@/components/DictTag'
 import defaultCover from '@/assets/system/images/model/version/card-title.svg';
@@ -259,7 +235,6 @@ const { proxy } = getCurrentInstance();
 const { model_access_type } = proxy.useDict('model_access_type');
 
 const queryFormRef = ref(null);
-const deptTreeRef = ref(null);
 
 const loading = ref(true);
 const showSearch = ref(true);
@@ -267,21 +242,15 @@ const total = ref(0);
 const modelList = ref([]);
 const nameOverflowMap = reactive({});
 
-// 左侧分类树
-const classifyOptions = ref([]);
-const leftWidth = ref(300);
-
 const queryParams = reactive({
   pageNum: 1,
   pageSize: 12,
   orderByColumn: "create_time",
   isAsc: "desc",
-  classifyId: undefined,
-  classifyIdList: [],
 });
 
 onMounted(() => {
-  getTreeselect();
+  getList();
 });
 
 const getList = () => {
@@ -302,45 +271,8 @@ const resetQuery = () => {
   if (queryFormRef.value) {
     queryFormRef.value.resetFields();
   }
-  if (deptTreeRef.value) {
-    deptTreeRef.value.resetTree();
-  }
-  queryParams.classifyId = undefined;
-  queryParams.classifyIdList = [];
-  handleQuery();
-};
-
-/** 查询分类下拉树结构 */
-const getTreeselect = () => {
-  listClassify().then((res) => {
-    const treeData = proxy.handleTree(res.data, "id");
-    classifyOptions.value = [
-      {
-        id: 0,
-        name: "模型分类",
-        children: treeData,
-        count: treeData.length,
-        totalCount: treeData.reduce((sum, item) => sum + (item.totalCount || 0), 0),
-      },
-    ];
-    handleNodeClick(classifyOptions.value[0]);
-  });
-};
-
-// 节点单击事件
-const handleNodeClick = (data) => {
-  const ids = [];
-  collectIds(data, ids);
-  queryParams.classifyIdList = ids;
   queryParams.classifyId = undefined;
   handleQuery();
-};
-
-const collectIds = (node, ids) => {
-  ids.push(node.id);
-  if (node.children && Array.isArray(node.children)) {
-    node.children.forEach((child) => collectIds(child, ids));
-  }
 };
 
 const getStatusText = (val) => {
@@ -490,15 +422,7 @@ function getImage(row) {
   display: flex;
   flex-direction: column;
   height: calc(100vh - 124px);
-
-  :deep(.el-container) {
-    height: 100%;
-  }
-}
-
-.el-main {
   overflow: hidden;
-  padding: 2px 0;
 }
 
 .pagecont-top {
@@ -528,6 +452,21 @@ function getImage(row) {
   }
 }
 
+.add-btn-top {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0 16px;
+  height: 32px;
+  border-radius: 4px;
+
+  .add-icon {
+    width: 16px;
+    height: 16px;
+  }
+}
+
 .pagecont-bottom {
   flex: 1;
   display: flex;
@@ -537,8 +476,9 @@ function getImage(row) {
   background-color: transparent;
   border-radius: 0;
   box-shadow: none;
-  margin-top: 0;
+  margin-top: 15px;
   padding: 0;
+  margin-bottom: 60px;
 }
 
 .card-scroll {
@@ -546,30 +486,32 @@ function getImage(row) {
   overflow-y: auto;
   overflow-x: hidden;
   min-height: 0;
-  padding-bottom: 12px;
 }
 
 .card-box {
   width: 100%;
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(min(100%, 280px), 1fr));
+  grid-template-columns: repeat(4, 1fr);
   grid-gap: 15px;
   padding: 0;
   align-content: flex-start;
 }
 
 .pagefy {
-  flex-shrink: 0;
-  height: 52px;
-  background: transparent;
-  border-top: 1px solid #f0f0f0;
-  line-height: 52px;
-  margin: 0;
-  padding: 0 18px 0 0;
-
-  :deep(.pagination-container) {
-    margin-top: 0;
-  }
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    left: 0;
+    height: 60px;
+    background: #ffffff;
+    border-radius: 2px 2px 2px 2px;
+    line-height: 60px;
+    margin: 0;
+    padding: 0 18px 0 0;
+    flex: none;
+    .pagination-container {
+        margin-top: 0;
+    }
 }
 
 :deep(.el-card) {
@@ -800,27 +742,5 @@ function getImage(row) {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-}
-
-.toolbar-row {
-  flex-shrink: 0;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0 0 12px;
-}
-
-.content-panel {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
-  background: #fff;
-  border-radius: 2px;
-  padding: 12px 20px 0;
-
-  &.has-search {
-    margin-top: 15px;
-  }
 }
 </style>

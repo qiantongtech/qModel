@@ -165,6 +165,19 @@ defineExpose({
 </script>
 
 <style lang="scss" scoped>
+.param-define-step {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.param-form {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+
 .h2-titles {
   font-size: 16px;
   color: rgba(0, 0, 0, 0.85);
@@ -186,6 +199,8 @@ defineExpose({
 
 .schema-row {
   align-items: stretch;
+  flex: 1;
+  min-height: 0;
 
   .editor-card,
   .preview-card {
@@ -193,7 +208,7 @@ defineExpose({
     border-radius: 4px;
     overflow: hidden;
     height: 100%;
-    min-height: 560px;
+    min-height: 0;
     display: flex;
     flex-direction: column;
   }
@@ -254,7 +269,7 @@ defineExpose({
       font-family: 'Consolas', 'Monaco', monospace;
       resize: none;
       height: 100% !important;
-      min-height: 510px;
+      min-height: 0;
     }
   }
 

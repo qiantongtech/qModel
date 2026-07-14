@@ -74,6 +74,9 @@ public class ModelClassifyDO extends BaseEntity {
     /** 分类描述 */
     private String description;
 
+    /** 显示顺序 */
+    private Integer orderNum;
+
     /** 是否有效 0：无效，1：有效 */
     private Boolean validFlag;
 
