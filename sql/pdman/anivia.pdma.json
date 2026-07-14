@@ -4,7 +4,7 @@
   "avatar": "",
   "version": "4.9.4",
   "createdTime": "2024-8-30 21:54:48",
-  "updatedTime": "2026-7-14 10:14:14",
+  "updatedTime": "2026-7-14 10:34:31",
   "dbConns": [],
   "profile": {
     "default": {
@@ -14996,6 +14996,24 @@
           "id": "9BB3AE38-D568-456A-BBC8-80857E08F694"
         },
         {
+          "defKey": "failed_ackages",
+          "defName": "安装失败的依赖包列表JSON",
+          "comment": "",
+          "type": "",
+          "len": "",
+          "scale": "",
+          "primaryKey": false,
+          "notNull": false,
+          "autoIncrement": false,
+          "defaultValue": "",
+          "hideInGraph": false,
+          "refDict": "",
+          "baseType": "B17BDED3-085F-40E1-9019-3B79CF2BF075",
+          "extProps": {},
+          "domain": "D3C06E04-3E8E-4FA7-BD2F-A62B5206E305",
+          "id": "C41A9E4B-356C-42CA-BA12-D00FD22A8791"
+        },
+        {
           "defKey": "dockerfile_content",
           "defName": "dockerFile内容",
           "comment": "",
@@ -15048,24 +15066,6 @@
           "extProps": {},
           "domain": "D3C06E04-3E8E-4FA7-BD2F-A62B5206E305",
           "id": "285B63EF-89E8-4B41-A91D-435CE716D272"
-        },
-        {
-          "defKey": "failed_ackages",
-          "defName": "安装失败的依赖包列表JSON",
-          "comment": "",
-          "type": "",
-          "len": "",
-          "scale": "",
-          "primaryKey": false,
-          "notNull": false,
-          "autoIncrement": false,
-          "defaultValue": "",
-          "hideInGraph": false,
-          "refDict": "",
-          "baseType": "B17BDED3-085F-40E1-9019-3B79CF2BF075",
-          "extProps": {},
-          "domain": "D3C06E04-3E8E-4FA7-BD2F-A62B5206E305",
-          "id": "C41A9E4B-356C-42CA-BA12-D00FD22A8791"
         },
         {
           "defKey": "requirements",
@@ -15587,9 +15587,9 @@
           "defaultValue": "",
           "hideInGraph": false,
           "refDict": "",
-          "baseType": "FC9790A7-36B8-4A48-8F9A-BC1042BCFE64",
+          "baseType": "89D69E81-EA34-42EE-9FA2-93B8BD27E098",
           "extProps": {},
-          "domain": "D9CF4D8E-CD60-499C-B46E-2304C7ED36DE",
+          "domain": "C49EBB99-CEE0-40B1-9146-6779D2CEC2FD",
           "id": "D40FE825-7CB7-48EA-8076-3816A5D158D6"
         },
         {
@@ -15605,9 +15605,9 @@
           "defaultValue": "",
           "hideInGraph": false,
           "refDict": "",
-          "baseType": "FC9790A7-36B8-4A48-8F9A-BC1042BCFE64",
+          "baseType": "89D69E81-EA34-42EE-9FA2-93B8BD27E098",
           "extProps": {},
-          "domain": "D9CF4D8E-CD60-499C-B46E-2304C7ED36DE",
+          "domain": "C49EBB99-CEE0-40B1-9146-6779D2CEC2FD",
           "id": "FA1131F0-776E-4A9E-80DD-EDCD57759504"
         },
         {

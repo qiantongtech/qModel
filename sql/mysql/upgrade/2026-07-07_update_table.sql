@@ -38,25 +38,95 @@ CREATE TABLE model_file_resource
 ) COMMENT = '模型文件部署表';
 
 
-ALTER TABLE QMODEL_DEV."MODEL" ADD CODE VARCHAR2(128);
+ALTER TABLE QMODEL_DEV."MODEL"
+    ADD CODE VARCHAR2(128);
 
-COMMENT ON COLUMN QMODEL_DEV."MODEL".CODE IS '编码';
-
-
-ALTER TABLE QMODEL_DEV."MODEL" ADD ACCESS_TYPE INTEGER;
-
-COMMENT ON COLUMN QMODEL_DEV."MODEL".ACCESS_TYPE IS '编码';
+COMMENT
+ON COLUMN QMODEL_DEV."MODEL".CODE IS '编码';
 
 
-ALTER TABLE QMODEL_DEV."MODEL" ADD STATUS INTEGER;
+ALTER TABLE QMODEL_DEV."MODEL"
+    ADD ACCESS_TYPE INTEGER;
 
-COMMENT ON COLUMN QMODEL_DEV."MODEL".STATUS IS '状态: 0-停用, 1-启用';
-
-
-ALTER TABLE QMODEL_DEV."MODEL" ADD AUTHOR VARCHAR2(128);
-
-COMMENT ON COLUMN QMODEL_DEV."MODEL".AUTHOR IS '作者';
+COMMENT
+ON COLUMN QMODEL_DEV."MODEL".ACCESS_TYPE IS '编码';
 
 
+ALTER TABLE QMODEL_DEV."MODEL"
+    ADD STATUS INTEGER;
+
+COMMENT
+ON COLUMN QMODEL_DEV."MODEL".STATUS IS '状态: 0-停用, 1-启用';
+
+
+ALTER TABLE QMODEL_DEV."MODEL"
+    ADD AUTHOR VARCHAR2(128);
+
+COMMENT
+ON COLUMN QMODEL_DEV."MODEL".AUTHOR IS '作者';
+
+
+DROP TABLE IF EXISTS model_invoke_history;
+CREATE TABLE model_invoke_history
+(
+    `id`             BIGINT AUTO_INCREMENT COMMENT 'ID',
+    `model_id`       BIGINT   NOT NULL COMMENT '模型id',
+    `model_name`     VARCHAR(128) COMMENT '模型名称',
+    `resource_id`    BIGINT COMMENT '模型配置资源id',
+    `version_id`     BIGINT COMMENT '模型版本id',
+    `request_method` TINYINT(4) UNSIGNED  DEFAULT 1 COMMENT '请求方式;HTTP请求方式：0=GET，1=POST，2=PUT，3=DELETE',
+    `invoke_type`    TINYINT(4) UNSIGNED  DEFAULT 1 COMMENT '调用类型;1=在线测试，2=网关服务',
+    `input_params`   TEXT COMMENT '输入参数（JSON格式）',
+    `output_result`  TEXT COMMENT '输出结果（JSON格式）',
+    `start_time`     DATETIME COMMENT '开始时间',
+    `end_time`       DATETIME COMMENT '结束时间',
+    `duration`       INT COMMENT '执行耗时（毫秒）',
+    `error_message`  TEXT COMMENT '错误信息',
+    `status`         TINYINT(4) UNSIGNED  DEFAULT 0 COMMENT '调用状态;0=执行中，1=成功，2=失败，3=超时，4=参数校验阻塞',
+    `client_ip`      VARCHAR(128) COMMENT '客户端操作IP',
+    `valid_flag`     TINYINT(1) NOT NULL DEFAULT 1 COMMENT '是否有效;0：无效，1：有效',
+    `del_flag`       TINYINT(1) NOT NULL DEFAULT 0 COMMENT '删除标志;1：已删除，0：未删除',
+    `create_by`      VARCHAR(32) COMMENT '创建人',
+    `creator_id`     BIGINT COMMENT '创建人id',
+    `create_time`    DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    `update_by`      VARCHAR(32) COMMENT '更新人',
+    `updator_id`     BIGINT COMMENT '更新人id',
+    `update_time`    DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '更新时间',
+    `remark`         VARCHAR(512) COMMENT '备注',
+    PRIMARY KEY (id)
+) COMMENT = '模型调用历史记录';
+
+
+DROP TABLE IF EXISTS model_build_log;
+CREATE TABLE model_build_log
+(
+    `id`                 BIGINT AUTO_INCREMENT COMMENT 'ID',
+    `resource_id`        BIGINT   NOT NULL COMMENT '模型文件id',
+    `model_id`           BIGINT COMMENT '模型id',
+    `model_name`         VARCHAR(128) COMMENT '模型名称',
+    `version_id`         BIGINT COMMENT '版本id',
+    `build_type`         TINYINT(4) UNSIGNED  DEFAULT 1 COMMENT '构建类型;构建类型：1=依赖安装，2=Docker镜像构建',
+    `status`             TINYINT(4) UNSIGNED  DEFAULT 0 COMMENT '构建状态;构建状态：0=待执行，1=执行中，2=成功，3=失败',
+    `start_time`         DATETIME COMMENT '开始时间',
+    `end_time`           DATETIME COMMENT '结束时间',
+    `duration`           INT COMMENT '执行耗时',
+    `installed_packages` TEXT COMMENT '已存在的依赖包列表JSON',
+    `missing_packages`   TEXT COMMENT '缺失失败的依赖包列表JSON',
+    `failed_ackages`     TEXT COMMENT '安装失败的依赖包列表JSON',
+    `dockerfile_content` TEXT COMMENT 'dockerFile内容',
+    `build_log`          TEXT COMMENT '构建日志',
+    `error_message`      TEXT COMMENT '错误日志',
+    `requirements`       TEXT COMMENT 'requirements.txt 内容',
+    `valid_flag`         TINYINT(1) NOT NULL DEFAULT 1 COMMENT '是否有效;0：无效，1：有效',
+    `del_flag`           TINYINT(1) NOT NULL DEFAULT 0 COMMENT '删除标志;1：已删除，0：未删除',
+    `create_by`          VARCHAR(32) COMMENT '创建人',
+    `creator_id`         BIGINT COMMENT '创建人id',
+    `create_time`        DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    `update_by`          VARCHAR(32) COMMENT '更新人',
+    `updator_id`         BIGINT COMMENT '更新人id',
+    `update_time`        DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '更新时间',
+    `remark`             VARCHAR(512) COMMENT '备注',
+    PRIMARY KEY (id)
+) COMMENT = '构建日志表';
 
 
