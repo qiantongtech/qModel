@@ -67,6 +67,10 @@ public class ModelRespVO implements Serializable {
     @Schema(description = "分类id", example = "")
     private Long classifyId;
 
+    @Excel(name = "分类名称")
+    @Schema(description = "分类名称", example = "")
+    private String classifyName;
+
     @Excel(name = "名称")
     @Schema(description = "名称", example = "")
     private String name;

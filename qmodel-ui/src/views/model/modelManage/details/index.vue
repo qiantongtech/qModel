@@ -46,36 +46,7 @@
                 plain
                 @click="goBack"
                 @mousedown="(e) => e.preventDefault()"
-              >
-                <svg-icon
-                  style="width: 1em; height: 1em; margin-right: 3px"
-                  :iconClass="'fhs'"
-                />
-                返回
-              </el-button>
-            </el-col>
-            <el-col :span="1.5">
-              <el-button
-                type="primary"
-                size="small"
-                class="fhbtn"
-                plain
-                @click="handleUpdate"
-                :disabled="viewInfo.whetherPublish == 0"
-              >
-                <Edit class="icon-mini" />
-                修改
-              </el-button>
-            </el-col>
-            <el-col :span="1.5">
-              <el-button
-                :type="viewInfo.whetherPublish == 1 ? 'danger' : 'primary'"
-                size="small"
-                class="fhbtn"
-                plain
-                @click="isWhetherPublish"
-              >
-                {{ viewInfo.whetherPublish == 1 ? '取消发布' : '发布' }}
+              ><svg-icon :iconClass="'fhs'" />返回
               </el-button>
             </el-col>
           </el-row>
@@ -84,8 +55,8 @@
         <el-row :gutter="3" style="margin-bottom: 3px">
           <el-col :span="8">
             <div class="infotop-row border-top">
-              <div class="infotop-row-lable">模型名称</div>
-              <div class="infotop-row-value">{{ viewInfo.name || '-' }}</div>
+              <div class="infotop-row-lable">模型编号</div>
+              <div class="infotop-row-value">{{ viewInfo.code || '-' }}</div>
             </div>
           </el-col>
           <el-col :span="8">
@@ -108,53 +79,40 @@
 
           <el-col :span="8">
             <div class="infotop-row border-top">
-              <div class="infotop-row-lable">接入方式</div>
+              <div class="infotop-row-lable">作者</div>
               <div class="infotop-row-value">
-                <span v-if="viewInfo.accessMode == 1">API接口</span>
-                <span v-else>python脚本</span>
+                <span>{{ viewInfo.author || '-' }}</span>
               </div>
             </div>
           </el-col>
           <el-col :span="8">
             <div class="infotop-row border-top">
-              <div class="infotop-row-lable">创建人</div>
-              <div class="infotop-row-value">{{ viewInfo.createBy || '-' }}</div>
+              <div class="infotop-row-lable">标签</div>
+              <div class="infotop-row-value">{{ viewInfo.tags || '-' }}</div>
             </div>
           </el-col>
-        </el-row>
-
-        <el-row :gutter="3" style="margin-bottom: 3px">
           <el-col :span="8">
             <div class="infotop-row border-top">
               <div class="infotop-row-lable">图标</div>
               <div class="infotop-row-value">
                 <img
-                  v-if="viewInfo.icon"
-                  :src="getIconUrl(viewInfo.icon)"
-                  class="icon-preview"
-                  @click="previewIcon"
-                  alt="图标"
+                    v-if="viewInfo.icon"
+                    :src="getIconUrl(viewInfo.icon)"
+                    class="icon-preview"
+                    @click="previewIcon"
+                    alt="图标"
                 />
                 <span v-else>-</span>
               </div>
             </div>
           </el-col>
-          <el-col :span="8">
+        </el-row>
+
+        <el-row :gutter="3">
+          <el-col :span="24">
             <div class="infotop-row border-top">
-              <div class="infotop-row-lable">上传时间</div>
-              <div class="infotop-row-value">
-                <span>{{ parseTime(viewInfo.createTime, '{y}-{m}-{d} {h}:{i}') || '-' }}</span>
-              </div>
-            </div>
-          </el-col>
-          <el-col :span="8">
-            <div class="infotop-row border-top">
-              <div class="infotop-row-lable">发布状态</div>
-              <div class="infotop-row-value">
-                <el-tag :type="viewInfo.whetherPublish == 1 ? 'success' : 'info'">
-                  {{ viewInfo.whetherPublish == 1 ? '已发布' : '未发布' }}
-                </el-tag>
-              </div>
+              <div class="infotop-row-lable">描述</div>
+              <div class="infotop-row-value">{{ viewInfo.description || '-' }}</div>
             </div>
           </el-col>
         </el-row>
@@ -162,16 +120,7 @@
         <el-row :gutter="3">
           <el-col :span="24">
             <div class="infotop-row border-top">
-              <div class="infotop-row-lable">接口地址</div>
-              <div class="infotop-row-value">{{ viewInfo.interfaceorfileAddress || '-' }}</div>
-            </div>
-          </el-col>
-        </el-row>
-
-        <el-row :gutter="3">
-          <el-col :span="24">
-            <div class="infotop-row border-top">
-              <div class="infotop-row-lable">模型介绍</div>
+              <div class="infotop-row-lable">备注</div>
               <div class="infotop-row-value">{{ viewInfo.remark || '-' }}</div>
             </div>
           </el-col>
@@ -196,7 +145,7 @@
           <OnlineTest
             v-if="activeName === 'onlineTest'"
             :model-id="viewInfo.id"
-            :access-mode="viewInfo.accessMode"
+            :access-mode="viewInfo.accessType === 'API' ? 1 : 0"
             style="margin: 0; padding: 0"
           />
         </el-tab-pane>
@@ -210,7 +159,7 @@
           />
         </el-tab-pane>
 
-        <el-tab-pane name="buildLog">
+        <el-tab-pane name="buildLog" v-if="viewInfo.accessType === 'PYTHON'">
           <template #label>构建日志</template>
           <BuildLog
             v-if="activeName === 'buildLog'"

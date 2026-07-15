@@ -54,11 +54,13 @@ import tech.qiantong.qmodel.module.model.controller.admin.model.vo.ModelPageReqV
 import tech.qiantong.qmodel.module.model.controller.admin.model.vo.ModelRespVO;
 import tech.qiantong.qmodel.module.model.controller.admin.model.vo.ModelSaveReqVO;
 import tech.qiantong.qmodel.module.model.controller.admin.model.vo.ModelSaveWithConfigReqVO;
+import tech.qiantong.qmodel.module.model.dal.dataobject.classify.ModelClassifyDO;
 import tech.qiantong.qmodel.module.model.dal.dataobject.config.ModelConfigDO;
 import tech.qiantong.qmodel.module.model.dal.dataobject.fileResource.ModelFileResourceDO;
 import tech.qiantong.qmodel.module.model.dal.dataobject.model.ModelDO;
 import tech.qiantong.qmodel.module.model.dal.mapper.config.ModelConfigMapper;
 import tech.qiantong.qmodel.module.model.dal.mapper.model.ModelMapper;
+import tech.qiantong.qmodel.module.model.service.classify.IModelClassifyService;
 import tech.qiantong.qmodel.module.model.service.config.IModelConfigService;
 import tech.qiantong.qmodel.module.model.service.model.IModelService;
 import tech.qiantong.qmodel.module.model.service.fileResource.IModelFileResourceService;
@@ -71,6 +73,9 @@ public class ModelServiceImpl extends ServiceImpl<ModelMapper, ModelDO> implemen
     private ModelMapper modelMapper;
     @Resource
     private IModelFileResourceService modelFileResourceService;
+
+    @Resource
+    private IModelClassifyService modelClassifyService;
 
     private static final String ACCESS_TYPE_PYTHON = "1";
 
@@ -122,11 +127,18 @@ public class ModelServiceImpl extends ServiceImpl<ModelMapper, ModelDO> implemen
     @Override
     public ModelDO getModelById(Long id) {
         ModelDO modelDO = modelMapper.selectById(id);
-        if(ObjectUtil.isNotNull(modelDO)&&ACCESS_TYPE_PYTHON.equals(modelDO.getAccessType())){
-            //关联模型文件资源信息
-            ModelFileResourceDO one = modelFileResourceService.getOne(new QueryWrapper<ModelFileResourceDO>()
-                    .eq("model_id",id));
-            modelDO.setModelFileResourceRespVO(one);
+        if(ObjectUtil.isNotNull(modelDO)){
+            if(ACCESS_TYPE_PYTHON.equals(modelDO.getAccessType())){
+                ModelFileResourceDO one = modelFileResourceService.getOne(new QueryWrapper<ModelFileResourceDO>()
+                        .eq("model_id",id));
+                modelDO.setModelFileResourceRespVO(one);
+            }
+            if(modelDO.getClassifyId() != null){
+                ModelClassifyDO classifyDO = modelClassifyService.getModelClassifyById(modelDO.getClassifyId());
+                if(classifyDO != null){
+                    modelDO.setClassifyName(classifyDO.getName());
+                }
+            }
         }
         return modelDO;
     }

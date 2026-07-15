@@ -103,31 +103,13 @@
         class-name="small-padding fixed-width"
       >
         <template #default="scope">
-          <el-button
-            v-if="scope.row.status != 1"
-            type="text"
-            @click="handleEnable(scope.row)"
-          >
-            <Switch class="icon-mini" />
-            版本切换
+
+          <el-button link type="primary" @click="handleCompare(scope.row)">
+<!--            <Edit class="icon-mini" />-->
+            版本对比
           </el-button>
-          <el-button link type="primary" @click="handleUpdate(scope.row)">
-            <Edit class="icon-mini" />
-            修改
-          </el-button>
-          <el-button link type="danger" @click="handleDelete(scope.row)">
-            <Delete class="icon-mini" />
-            删除
-          </el-button>
-          <el-button
-            link
-            type="primary"
-            @click="handleDownload(scope.row)"
-            v-if="modelForm.accessMode == 0"
-          >
-            <Download class="icon-mini" />
-            下载
-          </el-button>
+
+
         </template>
       </el-table-column>
     </el-table>
@@ -383,6 +365,12 @@ const cancel = () => {
   open.value = false;
   reset();
 };
+
+/** 版本对比 */
+
+const handleCompare = (row) => {
+  ElMessage.info("功能正在开发中");
+}
 
 // 表单重置
 const reset = () => {

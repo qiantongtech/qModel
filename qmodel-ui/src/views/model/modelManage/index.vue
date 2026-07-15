@@ -137,7 +137,7 @@
                 v-for="(item, index) in modelList"
                 :key="index"
               >
-                <div class="card-item">
+                <div class="card-item" @click="handleView(item)">
                   <div class="item-top">
                     <div class="top-icon">
                       <img :src="getImage(item)" alt="应用图标" @error="handleImageError" />

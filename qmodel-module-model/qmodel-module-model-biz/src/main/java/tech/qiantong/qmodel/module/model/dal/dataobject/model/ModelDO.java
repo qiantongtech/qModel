@@ -65,11 +65,15 @@ public class ModelDO extends BaseEntity {
     @TableId(type = IdType.AUTO)
     private Long id;
 
+    @TableField(exist = false)
+    private String classifyName;
+
     /** 企业ID */
     private Long companyId;
 
     /** 分类id */
     private Long classifyId;
+
 
     /** 名称 */
     private String name;
