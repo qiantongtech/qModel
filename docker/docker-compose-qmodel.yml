@@ -1,4 +1,3 @@
-version: "1.0.1"
 
 services:
   # qmodel 后端服务
@@ -6,21 +5,25 @@ services:
     privileged: true
     image: ${QMODEL_HUB}/qmodel-server-ce:${QMODEL_VERSION}
     restart: always
-    profiles: [ "all" ]
+    profiles: [ "qmodel", "base" ]
     env_file: .env
     environment:
       - TZ=Asia/Shanghai
-    ports:
-      - "18888:8080"
+      - SPRING_CONFIG_LOCATION=file:/usr/app/jar/
+      - SPRING_CONFIG_NAME=application
+    # ports:
+    #  - "18888:8080"
+    mac_address: 28-C5-D2-B7-FC-F7
     volumes:
       - /etc/localtime:/etc/localtime:ro
-      - ./qmodel-server/logs:/usr/app/jar/logs
-      - ./qmodel-server/upload:/usr/app/jar/upload
-      - ./qmodel-server/application-prod.yml:/usr/app/jar/application-prod.yml
+      - ./qModel/server/logs:/usr/app/jar/logs
+      - ./qModel/server/upload:/usr/app/jar/upload
+      - ./qModel/server/application-prod.yml:/usr/app/jar/application-prod.yml
+      - ./qModel/server/application.yml:/usr/app/jar/application.yml
     depends_on:
       redis:
         condition: service_healthy
-      dm8:
+      mysql57:
         condition: service_healthy
     networks:
       - qmodel_net

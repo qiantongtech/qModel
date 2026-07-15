@@ -11,9 +11,9 @@ RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime \
 WORKDIR $APP_HOME
 
 # 拷贝产物
-COPY ./target/*.jar ./qmodel-server.jar
+COPY ./target/*.jar ./qmodel.jar
 
 EXPOSE 8080
 
-ENTRYPOINT ["java", "-Xms512m", "-Xmx2g", "-Dspring.profiles.active=prod","-jar","qmodel-server.jar"]
+ENTRYPOINT ["java", "-Xms512m", "-Xmx2g", "-Dspring.profiles.active=prod","-jar","qmodel.jar"]
 CMD ["--server.port=8080"]
