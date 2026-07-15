@@ -15,7 +15,7 @@ cd /mnt/c/Users/Ming/Desktop/qModel/qmodel-server-ce # 路径改成你自己的�
 docker buildx build \
   --platform linux/amd64 \
   --no-cache \
-  -t crpi-kf13onfj0v8f6jax.cn-shanghai.personal.cr.aliyuncs.com/qiantongkeji/qmodel-server-ce:1.0.1 \
+  -t crpi-kf13onfj0v8f6jax.cn-shanghai.personal.cr.aliyuncs.com/qiantongkeji/qmodel-server-ce:1.1.0 \
   --file=docker/Dockerfile \
   --load \
   /mnt/c/Users/Ming/Desktop/qModel/qmodel-server-ce # 上下文路径改成你自己的路径
@@ -24,13 +24,13 @@ docker buildx build \
 docker buildx build \
   --platform linux/arm64 \
   --no-cache \
-  -t crpi-kf13onfj0v8f6jax.cn-shanghai.personal.cr.aliyuncs.com/qiantongkeji/qmodel-server-ce:1.0.1 \
+  -t crpi-kf13onfj0v8f6jax.cn-shanghai.personal.cr.aliyuncs.com/qiantongkeji/qmodel-server-ce:1.1.0 \
   --file=docker/Dockerfile \
   --load \
   /mnt/c/Users/Ming/Desktop/qModel/qmodel-server-ce # 上下文路径改成你自己的路径
 
 # 检查是否支持 ARM64
-docker inspect crpi-kf13onfj0v8f6jax.cn-shanghai.personal.cr.aliyuncs.com/qiantongkeji/qmodel-server-ce:1.0.1 --format '{{.Architecture}}'
+docker inspect crpi-kf13onfj0v8f6jax.cn-shanghai.personal.cr.aliyuncs.com/qiantongkeji/qmodel-server-ce:1.1.0 --format '{{.Architecture}}'
 
 # 删掉之前建的 builder（可选但建议，保持干净）
 docker buildx rm qmodel-builder
@@ -39,4 +39,4 @@ docker buildx rm qmodel-builder
 docker run -d \
   --name qmodel-server-ce \
   -p 8080:8080 \
-  crpi-kf13onfj0v8f6jax.cn-shanghai.personal.cr.aliyuncs.com/qiantongkeji/qmodel-server-ce:1.0.1
+  crpi-kf13onfj0v8f6jax.cn-shanghai.personal.cr.aliyuncs.com/qiantongkeji/qmodel-server-ce:1.1.0

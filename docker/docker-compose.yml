@@ -2,9 +2,15 @@ include:
   - path: ./docker-compose-base.yml
   - path: ./docker-compose-qmodel.yml
 
-version: "1.0.1"
-
 networks:
+  ssrf_proxy_network:
+    driver: bridge
+    internal: true
+  milvus:
+    driver: bridge
+  opensearch-net:
+    driver: bridge
+    internal: true
   qmodel_net:
     driver: bridge
     ipam:
