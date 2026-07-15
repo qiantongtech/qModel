@@ -86,6 +86,7 @@
               <el-select
                 :model-value="row.displayType"
                 @change="(val) => handleTypeChange(row.key, val)"
+                disabled
               >
                 <el-option
                   v-for="opt in typeOptions"

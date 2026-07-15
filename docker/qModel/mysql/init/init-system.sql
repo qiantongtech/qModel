@@ -654,15 +654,16 @@ INSERT INTO `system_menu` VALUES (2240, '泵站信息删除', 2236, 4, '#', NULL
 INSERT INTO `system_menu` VALUES (2241, '泵站信息导出', 2236, 5, '#', NULL, NULL, 1, 0, NULL, 'F', '0', '0', 'system:testPust:pust:export', '#', 'admin', '2025-11-11 14:43:42', NULL, NULL, NULL);
 INSERT INTO `system_menu` VALUES (2242, '泵站信息导入', 2236, 6, '#', NULL, NULL, 1, 0, NULL, 'F', '0', '0', 'system:testPust:pust:import', '#', 'admin', '2025-11-11 14:43:42', NULL, NULL, NULL);
 INSERT INTO `system_menu` VALUES (2243, '模型管理', 0, 11, 'model', NULL, NULL, 1, 0, NULL, 'M', '0', '0', NULL, 'model-administration', 'admin', '2025-11-14 10:01:45', '小桐', '2025-12-31 09:58:12', NULL);
-INSERT INTO `system_menu` VALUES (2244, '模型分类', 2250, 0, 'type', 'model/modelClassify/index', NULL, 1, 0, NULL, 'C', '0', '0', NULL, '#', 'admin', '2025-11-14 10:06:39', '小桐', '2026-01-15 18:06:27', NULL);
+INSERT INTO `system_menu` VALUES (2244, '模型分类', 2243, 0, 'type', 'model/modelClassify/index', NULL, 1, 0, NULL, 'C', '0', '0', '', '#', 'admin', '2025-11-14 10:06:39', 'qModel', '2026-07-14 15:45:28', NULL);
 INSERT INTO `system_menu` VALUES (2245, '模型管理', 2243, 1, 'version', 'model/modelManage/index', NULL, 1, 0, NULL, 'C', '0', '0', NULL, '#', 'admin', '2025-11-14 15:32:43', '小桐', '2026-01-15 10:11:47', NULL);
-INSERT INTO `system_menu` VALUES (2246, '模型输入管理', 2243, 2, 'input', 'model/inputList/index', NULL, 1, 0, NULL, 'C', '0', '0', NULL, '#', 'admin', '2025-11-17 04:34:18', '小桐', '2026-01-16 09:13:25', NULL);
-INSERT INTO `system_menu` VALUES (2247, '模型输出管理', 2243, 3, 'output', 'model/outputList/index', NULL, 1, 0, NULL, 'C', '0', '0', NULL, '#', 'admin', '2025-11-17 04:34:46', '小桐', '2026-01-16 09:14:28', NULL);
+INSERT INTO `system_menu` VALUES (2246, '模型输入管理', 2243, 2, 'input', 'model/inputList/index', NULL, 1, 0, NULL, 'C', '1', '1', '', '#', 'admin', '2025-11-17 04:34:18', 'qModel', '2026-07-14 15:48:07', NULL);
+INSERT INTO `system_menu` VALUES (2247, '模型输出管理', 2243, 3, 'output', 'model/outputList/index', NULL, 1, 0, NULL, 'C', '1', '1', '', '#', 'admin', '2025-11-17 04:34:46', 'qModel', '2026-07-14 15:48:10', NULL);
 INSERT INTO `system_menu` VALUES (2248, '模拟计算', 2252, 4, 'compute', 'model/computeList/index', NULL, 1, 0, NULL, 'C', '0', '0', NULL, '#', 'admin', '2025-11-17 04:35:16', '小桐', '2026-01-15 18:08:05', NULL);
 INSERT INTO `system_menu` VALUES (2249, '历史记录', 2251, 5, 'operate', 'model/operateList/index', NULL, 1, 0, NULL, 'C', '0', '0', NULL, '#', 'admin', '2025-11-17 04:35:45', '小桐', '2026-01-15 18:09:07', NULL);
-INSERT INTO `system_menu` VALUES (2250, '类目管理', 0, 10, 'model/modelClassify', NULL, NULL, 1, 0, NULL, 'M', '0', '0', NULL, 'category-management', 'admin', '2025-12-29 16:06:15', '小桐', '2025-12-31 09:57:57', NULL);
+INSERT INTO `system_menu` VALUES (2250, '类目管理', 0, 10, 'model/modelClassify', NULL, NULL, 1, 0, NULL, 'M', '1', '1', '', 'category-management', 'admin', '2025-12-29 16:06:15', 'qModel', '2026-07-14 15:48:03', NULL);
 INSERT INTO `system_menu` VALUES (2251, '计算历史', 0, 13, 'model/operateList', NULL, NULL, 1, 0, NULL, 'M', '0', '0', NULL, 'calculate-history', 'admin', '2025-12-29 16:09:40', '小桐', '2025-12-31 10:02:09', NULL);
 INSERT INTO `system_menu` VALUES (2252, '模型计算', 0, 12, 'model/computeList', NULL, NULL, 1, 0, NULL, 'M', '0', '0', NULL, 'model-calculation', 'admin', '2025-12-29 16:18:52', '小桐', '2026-01-06 12:01:25', NULL);
+INSERT INTO `system_menu` VALUES (2253, 'API 服务网关', 2243, 4, 'apiGateway', 'model/apiGateway/index', NULL, 1, 0, NULL, 'C', '0', '0', '', NULL, 'qModel', '2026-07-14 15:49:56', 'qModel', '2026-07-14 15:50:05', NULL);
 
 -- ----------------------------
 -- Table structure for system_notice

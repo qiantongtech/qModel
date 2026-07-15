@@ -210,7 +210,7 @@ CREATE TABLE `model`  (
                           `version` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '版本号',
                           `author` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '作者',
                           `status` tinyint UNSIGNED NULL DEFAULT 1 COMMENT '状态;0-停用, 1-启用，2-构建部署中，3-构建失败',
-                          `tags` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '标签',
+                          `tags` varchar(512) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '标签',
                           `icon` varchar(512) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '图标',
                           `description` varchar(512) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '描述',
                           `valid_flag` tinyint(1) NOT NULL DEFAULT 1 COMMENT '是否有效;0：无效，1：有效',
@@ -229,14 +229,14 @@ CREATE TABLE `model`  (
 -- ----------------------------
 -- Records of model
 -- ----------------------------
-INSERT INTO `model` VALUES (1, NULL, 28, '工业大模型-动态 Token', 'INDUSTRY_MODEL_TEST', 'API', 'V1.0', '吴同', 0, '[{\"name\":\"工业\"}]', '/2026/05/11/6a01a8f6e4b0d389f4f52e8f.png', '工业大模型接口测试', 1, 0, '吴同', NULL, '2026-07-10 14:14:51', 'qModel', 1, '2026-07-10 17:43:36', '测试数据');
-INSERT INTO `model` VALUES (2, NULL, 28, '线性回归算法', 'LINEAR_REGRESSION', 'API', 'V2.0', '吴同', 0, '[{\"name\":\"NLP\"},{\"name\":\"分类\"}]', '/2026/05/11/6a01aa17e4b0d389f4f52e95.png', '文本分类API，使用固定Bearer Token', 1, 0, '吴同', 2, '2026-07-10 10:00:00', '小桐', 1, '2026-07-10 11:48:06', '固定Token示例');
-INSERT INTO `model` VALUES (3, NULL, 28, '支持向量机算法', 'SVM', 'API', 'V1.5', '吴同', 0, '[{\"name\":\"对话\"},{\"name\":\"生成\"}]', '/2026/05/11/6a01aa0ae4b0d389f4f52e94.png', '模拟OpenAI Chat Completion接口', 1, 0, '吴同', 3, '2026-07-10 09:00:00', '小桐', 1, '2026-07-10 11:58:14', 'APIKey固定鉴权示例');
-INSERT INTO `model` VALUES (4, NULL, 28, '逻辑回归算法', 'LOGISTIC_REGRESSION', 'API', 'V1.0', '吴同', 0, '[{\"name\":\"视觉\"},{\"name\":\"图像识别\"}]', '/2026/05/11/6a01a9f9e4b0d389f4f52e93.png', '内网图片分类识别服务，无需鉴权', 1, 0, '吴同', 4, '2026-07-10 08:00:00', '小桐', 1, '2026-07-10 13:33:41', '无鉴权示例');
-INSERT INTO `model` VALUES (5, NULL, 28, '随机森林算法', 'RANDOM_FOREST', 'API', 'V2.3', '吴同', 0, '[{\"name\":\"问答\"},{\"name\":\"RAG\"}]', '/2026/05/11/6a01a9e9e4b0d389f4f52e92.png', '基于知识库的企业问答接口', 1, 0, '吴同', 5, '2026-07-10 07:30:00', '小桐', 1, '2026-07-10 11:48:15', '动态Token-GET方式示例');
-INSERT INTO `model` VALUES (6, NULL, 28, '降维算法', 'DIMENSIONALITY_REDUCTION', 'PYTHON', 'V1.2', '吴同', 2, '[{\"name\":\"运维\"},{\"name\":\"流水线\"}]', '/2026/05/11/6a01a9d8e4b0d389f4f52e91.png', '数据流水线状态管理接口', 1, 0, '吴同', 6, '2026-07-10 06:00:00', '小桐', 1, '2026-07-10 11:48:13', 'PUT请求+Query注入示例');
-INSERT INTO `model` VALUES (7, NULL, 28, '梯度增强算法', 'GRADIENT_BOOSTING', 'PYTHON', 'V3.0', '吴同', 3, '[{\"name\":\"生成\"},{\"name\":\"多模态\"}]', '/2026/05/11/6a01a9a0e4b0d389f4f52e90.png', '支持文本/图像/音频生成的多模态模型', 1, 0, '吴同', 7, '2026-07-10 05:00:00', '小桐', 1, '2026-07-10 11:48:12', '复杂动态Token示例-组合认证');
-INSERT INTO `model` VALUES (8, NULL, 28, '工业大模型-固定 Token', 'INDUSTRY_MODEL_TEST', 'API', 'v1.0', '吴同', 1, '[{\"name\":\"工业\"}]', '/2026/05/11/6a01a9a0e4b0d389f4f52e99.png', NULL, 1, 0, '小桐', 1, '2026-07-10 11:55:55', 'qModel', 1, '2026-07-10 16:20:19', NULL);
+INSERT INTO `model` VALUES (1, NULL, 1, '工业大模型-动态 Token', 'INDUSTRY_MODEL_TEST', 'API', 'V1.0', '吴同', 0, '[{\"name\":\"工业\"}]', '/2026/05/11/6a01a8f6e4b0d389f4f52e8f.png', '工业大模型接口测试', 1, 0, '吴同', NULL, '2026-07-10 14:14:51', 'qModel', 1, '2026-07-14 10:07:30', '测试数据');
+INSERT INTO `model` VALUES (2, NULL, 8, '线性回归算法', 'LINEAR_REGRESSION', 'API', 'V2.0', '吴同', 0, '[{\"name\":\"NLP\"},{\"name\":\"分类\"}]', '/2026/05/11/6a01aa17e4b0d389f4f52e95.png', '文本分类API，使用固定Bearer Token', 1, 0, '吴同', 2, '2026-07-10 10:00:00', '小桐', 1, '2026-07-10 11:48:06', '固定Token示例');
+INSERT INTO `model` VALUES (3, NULL, 9, '支持向量机算法', 'SVM', 'API', 'V1.5', '吴同', 0, '[{\"name\":\"对话\"},{\"name\":\"生成\"}]', '/2026/05/11/6a01aa0ae4b0d389f4f52e94.png', '模拟OpenAI Chat Completion接口', 1, 0, '吴同', 3, '2026-07-10 09:00:00', '小桐', 1, '2026-07-10 11:58:14', 'APIKey固定鉴权示例');
+INSERT INTO `model` VALUES (4, NULL, 9, '逻辑回归算法', 'LOGISTIC_REGRESSION', 'API', 'V1.0', '吴同', 0, '[{\"name\":\"视觉\"},{\"name\":\"图像识别\"}]', '/2026/05/11/6a01a9f9e4b0d389f4f52e93.png', '内网图片分类识别服务，无需鉴权', 1, 0, '吴同', 4, '2026-07-10 08:00:00', '小桐', 1, '2026-07-10 13:33:41', '无鉴权示例');
+INSERT INTO `model` VALUES (5, NULL, 10, '随机森林算法', 'RANDOM_FOREST', 'API', 'V2.3', '吴同', 0, '[{\"name\":\"问答\"},{\"name\":\"RAG\"}]', '/2026/05/11/6a01a9e9e4b0d389f4f52e92.png', '基于知识库的企业问答接口', 1, 0, '吴同', 5, '2026-07-10 07:30:00', '小桐', 1, '2026-07-10 11:48:15', '动态Token-GET方式示例');
+INSERT INTO `model` VALUES (6, NULL, 11, '降维算法', 'DIMENSIONALITY_REDUCTION', 'PYTHON', 'V1.2', '吴同', 2, '[{\"name\":\"运维\"},{\"name\":\"流水线\"}]', '/2026/05/11/6a01a9d8e4b0d389f4f52e91.png', '数据流水线状态管理接口', 1, 0, '吴同', 6, '2026-07-10 06:00:00', '小桐', 1, '2026-07-10 11:48:13', 'PUT请求+Query注入示例');
+INSERT INTO `model` VALUES (7, NULL, 10, '梯度增强算法', 'GRADIENT_BOOSTING', 'PYTHON', 'V3.0', '吴同', 3, '[{\"name\":\"生成\"},{\"name\":\"多模态\"}]', '/2026/05/11/6a01a9a0e4b0d389f4f52e90.png', '支持文本/图像/音频生成的多模态模型', 1, 0, '吴同', 7, '2026-07-10 05:00:00', '小桐', 1, '2026-07-10 11:48:12', '复杂动态Token示例-组合认证');
+INSERT INTO `model` VALUES (8, NULL, 1, '工业大模型-固定 Token', 'INDUSTRY_MODEL_TEST', 'API', 'v1.0', '吴同', 1, '[{\"name\":\"工业\"}]', '/2026/05/11/6a01a9a0e4b0d389f4f52e99.png', NULL, 1, 0, '小桐', 1, '2026-07-10 11:55:55', 'qModel', 1, '2026-07-10 16:20:19', NULL);
 
 -- ----------------------------
 -- Table structure for model_config
@@ -279,7 +279,7 @@ CREATE TABLE `model_config`  (
 -- ----------------------------
 -- Records of model_config
 -- ----------------------------
-INSERT INTO `model_config` VALUES (1, NULL, 1, 'http://api.example.com/blade-vstec/call/log/call/model', 'POST', 'application/x-www-form-urlencoded', 30, 'DYNAMIC', 'apiKey', 'Header', 'Blade-Auth', 'bearer', NULL, 'POST', 'http://api.example.com/blade-auth/oauth/token', '{\n  \"Content-Type\": \"application/x-www-form-urlencoded\",\n  \"Tenant-Id\": \"595\",\n  \"Authorization\": \"Basic c3dvcmQ6c3dvcmRfc2VjcmV0\"\n}', NULL, '{\n  \"grant_type\": \"password\",\n  \"username\": \"admin\",\n  \"password\": \"21232f297a57a5a743894a0e4a801fc3\",\n  \"scope\": \"all\"\n}', 'access_token', '{\n  \"type\": \"object\",\n  \"properties\": {\n    \"modelId\": {\n      \"type\": \"integer\",\n      \"description\": \"模型ID\"\n    },\n    \"files\": {\n      \"type\": \"string\",\n      \"format\": \"binary\",\n      \"description\": \"上传的文件\"\n    }\n  },\n  \"required\": [\n    \"modelId\",\n    \"files\"\n  ]\n}', NULL, 1, 0, '小桐', 1, '2026-07-09 15:06:46', 'qModel', 1, '2026-07-10 18:56:05', '测试数据');
+INSERT INTO `model_config` VALUES (1, NULL, 1, 'http://api.example.com/blade-vstec/call/log/call/model', 'POST', 'application/x-www-form-urlencoded', 30, 'DYNAMIC', 'apiKey', 'Header', 'Blade-Auth', 'bearer', NULL, 'POST', 'http://api.example.com/blade-auth/oauth/token', '{\n  \"Content-Type\": \"application/x-www-form-urlencoded\",\n  \"Tenant-Id\": \"595\",\n  \"Authorization\": \"Basic c3dvcmQ6c3dvcmRfc2VjcmV0\"\n}', NULL, '{\n  \"grant_type\": \"password\",\n  \"username\": \"admin\",\n  \"password\": \"21232f297a57a5a743894a0e4a801fc3\",\n  \"scope\": \"all\"\n}', 'access_token', '{\n  \"type\": \"object\",\n  \"properties\": {\n    \"modelId\": {\n      \"type\": \"integer\",\n      \"description\": \"模型ID\"\n    },\n    \"files\": {\n      \"type\": \"string\",\n      \"format\": \"binary\",\n      \"description\": \"上传的文件\"\n    }\n  },\n  \"required\": [\n    \"modelId\",\n    \"files\"\n  ]\n}', NULL, 1, 0, '小桐', 1, '2026-07-09 15:06:46', 'qModel', 1, '2026-07-14 10:07:30', '测试数据');
 INSERT INTO `model_config` VALUES (2, NULL, 2, 'https://api.example.com/v1/predict', 'POST', 'application/json', 60, 'FIXED', 'apiKey', 'Header', 'Authorization', 'Bearer', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36', NULL, NULL, NULL, NULL, NULL, NULL, '{\n  \"type\": \"object\",\n  \"properties\": {\n    \"text\": {\n      \"type\": \"string\",\n      \"description\": \"待分析文本\"\n    },\n    \"top_k\": {\n      \"type\": \"integer\",\n      \"default\": 5\n    }\n  },\n  \"required\": [\"text\"]\n}', '{\n  \"type\": \"object\",\n  \"properties\": {\n    \"result\": {\n      \"type\": \"array\",\n      \"items\": {\n        \"type\": \"string\"\n      }\n    }\n  }\n}', 1, 0, '张三', 2, '2026-07-10 10:00:00', '小桐', 1, '2026-07-10 11:48:06', '固定Token示例');
 INSERT INTO `model_config` VALUES (3, NULL, 3, 'https://api.openai.com/v1/chat/completions', 'POST', 'application/json', 120, 'FIXED', 'apiKey', 'Header', 'X-API-Key', NULL, 'sk-proj-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx', NULL, NULL, NULL, NULL, NULL, NULL, '{\n  \"type\": \"object\",\n  \"properties\": {\n    \"messages\": {\n      \"type\": \"array\",\n      \"items\": {\n        \"type\": \"object\",\n        \"properties\": {\n          \"role\": {\"type\": \"string\"},\n          \"content\": {\"type\": \"string\"}\n        }\n      }\n    },\n    \"temperature\": {\n      \"type\": \"number\",\n      \"default\": 0.7\n    }\n  },\n  \"required\": [\"messages\"]\n}', '{\n  \"type\": \"object\",\n  \"properties\": {\n    \"choices\": {\n      \"type\": \"array\",\n      \"items\": {\n        \"type\": \"object\",\n        \"properties\": {\n          \"message\": {\n            \"type\": \"object\",\n            \"properties\": {\n              \"content\": {\"type\": \"string\"}\n            }\n          }\n        }\n      }\n    }\n  }\n}', 1, 0, '王五', 3, '2026-07-10 09:00:00', '小桐', 1, '2026-07-10 11:49:14', 'APIKey固定鉴权示例');
 INSERT INTO `model_config` VALUES (4, NULL, 4, 'http://api.example.com/image/recognize', 'POST', 'multipart/form-data', 45, 'NONE', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '{\n  \"type\": \"object\",\n  \"properties\": {\n    \"image\": {\n      \"type\": \"string\",\n      \"format\": \"binary\",\n      \"description\": \"待识别的图片文件\"\n    },\n    \"top_n\": {\n      \"type\": \"integer\",\n      \"default\": 3\n    }\n  },\n  \"required\": [\"image\"]\n}', '{\n  \"type\": \"object\",\n  \"properties\": {\n    \"labels\": {\n      \"type\": \"array\",\n      \"items\": {\n        \"type\": \"object\",\n        \"properties\": {\n          \"name\": {\"type\": \"string\"},\n          \"confidence\": {\"type\": \"number\"}\n        }\n      }\n    }\n  }\n}', 1, 0, '孙七', 4, '2026-07-10 08:00:00', '小桐', 1, '2026-07-10 13:33:41', '无鉴权示例');
@@ -376,6 +376,7 @@ CREATE TABLE `model_classify` (
   `ancestors` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '祖籍列表',
   `name` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '分类名称',
   `description` varchar(1024) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '分类描述',
+  `order_num` int NULL DEFAULT 0 COMMENT '显示顺序',
   `valid_flag` int(11) NOT NULL COMMENT '是否有效 0：无效，1：有效',
   `del_flag` int(11) NOT NULL COMMENT '删除标志 1：已删除，0：未删除',
   `create_by` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '创建人',
@@ -391,37 +392,23 @@ CREATE TABLE `model_classify` (
 -- ----------------------------
 -- Records of model_classify
 -- ----------------------------
-INSERT INTO `model_classify` VALUES (1, NULL, 0, '0', '产汇', NULL, 1, 1, 'admin', 1, '2025-11-14 18:32:07', NULL, NULL, '2025-12-31 13:58:54', NULL);
-INSERT INTO `model_classify` VALUES (2, NULL, 1, '0,1', '产汇流', '产汇流信息', 1, 1, 'admin', 1, '2025-11-14 18:32:20', '小桐', 1, '2026-01-07 14:09:38', '备注');
-INSERT INTO `model_classify` VALUES (3, NULL, 2, '0,1,2', '产汇子流', NULL, 1, 1, 'admin', 1, '2025-12-11 10:11:01', '小桐', 1, '2026-01-07 14:09:38', NULL);
-INSERT INTO `model_classify` VALUES (4, NULL, 0, '0', '水文预报', NULL, 1, 0, '小桐', 1, '2025-12-31 14:01:40', NULL, NULL, '2025-12-31 14:01:39', NULL);
-INSERT INTO `model_classify` VALUES (5, NULL, 0, '0', '水文预报', NULL, 1, 1, '小桐', 1, '2025-12-31 14:01:40', NULL, NULL, '2025-12-31 14:01:39', NULL);
-INSERT INTO `model_classify` VALUES (6, NULL, 4, '0,4', '降雨径流模型', NULL, 1, 1, '小桐', 1, '2025-12-31 14:01:55', NULL, NULL, '2025-12-31 14:01:55', NULL);
-INSERT INTO `model_classify` VALUES (7, NULL, 4, '0,4', '洪水演进模型', NULL, 1, 1, '小桐', 1, '2025-12-31 14:02:03', NULL, NULL, '2025-12-31 14:02:02', NULL);
-INSERT INTO `model_classify` VALUES (8, NULL, 4, '0,4', '产汇流模型', NULL, 1, 0, '小桐', 1, '2025-12-31 14:02:11', NULL, NULL, '2025-12-31 14:02:10', NULL);
-INSERT INTO `model_classify` VALUES (9, NULL, 4, '0,4', '实时洪水预报', NULL, 1, 0, '小桐', 1, '2025-12-31 14:02:17', NULL, NULL, '2025-12-31 14:02:17', NULL);
-INSERT INTO `model_classify` VALUES (10, NULL, 4, '0,4', '中长期水文预测', NULL, 1, 1, '小桐', 1, '2025-12-31 14:02:26', NULL, NULL, '2025-12-31 14:02:25', NULL);
-INSERT INTO `model_classify` VALUES (11, NULL, 0, '0', '水工程安全', NULL, 1, 0, '小桐', 1, '2025-12-31 14:02:37', NULL, NULL, '2025-12-31 14:02:36', NULL);
-INSERT INTO `model_classify` VALUES (12, NULL, 11, '0,11', '大坝渗流分析', NULL, 1, 0, '小桐', 1, '2025-12-31 14:02:45', NULL, NULL, '2025-12-31 14:02:44', NULL);
-INSERT INTO `model_classify` VALUES (13, NULL, 11, '0,11', '堤防稳定性模型', NULL, 1, 0, '小桐', 1, '2025-12-31 14:02:50', NULL, NULL, '2025-12-31 14:02:50', NULL);
-INSERT INTO `model_classify` VALUES (14, NULL, 11, '0,11', '溃坝风险模拟', NULL, 1, 0, '小桐', 1, '2025-12-31 14:02:56', NULL, NULL, '2025-12-31 14:02:55', NULL);
-INSERT INTO `model_classify` VALUES (15, NULL, 11, '0,11', '泵站运行仿真', NULL, 1, 0, '小桐', 1, '2025-12-31 14:03:02', NULL, NULL, '2025-12-31 14:03:01', NULL);
-INSERT INTO `model_classify` VALUES (16, NULL, 11, '0,11', '渡槽结构安全评估', NULL, 1, 0, '小桐', 1, '2025-12-31 14:03:08', NULL, NULL, '2025-12-31 14:03:07', NULL);
-INSERT INTO `model_classify` VALUES (17, NULL, 4, '0,4', '中长期水文预测', NULL, 1, 0, '小桐', 1, '2025-12-31 14:03:52', NULL, NULL, '2025-12-31 14:03:51', NULL);
-INSERT INTO `model_classify` VALUES (18, NULL, 0, '0', '水资源调度', NULL, 1, 1, '小桐', 1, '2025-12-31 14:04:12', NULL, NULL, '2025-12-31 14:04:11', NULL);
-INSERT INTO `model_classify` VALUES (19, NULL, 0, '0', '水资源调度', NULL, 1, 0, '小桐', 1, '2025-12-31 14:10:51', NULL, NULL, '2025-12-31 14:10:51', NULL);
-INSERT INTO `model_classify` VALUES (20, NULL, 19, '0,19', '水库优化调度', NULL, 1, 0, '小桐', 1, '2025-12-31 14:10:59', NULL, NULL, '2025-12-31 14:10:59', NULL);
-INSERT INTO `model_classify` VALUES (21, NULL, 19, '0,19', '流域水量分配', NULL, 1, 0, '小桐', 1, '2025-12-31 14:11:06', NULL, NULL, '2025-12-31 14:11:06', NULL);
-INSERT INTO `model_classify` VALUES (22, NULL, 0, '0', '智慧水利', NULL, 1, 0, '小桐', 1, '2025-12-31 14:11:25', NULL, NULL, '2025-12-31 14:11:24', NULL);
-INSERT INTO `model_classify` VALUES (23, NULL, 22, '0,22', '数字孪生流域', NULL, 1, 0, '小桐', 1, '2025-12-31 14:11:32', NULL, NULL, '2025-12-31 14:11:31', NULL);
-INSERT INTO `model_classify` VALUES (24, NULL, 22, '0,22', 'AI水位预测', NULL, 1, 0, '小桐', 1, '2025-12-31 14:11:38', NULL, NULL, '2025-12-31 14:11:38', NULL);
-INSERT INTO `model_classify` VALUES (25, NULL, 22, '0,22', '无人机巡河识别模型', NULL, 1, 0, '小桐', 1, '2025-12-31 14:11:44', NULL, NULL, '2025-12-31 14:11:43', NULL);
-INSERT INTO `model_classify` VALUES (26, NULL, 22, '0,22', '智能预警决策模型', NULL, 1, 0, '小桐', 1, '2025-12-31 14:11:51', NULL, NULL, '2025-12-31 14:11:50', NULL);
-INSERT INTO `model_classify` VALUES (27, NULL, 0, '0', '其他', NULL, 1, 0, '小桐', 1, '2025-12-31 14:11:58', NULL, NULL, '2025-12-31 14:11:57', NULL);
-INSERT INTO `model_classify` VALUES (28, NULL, 27, '0,27', '综合水利集成模型', NULL, 1, 0, '小桐', 1, '2025-12-31 14:12:04', NULL, NULL, '2025-12-31 14:12:03', NULL);
-INSERT INTO `model_classify` VALUES (29, NULL, 27, '0,27', '跨流域调水仿真', NULL, 1, 0, '小桐', 1, '2025-12-31 14:12:10', NULL, NULL, '2025-12-31 14:12:09', NULL);
-INSERT INTO `model_classify` VALUES (30, NULL, 27, '0,27', '水土保持模型', NULL, 1, 0, '小桐', 1, '2025-12-31 14:12:16', NULL, NULL, '2025-12-31 14:12:15', NULL);
-INSERT INTO `model_classify` VALUES (31, NULL, 27, '0,27', '冰凌洪水模拟', NULL, 1, 0, '小桐', 1, '2025-12-31 14:12:23', NULL, NULL, '2025-12-31 14:12:22', NULL);
+INSERT INTO `model_classify` VALUES (1, NULL, 0, '0', '工业大模型', '面向工业领域的预训练大语言模型及衍生应用', 1, 1, 0, '吴同', 1, '2026-07-14 09:15:22', NULL, NULL, '2026-07-14 09:15:22', '面向工业领域的预训练大语言模型及衍生应用');
+INSERT INTO `model_classify` VALUES (2, NULL, 0, '0', '机器学习', '经典机器学习算法与模型', 0, 1, 0, '吴同', 1, '2026-07-14 09:32:45', NULL, NULL, '2026-07-14 09:32:45', '经典机器学习算法与模型');
+INSERT INTO `model_classify` VALUES (3, NULL, 0, '0', '深度学习', '基于深度神经网络的模型', 1, 1, 0, '吴同', 1, '2026-07-14 09:48:10', NULL, NULL, '2026-07-14 09:48:10', '基于深度神经网络的模型');
+INSERT INTO `model_classify` VALUES (4, NULL, 0, '0', '数据智能', '面向数据的分析、预测与挖掘模型', 1, 1, 0, '吴同', 1, '2026-07-14 10:05:33', NULL, NULL, '2026-07-14 10:05:33', '面向数据的分析、预测与挖掘模型');
+INSERT INTO `model_classify` VALUES (5, NULL, 1, '0,1', '文本生成', '文本生成、摘要、扩写等大模型能力', 1, 1, 0, '吴同', 1, '2026-07-14 10:22:18', NULL, NULL, '2026-07-14 10:22:18', '文本生成、摘要、扩写等大模型能力');
+INSERT INTO `model_classify` VALUES (6, NULL, 1, '0,1', '对话交互', '问答、对话、助手类大模型应用', 2, 1, 0, '吴同', 1, '2026-07-14 10:45:09', NULL, NULL, '2026-07-14 10:45:09', '问答、对话、助手类大模型应用');
+INSERT INTO `model_classify` VALUES (7, NULL, 1, '0,1', '代码生成', '代码辅助、生成、审查类大模型', 3, 1, 0, '吴同', 1, '2026-07-14 11:12:55', NULL, NULL, '2026-07-14 11:12:55', '代码辅助、生成、审查类大模型');
+INSERT INTO `model_classify` VALUES (8, NULL, 2, '0,2', '回归模型', '连续值预测类机器学习模型', 1, 1, 0, '吴同', 1, '2026-07-14 11:35:40', NULL, NULL, '2026-07-14 11:35:40', '连续值预测类机器学习模型');
+INSERT INTO `model_classify` VALUES (9, NULL, 2, '0,2', '分类模型', '离散类别预测类机器学习模型', 2, 1, 0, '吴同', 1, '2026-07-14 13:20:15', NULL, NULL, '2026-07-14 13:20:15', '离散类别预测类机器学习模型');
+INSERT INTO `model_classify` VALUES (10, NULL, 2, '0,2', '集成学习', '多基学习器集成的机器学习模型', 3, 1, 0, '吴同', 1, '2026-07-14 13:55:28', NULL, NULL, '2026-07-14 13:55:28', '多基学习器集成的机器学习模型');
+INSERT INTO `model_classify` VALUES (11, NULL, 2, '0,2', '降维与特征工程', '特征降维、选择与工程化方法', 4, 1, 0, '吴同', 1, '2026-07-14 14:30:42', NULL, NULL, '2026-07-14 14:30:42', '特征降维、选择与工程化方法');
+INSERT INTO `model_classify` VALUES (12, NULL, 3, '0,3', '计算机视觉', '图像识别、检测、分割等视觉模型', 1, 1, 0, '吴同', 1, '2026-07-14 14:58:11', NULL, NULL, '2026-07-14 14:58:11', '图像识别、检测、分割等视觉模型');
+INSERT INTO `model_classify` VALUES (13, NULL, 3, '0,3', '自然语言处理', '文本分类、序列标注、语义理解等模型', 2, 1, 0, '吴同', 1, '2026-07-14 15:25:36', NULL, NULL, '2026-07-14 15:25:36', '文本分类、序列标注、语义理解等模型');
+INSERT INTO `model_classify` VALUES (14, NULL, 3, '0,3', '语音识别', '语音转文字、声纹识别等模型', 3, 1, 0, '吴同', 1, '2026-07-14 16:10:48', NULL, NULL, '2026-07-14 16:10:48', '语音转文字、声纹识别等模型');
+INSERT INTO `model_classify` VALUES (15, NULL, 4, '0,4', '时序预测', '时间序列分析与预测模型', 1, 1, 0, '吴同', 1, '2026-07-14 16:45:22', NULL, NULL, '2026-07-14 16:45:22', '时间序列分析与预测模型');
+INSERT INTO `model_classify` VALUES (16, NULL, 4, '0,4', '推荐系统', '协同过滤、内容推荐等模型', 2, 1, 0, '吴同', 1, '2026-07-14 17:20:55', NULL, NULL, '2026-07-14 17:20:55', '协同过滤、内容推荐等模型');
+INSERT INTO `model_classify` VALUES (17, NULL, 4, '0,4', '异常检测', '离群点、异常行为识别模型', 3, 1, 0, '吴同', 1, '2026-07-14 17:55:30', NULL, NULL, '2026-07-14 17:55:30', '离群点、异常行为识别模型');
 
 -- ----------------------------
 -- Table structure for model_compute
