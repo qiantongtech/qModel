@@ -54,6 +54,7 @@ import javax.annotation.Resource;
 
 import org.springframework.web.multipart.MultipartFile;
 import tech.qiantong.qmodel.common.core.page.PageResult;
+import tech.qiantong.qmodel.common.utils.ip.IpUtils;
 import tech.qiantong.qmodel.common.utils.object.BeanUtils;
 import tech.qiantong.qmodel.common.utils.StringUtils;
 import tech.qiantong.qmodel.common.exception.ServiceException;
@@ -72,6 +73,7 @@ import tech.qiantong.qmodel.module.model.service.fileResource.IModelFileResource
 import tech.qiantong.qmodel.file.util.FileUploadUtil;
 import org.dromara.x.file.storage.core.FileInfo;
 import tech.qiantong.qmodel.module.model.service.fileResource.handler.ModelFileResourceDepsCheckHandler;
+import tech.qiantong.qmodel.module.model.service.invokeHistory.IModelInvokeHistoryService;
 
 
 /**
@@ -95,6 +97,9 @@ public class ModelFileResourceServiceImpl extends ServiceImpl<ModelFileResourceM
 
     @Resource
     private ServerConfig serverConfig;
+
+    @Resource
+    private IModelInvokeHistoryService modelInvokeHistoryService;
 
     @Value("${dromara.x-file-storage.local-plus[0].storage-path:${user.dir}/upload/}")
     private String storagePath;
@@ -471,6 +476,8 @@ public class ModelFileResourceServiceImpl extends ServiceImpl<ModelFileResourceM
 
     @Override
     public Object runModelScript(Long modelId, Map<String, Object> inputParam) {
+        Date startTime = new Date();
+        String clientIp = IpUtils.getIpAddr();
         if (inputParam == null) {
             inputParam = new HashMap<>();
         }
@@ -504,7 +511,6 @@ public class ModelFileResourceServiceImpl extends ServiceImpl<ModelFileResourceM
         File workDir = scriptFile.getParentFile();
         String scriptName = scriptFile.getName();
 
-        // ========== 新增：处理 inputParam 中的文件路径 ==========
         Map<String, Object> processedParam = new HashMap<>();
         for (Map.Entry<String, Object> entry : inputParam.entrySet()) {
             String key = entry.getKey();
@@ -512,7 +518,6 @@ public class ModelFileResourceServiceImpl extends ServiceImpl<ModelFileResourceM
 
             if (value != null) {
                 String strValue = String.valueOf(value);
-                // 尝试解析为文件路径
                 String resolvedPath = resolveFilePath(strValue);
                 processedParam.put(key, resolvedPath);
             } else {
@@ -521,7 +526,7 @@ public class ModelFileResourceServiceImpl extends ServiceImpl<ModelFileResourceM
         }
 
         String pythonCmd = getPythonCommand();
-        String paramJson = JSON.toJSONString(processedParam);  // 使用处理后的参数
+        String paramJson = JSON.toJSONString(processedParam);
 
         log.debug("开始执行模型脚本，modelId: {}, scriptPath: {}, workDir: {}", modelId, scriptPath, workDir.getAbsolutePath());
 
@@ -570,14 +575,30 @@ public class ModelFileResourceServiceImpl extends ServiceImpl<ModelFileResourceM
             }
 
             log.debug("模型脚本执行成功，modelId: {}", modelId);
+            Object result;
             try {
-                return JSON.parse(output.toString().trim());  // 使用 FastJSON 解析
+                result = JSON.parse(output.toString().trim());
             } catch (Exception e) {
-                return output.toString().trim();
+                result = output.toString().trim();
             }
+
+            Date endTime = new Date();
+            modelInvokeHistoryService.saveInvokeLogAsync(modelId, fileResourceDO.getFileName(), "1",
+                    paramJson, JSON.toJSONString(result), "1", null,
+                    endTime.getTime() - startTime.getTime(), startTime, endTime, clientIp);
+
+            return result;
         } catch (ServiceException e) {
+            Date endTime = new Date();
+            modelInvokeHistoryService.saveInvokeLogAsync(modelId, fileResourceDO.getFileName(), "1",
+                    paramJson, null, "2", e.getMessage(),
+                    endTime.getTime() - startTime.getTime(), startTime, endTime, clientIp);
             throw e;
         } catch (Exception e) {
+            Date endTime = new Date();
+            modelInvokeHistoryService.saveInvokeLogAsync(modelId, fileResourceDO.getFileName(), "1",
+                    paramJson, null, "2", e.getMessage(),
+                    endTime.getTime() - startTime.getTime(), startTime, endTime, clientIp);
             log.error("执行模型脚本失败，modelId: {}", modelId, e);
             throw new ServiceException("执行模型脚本失败：" + e.getMessage());
         }

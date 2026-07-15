@@ -425,7 +425,7 @@ const buildModelData = () => {
     modelData.inputSchema = form.inputSchema || undefined
     modelData.outputSchema = form.outputSchema || undefined
     modelData.fileResourceId = isEdit.value ? form.fileResourceId : undefined
-    modelData.accessType = 1
+    modelData.accessType = 'PYTHON'
   }
 
   return modelData

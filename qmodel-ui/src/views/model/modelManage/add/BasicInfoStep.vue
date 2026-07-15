@@ -37,7 +37,7 @@
           class="access-type-item"
           :class="{
             active: formData.accessType === item.value,
-            disabled: item.value === 'PYTHON'
+
           }"
           @click="handleAccessTypeChange(item.value)"
         >
@@ -45,7 +45,6 @@
             v-model="formData.accessType"
             :label="item.value"
             class="radio-label-hidden"
-            :disabled="item.value === 'PYTHON'"
           />
             <div class="access-type-title">
               <span>{{ item.label }}</span>

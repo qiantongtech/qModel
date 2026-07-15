@@ -48,6 +48,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
+
+import tech.qiantong.qmodel.common.utils.DateUtils;
 import tech.qiantong.qmodel.module.model.dal.dataobject.fileResource.ModelFileResourceDO;
 import tech.qiantong.qmodel.module.model.dal.mapper.fileResource.ModelFileResourceMapper;
 import tech.qiantong.qmodel.module.model.service.buildLog.IModelBuildLogService;
@@ -95,7 +97,7 @@ public class ModelFileResourceDepsCheckHandler {
                     1
             );
             buildLogBuilder.append("========== 开始依赖检测 ==========\n");
-            buildLogBuilder.append("时间: ").append(new java.util.Date()).append("\n");
+            buildLogBuilder.append("时间: ").append(DateUtils.getTime()).append("\n");
             buildLogBuilder.append("文件资源ID: ").append(fileResourceId).append("\n");
             buildLogBuilder.append("模型ID: ").append(fileResource.getModelId()).append("\n");
             buildLogBuilder.append("文件名: ").append(fileResource.getFileName()).append("\n\n");
@@ -114,7 +116,6 @@ public class ModelFileResourceDepsCheckHandler {
 
             String zipFilePath = STORAGE_PATH + relativePath;
             log.info("ZIP文件完整路径: {}", zipFilePath);
-            buildLogBuilder.append("ZIP文件路径: ").append(zipFilePath).append("\n");
 
             String extractDir = extractZipToTemp(zipFilePath, fileResourceId);
             if (extractDir == null) {
@@ -125,14 +126,16 @@ public class ModelFileResourceDepsCheckHandler {
                 updateStatus(fileResourceId, STATUS_FAILED, null, null);
                 return;
             }
-            buildLogBuilder.append("解压目录: ").append(extractDir).append("\n");
+//            buildLogBuilder.append("解压目录: ").append(extractDir).append("\n");
 
             String scriptPath = findMainPyPath(extractDir);
             String depsPath = findRequirementsTxtPath(extractDir);
 
             log.info("找到入口文件: {}, 依赖文件: {}", scriptPath, depsPath);
-            buildLogBuilder.append("入口文件: ").append(scriptPath != null ? scriptPath : "未找到").append("\n");
-            buildLogBuilder.append("依赖文件: ").append(depsPath != null ? depsPath : "未找到").append("\n\n");
+            String scriptFileName = scriptPath != null ? Paths.get(scriptPath).getFileName().toString() : "未找到";
+            String depsFileName = depsPath != null ? Paths.get(depsPath).getFileName().toString() : "未找到";
+            buildLogBuilder.append("入口文件: ").append(scriptFileName).append("\n");
+            buildLogBuilder.append("依赖文件: ").append(depsFileName).append("\n\n");
 
             List<String> requirements = parseRequirements(depsPath);
             if (depsPath != null) {
@@ -158,12 +161,20 @@ public class ModelFileResourceDepsCheckHandler {
             buildLogBuilder.append("依赖列表: ").append(String.join(", ", requirements)).append("\n\n");
 
             Set<String> installedPackages = getInstalledPackages();
-            buildLogBuilder.append("已安装依赖包数量: ").append(installedPackages.size()).append("\n\n");
+
+            int installedCount = 0;
+            for (String requirement : requirements) {
+                String pkgName = extractPackageName(requirement);
+                String normalizedName = normalizePackageName(pkgName);
+                if (installedPackages.contains(normalizedName)) {
+                    installedCount++;
+                }
+            }
+            buildLogBuilder.append("已安装依赖包数量: ").append(installedCount).append("\n\n");
 
             boolean allInstalled = checkAllDependenciesInstalled(requirements, installedPackages);
 
             if (allInstalled) {
-                buildLogBuilder.append("所有依赖包均已安装，无需额外安装\n");
                 buildLogBuilder.append("========== 依赖检测完成 ==========\n");
                 modelBuildLogService.updateBuildLogSuccess(
                         buildLogId,

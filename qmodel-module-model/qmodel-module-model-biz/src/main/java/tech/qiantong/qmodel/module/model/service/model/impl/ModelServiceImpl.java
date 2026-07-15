@@ -77,7 +77,7 @@ public class ModelServiceImpl extends ServiceImpl<ModelMapper, ModelDO> implemen
     @Resource
     private IModelClassifyService modelClassifyService;
 
-    private static final String ACCESS_TYPE_PYTHON = "1";
+    private static final String ACCESS_TYPE_PYTHON = "PYTHON";
 
     @Resource
     private ModelConfigMapper modelConfigMapper;

@@ -32,6 +32,7 @@
 
 package tech.qiantong.qmodel.module.model.controller.admin.config.vo;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
@@ -100,5 +101,11 @@ public class ModelConfigTestReqVO {
 
     @Schema(description = "测试请求体", example = "{\"name\": \"测试\"}")
     private String testBody;
+
+    @TableField(exist = false)
+    private Long modelId;
+
+    @TableField(exist = false)
+    private String modelName;
 
 }

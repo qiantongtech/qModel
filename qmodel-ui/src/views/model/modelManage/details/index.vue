@@ -46,7 +46,9 @@
                 plain
                 @click="goBack"
                 @mousedown="(e) => e.preventDefault()"
-              ><svg-icon :iconClass="'fhs'" />返回
+              ><el-icon>
+                <Back />
+              </el-icon>返回
               </el-button>
             </el-col>
           </el-row>
@@ -74,7 +76,14 @@
             </div>
           </el-col>
         </el-row>
-
+        <el-row :gutter="3">
+          <el-col :span="24">
+            <div class="infotop-row border-top">
+              <div class="infotop-row-lable">描述</div>
+              <div class="infotop-row-value">{{ viewInfo.description || '-' }}</div>
+            </div>
+          </el-col>
+        </el-row>
         <el-row :gutter="3" style="margin-bottom: 3px">
 
           <el-col :span="8">
@@ -88,7 +97,17 @@
           <el-col :span="8">
             <div class="infotop-row border-top">
               <div class="infotop-row-lable">标签</div>
-              <div class="infotop-row-value">{{ viewInfo.tags || '-' }}</div>
+              <div class="infotop-row-value tag-list">
+                <el-tag
+                  v-for="tag in parsedTags"
+                  :key="tag.name"
+                  size="small"
+                  class="mr3"
+                >
+                  {{ tag.name }}
+                </el-tag>
+                <span v-if="parsedTags.length === 0">-</span>
+              </div>
             </div>
           </el-col>
           <el-col :span="8">
@@ -108,14 +127,7 @@
           </el-col>
         </el-row>
 
-        <el-row :gutter="3">
-          <el-col :span="24">
-            <div class="infotop-row border-top">
-              <div class="infotop-row-lable">描述</div>
-              <div class="infotop-row-value">{{ viewInfo.description || '-' }}</div>
-            </div>
-          </el-col>
-        </el-row>
+
 
         <el-row :gutter="3">
           <el-col :span="24">
@@ -145,6 +157,7 @@
           <OnlineTest
             v-if="activeName === 'onlineTest'"
             :model-id="viewInfo.id"
+            :model-name="viewInfo.name"
             :access-mode="viewInfo.accessType === 'API' ? 1 : 0"
             style="margin: 0; padding: 0"
           />
@@ -286,9 +299,10 @@
 
     <el-image-viewer
       v-if="iconPreviewVisible"
-      :on-close="closeIconPreview"
+      @close="closeIconPreview"
       :url-list="[iconPreviewUrl]"
       :src="iconPreviewUrl"
+      z-index="9999"
     />
   </div>
 </template>
@@ -326,6 +340,20 @@ const showSearch = ref(true);
 
 const iconPreviewVisible = ref(false);
 const iconPreviewUrl = ref("");
+
+const parsedTags = computed(() => {
+  const tags = viewInfo.value.tags;
+  if (!tags) return [];
+  try {
+    const parsed = JSON.parse(tags);
+    if (Array.isArray(parsed)) {
+      return parsed.filter((item) => item && item.name);
+    }
+  } catch {
+    return [];
+  }
+  return [];
+});
 
 const rules = reactive({
   validFlag: [
@@ -448,19 +476,20 @@ const closeIconPreview = () => {
 
 const getTreeSelect = () => {
   listClassify().then((res) => {
-    for (let i = 0; i < res.rows.length; i++) {
+    console.log(res)
+    for (let i = 0; i < res.data.length; i++) {
       let arrTemp = [];
-      for (let j = 0; j < res.rows.length; j++) {
-        if (res.rows[i].id == res.rows[j].parentId) {
-          res.rows[i].children = arrTemp;
-          arrTemp.push(res.rows[j]);
+      for (let j = 0; j < res.data.length; j++) {
+        if (res.data[i].id == res.data[j].parentId) {
+          res.data[i].children = arrTemp;
+          arrTemp.push(res.data[j]);
         }
       }
     }
     const result = [];
-    for (let i = 0; i < res.rows.length; i++) {
-      if (res.rows[i].parentId == 0) {
-        result.push(res.rows[i]);
+    for (let i = 0; i < res.data.length; i++) {
+      if (res.data[i].parentId == 0) {
+        result.push(res.data[i]);
       }
     }
     classifyOptions.value = result;
@@ -494,39 +523,7 @@ const normalizer = (node) => {
   };
 };
 
-const isWhetherPublish = () => {
-  let whetherPublish = viewInfo.value.whetherPublish == 0 ? 1 : 0;
-  if (whetherPublish == 1) {
-    listInterfaceAddress({
-      modelId: viewInfo.value.id,
-      versionId: viewInfo.value.versionId,
-    }).then((response) => {
-      interfaceAddressList.value = response.data.rows;
-      if (interfaceAddressList.value.length > 0) {
-        viewInfo.value.whetherPublish = whetherPublish;
-        updateModel(viewInfo.value).then((response) => {
-          ElMessage.success(
-            viewInfo.value.whetherPublish == 0 ? "以取消发布" : "发布成功"
-          );
-          getList();
-        });
-      } else {
-        ElMessageBox.alert("发布失败，请添加接口或者文件数据！", "错误", {
-          type: "error",
-          confirmButtonText: "确定",
-        });
-      }
-    });
-  } else {
-    viewInfo.value.whetherPublish = whetherPublish;
-    updateModel(viewInfo.value).then((response) => {
-      ElMessage.success(
-        viewInfo.value.whetherPublish == 0 ? "以取消发布" : "发布成功"
-      );
-      getList();
-    });
-  }
-};
+
 
 const submitForm = () => {
   if (formRef.value) {
@@ -575,12 +572,13 @@ onMounted(() => {
   display: inline-flex;
   justify-content: center;
   align-items: center;
-  padding: 2px;
+  padding: 1px 2px;
   background-color: #2666fb;
   color: #fff;
-  aspect-ratio: 1 / 1;
-  width: 20px;
-  height: 20px;
+  border-radius: 4px;
+  font-size: 12px;
+  white-space: nowrap;
+  min-width: 30px;
 }
 
 .fhbtn {
@@ -648,6 +646,13 @@ onMounted(() => {
     padding: 10px 15px;
     color: #333333;
     word-break: break-all;
+
+    .tag-list {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 8px;
+    }
   }
 }
 

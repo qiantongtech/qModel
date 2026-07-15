@@ -130,3 +130,8 @@ CREATE TABLE model_build_log
 ) COMMENT = '构建日志表';
 
 
+ALTER TABLE `model_file_resource`
+    ADD `input_schema` TEXT COMMENT '入参JSONSchema定义';
+
+ALTER TABLE `model_file_resource`
+    ADD `output_schema` TEXT COMMENT '出参JSONSchema定义';

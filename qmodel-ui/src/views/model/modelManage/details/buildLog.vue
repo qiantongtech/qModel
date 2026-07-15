@@ -2,13 +2,10 @@
   <div class="build-log">
     <div class="build-status-header">
       <div class="status-info">
-        <el-tag :type="buildStatus === 'success' ? 'success' : buildStatus === 'building' ? 'warning' : 'danger'" size="large">
-          构建状态：{{ buildStatusText }}
-        </el-tag>
+        <div class="h2-titles">构建状态 </div>
+        <dict-tag :options="build_status" :value="buildStatus" class="con-value access-tag" />
       </div>
-      <div class="image-tag-info" v-if="imageTag">
-        <el-tag>当前镜像标签：{{ imageTag }}</el-tag>
-      </div>
+
     </div>
 
     <div class="log-content">
@@ -52,8 +49,9 @@
 </template>
 
 <script setup name="BuildLog">
-import { ref, computed, onMounted, watch, nextTick } from "vue";
+import {ref, computed, onMounted, watch, nextTick, getCurrentInstance} from "vue";
 import { listModelBuildLog } from "@/api/model/buildLog/modelBuildLog";
+import DictTag from "@/components/DictTag/index.vue";
 
 const props = defineProps({
   modelId: {
@@ -61,6 +59,10 @@ const props = defineProps({
     default: null
   }
 });
+
+
+const { proxy } = getCurrentInstance();
+const { build_status } = proxy.useDict('build_status');
 
 const logs = ref([]);
 const logRef = ref(null);
@@ -123,9 +125,7 @@ const getBuildLogs = () => {
     if (data.length > 0) {
       const latestLog = data[0];
       buildType.value = latestLog.buildType || '';
-      buildStatus.value = latestLog.status === '构建成功' ? 'success' :
-                          latestLog.status === '构建中' ? 'building' :
-                          latestLog.status === '构建失败' ? 'failed' : 'pending';
+      buildStatus.value = latestLog.status;
       startTime.value = latestLog.startTime || '';
       endTime.value = latestLog.endTime || '';
       duration.value = latestLog.duration || null;
@@ -172,6 +172,13 @@ onMounted(() => {
 
 .status-info {
   flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  .h2-titles {
+    margin: 0;
+  }
 }
 
 .image-tag-info {

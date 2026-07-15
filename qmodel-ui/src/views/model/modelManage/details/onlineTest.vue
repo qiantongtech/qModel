@@ -122,6 +122,10 @@ const props = defineProps({
     type: [Number, String],
     default: null
   },
+  modelName: {
+    type: String,
+    default: ''
+  },
   accessMode: {
     type: Number,
     default: 0
@@ -391,6 +395,8 @@ const handleTest = async () => {
       }
     } else {
       const data = {
+        modelId: props.modelId,
+        modelName: props.modelName,
         apiUrl: configData.apiUrl,
         requestMethod: configData.requestMethod,
         contentType: configData.contentType,

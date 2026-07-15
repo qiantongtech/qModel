@@ -33,13 +33,11 @@
 package tech.qiantong.qmodel.module.model.dal.dataobject.invokeHistory;
 
 import java.util.Date;
+
+import com.baomidou.mybatisplus.annotation.*;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableLogic;
-import com.baomidou.mybatisplus.annotation.TableName;
 import tech.qiantong.qmodel.common.core.domain.BaseEntity;
 
 /**
@@ -112,6 +110,39 @@ public class ModelInvokeHistoryDO extends BaseEntity {
     /** 删除标志 */
     @TableLogic
     private Boolean delFlag;
+
+    @Schema(description = "创建者id", example = "")
+    private Long creatorId;
+
+    /**
+     * 创建者
+     */
+    @Schema(description = "创建者", example = "")
+    private String createBy;
+
+    /**
+     * 创建时间
+     */
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @Schema(description = "创建时间", example = "")
+    private Date createTime;
+
+    @Schema(description = "更新者id", example = "")
+    private Long updatorId;
+
+    /**
+     * 更新者
+     */
+    @Schema(description = "更新者", example = "")
+    private String updateBy;
+
+    /**
+     * 更新时间
+     */
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    private Date updateTime;
+
+
 
 
 }

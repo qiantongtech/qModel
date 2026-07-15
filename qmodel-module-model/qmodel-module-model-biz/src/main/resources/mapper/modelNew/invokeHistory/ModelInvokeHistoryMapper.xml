@@ -147,6 +147,15 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
          </trim>
     </insert>
 
+    <insert id="insertInvokeHistoryWithoutFill" parameterType="ModelInvokeHistoryDO" useGeneratedKeys="true" keyProperty="id">
+        insert into model_invoke_history (model_id, model_name, invoke_type, input_params,
+            output_result, status, error_message, duration, start_time, end_time, client_ip,
+            create_by, creator_id, create_time, update_by, updator_id, update_time, valid_flag, del_flag)
+        values (#{modelId}, #{modelName}, #{invokeType}, #{inputParams},
+            #{outputResult}, #{status}, #{errorMessage}, #{duration}, #{startTime}, #{endTime}, #{clientIp},
+            #{createBy}, #{creatorId}, #{createTime}, #{updateBy}, #{updatorId}, #{updateTime}, #{validFlag}, #{delFlag})
+    </insert>
+
     <update id="updateModelInvokeHistory" parameterType="ModelInvokeHistoryDO">
         update model_invoke_history
         <trim prefix="SET" suffixOverrides=",">

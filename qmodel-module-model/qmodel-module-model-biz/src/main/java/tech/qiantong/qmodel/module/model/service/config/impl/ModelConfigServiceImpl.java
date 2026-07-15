@@ -62,6 +62,7 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 import tech.qiantong.qmodel.common.core.page.PageResult;
 import tech.qiantong.qmodel.common.exception.ServiceException;
+import tech.qiantong.qmodel.common.utils.ip.IpUtils;
 import tech.qiantong.qmodel.common.utils.StringUtils;
 import tech.qiantong.qmodel.common.utils.object.BeanUtils;
 import tech.qiantong.qmodel.module.model.controller.admin.config.vo.ModelConfigPageReqVO;
@@ -72,7 +73,9 @@ import tech.qiantong.qmodel.module.model.controller.admin.config.vo.ModelConfigT
 import tech.qiantong.qmodel.module.model.dal.dataobject.config.ModelConfigDO;
 import tech.qiantong.qmodel.module.model.dal.mapper.config.ModelConfigMapper;
 import tech.qiantong.qmodel.module.model.service.config.IModelConfigService;
+import tech.qiantong.qmodel.module.model.service.invokeHistory.IModelInvokeHistoryService;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import java.util.Date;
 /**
  * 模型配置详情Service业务层处理
  *
@@ -88,6 +91,9 @@ public class ModelConfigServiceImpl  extends ServiceImpl<ModelConfigMapper,Model
 
     @Resource
     private tech.qiantong.qmodel.config.ServerConfig serverConfig;
+
+    @Resource
+    private IModelInvokeHistoryService modelInvokeHistoryService;
 
     @Value("${dromara.x-file-storage.local-plus[0].storage-path:${user.dir}/upload/}")
     private String storagePath;
@@ -178,6 +184,8 @@ public class ModelConfigServiceImpl  extends ServiceImpl<ModelConfigMapper,Model
 
     @Override
     public ModelConfigTestRespVO testModelConfig(ModelConfigTestReqVO testReqVO) {
+        Date startTime = new Date();
+        String clientIp = IpUtils.getIpAddr();
         ModelConfigTestRespVO result = new ModelConfigTestRespVO();
         List<String> logs = new ArrayList<>();
         result.setLogs(logs);
@@ -193,7 +201,6 @@ public class ModelConfigServiceImpl  extends ServiceImpl<ModelConfigMapper,Model
         RestTemplate restTemplate = new RestTemplate(factory);
 
         try {
-            // 1. 处理鉴权
             String authToken = null;
             String authKeyName = testReqVO.getAuthKeyName();
             if ("FIXED".equals(testReqVO.getAuthType())) {
@@ -210,7 +217,6 @@ public class ModelConfigServiceImpl  extends ServiceImpl<ModelConfigMapper,Model
                 logs.add("无鉴权配置");
             }
 
-            // 2. 组装目标请求
             HttpHeaders headers = new HttpHeaders();
             if (StringUtils.isNotBlank(testReqVO.getContentType())) {
                 headers.setContentType(org.springframework.http.MediaType.parseMediaType(testReqVO.getContentType()));
@@ -274,15 +280,30 @@ public class ModelConfigServiceImpl  extends ServiceImpl<ModelConfigMapper,Model
             result.setResponseBody(response.getBody());
             result.setResponseHeaders(response.getHeaders());
             logs.add("请求成功，HTTP 状态码：" + response.getStatusCodeValue());
+
+            Date endTime = new Date();
+            modelInvokeHistoryService.saveInvokeLogAsync(testReqVO.getModelId(), testReqVO.getModelName(), "1",
+                    testReqVO.getTestBody(), response.getBody(), "1", null,
+                    endTime.getTime() - startTime.getTime(), startTime, endTime, clientIp);
         } catch (RestClientResponseException e) {
             result.setStatusCode(e.getRawStatusCode());
             result.setResponseBody(e.getResponseBodyAsString());
             result.setErrorMsg("请求返回非 2xx 状态：" + e.getStatusText());
             logs.add("请求返回异常状态：" + e.getRawStatusCode() + " " + e.getStatusText());
+
+            Date endTime = new Date();
+            modelInvokeHistoryService.saveInvokeLogAsync(testReqVO.getModelId(), testReqVO.getModelName(), "1",
+                    testReqVO.getTestBody(), e.getResponseBodyAsString(), "2", e.getStatusText(),
+                    endTime.getTime() - startTime.getTime(), startTime, endTime, clientIp);
         } catch (Exception e) {
             result.setErrorMsg(e.getMessage());
             logs.add("请求异常：" + e.getMessage());
             log.error("模型配置测试调用异常", e);
+
+            Date endTime = new Date();
+            modelInvokeHistoryService.saveInvokeLogAsync(testReqVO.getModelId(), testReqVO.getModelName(), "1",
+                    testReqVO.getTestBody(), null, "2", e.getMessage(),
+                    endTime.getTime() - startTime.getTime(), startTime, endTime, clientIp);
         }
         return result;
     }

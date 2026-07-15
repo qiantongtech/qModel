@@ -35,6 +35,7 @@ package tech.qiantong.qmodel.module.model.service.invokeHistory;
 import java.util.List;
 import java.util.Map;
 import java.util.Collection;
+import java.util.Date;
 import com.baomidou.mybatisplus.extension.service.IService;
 import tech.qiantong.qmodel.common.core.page.PageResult;
 import tech.qiantong.qmodel.module.model.controller.admin.invokeHistory.vo.ModelInvokeHistorySaveReqVO;
@@ -111,5 +112,24 @@ public interface IModelInvokeHistoryService extends IService<ModelInvokeHistoryD
      * @return 结果
      */
     String importModelInvokeHistory(List<ModelInvokeHistoryRespVO> importExcelList, boolean isUpdateSupport, String operName);
+
+    /**
+     * 异步保存模型调用日志
+     *
+     * @param modelId 模型ID
+     * @param modelName 模型名称
+     * @param invokeType 调用类型（PYTHON/API）
+     * @param inputParams 输入参数（JSON格式）
+     * @param outputResult 输出结果（JSON格式）
+     * @param status 调用状态（SUCCESS/FAILED）
+     * @param errorMessage 错误信息
+     * @param duration 执行耗时（毫秒）
+     * @param startTime 开始时间
+     * @param endTime 结束时间
+     * @param clientIp 客户端IP
+     */
+    void saveInvokeLogAsync(Long modelId, String modelName, String invokeType, String inputParams,
+                            String outputResult, String status, String errorMessage, Long duration,
+                            Date startTime, Date endTime, String clientIp);
 
 }

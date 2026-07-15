@@ -64,16 +64,18 @@ public interface ModelInvokeHistoryMapper extends BaseMapperX<ModelInvokeHistory
                 .eqIfPresent(ModelInvokeHistoryDO::getInvokeType, reqVO.getInvokeType())
                 .eqIfPresent(ModelInvokeHistoryDO::getInputParams, reqVO.getInputParams())
                 .eqIfPresent(ModelInvokeHistoryDO::getOutputResult, reqVO.getOutputResult())
-                .eqIfPresent(ModelInvokeHistoryDO::getStartTime, reqVO.getStartTime())
-                .eqIfPresent(ModelInvokeHistoryDO::getEndTime, reqVO.getEndTime())
+                .gtIfPresent(ModelInvokeHistoryDO::getStartTime, reqVO.getStartTime())
+                .ltIfPresent(ModelInvokeHistoryDO::getEndTime, reqVO.getEndTime())
                 .eqIfPresent(ModelInvokeHistoryDO::getDuration, reqVO.getDuration())
                 .eqIfPresent(ModelInvokeHistoryDO::getErrorMessage, reqVO.getErrorMessage())
                 .eqIfPresent(ModelInvokeHistoryDO::getStatus, reqVO.getStatus())
-                .eqIfPresent(ModelInvokeHistoryDO::getClientIp, reqVO.getClientIp())
+                .likeIfPresent(ModelInvokeHistoryDO::getClientIp, reqVO.getClientIp())
                 .eqIfPresent(ModelInvokeHistoryDO::getCreateTime, reqVO.getCreateTime())
                 // 如果 reqVO.getName() 不为空，则添加 name 的精确匹配条件（name = '<name>'）
                 // .likeIfPresent(ModelInvokeHistoryDO::getName, reqVO.getName())
                 // 按照 createTime 字段降序排序
                 .orderBy(reqVO.getOrderByColumn(), reqVO.getIsAsc(), allowedColumns));
     }
+
+    int insertInvokeHistoryWithoutFill(ModelInvokeHistoryDO record);
 }

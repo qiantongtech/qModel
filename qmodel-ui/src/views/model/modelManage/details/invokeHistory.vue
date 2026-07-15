@@ -42,15 +42,15 @@
 
     <div class="pagecont-bottom">
       <el-table stripe height="58vh" v-loading="loading" :data="modelInvokeHistoryList" :default-sort="defaultSort" @sort-change="handleSortChange">
-        <el-table-column label="编号" align="center" prop="id" />
+        <el-table-column label="编号" align="center" prop="id" sortable />
         <el-table-column label="客户端IP" align="center" prop="clientIp">
           <template #default="scope">
             {{ scope.row.clientIp || '-' }}
           </template>
         </el-table-column>
-        <el-table-column label="请求时间" align="center" prop="createTime" width="180">
+        <el-table-column label="请求时间" align="center" prop="createTime" width="180" sortable>
           <template #default="scope">
-            <span>{{ parseTime(scope.row.createTime, '{y}-{m}-{d} {h}:{i}:{s}') }}</span>
+            <span>{{ parseTime(scope.row.createTime, '{y}-{m}-{d} {h}:{i}') }}</span>
           </template>
         </el-table-column>
         <el-table-column label="耗时" align="center" prop="duration">
@@ -60,9 +60,7 @@
         </el-table-column>
         <el-table-column label="调用状态" align="center" prop="status">
           <template #default="scope">
-            <el-tag :type="scope.row.status === '成功(200)' ? 'success' : 'danger'">
-              {{ scope.row.status || '-' }}
-            </el-tag>
+            <dict-tag :options="invoke_history_status" :value="scope.row.status" class="con-value access-tag" />
           </template>
         </el-table-column>
         <el-table-column label="操作" align="center" class-name="small-padding fixed-width" width="100">
@@ -97,7 +95,7 @@
       <el-form ref="modelInvokeHistoryRef" :model="form" label-width="80px">
         <el-row :gutter="20">
           <el-col :span="12">
-            <el-form-item label="模型id" prop="modelId">
+            <el-form-item label="模型编号" prop="modelId">
               <div>{{ form.modelId || '-' }}</div>
             </el-form-item>
           </el-col>
@@ -115,7 +113,7 @@
           </el-col>
           <el-col :span="12">
             <el-form-item label="调用状态" prop="status">
-              <div>{{ form.status || '-' }}</div>
+              <dict-tag :options="invoke_history_status" :value="form.status" class="con-value access-tag" />
             </el-form-item>
           </el-col>
         </el-row>
@@ -171,7 +169,8 @@
 
 <script setup name="InvokeHistory">
 import { listModelInvokeHistory, getModelInvokeHistory } from "@/api/model/invokeHistory/modelInvokeHistory";
-import { ref, reactive, onMounted, watch } from "vue";
+import {ref, reactive, onMounted, watch, getCurrentInstance} from "vue";
+import DictTag from "@/components/DictTag/index.vue";
 
 const props = defineProps({
   modelId: {
@@ -180,6 +179,8 @@ const props = defineProps({
   }
 })
 
+const { proxy } = getCurrentInstance();
+const { invoke_history_status } = proxy.useDict('invoke_history_status');
 const modelInvokeHistoryList = ref([]);
 const loading = ref(true);
 const showSearch = ref(true);
