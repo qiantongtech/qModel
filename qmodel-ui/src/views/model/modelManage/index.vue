@@ -179,37 +179,62 @@
                     </div>
                   </div>
                   <div class="item-btns">
-                    <el-button
-                      link
-                      type="primary"
-                      icon="Edit"
-                      :disabled="['1', '2', '3'].includes(String(item.status))"
-                      @click.stop="handleUpdate(item)"
-                    >修改</el-button>
-                    <div class="btn-divider"></div>
-                    <el-button
-                      link
-                      type="primary"
-                      icon="VideoPlay"
-                      :disabled="String(item.status) === '2' || String(item.status) === '3'"
-                      @click.stop="handleTest(item)"
-                    >调试</el-button>
-                    <div class="btn-divider"></div>
-                    <el-button
-                      link
-                      :type="String(item.status) === '1' ? 'info' : 'primary'"
-                      :icon="String(item.status) === '1' ? 'CircleClose' : 'CircleCheck'"
-                      :disabled="String(item.status) === '2' || String(item.status) === '3'"
-                      @click.stop="handleToggleStatus(item)"
-                    >{{ String(item.status) === '1' ? '停用' : '启用' }}</el-button>
-                    <div class="btn-divider"></div>
-                    <el-button
-                      link
-                      type="danger"
-                      icon="Delete"
-                      :disabled="['1', '2', '3'].includes(String(item.status))"
-                      @click.stop="handleDelete(item)"
-                    >删除</el-button>
+                    <template v-if="String(item.status) === '2'">
+                      <el-button
+                        link
+                        type="primary"
+                        icon="View"
+                        @click.stop="handleViewBuildLog(item)"
+                      >查看构建日志</el-button>
+                    </template>
+                    <template v-else-if="String(item.status) === '3'">
+                      <el-button
+                        link
+                        type="primary"
+                        icon="View"
+                        @click.stop="handleViewBuildLog(item)"
+                      >查看构建日志</el-button>
+                      <div class="btn-divider"></div>
+                      <el-button
+                        link
+                        type="danger"
+                        icon="Delete"
+                        @click.stop="handleDelete(item)"
+                      >删除</el-button>
+                    </template>
+                    <template v-else>
+                      <el-button
+                        link
+                        type="primary"
+                        icon="Edit"
+                        :disabled="['1'].includes(String(item.status))"
+                        @click.stop="handleUpdate(item)"
+                      >修改</el-button>
+                      <div class="btn-divider"></div>
+                      <el-button
+                        link
+                        type="primary"
+                        icon="VideoPlay"
+                        :disabled="String(item.status) === '4'"
+                        @click.stop="handleTest(item)"
+                      >调试</el-button>
+                      <div class="btn-divider"></div>
+                      <el-button
+                        link
+                        :type="String(item.status) === '1' ? 'info' : 'primary'"
+                        :icon="String(item.status) === '1' ? 'CircleClose' : 'CircleCheck'"
+                        :disabled="String(item.status) === '4'"
+                        @click.stop="handleToggleStatus(item)"
+                      >{{ String(item.status) === '1' ? '停用' : '启用' }}</el-button>
+                      <div class="btn-divider"></div>
+                      <el-button
+                        link
+                        type="danger"
+                        icon="Delete"
+                        :disabled="['1', '4'].includes(String(item.status))"
+                        @click.stop="handleDelete(item)"
+                      >删除</el-button>
+                    </template>
                   </div>
                 </div>
               </el-card>
@@ -438,6 +463,13 @@ const handleToggleStatus = (row) => {
       ElMessage.success(text + "成功");
     })
     .catch(() => {});
+};
+
+const handleViewBuildLog = (row) => {
+  proxy.$router.push({
+    path: "/model/modelManageView",
+    query: { modelId: row.id }
+  });
 };
 
 const handleDelete = (row) => {
@@ -715,6 +747,16 @@ function getImage(row) {
 
       .status-dot {
         background: #f2657d;
+      }
+    }
+
+    .status-success {
+      color: #35bf53;
+      background: rgba(53, 191, 83, 0.062745);
+      border: 1px solid rgba(53, 191, 83, 0.14902);
+
+      .status-dot {
+        background: #35bf53;
       }
     }
   }

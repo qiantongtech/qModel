@@ -421,6 +421,7 @@ const buildModelData = () => {
     modelData.fileSize = form.uploadedFile?.size ? Math.round(form.uploadedFile.size / (1024 * 1024)) : undefined
     modelData.scriptName = 'main.py'
     modelData.resourceType = '2'
+    modelData.status = '2'
     modelData.modelVersion = 1
     modelData.inputSchema = form.inputSchema || undefined
     modelData.outputSchema = form.outputSchema || undefined

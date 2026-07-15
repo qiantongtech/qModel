@@ -92,7 +92,7 @@ public class ModelRespVO implements Serializable {
     private String author;
 
     @Excel(name = "状态")
-    @Schema(description = "状态", example = "")
+    @Schema(description = "状态", example = "状态;0-停用, 1-启用，2-构建部署中，3-构建失败，4-构建成功")
     private String status;
 
     @Excel(name = "标签")

@@ -207,6 +207,8 @@ const queryParams = reactive({
   status: null,
   clientIp: null,
   createTime: null,
+  orderByColumn: "createTime",  // 添加默认排序字段
+  isAsc: "desc",
 });
 
 const form = reactive({});

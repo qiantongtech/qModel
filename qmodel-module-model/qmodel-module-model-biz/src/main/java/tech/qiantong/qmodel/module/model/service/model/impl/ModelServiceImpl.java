@@ -222,6 +222,7 @@ public class ModelServiceImpl extends ServiceImpl<ModelMapper, ModelDO> implemen
 
     @Override
     public void updateModelStatus(Long id, String status) {
+
         ModelDO updateObj = new ModelDO();
         updateObj.setId(id);
         updateObj.setStatus(status);

@@ -51,7 +51,9 @@ import java.util.zip.ZipInputStream;
 
 import tech.qiantong.qmodel.common.utils.DateUtils;
 import tech.qiantong.qmodel.module.model.dal.dataobject.fileResource.ModelFileResourceDO;
+import tech.qiantong.qmodel.module.model.dal.dataobject.model.ModelDO;
 import tech.qiantong.qmodel.module.model.dal.mapper.fileResource.ModelFileResourceMapper;
+import tech.qiantong.qmodel.module.model.dal.mapper.model.ModelMapper;
 import tech.qiantong.qmodel.module.model.service.buildLog.IModelBuildLogService;
 import com.alibaba.fastjson.JSON;
 
@@ -61,6 +63,9 @@ public class ModelFileResourceDepsCheckHandler {
 
     @Resource
     private ModelFileResourceMapper modelFileResourceMapper;
+
+    @Resource
+    private ModelMapper modelMapper;
 
     @Resource
     private IModelBuildLogService modelBuildLogService;
@@ -73,6 +78,9 @@ public class ModelFileResourceDepsCheckHandler {
     private static final String STATUS_SUCCESS = "2";
     private static final String STATUS_FAILED = "3";
 
+    private static final String MODEL_STATUS_BUILD_FAILED = "3";
+    private static final String MODEL_STATUS_BUILD_SUCCESS = "0";
+
     private static final String STORAGE_PATH = System.getProperty("user.dir") + "/upload/";
 
     @Async("threadPoolTaskExecutor")
@@ -82,9 +90,9 @@ public class ModelFileResourceDepsCheckHandler {
         Long buildLogId = null;
         StringBuilder buildLogBuilder = new StringBuilder();
         String requirementsContent = "";
-
+        ModelFileResourceDO fileResource = null;
         try {
-            ModelFileResourceDO fileResource = modelFileResourceMapper.selectById(fileResourceId);
+            fileResource = modelFileResourceMapper.selectById(fileResourceId);
             if (fileResource == null) {
                 log.warn("文件资源不存在，fileResourceId: {}", fileResourceId);
                 return;
@@ -111,6 +119,7 @@ public class ModelFileResourceDepsCheckHandler {
                 buildLogBuilder.append("错误: ").append(errorMsg).append("\n");
                 modelBuildLogService.updateBuildLogFailed(buildLogId, errorMsg, null, buildLogBuilder.toString());
                 updateStatus(fileResourceId, STATUS_FAILED, null, null);
+                updateModelStatus(fileResource.getModelId(), MODEL_STATUS_BUILD_FAILED);
                 return;
             }
 
@@ -124,6 +133,7 @@ public class ModelFileResourceDepsCheckHandler {
                 buildLogBuilder.append("错误: ").append(errorMsg).append("\n");
                 modelBuildLogService.updateBuildLogFailed(buildLogId, errorMsg, null, buildLogBuilder.toString());
                 updateStatus(fileResourceId, STATUS_FAILED, null, null);
+                updateModelStatus(fileResource.getModelId(), MODEL_STATUS_BUILD_FAILED);
                 return;
             }
 //            buildLogBuilder.append("解压目录: ").append(extractDir).append("\n");
@@ -184,6 +194,7 @@ public class ModelFileResourceDepsCheckHandler {
                         buildLogBuilder.toString()
                 );
                 updateStatus(fileResourceId, STATUS_SUCCESS, scriptPath, depsPath);
+                updateModelStatus(fileResource.getModelId(), MODEL_STATUS_BUILD_SUCCESS);
                 log.info("依赖检测通过，fileResourceId: {}", fileResourceId);
             } else {
                 buildLogBuilder.append("开始安装缺失的依赖包...\n");
@@ -199,6 +210,7 @@ public class ModelFileResourceDepsCheckHandler {
                             buildLogBuilder.toString()
                     );
                     updateStatus(fileResourceId, STATUS_SUCCESS, scriptPath, depsPath);
+                    updateModelStatus(fileResource.getModelId(), MODEL_STATUS_BUILD_SUCCESS);
                     log.info("依赖安装成功，fileResourceId: {}", fileResourceId);
                 } else {
                     buildLogBuilder.append("依赖包安装失败\n");
@@ -210,6 +222,7 @@ public class ModelFileResourceDepsCheckHandler {
                             buildLogBuilder.toString()
                     );
                     updateStatus(fileResourceId, STATUS_FAILED, scriptPath, depsPath);
+                    updateModelStatus(fileResource.getModelId(), MODEL_STATUS_BUILD_FAILED);
                     log.warn("依赖安装失败，fileResourceId: {}", fileResourceId);
                 }
             }
@@ -223,6 +236,7 @@ public class ModelFileResourceDepsCheckHandler {
             }
             try {
                 updateStatus(fileResourceId, STATUS_FAILED, null, null);
+                updateModelStatus(fileResource.getModelId(), MODEL_STATUS_BUILD_FAILED);
             } catch (Exception updateEx) {
                 log.error("更新状态失败，fileResourceId: {}", fileResourceId, updateEx);
             }
@@ -522,6 +536,16 @@ public class ModelFileResourceDepsCheckHandler {
         }
 
         modelFileResourceMapper.update(null, wrapper);
+    }
+
+    private void updateModelStatus(Long modelId, String status) {
+        UpdateWrapper<ModelDO> wrapper = new UpdateWrapper<>();
+        wrapper.eq("id", modelId)
+                .set("status", status)
+                .set("update_by", "system")
+                .set("updator_id", 1L)
+                .set("update_time", new java.util.Date());
+        modelMapper.update(null, wrapper);
     }
 
 }

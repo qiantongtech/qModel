@@ -59,6 +59,7 @@ public interface ModelFileResourceMapper extends BaseMapperX<ModelFileResourceDO
                 .likeIfPresent(ModelFileResourceDO::getFileName, reqVO.getFileName())
                 .likeIfPresent(ModelFileResourceDO::getScriptName, reqVO.getScriptName())
                 .eqIfPresent(ModelFileResourceDO::getFilePath, reqVO.getFilePath())
+                .eqIfPresent(ModelFileResourceDO::getModelId, reqVO.getModelId())
                 .eqIfPresent(ModelFileResourceDO::getDepsFilePath, reqVO.getDepsFilePath())
                 .eqIfPresent(ModelFileResourceDO::getModelVersion, reqVO.getModelVersion())
                 .eqIfPresent(ModelFileResourceDO::getResourceType, reqVO.getResourceType())
