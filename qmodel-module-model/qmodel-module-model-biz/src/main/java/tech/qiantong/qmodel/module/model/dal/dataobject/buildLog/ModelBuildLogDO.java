@@ -33,13 +33,12 @@
 package tech.qiantong.qmodel.module.model.dal.dataobject.buildLog;
 
 import java.util.Date;
+
+import com.baomidou.mybatisplus.annotation.*;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableLogic;
-import com.baomidou.mybatisplus.annotation.TableName;
 import tech.qiantong.qmodel.common.core.domain.BaseEntity;
 
 /**
@@ -77,10 +76,10 @@ public class ModelBuildLogDO extends BaseEntity {
     private Long versionId;
 
     /** 构建类型 */
-    private String buildType;
+    private Integer buildType;
 
     /** 构建状态 */
-    private String status;
+    private Integer status;
 
     /** 开始时间 */
     private Date startTime;
@@ -98,7 +97,7 @@ public class ModelBuildLogDO extends BaseEntity {
     private String missingPackages;
 
     /** 安装失败的依赖包列表JSON */
-    private String failedAckages;
+    private String failedPackages;
 
     /** dockerFile内容 */
     private String dockerfileContent;
@@ -118,6 +117,46 @@ public class ModelBuildLogDO extends BaseEntity {
     /** 删除标志 */
     @TableLogic
     private Boolean delFlag;
+
+
+    @Schema(description = "创建者id", example = "")
+    private Long creatorId;
+
+    /**
+     * 创建者
+     */
+    @Schema(description = "创建者", example = "")
+    private String createBy;
+
+    /**
+     * 创建时间
+     */
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @Schema(description = "创建时间", example = "")
+    private Date createTime;
+
+    @Schema(description = "更新者id", example = "")
+    private Long updatorId;
+
+    /**
+     * 更新者
+     */
+    @Schema(description = "更新者", example = "")
+    private String updateBy;
+
+    /**
+     * 更新时间
+     */
+    // 更新时间自动填充
+    @Schema(description = "更新时间", example = "")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    private Date updateTime;
+
+    /**
+     * 备注
+     */
+    @Schema(description = "备注", example = "")
+    private String remark;
 
 
 }

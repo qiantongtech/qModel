@@ -112,7 +112,7 @@ CREATE TABLE model_build_log
     `duration`           INT COMMENT '执行耗时',
     `installed_packages` TEXT COMMENT '已存在的依赖包列表JSON',
     `missing_packages`   TEXT COMMENT '缺失失败的依赖包列表JSON',
-    `failed_ackages`     TEXT COMMENT '安装失败的依赖包列表JSON',
+    `failed_packages`     TEXT COMMENT '安装失败的依赖包列表JSON',
     `dockerfile_content` TEXT COMMENT 'dockerFile内容',
     `build_log`          TEXT COMMENT '构建日志',
     `error_message`      TEXT COMMENT '错误日志',

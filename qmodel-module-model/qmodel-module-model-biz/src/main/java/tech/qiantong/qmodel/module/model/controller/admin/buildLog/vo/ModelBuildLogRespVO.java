@@ -105,7 +105,7 @@ public class ModelBuildLogRespVO implements Serializable {
 
     @Excel(name = "安装失败的依赖包列表JSON")
     @Schema(description = "安装失败的依赖包列表JSON", example = "")
-    private String failedAckages;
+    private String failedPackages;
 
     @Excel(name = "dockerFile内容")
     @Schema(description = "dockerFile内容", example = "")

@@ -39,21 +39,13 @@
       v-show="showSearch"
       @submit.prevent
     >
-      <el-form-item label="模型版本号：" prop="modelVersion">
-        <el-select
-          v-model="queryParams.version"
-          placeholder="请输入版本号"
-          clearable
-          class="el-form-input-width"
-        >
-          <el-option
-            v-for="item in versionList"
-            :key="item.id"
-            :label="'Version ' + item.version"
-            :value="item.version"
-          >
-          </el-option>
-        </el-select>
+      <el-form-item label="模型版名称" prop="modelVersion">
+        <el-input
+            v-model="queryParams.name"
+            placeholder="请输入模型名称"
+            clearable
+            @keyup.enter="handleQuery"
+        />
       </el-form-item>
       <el-form-item>
         <el-button type="primary" @click="handleQuery">
@@ -66,15 +58,15 @@
     </el-form>
 
     <el-row :gutter="10" class="mb8">
-      <el-col :span="1.5">
-        <el-button type="primary" plain @click="handleAdd">
-          <i class="iconfont-mini icon-xinzeng"></i>新增
-        </el-button>
-      </el-col>
-      <right-toolbar
-        v-model:showSearch="showSearch"
-        @queryTable="getList"
-      ></right-toolbar>
+<!--      <el-col :span="1.5">-->
+<!--        <el-button type="primary" plain @click="handleAdd">-->
+<!--          <i class="iconfont-mini icon-xinzeng"></i>新增-->
+<!--        </el-button>-->
+<!--      </el-col>-->
+<!--      <right-toolbar-->
+<!--        v-model:showSearch="showSearch"-->
+<!--        @queryTable="getList"-->
+<!--      ></right-toolbar>-->
     </el-row>
 
     <el-table
@@ -82,23 +74,29 @@
       :data="versionList"
       @selection-change="handleSelectionChange"
     >
+      <el-table-column label="编号" align="center" prop="version">
+        <template #default="scope">
+          1
+        </template>
+      </el-table-column>
       <el-table-column label="模型版本号" align="center" prop="version">
         <template #default="scope">
           <el-tag size="small">Version {{ scope.row.version }}</el-tag>
         </template>
       </el-table-column>
-      <el-table-column label="版本是否被启用" align="center" prop="status">
+      <el-table-column label="变更类型" align="center" prop="description"/>
+      <el-table-column label="变更详情" align="center" prop="description"/>
+      <el-table-column label="操作人" align="center" prop="updateBy">
         <template #default="scope">
-          <el-tag v-if="scope.row.status == 1">是</el-tag>
-          <el-tag type="info" v-else>否</el-tag>
+          <span>{{ scope.row.createBy }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="版本发布说明" align="center" prop="description" />
-      <!--      <el-table-column label="模型介绍" align="center" prop="remark" >
+      <el-table-column label="版本生成时间" align="center" prop="createTime" >
         <template #default="scope">
-          {{modelForm.remark}}
+          <span>{{ scope.row.createTime }}</span>
         </template>
-      </el-table-column>-->
+      </el-table-column>
+
       <el-table-column
         label="操作"
         align="center"
@@ -338,10 +336,13 @@ const modelId = computed(() => {
 
 // 监听器
 watch(
-  () => route.query.modelId,
-  () => {
-    getList();
-  }
+    () => props.model,
+    (newModel) => {
+      if (newModel && newModel.version) {
+        getList();
+      }
+    },
+    { deep: true }
 );
 
 // 方法
@@ -358,17 +359,23 @@ const getList = () => {
   loading.value = true;
   const mid = route.query.modelId;
   queryParams.modelId = mid;
-  getVersionList(queryParams).then((response) => {
-    console.log(response, "12312");
+  let data =  [];
+  if (data.length === 0 && props.model && props.model.version) {
+    data = [{
+      id: null,
+      modelId: mid,
+      modelName: props.model.name,
+      version: props.model.version,
+      status: 1,
+      description: '-',
+      createBy: props.model.createBy || '张三',
+      createTime: props.model.createTime || '2025-09-18 15:13',
+    }];
+  }
+  versionList.value = data;
+  total.value = data.length;
+  loading.value = false;
 
-    versionList.value = response.data;
-    total.value = response.data.length;
-    loading.value = false;
-  });
-  getModel(mid).then((response) => {
-    isFormat.value = response.data.accessMode;
-    modelForm.value = response.data;
-  });
 };
 
 // 取消按钮

@@ -43,6 +43,7 @@ import java.util.concurrent.TimeUnit;
 import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.TypeReference;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.transaction.support.TransactionSynchronizationManager;
 import org.springframework.transaction.support.TransactionSynchronization;
 
@@ -60,6 +61,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import tech.qiantong.qmodel.config.PythonConfig;
+import tech.qiantong.qmodel.config.ServerConfig;
 import tech.qiantong.qmodel.module.model.controller.admin.fileResource.vo.ModelFileResourcePageReqVO;
 import tech.qiantong.qmodel.module.model.controller.admin.fileResource.vo.ModelFileResourceRespVO;
 import tech.qiantong.qmodel.module.model.controller.admin.fileResource.vo.ModelFileResourceSaveReqVO;
@@ -90,6 +92,12 @@ public class ModelFileResourceServiceImpl extends ServiceImpl<ModelFileResourceM
 
     @Resource
     private PythonConfig pythonConfig;
+
+    @Resource
+    private ServerConfig serverConfig;
+
+    @Value("${dromara.x-file-storage.local-plus[0].storage-path:${user.dir}/upload/}")
+    private String storagePath;
 
     @Override
     public PageResult<ModelFileResourceDO> getModelFileResourcePage(ModelFileResourcePageReqVO pageReqVO) {
@@ -429,6 +437,38 @@ public class ModelFileResourceServiceImpl extends ServiceImpl<ModelFileResourceM
         }
     }
 
+    // 文件路径解析方法
+    private String resolveFilePath(String filePath) {
+        if (StringUtils.isBlank(filePath)) {
+            return filePath;
+        }
+        filePath = filePath.trim();
+
+        String currentServerUrl = serverConfig.getUrl();
+        if (StringUtils.isNotBlank(currentServerUrl) && filePath.startsWith(currentServerUrl)) {
+            String relativePath = filePath.substring(currentServerUrl.length());
+            if (relativePath.startsWith("/profile/")) {
+                relativePath = relativePath.substring("/profile/".length());
+            } else if (relativePath.startsWith("/")) {
+                relativePath = relativePath.substring(1);
+            }
+            String localPath = storagePath + relativePath;
+            File file = new File(localPath);
+            if (file.exists()) {
+                return localPath;
+            }
+        }
+
+        // 2. 直接作为本地路径处理
+        File file = new File(filePath);
+        if (file.exists()) {
+            return filePath;
+        }
+
+        // 3. 如果都不存在，保持原路径不变（Python脚本可能会处理）
+        return filePath;
+    }
+
     @Override
     public Object runModelScript(Long modelId, Map<String, Object> inputParam) {
         if (inputParam == null) {
@@ -464,10 +504,26 @@ public class ModelFileResourceServiceImpl extends ServiceImpl<ModelFileResourceM
         File workDir = scriptFile.getParentFile();
         String scriptName = scriptFile.getName();
 
-        String pythonCmd = getPythonCommand();
-        String paramJson = JSON.toJSONString(inputParam);
+        // ========== 新增：处理 inputParam 中的文件路径 ==========
+        Map<String, Object> processedParam = new HashMap<>();
+        for (Map.Entry<String, Object> entry : inputParam.entrySet()) {
+            String key = entry.getKey();
+            Object value = entry.getValue();
 
-        log.info("开始执行模型脚本，modelId: {}, scriptPath: {}, workDir: {}", modelId, scriptPath, workDir.getAbsolutePath());
+            if (value != null) {
+                String strValue = String.valueOf(value);
+                // 尝试解析为文件路径
+                String resolvedPath = resolveFilePath(strValue);
+                processedParam.put(key, resolvedPath);
+            } else {
+                processedParam.put(key, value);
+            }
+        }
+
+        String pythonCmd = getPythonCommand();
+        String paramJson = JSON.toJSONString(processedParam);  // 使用处理后的参数
+
+        log.debug("开始执行模型脚本，modelId: {}, scriptPath: {}, workDir: {}", modelId, scriptPath, workDir.getAbsolutePath());
 
         try {
             ProcessBuilder pb = new ProcessBuilder(pythonCmd, scriptName);
@@ -513,7 +569,7 @@ public class ModelFileResourceServiceImpl extends ServiceImpl<ModelFileResourceM
                 throw new ServiceException("Python脚本异常退出，退出码：" + exitCode + "，输出日志：" + output);
             }
 
-            log.info("模型脚本执行成功，modelId: {}", modelId);
+            log.debug("模型脚本执行成功，modelId: {}", modelId);
             try {
                 return JSON.parse(output.toString().trim());  // 使用 FastJSON 解析
             } catch (Exception e) {

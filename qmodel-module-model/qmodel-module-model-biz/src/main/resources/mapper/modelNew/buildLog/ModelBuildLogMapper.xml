@@ -49,7 +49,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="duration"    column="duration"    />
         <result property="installedPackages"    column="installed_packages"    />
         <result property="missingPackages"    column="missing_packages"    />
-        <result property="failedAckages"    column="failed_ackages"    />
+        <result property="failedPackages"    column="failed_packages"    />
         <result property="dockerfileContent"    column="dockerfile_content"    />
         <result property="buildLog"    column="build_log"    />
         <result property="errorMessage"    column="error_message"    />
@@ -66,7 +66,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <sql id="selectModelBuildLogVo">
-        select id, resource_id, model_id, model_name, version_id, build_type, status, start_time, end_time, duration, installed_packages, missing_packages, failed_ackages, dockerfile_content, build_log, error_message, requirements, valid_flag, del_flag, create_by, creator_id, create_time, update_by, updator_id, update_time, remark from model_build_log
+        select id, resource_id, model_id, model_name, version_id, build_type, status, start_time, end_time, duration, installed_packages, missing_packages, failed_packages, dockerfile_content, build_log, error_message, requirements, valid_flag, del_flag, create_by, creator_id, create_time, update_by, updator_id, update_time, remark from model_build_log
     </sql>
 
     <select id="selectModelBuildLogList" parameterType="ModelBuildLogDO" resultMap="ModelBuildLogResult">
@@ -83,7 +83,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="duration != null "> and duration = #{duration}</if>
             <if test="installedPackages != null  and installedPackages != ''"> and installed_packages = #{installedPackages}</if>
             <if test="missingPackages != null  and missingPackages != ''"> and missing_packages = #{missingPackages}</if>
-            <if test="failedAckages != null  and failedAckages != ''"> and failed_ackages = #{failedAckages}</if>
+            <if test="failedPackages != null  and failedPackages != ''"> and failed_packages = #{failedPackages}</if>
             <if test="dockerfileContent != null  and dockerfileContent != ''"> and dockerfile_content = #{dockerfileContent}</if>
             <if test="buildLog != null  and buildLog != ''"> and build_log = #{buildLog}</if>
             <if test="errorMessage != null  and errorMessage != ''"> and error_message = #{errorMessage}</if>
@@ -111,7 +111,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="duration != null">duration,</if>
             <if test="installedPackages != null">installed_packages,</if>
             <if test="missingPackages != null">missing_packages,</if>
-            <if test="failedAckages != null">failed_ackages,</if>
+            <if test="failedPackages != null">failed_packages,</if>
             <if test="dockerfileContent != null">dockerfile_content,</if>
             <if test="buildLog != null">build_log,</if>
             <if test="errorMessage != null">error_message,</if>
@@ -138,7 +138,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="duration != null">#{duration},</if>
             <if test="installedPackages != null">#{installedPackages},</if>
             <if test="missingPackages != null">#{missingPackages},</if>
-            <if test="failedAckages != null">#{failedAckages},</if>
+            <if test="failedPackages != null">#{failedPackages},</if>
             <if test="dockerfileContent != null">#{dockerfileContent},</if>
             <if test="buildLog != null">#{buildLog},</if>
             <if test="errorMessage != null">#{errorMessage},</if>
@@ -155,6 +155,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
          </trim>
     </insert>
 
+    <insert id="insertBuildLogWithoutFill" parameterType="ModelBuildLogDO" useGeneratedKeys="true" keyProperty="id">
+        insert into model_build_log (resource_id, model_id, model_name, build_type, status, start_time,
+            create_by, creator_id, create_time, update_by, updator_id, update_time)
+        values (#{resourceId}, #{modelId}, #{modelName}, #{buildType}, #{status}, #{startTime},
+            #{createBy}, #{creatorId}, #{createTime}, #{updateBy}, #{updatorId}, #{updateTime})
+    </insert>
+
     <update id="updateModelBuildLog" parameterType="ModelBuildLogDO">
         update model_build_log
         <trim prefix="SET" suffixOverrides=",">
@@ -169,7 +176,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="duration != null">duration = #{duration},</if>
             <if test="installedPackages != null">installed_packages = #{installedPackages},</if>
             <if test="missingPackages != null">missing_packages = #{missingPackages},</if>
-            <if test="failedAckages != null">failed_ackages = #{failedAckages},</if>
+            <if test="failedPackages != null">failed_packages = #{failedPackages},</if>
             <if test="dockerfileContent != null">dockerfile_content = #{dockerfileContent},</if>
             <if test="buildLog != null">build_log = #{buildLog},</if>
             <if test="errorMessage != null">error_message = #{errorMessage},</if>

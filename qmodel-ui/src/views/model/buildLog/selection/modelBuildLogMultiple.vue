@@ -203,9 +203,9 @@
           {{ scope.row.missingPackages || '-' }}
         </template>
       </el-table-column>
-      <el-table-column label="安装失败的依赖包列表JSON" align="center" prop="failedAckages">
+      <el-table-column label="安装失败的依赖包列表JSON" align="center" prop="failedPackages">
         <template #default="scope">
-          {{ scope.row.failedAckages || '-' }}
+          {{ scope.row.failedPackages || '-' }}
         </template>
       </el-table-column>
       <el-table-column label="dockerFile内容" align="center" prop="dockerfileContent">
@@ -290,7 +290,7 @@
       duration: null,
       installedPackages: null,
       missingPackages: null,
-      failedAckages: null,
+      failedPackages: null,
       dockerfileContent: null,
       buildLog: null,
       errorMessage: null,

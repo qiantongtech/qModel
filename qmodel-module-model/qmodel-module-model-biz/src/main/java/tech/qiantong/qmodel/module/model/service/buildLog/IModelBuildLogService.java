@@ -112,4 +112,45 @@ public interface IModelBuildLogService extends IService<ModelBuildLogDO> {
      */
     String importModelBuildLog(List<ModelBuildLogRespVO> importExcelList, boolean isUpdateSupport, String operName);
 
+    /**
+     * 创建构建日志开始记录
+     *
+     * @param resourceId 模型文件id
+     * @param modelId 模型id
+     * @param modelName 模型名称
+     * @param buildType 构建类型
+     * @return 构建日志编号
+     */
+    Long createBuildLogStart(Long resourceId, Long modelId, String modelName, Integer buildType);
+
+    /**
+     * 更新构建日志成功状态
+     *
+     * @param buildLogId 构建日志编号
+     * @param installedPackages 已安装依赖包列表JSON
+     * @param missingPackages 缺失依赖包列表JSON
+     * @param requirements requirements.txt内容
+     * @param buildLog 构建日志内容
+     */
+    void updateBuildLogSuccess(Long buildLogId, String installedPackages, String missingPackages,
+                              String requirements, String buildLog);
+
+    /**
+     * 更新构建日志失败状态
+     *
+     * @param buildLogId 构建日志编号
+     * @param errorMessage 错误信息
+     * @param failedPackages 安装失败的依赖包列表JSON
+     * @param buildLog 构建日志内容
+     */
+    void updateBuildLogFailed(Long buildLogId, String errorMessage, String failedPackages, String buildLog);
+
+    /**
+     * 获取最新的构建日志
+     *
+     * @param resourceId 模型文件id
+     * @return 构建日志
+     */
+    ModelBuildLogDO getLatestBuildLog(Long resourceId);
+
 }

@@ -108,9 +108,9 @@
                 {{ scope.row.missingPackages || '-' }}
               </template>
             </el-table-column>
-            <el-table-column v-if="columns[12].visible" label="安装失败的依赖包列表JSON" align="center" prop="failedAckages">
+            <el-table-column v-if="columns[12].visible" label="安装失败的依赖包列表JSON" align="center" prop="failedPackages">
               <template #default="scope">
-                {{ scope.row.failedAckages || '-' }}
+                {{ scope.row.failedPackages || '-' }}
               </template>
             </el-table-column>
             <el-table-column v-if="columns[13].visible" label="dockerFile内容" align="center" prop="dockerfileContent">
@@ -260,8 +260,8 @@
                         </el-form-item>
                       </el-col>
                       <el-col :span="24">
-                        <el-form-item label="安装失败的依赖包列表JSON" prop="failedAckages">
-                          <el-input v-model="form.failedAckages" type="textarea" placeholder="请输入内容" />
+                        <el-form-item label="安装失败的依赖包列表JSON" prop="failedPackages">
+                          <el-input v-model="form.failedPackages" type="textarea" placeholder="请输入内容" />
                         </el-form-item>
                       </el-col>
                     </el-row>
@@ -418,9 +418,9 @@
                         </el-form-item>
                       </el-col>
                       <el-col :span="24">
-                        <el-form-item label="安装失败的依赖包列表JSON" prop="failedAckages">
+                        <el-form-item label="安装失败的依赖包列表JSON" prop="failedPackages">
                           <div>
-                            {{ form.failedAckages }}
+                            {{ form.failedPackages }}
                           </div>
                         </el-form-item>
                       </el-col>
@@ -540,7 +540,7 @@
                     duration: null,
                     installedPackages: null,
                     missingPackages: null,
-                    failedAckages: null,
+                    failedPackages: null,
                     dockerfileContent: null,
                     buildLog: null,
                     errorMessage: null,
@@ -590,7 +590,7 @@
                     duration: null,
                     installedPackages: null,
                     missingPackages: null,
-                    failedAckages: null,
+                    failedPackages: null,
                     dockerfileContent: null,
                     buildLog: null,
                     errorMessage: null,

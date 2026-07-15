@@ -50,6 +50,8 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import tech.qiantong.qmodel.module.model.dal.dataobject.fileResource.ModelFileResourceDO;
 import tech.qiantong.qmodel.module.model.dal.mapper.fileResource.ModelFileResourceMapper;
+import tech.qiantong.qmodel.module.model.service.buildLog.IModelBuildLogService;
+import com.alibaba.fastjson.JSON;
 
 @Slf4j
 @Component
@@ -57,6 +59,9 @@ public class ModelFileResourceDepsCheckHandler {
 
     @Resource
     private ModelFileResourceMapper modelFileResourceMapper;
+
+    @Resource
+    private IModelBuildLogService modelBuildLogService;
 
     private static final Pattern REQUIREMENT_PATTERN = Pattern.compile("^([A-Za-z0-9][A-Za-z0-9._-]*)([><=!~].+)?$");
     private static final Pattern PIP_LIST_PATTERN = Pattern.compile("^([A-Za-z0-9][A-Za-z0-9._-]+)(==.+)?$");
@@ -72,6 +77,10 @@ public class ModelFileResourceDepsCheckHandler {
     public void checkDependencies(Long fileResourceId) {
         log.info("开始异步检测依赖，fileResourceId: {}", fileResourceId);
 
+        Long buildLogId = null;
+        StringBuilder buildLogBuilder = new StringBuilder();
+        String requirementsContent = "";
+
         try {
             ModelFileResourceDO fileResource = modelFileResourceMapper.selectById(fileResourceId);
             if (fileResource == null) {
@@ -79,49 +88,116 @@ public class ModelFileResourceDepsCheckHandler {
                 return;
             }
 
+            buildLogId = modelBuildLogService.createBuildLogStart(
+                    fileResourceId,
+                    fileResource.getModelId(),
+                    fileResource.getFileName(),
+                    1
+            );
+            buildLogBuilder.append("========== 开始依赖检测 ==========\n");
+            buildLogBuilder.append("时间: ").append(new java.util.Date()).append("\n");
+            buildLogBuilder.append("文件资源ID: ").append(fileResourceId).append("\n");
+            buildLogBuilder.append("模型ID: ").append(fileResource.getModelId()).append("\n");
+            buildLogBuilder.append("文件名: ").append(fileResource.getFileName()).append("\n\n");
+
             updateStatus(fileResourceId, STATUS_CHECKING, null, null);
 
             String relativePath = fileResource.getFilePath();
             if (relativePath == null || relativePath.isEmpty()) {
-                log.warn("文件路径为空，fileResourceId: {}", fileResourceId);
+                String errorMsg = "文件路径为空";
+                log.warn("{}, fileResourceId: {}", errorMsg, fileResourceId);
+                buildLogBuilder.append("错误: ").append(errorMsg).append("\n");
+                modelBuildLogService.updateBuildLogFailed(buildLogId, errorMsg, null, buildLogBuilder.toString());
                 updateStatus(fileResourceId, STATUS_FAILED, null, null);
                 return;
             }
 
             String zipFilePath = STORAGE_PATH + relativePath;
             log.info("ZIP文件完整路径: {}", zipFilePath);
+            buildLogBuilder.append("ZIP文件路径: ").append(zipFilePath).append("\n");
 
             String extractDir = extractZipToTemp(zipFilePath, fileResourceId);
             if (extractDir == null) {
-                log.warn("解压ZIP文件失败，fileResourceId: {}", fileResourceId);
+                String errorMsg = "解压ZIP文件失败";
+                log.warn("{}, fileResourceId: {}", errorMsg, fileResourceId);
+                buildLogBuilder.append("错误: ").append(errorMsg).append("\n");
+                modelBuildLogService.updateBuildLogFailed(buildLogId, errorMsg, null, buildLogBuilder.toString());
                 updateStatus(fileResourceId, STATUS_FAILED, null, null);
                 return;
             }
+            buildLogBuilder.append("解压目录: ").append(extractDir).append("\n");
 
             String scriptPath = findMainPyPath(extractDir);
             String depsPath = findRequirementsTxtPath(extractDir);
 
             log.info("找到入口文件: {}, 依赖文件: {}", scriptPath, depsPath);
+            buildLogBuilder.append("入口文件: ").append(scriptPath != null ? scriptPath : "未找到").append("\n");
+            buildLogBuilder.append("依赖文件: ").append(depsPath != null ? depsPath : "未找到").append("\n\n");
 
             List<String> requirements = parseRequirements(depsPath);
+            if (depsPath != null) {
+                requirementsContent = readFileContent(depsPath);
+            }
+
             if (requirements.isEmpty()) {
                 log.warn("requirements.txt为空或不存在，fileResourceId: {}", fileResourceId);
+                buildLogBuilder.append("requirements.txt为空或不存在，无需安装依赖\n");
+                buildLogBuilder.append("========== 依赖检测完成 ==========\n");
+                modelBuildLogService.updateBuildLogSuccess(
+                        buildLogId,
+                        JSON.toJSONString(new ArrayList<>()),
+                        JSON.toJSONString(new ArrayList<>()),
+                        requirementsContent,
+                        buildLogBuilder.toString()
+                );
                 updateStatus(fileResourceId, STATUS_SUCCESS, scriptPath, depsPath);
                 return;
             }
 
+            buildLogBuilder.append("检测到依赖包: ").append(requirements.size()).append(" 个\n");
+            buildLogBuilder.append("依赖列表: ").append(String.join(", ", requirements)).append("\n\n");
+
             Set<String> installedPackages = getInstalledPackages();
+            buildLogBuilder.append("已安装依赖包数量: ").append(installedPackages.size()).append("\n\n");
+
             boolean allInstalled = checkAllDependenciesInstalled(requirements, installedPackages);
 
             if (allInstalled) {
+                buildLogBuilder.append("所有依赖包均已安装，无需额外安装\n");
+                buildLogBuilder.append("========== 依赖检测完成 ==========\n");
+                modelBuildLogService.updateBuildLogSuccess(
+                        buildLogId,
+                        JSON.toJSONString(requirements),
+                        JSON.toJSONString(new ArrayList<>()),
+                        requirementsContent,
+                        buildLogBuilder.toString()
+                );
                 updateStatus(fileResourceId, STATUS_SUCCESS, scriptPath, depsPath);
                 log.info("依赖检测通过，fileResourceId: {}", fileResourceId);
             } else {
+                buildLogBuilder.append("开始安装缺失的依赖包...\n");
                 boolean installSuccess = installMissingDependencies(requirements, installedPackages);
                 if (installSuccess) {
+                    buildLogBuilder.append("依赖包安装成功\n");
+                    buildLogBuilder.append("========== 依赖检测完成 ==========\n");
+                    modelBuildLogService.updateBuildLogSuccess(
+                            buildLogId,
+                            JSON.toJSONString(requirements),
+                            JSON.toJSONString(new ArrayList<>()),
+                            requirementsContent,
+                            buildLogBuilder.toString()
+                    );
                     updateStatus(fileResourceId, STATUS_SUCCESS, scriptPath, depsPath);
                     log.info("依赖安装成功，fileResourceId: {}", fileResourceId);
                 } else {
+                    buildLogBuilder.append("依赖包安装失败\n");
+                    buildLogBuilder.append("========== 依赖检测失败 ==========\n");
+                    modelBuildLogService.updateBuildLogFailed(
+                            buildLogId,
+                            "依赖包安装失败",
+                            JSON.toJSONString(requirements),
+                            buildLogBuilder.toString()
+                    );
                     updateStatus(fileResourceId, STATUS_FAILED, scriptPath, depsPath);
                     log.warn("依赖安装失败，fileResourceId: {}", fileResourceId);
                 }
@@ -129,12 +205,31 @@ public class ModelFileResourceDepsCheckHandler {
 
         } catch (Exception e) {
             log.error("依赖检测异常，fileResourceId: {}", fileResourceId, e);
+            buildLogBuilder.append("异常: ").append(e.getMessage()).append("\n");
+            buildLogBuilder.append("========== 依赖检测异常 ==========\n");
+            if (buildLogId != null) {
+                modelBuildLogService.updateBuildLogFailed(buildLogId, e.getMessage(), null, buildLogBuilder.toString());
+            }
             try {
                 updateStatus(fileResourceId, STATUS_FAILED, null, null);
             } catch (Exception updateEx) {
                 log.error("更新状态失败，fileResourceId: {}", fileResourceId, updateEx);
             }
         }
+    }
+
+    private String readFileContent(String filePath) {
+        StringBuilder content = new StringBuilder();
+        try (BufferedReader reader = new BufferedReader(
+                new InputStreamReader(new FileInputStream(filePath), StandardCharsets.UTF_8))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                content.append(line).append("\n");
+            }
+        } catch (Exception e) {
+            log.error("读取文件内容失败，路径: {}", filePath, e);
+        }
+        return content.toString();
     }
 
     private String extractZipToTemp(String zipFilePath, Long fileResourceId) {
@@ -405,7 +500,8 @@ public class ModelFileResourceDepsCheckHandler {
         wrapper.eq("id", fileResourceId)
                 .set("image_build_status", status)
                 .set("update_by", "system")
-                .set("updator_id", 1L);
+                .set("updator_id", 1L)
+                .set("update_time", new java.util.Date());
 
         if (scriptPath != null) {
             wrapper.set("docker_file_path", scriptPath);

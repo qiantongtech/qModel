@@ -85,7 +85,7 @@ public class ModelBuildLogPageReqVO extends PageParam {
     private String missingPackages;
 
     @Schema(description = "安装失败的依赖包列表JSON", example = "")
-    private String failedAckages;
+    private String failedPackages;
 
     @Schema(description = "dockerFile内容", example = "")
     private String dockerfileContent;

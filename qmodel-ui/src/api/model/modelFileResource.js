@@ -74,3 +74,12 @@ export function delModelFileResource(id) {
     method: 'delete'
   })
 }
+
+// 执行模型脚本
+export function runModelScript(modelId, inputParam) {
+  return request({
+    url: '/model/modelFileResource/runScript/' + modelId,
+    method: 'post',
+    data: inputParam
+  })
+}

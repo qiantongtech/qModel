@@ -84,7 +84,7 @@ public class ModelBuildLogRespDTO {
     private String missingPackages;
 
     /** 安装失败的依赖包列表JSON */
-    private String failedAckages;
+    private String failedPackages;
 
     /** dockerFile内容 */
     private String dockerfileContent;

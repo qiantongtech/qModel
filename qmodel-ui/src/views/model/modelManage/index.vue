@@ -402,6 +402,13 @@ const handleAdd = () => {
   });
 };
 
+const handleView = (row) => {
+  proxy.$router.push({
+    path: "/model/modelManageView",
+    query: { modelId: row.id }
+  });
+};
+
 const handleUpdate = (row) => {
   proxy.$router.push({
     path: "/model/modelManage/edit",

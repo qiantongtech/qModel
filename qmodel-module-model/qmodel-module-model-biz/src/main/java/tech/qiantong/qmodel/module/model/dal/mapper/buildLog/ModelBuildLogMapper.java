@@ -50,6 +50,8 @@ import tech.qiantong.qmodel.mybatis.core.query.LambdaQueryWrapperX;
  */
 public interface ModelBuildLogMapper extends BaseMapperX<ModelBuildLogDO> {
 
+    int insertBuildLogWithoutFill(ModelBuildLogDO buildLog);
+
     default PageResult<ModelBuildLogDO> selectPage(ModelBuildLogPageReqVO reqVO) {
         // 定义排序的字段（防止 SQL 注入，与数据库字段名称一致）
         Set<String> allowedColumns = new HashSet<>(Arrays.asList("id", "create_time", "update_time"));
@@ -67,7 +69,7 @@ public interface ModelBuildLogMapper extends BaseMapperX<ModelBuildLogDO> {
                 .eqIfPresent(ModelBuildLogDO::getDuration, reqVO.getDuration())
                 .eqIfPresent(ModelBuildLogDO::getInstalledPackages, reqVO.getInstalledPackages())
                 .eqIfPresent(ModelBuildLogDO::getMissingPackages, reqVO.getMissingPackages())
-                .eqIfPresent(ModelBuildLogDO::getFailedAckages, reqVO.getFailedAckages())
+                .eqIfPresent(ModelBuildLogDO::getFailedPackages, reqVO.getFailedPackages())
                 .eqIfPresent(ModelBuildLogDO::getDockerfileContent, reqVO.getDockerfileContent())
                 .eqIfPresent(ModelBuildLogDO::getBuildLog, reqVO.getBuildLog())
                 .eqIfPresent(ModelBuildLogDO::getErrorMessage, reqVO.getErrorMessage())

@@ -151,7 +151,7 @@
               <div class="infotop-row border-top">
                 <div class="infotop-row-lable">安装失败的依赖包列表JSON</div>
                 <div class="infotop-row-value">
-                  {{ modelBuildLogDetail.failedAckages || '-' }}
+                  {{ modelBuildLogDetail.failedPackages || '-' }}
                 </div>
               </div>
             </el-col>

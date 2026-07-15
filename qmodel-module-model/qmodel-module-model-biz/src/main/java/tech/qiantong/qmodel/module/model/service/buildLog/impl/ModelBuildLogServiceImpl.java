@@ -46,6 +46,10 @@ import tech.qiantong.qmodel.common.utils.object.BeanUtils;
 import tech.qiantong.qmodel.common.utils.StringUtils;
 import tech.qiantong.qmodel.common.exception.ServiceException;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import tech.qiantong.qmodel.module.model.controller.admin.buildLog.vo.ModelBuildLogPageReqVO;
@@ -54,6 +58,9 @@ import tech.qiantong.qmodel.module.model.controller.admin.buildLog.vo.ModelBuild
 import tech.qiantong.qmodel.module.model.dal.dataobject.buildLog.ModelBuildLogDO;
 import tech.qiantong.qmodel.module.model.dal.mapper.buildLog.ModelBuildLogMapper;
 import tech.qiantong.qmodel.module.model.service.buildLog.IModelBuildLogService;
+
+import java.util.Date;
+import java.util.List;
 /**
  * 构建日志Service业务层处理
  *
@@ -66,6 +73,9 @@ import tech.qiantong.qmodel.module.model.service.buildLog.IModelBuildLogService;
 public class ModelBuildLogServiceImpl  extends ServiceImpl<ModelBuildLogMapper,ModelBuildLogDO> implements IModelBuildLogService {
     @Resource
     private ModelBuildLogMapper modelBuildLogMapper;
+
+    @Resource
+    private JdbcTemplate jdbcTemplate;
 
     @Override
     public PageResult<ModelBuildLogDO> getModelBuildLogPage(ModelBuildLogPageReqVO pageReqVO) {
@@ -118,7 +128,7 @@ public class ModelBuildLogServiceImpl  extends ServiceImpl<ModelBuildLogMapper,M
 
         /**
          * 导入构建日志数据
-         *
+         *  
          * @param importExcelList 构建日志数据列表
          * @param isUpdateSupport 是否更新支持，如果已存在，则进行更新数据
          * @param operName 操作用户
@@ -184,4 +194,70 @@ public class ModelBuildLogServiceImpl  extends ServiceImpl<ModelBuildLogMapper,M
             }
             return resultMsg.toString();
         }
+
+    private static final Integer STATUS_CHECKING = 1;
+    private static final Integer STATUS_SUCCESS = 2;
+    private static final Integer STATUS_FAILED = 3;
+
+    @Override
+    public Long createBuildLogStart(Long resourceId, Long modelId, String modelName, Integer buildType) {
+        ModelBuildLogDO buildLog = new ModelBuildLogDO();
+        buildLog.setResourceId(resourceId);
+        buildLog.setModelId(modelId);
+        buildLog.setModelName(modelName);
+        buildLog.setBuildType(buildType);
+        buildLog.setStatus(STATUS_CHECKING);
+        buildLog.setStartTime(new Date());
+        buildLog.setCreatorId(1L);
+        buildLog.setCreateBy("system");
+        buildLog.setCreateTime(new Date());
+        buildLog.setUpdatorId(1L);
+        buildLog.setUpdateBy("system");
+        buildLog.setUpdateTime(new Date());
+        modelBuildLogMapper.insert(buildLog);
+        return buildLog.getId();
+    }
+
+    @Override
+    public void updateBuildLogSuccess(Long buildLogId, String installedPackages, String missingPackages,
+                                      String requirements, String buildLog) {
+        UpdateWrapper<ModelBuildLogDO> wrapper = new UpdateWrapper<>();
+        wrapper.eq("id", buildLogId)
+                .set("status", STATUS_SUCCESS)
+                .set("end_time", new Date())
+                .set("installed_packages", installedPackages)
+                .set("missing_packages", missingPackages)
+                .set("requirements", requirements)
+                .set("build_log", buildLog)
+                .set("update_by", "system")
+                .set("updator_id", 1L)
+                .set("update_time", new Date());
+
+        modelBuildLogMapper.update(null, wrapper);
+    }
+
+    @Override
+    public void updateBuildLogFailed(Long buildLogId, String errorMessage, String failedPackages, String buildLog) {
+        UpdateWrapper<ModelBuildLogDO> wrapper = new UpdateWrapper<>();
+        wrapper.eq("id", buildLogId)
+                .set("status", STATUS_FAILED)
+                .set("end_time", new Date())
+                .set("error_message", errorMessage)
+                .set("failed_packages", failedPackages)
+                .set("build_log", buildLog)
+                .set("update_by", "system")
+                .set("updator_id", 1L)
+                .set("update_time", new Date());
+
+        modelBuildLogMapper.update(null, wrapper);
+    }
+
+    @Override
+    public ModelBuildLogDO getLatestBuildLog(Long resourceId) {
+        QueryWrapper<ModelBuildLogDO> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("resource_id", resourceId)
+                .orderByDesc("start_time")
+                .last("LIMIT 1");
+        return modelBuildLogMapper.selectOne(queryWrapper);
+    }
 }

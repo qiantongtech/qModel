@@ -31,145 +31,198 @@
 -->
 
 <template>
-  <el-card class="app-container modelManageView" body-class="pagecont-top">
-    <div class="father_box pagecont-top">
-      <div class="son_oneBox">
-        <span>{{ viewInfo.name }}</span>
-      </div>
-      <div class="son_twoBox">
-        <el-button
-          type="primary"
-          @click="handleUpdate"
-          :disabled="viewInfo.whetherPublish == 0"
-          ><Edit class="icon-mini"></Edit> 修改</el-button
-        >
-        <el-button
-          :type="viewInfo.whetherPublish == 1 ? 'danger' : 'primary'"
-          @click="isWhetherPublish"
-        >
-          {{ viewInfo.whetherPublish == 1 ? "取消发布" : "发布" }}
-        </el-button>
-        <el-button @click="goBack()">返回列表</el-button>
+  <div class="app-container" ref="app-container">
+    <div class="pagecont-top" v-show="showSearch" style="padding-bottom: 15px">
+      <div class="infotop">
+        <div class="infotop-title mb15">
+          <el-tag class="id-tag">{{ viewInfo.id }}</el-tag>
+          <span style="margin-left: 8px">{{ viewInfo.name || '-' }}</span>
+          <el-row :gutter="15" class="btn-style" style="margin-left: auto">
+            <el-col :span="1.5">
+              <el-button
+                type="primary"
+                size="small"
+                class="fhbtn"
+                plain
+                @click="goBack"
+                @mousedown="(e) => e.preventDefault()"
+              >
+                <svg-icon
+                  style="width: 1em; height: 1em; margin-right: 3px"
+                  :iconClass="'fhs'"
+                />
+                返回
+              </el-button>
+            </el-col>
+            <el-col :span="1.5">
+              <el-button
+                type="primary"
+                size="small"
+                class="fhbtn"
+                plain
+                @click="handleUpdate"
+                :disabled="viewInfo.whetherPublish == 0"
+              >
+                <Edit class="icon-mini" />
+                修改
+              </el-button>
+            </el-col>
+            <el-col :span="1.5">
+              <el-button
+                :type="viewInfo.whetherPublish == 1 ? 'danger' : 'primary'"
+                size="small"
+                class="fhbtn"
+                plain
+                @click="isWhetherPublish"
+              >
+                {{ viewInfo.whetherPublish == 1 ? '取消发布' : '发布' }}
+              </el-button>
+            </el-col>
+          </el-row>
+        </div>
+
+        <el-row :gutter="3" style="margin-bottom: 3px">
+          <el-col :span="8">
+            <div class="infotop-row border-top">
+              <div class="infotop-row-lable">模型名称</div>
+              <div class="infotop-row-value">{{ viewInfo.name || '-' }}</div>
+            </div>
+          </el-col>
+          <el-col :span="8">
+            <div class="infotop-row border-top">
+              <div class="infotop-row-lable">模型分类</div>
+              <div class="infotop-row-value">{{ viewInfo.classifyName || '-' }}</div>
+            </div>
+          </el-col>
+          <el-col :span="8">
+            <div class="infotop-row border-top">
+              <div class="infotop-row-lable">模型版本号</div>
+              <div class="infotop-row-value">
+                <el-tag size="small">Version {{ viewInfo.version || '-' }}</el-tag>
+              </div>
+            </div>
+          </el-col>
+        </el-row>
+
+        <el-row :gutter="3" style="margin-bottom: 3px">
+
+          <el-col :span="8">
+            <div class="infotop-row border-top">
+              <div class="infotop-row-lable">接入方式</div>
+              <div class="infotop-row-value">
+                <span v-if="viewInfo.accessMode == 1">API接口</span>
+                <span v-else>python脚本</span>
+              </div>
+            </div>
+          </el-col>
+          <el-col :span="8">
+            <div class="infotop-row border-top">
+              <div class="infotop-row-lable">创建人</div>
+              <div class="infotop-row-value">{{ viewInfo.createBy || '-' }}</div>
+            </div>
+          </el-col>
+        </el-row>
+
+        <el-row :gutter="3" style="margin-bottom: 3px">
+          <el-col :span="8">
+            <div class="infotop-row border-top">
+              <div class="infotop-row-lable">图标</div>
+              <div class="infotop-row-value">
+                <img
+                  v-if="viewInfo.icon"
+                  :src="getIconUrl(viewInfo.icon)"
+                  class="icon-preview"
+                  @click="previewIcon"
+                  alt="图标"
+                />
+                <span v-else>-</span>
+              </div>
+            </div>
+          </el-col>
+          <el-col :span="8">
+            <div class="infotop-row border-top">
+              <div class="infotop-row-lable">上传时间</div>
+              <div class="infotop-row-value">
+                <span>{{ parseTime(viewInfo.createTime, '{y}-{m}-{d} {h}:{i}') || '-' }}</span>
+              </div>
+            </div>
+          </el-col>
+          <el-col :span="8">
+            <div class="infotop-row border-top">
+              <div class="infotop-row-lable">发布状态</div>
+              <div class="infotop-row-value">
+                <el-tag :type="viewInfo.whetherPublish == 1 ? 'success' : 'info'">
+                  {{ viewInfo.whetherPublish == 1 ? '已发布' : '未发布' }}
+                </el-tag>
+              </div>
+            </div>
+          </el-col>
+        </el-row>
+
+        <el-row :gutter="3">
+          <el-col :span="24">
+            <div class="infotop-row border-top">
+              <div class="infotop-row-lable">接口地址</div>
+              <div class="infotop-row-value">{{ viewInfo.interfaceorfileAddress || '-' }}</div>
+            </div>
+          </el-col>
+        </el-row>
+
+        <el-row :gutter="3">
+          <el-col :span="24">
+            <div class="infotop-row border-top">
+              <div class="infotop-row-lable">模型介绍</div>
+              <div class="infotop-row-value">{{ viewInfo.remark || '-' }}</div>
+            </div>
+          </el-col>
+        </el-row>
       </div>
     </div>
-    <el-row :gutter="0" style="margin-bottom: 10px">
-      <el-col :span="24">
-        <el-descriptions :column="4" border :labelStyle="{ width: '160px' }">
-          <el-descriptions-item label="模型名称" span="1">
-            <span>{{ viewInfo.name != null ? viewInfo.name : "--" }}</span>
-          </el-descriptions-item>
-          <el-descriptions-item label="模型分类" span="1">
-            <span>{{
-              viewInfo.classifyName != null ? viewInfo.classifyName : "--"
-            }}</span>
-          </el-descriptions-item>
-          <!-- <el-descriptions-item label="所属维度" span="1">
-            <dict-tag
-              :options="dict.type.model_waterconserve_modelmanage_dimensions"
-              :value="viewInfo.dimensions"
-            />
-          </el-descriptions-item> -->
-          <el-descriptions-item label="模型版本号" span="1">
-            <el-tag size="small">Version {{ viewInfo.version }}</el-tag>
-          </el-descriptions-item>
-          <el-descriptions-item label="是否内置" span="1">
-            <dict-tag :options="model_type" :value="viewInfo.builtin" />
-          </el-descriptions-item>
-          <el-descriptions-item label="接入方式" span="1">
-            <span v-if="viewInfo.accessMode == 1">API接口</span>
-            <span v-else>python脚本</span>
-          </el-descriptions-item>
 
-          <!--          <el-descriptions-item label="请求方式" span="1" v-if="viewInfo.accessMode == 1">
-                      <dict-tag
-                        :options="dict.type.model_access_mode"
-                        :value="viewInfo.requestMethod"
-                      />
-                    </el-descriptions-item>-->
-          <!--          <el-descriptions-item label="数据来源" span="1">
-                      <span>{{ viewInfo.source != null ? viewInfo.source : "&#45;&#45;" }}</span>
-                    </el-descriptions-item>
-                    <el-descriptions-item label="上传状态" span="1">
-                      <dict-tag
-                        :options="dict.type.model_waterconserve_modelmanage_uploadstatus"
-                        :value="viewInfo.uploadStatus"
-                      />
-                    </el-descriptions-item>-->
-          <el-descriptions-item label="创建人" span="1">
-            <span>{{
-              viewInfo.createBy != null ? viewInfo.createBy : "--"
-            }}</span>
-          </el-descriptions-item>
-          <el-descriptions-item label="上传时间" span="1">
-            <span>{{
-              viewInfo.createTime != null ? viewInfo.createTime : "--"
-            }}</span>
-          </el-descriptions-item>
-          <el-descriptions-item label="模型介绍" span="1">
-            <span>{{ viewInfo.remark != null ? viewInfo.remark : "--" }}</span>
-          </el-descriptions-item>
-        </el-descriptions>
-      </el-col>
-    </el-row>
+    <div class="pagecont-bottom">
+      <el-tabs v-model="activeName" class="demo-tabs" @tab-click="handleClick">
+        <el-tab-pane name="version">
+          <template #label>版本管理</template>
+          <VersionManage
+            v-if="activeName === 'version'"
+            @refresh="getModelById"
+            :model="viewInfo"
+            style="margin: 0; padding: 0"
+          />
+        </el-tab-pane>
 
-    <el-tabs v-model="activeName" @tab-click="handleClick">
-      <el-tab-pane name="one">
-        <template #label>版本管理</template>
-        <VersionManage
-          v-if="activeName === 'one'"
-          @refresh="getModelById"
-          :model="viewInfo"
-          style="margin: 0; padding: 0"
-        />
-      </el-tab-pane>
-      <el-tab-pane name="two" v-if="viewInfo.accessMode === 1">
-        <template #label>接口地址管理</template>
-        <ModelInterfaceAddress
-          v-if="activeName === 'two' && viewInfo.accessMode === 1"
-          :model="viewInfo"
-          style="margin: 0; padding: 0"
-        />
-      </el-tab-pane>
-      <el-tab-pane name="five" v-if="viewInfo.accessMode == 0">
-        <template #label>模型输入管理</template>
-        <ModelInput
-          v-if="activeName === 'five' && viewInfo.accessMode == 0"
-          style="margin: 0; padding: 0"
-          :model="viewInfo"
-        />
-      </el-tab-pane>
-      <el-tab-pane name="six" v-if="viewInfo.accessMode == 0">
-        <template #label>模型输出管理</template>
-        <ModelOutput
-          v-if="activeName === 'six' && viewInfo.accessMode == 0"
-          style="margin: 0; padding: 0"
-          :model="viewInfo"
-        />
-      </el-tab-pane>
-      <el-tab-pane name="three">
-        <template #label>模型计算</template>
-        <ModelCompute
-          v-if="activeName === 'three'"
-          :model="viewInfo"
-          style="margin: 0; padding: 0"
-        />
-        <!--        <ModelFileCompute :model="viewInfo" style="margin: 0; padding: 0" v-if="viewInfo.accessMode == 0"/>-->
-      </el-tab-pane>
-      <el-tab-pane name="four">
-        <template #label>操作历史</template>
-        <ActionHistory
-          v-if="activeName === 'four'"
-          ref="actionHistoryRef"
-          :model="viewInfo"
-        />
-      </el-tab-pane>
-      <!--      <el-tab-pane name="five" v-if="viewInfo.accessMode == 0">
-                <template #label>当前版本文件</template>
-                <ModelFiles style="margin: 0; padding: 0" />
-              </el-tab-pane>-->
-    </el-tabs>
+        <el-tab-pane name="onlineTest">
+          <template #label>在线调用</template>
+          <OnlineTest
+            v-if="activeName === 'onlineTest'"
+            :model-id="viewInfo.id"
+            :access-mode="viewInfo.accessMode"
+            style="margin: 0; padding: 0"
+          />
+        </el-tab-pane>
 
-    <!-- 添加或修改模型管理 对话框 -->
+        <el-tab-pane name="invokeHistory">
+          <template #label>调用记录</template>
+          <InvokeHistory
+            v-if="activeName === 'invokeHistory'"
+            :model-id="viewInfo.id"
+            style="margin: 0; padding: 0"
+          />
+        </el-tab-pane>
+
+        <el-tab-pane name="buildLog">
+          <template #label>构建日志</template>
+          <BuildLog
+            v-if="activeName === 'buildLog'"
+            :model-id="viewInfo.id"
+            style="margin: 0; padding: 0"
+          />
+        </el-tab-pane>
+
+
+      </el-tabs>
+    </div>
+
     <el-dialog
       :title="title"
       v-model="open"
@@ -226,41 +279,17 @@
         <el-row>
           <el-col :span="20">
             <el-form-item label="接入方式：" prop="accessMode">
-              <el-radio v-model="form.accessMode" :label="Number(0)"
-                >python脚本</el-radio
-              >
-              <el-radio v-model="form.accessMode" :label="Number(1)"
-                >API接口</el-radio
-              >
+              <el-radio v-model="form.accessMode" :label="Number(0)">python脚本</el-radio>
+              <el-radio v-model="form.accessMode" :label="Number(1)">API接口</el-radio>
               <el-tooltip placement="top">
                 <template #content>
                   Tips: 核心信息请在详情页版本控制里面修改
                 </template>
-                <!-- elementui图标库：显示黑色的问号图标   -->
                 <i class="el-icon-question" />
               </el-tooltip>
             </el-form-item>
           </el-col>
         </el-row>
-        <!--        <el-row v-if="form.accessMode == 1">
-                  <el-col :span="20">
-                    <el-form-item label="API请求方式：" prop="requestMethod">
-                      <el-select
-                        style="width: 100%"
-                        v-model="form.requestMethod"
-                        placeholder="请选择模型类别"
-                        clearable
-                      >
-                        <el-option
-                          v-for="item in dict.type.model_access_mode"
-                          :key="item.value"
-                          :label="item.label"
-                          :value="item.value * 1">
-                        </el-option>
-                      </el-select>
-                    </el-form-item>
-                  </el-col>
-                </el-row>-->
         <el-row v-if="form.accessMode == 1">
           <el-col :span="20">
             <el-form-item label="API地址:端口：" prop="interfaceorfileAddress">
@@ -302,53 +331,53 @@
         <div class="dialog-footer">
           <el-button type="primary" @click="submitForm">确 定</el-button>
           <el-button @click="cancel">取 消</el-button>
-        </div></template
-      >
+        </div>
+      </template>
     </el-dialog>
-  </el-card>
+
+    <el-image-viewer
+      v-if="iconPreviewVisible"
+      :on-close="closeIconPreview"
+      :url-list="[iconPreviewUrl]"
+      :src="iconPreviewUrl"
+    />
+  </div>
 </template>
 
 <script setup>
-import { ref, reactive, computed, onMounted, getCurrentInstance } from "vue";
+import { ref, reactive, computed, onMounted, getCurrentInstance, watch } from "vue";
 import { useRouter, useRoute } from "vue-router";
-import { ElMessage, ElMessageBox } from "element-plus";
+import { ElMessage, ElMessageBox, ElImageViewer } from "element-plus";
 import {
   getModel,
   updateModel,
   addModel,
-} from "@/api/modelReconstitution/model";
-import ActionHistory from "./actionHistory.vue";
-import VersionManage from "./modelVersion.vue";
-import ModelInput from "./modelInput.vue";
-import ModelOutput from "./modelOutput.vue";
-import ModelInterfaceAddress from "./modelInterfaceAddress.vue";
-import ModelCompute from "./modelCompute.vue";
+} from "@/api/model/model";
 import { listClassify } from "@/api/modelReconstitution/classify";
 import { listInterfaceAddress } from "@/api/modelReconstitution/interfaceAddress";
 import { useDict } from "@/utils/dict.js";
 import { Edit } from "@element-plus/icons-vue";
+import VersionManage from "./modelVersion.vue";
+import OnlineTest from "./onlineTest.vue";
+import InvokeHistory from "./invokeHistory.vue";
+import BuildLog from "./buildLog.vue";
 
-// 获取当前实例和路由
 const { proxy } = getCurrentInstance();
 const router = useRouter();
 const route = useRoute();
 
-// 响应式数据
 const viewInfo = ref({});
-// 表单参数
 const form = ref({});
-// 弹出层标题
 const title = ref("");
-// 是否显示弹出层
 const open = ref(false);
-// 分类树选项
 const classifyOptions = ref([]);
-// 接口地址表格数据
 const interfaceAddressList = ref([]);
-// 激活的标签页
-const activeName = ref("one");
+const activeName = ref("version");
+const showSearch = ref(true);
 
-// 表单校验规则
+const iconPreviewVisible = ref(false);
+const iconPreviewUrl = ref("");
+
 const rules = reactive({
   validFlag: [
     {
@@ -383,21 +412,16 @@ const rules = reactive({
   ],
 });
 
-// 字典数据
 const model_type = useDict("model_type").model_type;
 
-// 计算属性
 const modelId = computed(() => route.query.modelId);
 
-// 模板引用
 const formRef = ref(null);
 const actionHistoryRef = ref(null);
 
-// 获取详情
 const getModelById = (params) => {
   getModel(params).then((res) => {
     viewInfo.value = res.data;
-    console.log(viewInfo.value.accessMode, "viewInfo");
   });
 };
 
@@ -413,59 +437,13 @@ const goBack = () => {
 
 const handleClick = (tab, event) => {
   activeName.value = tab.paneName;
-  console.log(activeName.value, "activeName");
 };
 
-// 设置默认激活的tab
-const setDefaultActiveTab = () => {
-  // 根据接入方式设置默认激活的tab
-  if (viewInfo.value.accessMode === 1) {
-    // API接口模式：默认显示版本管理
-    activeName.value = "one";
-  } else if (viewInfo.value.accessMode === 0) {
-    // 单机程序模式：默认显示版本管理
-    activeName.value = "one";
-  } else {
-    // 默认显示版本管理
-    activeName.value = "one";
-  }
-};
-
-// 根据模型信息更新可用的tab
-const updateAvailableTabs = () => {
-  // 模型信息更新后，确保激活的tab是有效的
-  const availableTabs = ["one"]; // 版本管理始终可用
-
-  if (viewInfo.value.accessMode === 1) {
-    availableTabs.push("two"); // API接口模式下接口地址管理可用
-  }
-
-  if (viewInfo.value.accessMode === 0) {
-    availableTabs.push("five", "six"); // 单机程序模式下输入输出管理可用
-  }
-
-  availableTabs.push("three", "four"); // 模型计算和操作历史始终可用
-
-  // 如果当前激活的tab不可用，则切换到第一个可用的tab
-  if (!availableTabs.includes(activeName.value)) {
-    activeName.value = availableTabs[0];
-  }
-};
-
-// 切换到指定tab
-const switchToTab = (tabName) => {
-  if (activeName.value !== tabName) {
-    activeName.value = tabName;
-  }
-};
-
-// 取消按钮
 const cancel = () => {
   open.value = false;
   reset();
 };
 
-// 表单重置
 const reset = () => {
   form.value = {
     id: null,
@@ -496,7 +474,29 @@ const reset = () => {
   }
 };
 
-/** 查询分类下拉树结构 */
+const getIconUrl = (icon) => {
+  if (!icon) return "";
+  if (/^https?:\/\//.test(icon)) {
+    return icon;
+  }
+  if (icon.startsWith("/profile")) {
+    return `${import.meta.env.VITE_APP_BASE_API}${icon}`;
+  }
+  if (icon.startsWith("/")) {
+    return `${import.meta.env.VITE_APP_BASE_API}/profile${icon}`;
+  }
+  return `${import.meta.env.VITE_APP_BASE_API}/profile/${icon}`;
+};
+
+const previewIcon = () => {
+  iconPreviewUrl.value = getIconUrl(viewInfo.value.icon);
+  iconPreviewVisible.value = true;
+};
+
+const closeIconPreview = () => {
+  iconPreviewVisible.value = false;
+};
+
 const getTreeSelect = () => {
   listClassify().then((res) => {
     for (let i = 0; i < res.rows.length; i++) {
@@ -518,7 +518,6 @@ const getTreeSelect = () => {
   });
 };
 
-/** 修改按钮操作 */
 const handleUpdate = (row) => {
   reset();
   const id = modelId.value;
@@ -535,7 +534,6 @@ const handleUpdate = (row) => {
   });
 };
 
-/** 转换菜单数据结构 */
 const normalizer = (node) => {
   if (node.children && !node.children.length) {
     delete node.children;
@@ -547,7 +545,6 @@ const normalizer = (node) => {
   };
 };
 
-// 发布或取消发布
 const isWhetherPublish = () => {
   let whetherPublish = viewInfo.value.whetherPublish == 0 ? 1 : 0;
   if (whetherPublish == 1) {
@@ -582,7 +579,6 @@ const isWhetherPublish = () => {
   }
 };
 
-/** 提交按钮 */
 const submitForm = () => {
   if (formRef.value) {
     formRef.value.validate((valid) => {
@@ -606,55 +602,141 @@ const submitForm = () => {
   }
 };
 
-// 获取列表方法
 const getList = () => {
-  // 由于此方法在原代码中未定义但被调用，这里补充定义
   getModelById(modelId.value);
 };
 
-// 组件挂载后执行
+watch(
+  () => route.query.modelId,
+  (newId) => {
+    if (newId) {
+      getModelById(newId);
+    }
+  }
+);
+
 onMounted(() => {
   getModelById(modelId.value);
   getTreeSelect();
 });
 </script>
+
 <style lang="scss" scoped>
-.modelManageView {
-  padding: 0;
-  .pagecont-top {
-    padding: 0;
-  }
-  .father_box {
-    display: flex;
-    justify-content: space-between;
-    padding-bottom: 10px;
-    line-height: 46px;
+.id-tag {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  padding: 2px;
+  background-color: #2666fb;
+  color: #fff;
+  aspect-ratio: 1 / 1;
+  width: 20px;
+  height: 20px;
+}
 
-    .son_oneBox {
-      font-size: 20px;
-      font-weight: bolder;
-    }
-    .icon-mini {
-      width: 1em;
-      height: 1em;
-      margin-right: 8px;
-    }
+.fhbtn {
+  .svg-icon {
+    font-size: 12px;
+    margin-right: 3px;
+    vertical-align: middle;
+    margin-top: -3px;
   }
-  .imgBox {
-    border: 1px solid #ebeef5;
-    border-left: none;
-    width: 100%;
-    height: 211px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-
-    .devImg {
-      height: 95%;
+  &:hover {
+    .svg-icon {
+      filter: brightness(0) invert(1) !important;
     }
   }
 }
-:deep(.el-card__body) {
-  min-height: calc(87vh - 7px);
+
+.icon-mini {
+  width: 1em;
+  height: 1em;
+  margin-right: 8px;
+}
+
+.infotop {
+  .infotop-title {
+    color: #333333;
+    display: flex;
+    align-items: center;
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 15px;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .infotop-row {
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid #f0f3f9;
+    border-left: 1px solid #f0f3f9;
+    border-right: 1px solid #f0f3f9;
+    min-height: 50px;
+
+    &.border-top {
+      border-top: 1px solid #f0f3f9;
+    }
+  }
+
+  .infotop-row-lable {
+    width: 150px;
+    border-right: 1px solid #f0f3f9;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    padding-left: 15px;
+    color: #666666;
+    font-weight: 500;
+    flex-shrink: 0;
+  }
+
+  .infotop-row-value {
+    height: 50px;
+    flex: 1;
+    display: flex;
+    align-items: center;
+    padding: 10px 15px;
+    color: #333333;
+    word-break: break-all;
+  }
+}
+
+.icon-preview {
+  width: 40px;
+  height: 40px;
+  border-radius: 4px;
+  cursor: pointer;
+  object-fit: cover;
+  transition: transform 0.2s;
+
+  &:hover {
+    transform: scale(1.1);
+  }
+}
+
+@media (max-width: 768px) {
+  .infotop-row-lable {
+    width: 120px;
+    padding-left: 10px;
+    font-size: 14px;
+  }
+
+  .infotop-row-value {
+    padding: 10px;
+    font-size: 14px;
+  }
+
+  .infotop-title {
+    font-size: 16px;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .btn-style {
+    margin-left: 0 !important;
+    margin-top: 10px;
+    width: 100%;
+  }
 }
 </style>

@@ -102,7 +102,7 @@ public class ModelBuildLogSaveReqVO extends BaseEntity {
 
     @Schema(description = "安装失败的依赖包列表JSON", example = "")
     @NotBlank(message = "安装失败的依赖包列表JSON不能为空")
-    private String failedAckages;
+    private String failedPackages;
 
     @Schema(description = "dockerFile内容", example = "")
     @NotBlank(message = "dockerFile内容不能为空")
