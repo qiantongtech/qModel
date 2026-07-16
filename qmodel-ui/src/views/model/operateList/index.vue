@@ -40,7 +40,7 @@
         v-show="showSearch"
         class="btn-style"
       >
-        <el-form-item label="模型名称：" prop="moduleName">
+        <el-form-item label="模型名称" prop="moduleName">
           <el-input
             v-model="queryParams.moduleName"
             placeholder="请输入模型名称"
@@ -82,6 +82,7 @@
         <right-toolbar
           v-model:showSearch="showSearch"
           @queryTable="getList"
+          :columns="columns"
         ></right-toolbar>
       </div>
 
@@ -90,27 +91,45 @@
         :data="operateList"
         @selection-change="handleSelectionChange"
       >
-        <el-table-column label="操作模块" align="center" prop="moduleName">
+        <el-table-column v-if="getColumnVisibility(0)" label="编号" align="center" prop="id" width="65">
         </el-table-column>
-        <el-table-column label="操作类型" align="center" prop="type">
+        <el-table-column v-if="getColumnVisibility(1)" label="操作模块" align="left" prop="moduleName">
+        </el-table-column>
+        <el-table-column v-if="getColumnVisibility(2)" label="操作类型" align="center" prop="type">
           <template #default="scope">
             <dict-tag
-              :options="dict.type.action_history_operate_type"
+              :options="model_access_mode"
               :value="scope.row.type"
             />
           </template>
         </el-table-column>
-        <el-table-column label="操作内容" align="center" prop="content" />
-        <el-table-column label="操作人员" align="center" prop="createBy" />
-        <el-table-column label="操作日期" align="center" prop="createTime" />
+        <el-table-column v-if="getColumnVisibility(3)" label="操作内容" align="left" prop="content" />
+        <el-table-column v-if="getColumnVisibility(4)" label="创建人" align="center" prop="createBy" />
         <el-table-column
+            v-if="getColumnVisibility(5)"
+            label="创建时间"
+            align="center"
+            prop="createTime"
+            sortable="custom"
+            :sort-orders="['descending', 'ascending']"
+        >
+          <template #default="scope">
+            <span>{{ parseTime(scope.row.createTime, '{y}-{m}-{d} {h}:{i}') }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column
+          v-if="getColumnVisibility(6)"
           label="操作"
           align="center"
           class-name="small-padding fixed-width"
         >
           <template #default="scope">
-            <el-button type="text" @click="handleView(scope.row)"
-              >详情
+            <el-button
+                link
+                type="primary"
+                icon="view"
+                @click="handleView(scope.row)"
+            >详情
             </el-button>
           </template>
         </el-table-column>
@@ -140,7 +159,7 @@
           </el-col>
           <el-col :span="12">
             <el-form-item label="操作方法："
-              >{{ typeFormat("action_history_operate_type", form.type) }}
+              >{{ form.type }}
             </el-form-item>
           </el-col>
           <el-col :span="24">
@@ -234,6 +253,23 @@ const respContent = ref(
   '{"msg":"操作成功","code":200,"data":{"searchValue":null,"createBy":null,"createTime":"2023-08-28 17:37:28","updateBy":null,"updateTime":"2023-09-14 14:16:14","remark":null,"params":{},"id":1002,"name":"开都-孔雀河流域数字孪生","companyName":"开都-孔雀河流域数字孪生","companyId":1005,"licence":"苏ICP备2022008519号-1","loginTemplate":1,"loginBannerOne":"https://s.qiantongkeji.com/2023/71/31/7f26c416-88cd-43e4-8601-b51d1b7366c4.png","loginBannerTwo":"[{\\"image\\":\\"https://s.qiantongkeji.com/2023/81/13/3c63e5d2-6ea8-42a5-8e07-3a96a6299089.png\\",\\"title\\":\\"开都-孔雀河流域数字孪生\\",\\"enTitle\\":\\"TA HE SHU ZI LUAN SHENG\\",\\"digest\\":\\"虚拟仿真、实时联动、智能决策\\",\\"content\\":\\"伊犁州直水利综合信息监管平台致力于水资源的智能化管理，旨在提升水利行业的效率和可持续发展。平台通过数字孪生、虚拟仿真、云计算技术，实现水利业务"四预"流程的智慧模拟、仿真推演，为水利业务提供决策支持。\\"}]","loginLogo":"https://s.qiantongkeji.com/2023/81/14/0f2d8a63-4918-45a7-8a97-267a7c517df7.png","phone":"400-660-8208","email":"support@qiantong.tech","messageLogo":"https://s.qiantongkeji.com/2023/81/14/c1a621ae-b1cf-4f80-8de1-37888ad67031.png","logo":"https://s.qiantongkeji.com/2023/81/14/e9ac588f-256e-4648-bca0-b66f89c2ea16.png","favicon":"https://s.qiantongkeji.com/2023/71/31/9a1f6192-739b-4a19-893a-034644857c0c.png","validFlag":1,"delFlag":false,"creatorId":null,"updatorId":null}}'
 );
 
+const { model_access_mode } = proxy.useDict('model_access_mode');
+const columns = ref([
+  { key: 0, label: '编号', visible: true },
+  { key: 1, label: '操作模块', visible: true },
+  { key: 2, label: '操作类型', visible: true },
+  { key: 3, label: '操作内容', visible: true },
+  { key: 4, label: '创建人', visible: true },
+  { key: 5, label: '创建时间', visible: true },
+  { key: 6, label: '操作', visible: true },
+]);
+const getColumnVisibility = (key) => {
+  const column = columns.value.find((col) => col.key === key);
+  // 如果没有找到对应列配置，默认显示
+  if (!column) return true;
+  // 如果找到对应列配置，根据visible属性来控制显示
+  return column.visible;
+};
 // 遮罩层
 const loading = ref(true);
 // 选中数组

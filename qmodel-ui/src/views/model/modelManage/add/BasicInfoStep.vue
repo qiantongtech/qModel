@@ -126,6 +126,7 @@
                 v-model="inputTagValue"
                 class="tag-input"
                 size="small"
+                maxlength="4"
                 @keyup.enter="handleTagConfirm"
                 @blur="handleTagConfirm"
             />
@@ -197,6 +198,7 @@ const inputTagValue = ref('')
 const tagInputRef = ref(null)
 
 const MAX_TAG_COUNT = 2
+const MAX_TAG_LENGTH = 4
 const canAddTag = computed(() => tagsList.value.length < MAX_TAG_COUNT)
 
 const parseTags = (val) => {
@@ -250,6 +252,11 @@ const handleTagConfirm = () => {
   if (!canAddTag.value) {
     ElMessage.warning(`最多只能添加 ${MAX_TAG_COUNT} 个标签`)
     inputVisible.value = false
+    inputTagValue.value = ''
+    return
+  }
+  if (value.length > MAX_TAG_LENGTH) {
+    ElMessage.warning(`每个标签最多 ${MAX_TAG_LENGTH} 个字`)
     inputTagValue.value = ''
     return
   }

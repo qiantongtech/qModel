@@ -155,8 +155,8 @@
                         >{{ item.name }}</div>
                       </el-tooltip>
                       <div class="top-tags">
-                        <dict-tag :options="buildTagOptions(item.tags)" :value="buildTagValues(item.tags)" separator="," />
-                        <dict-tag :options="[{ value: formatVersion(item.version), label: formatVersion(item.version), elTagType: 'info' }]" :value="formatVersion(item.version)" />
+                        <dict-tag v-if="buildTagValues(item.tags).length > 0" :options="buildTagOptions(item.tags)" :value="buildTagValues(item.tags)" separator="," />
+                        <dict-tag :options="model_access_type" :value="item.accessType" />
                       </div>
                     </div>
                     <div class="top-status" :class="getStatusClass(item.status)">
@@ -167,11 +167,21 @@
                   <div class="item-con">
                     <div class="con-row">
                       <span class="con-label">模型编码</span>
-                      <span class="con-value ellipsis">{{ item.code || '-' }}</span>
+                      <el-tooltip
+                        :content="item.code || '-'"
+                        placement="top"
+                        effect="light"
+                        :disabled="!codeOverflowMap[index]"
+                      >
+                        <span
+                          class="con-value ellipsis"
+                          @mouseenter="(e) => checkCodeOverflow(e, index)"
+                        >{{ item.code || '-' }}</span>
+                      </el-tooltip>
                     </div>
                     <div class="con-row">
-                      <span class="con-label">接入方式</span>
-                      <dict-tag :options="model_access_type" :value="item.accessType" class="con-value access-tag" />
+                      <span class="con-label">模型分类</span>
+                      <span class="con-value ellipsis">{{ findClassName(item.classifyId) || '-' }}</span>
                     </div>
                     <div class="con-row">
                       <span class="con-label">创建时间</span>
@@ -291,6 +301,7 @@ const showSearch = ref(true);
 const total = ref(0);
 const modelList = ref([]);
 const nameOverflowMap = reactive({});
+const codeOverflowMap = reactive({});
 
 // 左侧分类树
 const classifyOptions = ref([]);
@@ -421,6 +432,13 @@ const checkNameOverflow = (event, index) => {
   }
 };
 
+const checkCodeOverflow = (event, index) => {
+  const el = event.target;
+  if (el) {
+    codeOverflowMap[index] = el.scrollWidth > el.clientWidth;
+  }
+};
+
 const handleAdd = () => {
   proxy.$router.push({
     path: "/model/modelManage/add"
@@ -505,6 +523,26 @@ const handleDelete = (row) => {
 const handleImageError = (event) => {
   event.target.src = defaultCover
 }
+
+const findClassName = (id) => {
+  if (!id) return '-';
+  const search = (nodes) => {
+    for (let node of nodes) {
+      if (node.id == id) {
+        return node.name;
+      }
+      if (node.children && node.children.length > 0) {
+        const found = search(node.children);
+        if (found) return found;
+      }
+    }
+    return null;
+  };
+  const rootNodes = classifyOptions.value.length > 0 ? classifyOptions.value[0].children : [];
+  const result = search(rootNodes);
+
+  return result || '-';
+};
 
 function getImage(row) {
   const image = row?.icon;

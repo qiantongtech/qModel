@@ -78,14 +78,19 @@
                   end-placeholder="结束日期"
                ></el-date-picker>
             </el-form-item>
-            <el-form-item>
-               <el-button type="primary" @click="handleQuery" @mousedown="(e) => e.preventDefault()">
-                  <i class="iconfont-mini icon-a-chaxunxianxing mr5"></i>查询
-               </el-button>
-               <el-button @click="resetQuery" @mousedown="e => e.preventDefault()">
-                  <i class="iconfont-mini icon-a-shuaxinxianxing mr5"></i>重置
-               </el-button>
-            </el-form-item>
+           <el-form-item>
+             <el-button
+                 plain
+                 type="primary"
+                 @click="handleQuery"
+                 @mousedown="(e) => e.preventDefault()"
+             >
+               <i class="iconfont-mini icon-a-zu22377 mr5"></i>查询
+             </el-button>
+             <el-button @click="resetQuery" @mousedown="(e) => e.preventDefault()">
+               <i class="iconfont-mini icon-a-zu22378 mr5"></i>重置
+             </el-button>
+           </el-form-item>
          </el-form>
       </div>
       <div  class="pagecont-bottom">
@@ -157,11 +162,11 @@
             <right-toolbar v-model:showSearch="showSearch" @queryTable="getList"></right-toolbar>
          </div>
 
-         <el-table stripe height="60vh" v-loading="loading" :data="typeList" @selection-change="handleSelectionChange">
+         <el-table stripe v-loading="loading" :data="typeList" @selection-change="handleSelectionChange">
             <el-table-column type="selection" width="55" align="center" />
             <el-table-column label="字典编号" align="center" prop="dictId" />
             <el-table-column label="字典名称" align="center" prop="dictName" :show-overflow-tooltip="true"/>
-            <el-table-column label="字典类型" align="center" :show-overflow-tooltip="true">
+            <el-table-column label="字典类型" align="left" :show-overflow-tooltip="true">
                <template #default="scope">
                   <router-link :to="'/system/dict-data/index/' + scope.row.dictId" class="link-type">
                      <span>{{ scope.row.dictType }}</span>
@@ -173,7 +178,7 @@
                   <dict-tag :options="sys_normal_disable" :value="scope.row.status" />
                </template>
             </el-table-column>
-            <el-table-column label="备注" align="center" prop="remark" :show-overflow-tooltip="true" />
+            <el-table-column label="备注" align="left" prop="remark" :show-overflow-tooltip="true" />
             <el-table-column label="创建时间" align="center" prop="createTime" width="180">
                <template #default="scope">
                   <span>{{ parseTime(scope.row.createTime) }}</span>

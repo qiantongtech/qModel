@@ -40,7 +40,7 @@
         v-show="showSearch"
         class="btn-style"
       >
-        <el-form-item label="计算名称：" prop="modelVersion">
+        <el-form-item label="计算名称" prop="modelVersion">
           <el-input
             class="el-form-input-width"
             v-model="queryParams.name"
@@ -48,7 +48,7 @@
             clearable
           />
         </el-form-item>
-        <el-form-item label="模型名称：" prop="modelVersion">
+        <el-form-item label="模型名称" prop="modelVersion">
           <el-input
             class="el-form-input-width"
             v-model="queryParams.modelName"
@@ -56,16 +56,17 @@
             clearable
           />
         </el-form-item>
-        <el-form-item label="起止时间：" prop="timer">
+        <el-form-item label="计算时间" prop="timer">
           <el-date-picker
             clearable
             v-model="timer"
             type="daterange"
             range-separator="至"
-            start-placeholder="开始时间"
-            end-placeholder="结束时间"
+            start-placeholder="开始日期"
+            end-placeholder="结束日期"
             value-format="YYYY-MM-DD"
             @change="timerChange"
+            style="width: 210px"
           >
           </el-date-picker>
         </el-form-item>
@@ -103,45 +104,68 @@
         <right-toolbar
           v-model:showSearch="showSearch"
           @queryTable="getList"
+          :columns="columns"
         ></right-toolbar>
       </div>
 
       <el-table
         v-loading="loading"
         :data="caclList"
+        :default-sort="defaultSort"
         @selection-change="handleSelectionChange"
+        @sort-change="handleSortChange"
       >
-        <el-table-column label="计算编码" align="center" prop="id" />
-        <el-table-column label="计算名称" align="center" prop="name" />
-        <el-table-column label="模型名称" align="center" prop="modelName" />
-        <el-table-column label="版本号" align="center" prop="modelVersion">
+        <el-table-column v-if="getColumnVisibility(0)" label="编号" align="center" prop="id" width="80" sortable="custom"  :sort-orders="['descending', 'ascending']"/>
+        <el-table-column v-if="getColumnVisibility(1)" label="计算名称" align="left" prop="name" />
+        <el-table-column v-if="getColumnVisibility(3)" label="模型名称" align="left" prop="modelName" />
+        <el-table-column v-if="getColumnVisibility(4)" label="版本号" align="center" prop="modelVersion">
           <template #default="scope">
             <el-tag size="small">Version {{ scope.row.modelVersion }}</el-tag>
           </template>
         </el-table-column>
         <el-table-column
+          v-if="getColumnVisibility(5)"
           label="开始时间"
           align="center"
           prop="startTime"
           width="180"
         >
+          <template #default="scope">
+            <span>{{ parseTime(scope.row.startTime, '{y}-{m}-{d} {h}:{i}') }}</span>
+          </template>
         </el-table-column>
         <el-table-column
+          v-if="getColumnVisibility(6)"
           label="结束时间"
           align="center"
           prop="endTime"
           width="180"
         >
+          <template #default="scope">
+            <span>{{ parseTime(scope.row.endTime, '{y}-{m}-{d} {h}:{i}') }}</span>
+          </template>
         </el-table-column>
-        <!--                <el-table-column label="计算状态" align="center" prop="status">-->
-        <!--                              <template #default="scope">-->
-        <!--                              <dict-tag-->
-        <!--                                :options="dict.type.calculation_status"-->
-        <!--                                :value="scope.row.status + ''"-->
-        <!--                              />-->
-        <!--                              </template>-->
-        <!--                </el-table-column>-->
         <el-table-column
+            v-if="getColumnVisibility(7)"
+            label="创建人"
+            align="center"
+            prop="createBy"
+        >
+        </el-table-column>
+        <el-table-column
+            v-if="getColumnVisibility(8)"
+            label="创建时间"
+            align="center"
+            prop="createTime"
+            sortable="custom"
+            :sort-orders="['descending', 'ascending']"
+        >
+          <template #default="scope">
+            <span>{{ parseTime(scope.row.createTime, '{y}-{m}-{d} {h}:{i}') }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column
+          v-if="getColumnVisibility(9)"
           label="操作"
           align="center"
           class-name="small-padding fixed-width"
@@ -167,7 +191,7 @@
               type="primary"
               icon="view"
               @click="handleView(scope.row)"
-              >查看计算结果</el-button
+              >查看结果</el-button
             >
           </template>
         </el-table-column>
@@ -453,6 +477,26 @@ const rules = reactive({
     { required: true, message: "更新时间不能为空", trigger: "blur" },
   ],
 });
+const defaultSort = ref({ prop: 'createTime', order: 'desc' });
+// 列显隐信息
+const columns = ref([
+  { key: 0, label: '编号', visible: true },
+  { key: 1, label: '计算名称', visible: true },
+  { key: 3, label: '模型名称', visible: true },
+  { key: 4, label: '版本号', visible: true },
+  { key: 5, label: '开始时间', visible: true },
+  { key: 6, label: '结束时间', visible: true },
+  { key: 7, label: '创建人', visible: true },
+  { key: 8, label: '创建时间', visible: true },
+  { key: 9, label: '操作', visible: true },
+]);
+const getColumnVisibility = (key) => {
+  const column = columns.value.find((col) => col.key === key);
+  // 如果没有找到对应列配置，默认显示
+  if (!column) return true;
+  // 如果找到对应列配置，根据visible属性来控制显示
+  return column.visible;
+};
 const titleParams = ref("");
 const openParams = ref(false);
 const formParams = ref({});
@@ -1110,6 +1154,13 @@ const handleMultipleChange = (selection) => {
   // Note: This variable is not defined in the original data, may need to be added if used
   // checkedMultiple.value = selection.map((item) => item.index);
 };
+
+function handleSortChange(column, prop, order) {
+  queryParams.value.orderByColumn = column.prop;
+  queryParams.value.isAsc = column.order;
+  getList();
+}
+
 </script>
 <style lang="scss" scoped>
 .modelCompute {

@@ -142,11 +142,16 @@
               </el-date-picker>
             </el-form-item>
             <el-form-item>
-              <el-button type="primary" @click="handleQuery" @mousedown="(e) => e.preventDefault()">
-                <i class="iconfont-mini icon-a-chaxunxianxing mr5"></i>查询
+              <el-button
+                  plain
+                  type="primary"
+                  @click="handleQuery"
+                  @mousedown="(e) => e.preventDefault()"
+              >
+                <i class="iconfont-mini icon-a-zu22377 mr5"></i>查询
               </el-button>
-              <el-button @click="resetQuery" @mousedown="e => e.preventDefault()">
-                <i class="iconfont-mini icon-a-shuaxinxianxing mr5"></i>重置
+              <el-button @click="resetQuery" @mousedown="(e) => e.preventDefault()">
+                <i class="iconfont-mini icon-a-zu22378 mr5"></i>重置
               </el-button>
             </el-form-item>
           </el-form>
@@ -192,12 +197,11 @@
               <el-col :span="1.5">
                 <el-button
                     type="info"
-                    plains
+                    plain
+                    icon="Upload"
                     @click="handleImport"
                     v-hasPermi="['system:user:import']"
-                >
-                  <i class="iconfont-mini icon-daoru"></i>
-                  导入
+                >导入
                 </el-button>
               </el-col>
               <el-col :span="1.5">
@@ -219,15 +223,20 @@
           <el-table stripe height="544px" v-loading="loading" :data="userList"
                     @selection-change="handleSelectionChange">
             <el-table-column type="selection" width="50" align="center"/>
-            <el-table-column label="用户编号" align="center" key="userId" prop="userId"
+            <el-table-column label="编号" align="center" key="userId" prop="userId"
                              v-if="columns[0].visible"/>
-            <el-table-column label="用户名称" align="center" key="userName" prop="userName"
-                             v-if="columns[1].visible" :show-overflow-tooltip="true"/>
-            <el-table-column label="用户昵称" align="center" key="nickName" prop="nickName"
+            <el-table-column
+                label="登录账号"
+                key="userName"
+                prop="userName"
+                v-if="columns[1].visible"
+                :show-overflow-tooltip="{ effect: 'light' }"
+            />
+            <el-table-column label="用户姓名"  key="nickName" prop="nickName"
                              v-if="columns[2].visible" :show-overflow-tooltip="true"/>
-            <el-table-column label="部门" align="center" key="deptName" prop="dept.deptName"
+            <el-table-column label="部门"  key="deptName" prop="dept.deptName"
                              v-if="columns[3].visible" :show-overflow-tooltip="true"/>
-            <el-table-column label="手机号码" align="center" key="phonenumber" prop="phonenumber"
+            <el-table-column label="手机号码"  key="phonenumber" prop="phonenumber"
                              v-if="columns[4].visible" width="120"/>
             <el-table-column label="状态" align="center" key="status" v-if="columns[5].visible">
               <template #default="scope">
@@ -239,10 +248,17 @@
                 ></el-switch>
               </template>
             </el-table-column>
-            <el-table-column label="创建时间" align="center" prop="createTime" v-if="columns[6].visible"
-                             width="160">
+            <el-table-column
+                label="创建时间"
+                prop="createTime"
+                v-if="columns[6].visible"
+                width="100"
+                align="left"
+            >
               <template #default="scope">
-                <span>{{ parseTime(scope.row.createTime) }}</span>
+                                <span>
+                                    {{ parseTime(scope.row.createTime, '{y}-{m}-{d}') || '-' }}
+                                </span>
               </template>
             </el-table-column>
             <el-table-column label="操作" align="center" class-name="small-padding fixed-width" fixed="right"
@@ -270,19 +286,26 @@
                   <i class="iconfont-mini icon-a-shanchuxianxing"></i>
                   删除
                 </el-button>
-                <el-popover placement="bottom" :width="150" trigger="click" v-if="scope.row.userId !== 1">
+                <el-popover
+                    placement="bottom"
+                    :width="150"
+                    trigger="click"
+                    v-if="scope.row.userId !== 1"
+                >
                   <template #reference>
-                    <el-button link type="primary" icon="More">更多</el-button>
+                    <el-button link type="primary" icon="ArrowDown"
+                    >更多</el-button
+                    >
                   </template>
-                  <div style="width: 90px;" class="butgdlist">
-                    <el-button style="padding-left: 14px;" link type="primary"
-                               @click="handleResetPwd(scope.row)"
-                               v-hasPermi="['system:user:resetPwd']">
-                      <i class="iconfont-mini icon-a-mimaxianxing"></i>重置密码
-                    </el-button>
-                    <el-button link type="primary"
-                               @click="handleAuthRole(scope.row)" v-hasPermi="['system:user:edit']">
-                      <i class="iconfont-mini icon-a-yonghuzhanghaoxianxing"></i>分配角色
+                  <div style="width: 90px" class="butgdlist">
+                    <el-button
+                        style="padding-left: 14px"
+                        link
+                        type="primary"
+                        icon="Key"
+                        @click="handleResetPwd(scope.row)"
+                        v-hasPermi="['system:user:resetPwd']"
+                    >重置密码
                     </el-button>
                   </div>
                 </el-popover>
@@ -545,13 +568,14 @@ const upload = reactive({
 });
 // 列显隐信息
 const columns = ref([
-  {key: 0, label: `用户编号`, visible: true},
-  {key: 1, label: `用户名称`, visible: true},
-  {key: 2, label: `用户昵称`, visible: true},
-  {key: 3, label: `部门`, visible: true},
-  {key: 4, label: `手机号码`, visible: true},
-  {key: 5, label: `状态`, visible: true},
-  {key: 6, label: `创建时间`, visible: true}
+  { key: 0, label: `编号`, visible: true },
+  { key: 1, label: `登录账号`, visible: true },
+  { key: 2, label: `用户姓名`, visible: true },
+  { key: 3, label: `部门`, visible: true },
+  { key: 4, label: `手机号码`, visible: true },
+  { key: 5, label: `状态`, visible: true },
+  { key: 6, label: `创建时间`, visible: true },
+  { key: 7, label: '操作', visible: true }
 ]);
 
 const data = reactive({

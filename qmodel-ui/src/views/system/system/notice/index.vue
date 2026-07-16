@@ -62,14 +62,19 @@
                   />
                </el-select>
             </el-form-item>
-            <el-form-item>
-               <el-button type="primary" @click="handleQuery" @mousedown="(e) => e.preventDefault()">
-                  <i class="iconfont-mini icon-a-chaxunxianxing mr5"></i>查询
-               </el-button>
-               <el-button @click="resetQuery" @mousedown="e => e.preventDefault()">
-                  <i class="iconfont-mini icon-a-shuaxinxianxing mr5"></i>重置
-               </el-button>
-            </el-form-item>
+           <el-form-item>
+             <el-button
+                 plain
+                 type="primary"
+                 @click="handleQuery"
+                 @mousedown="(e) => e.preventDefault()"
+             >
+               <i class="iconfont-mini icon-a-zu22377 mr5"></i>查询
+             </el-button>
+             <el-button @click="resetQuery" @mousedown="(e) => e.preventDefault()">
+               <i class="iconfont-mini icon-a-zu22378 mr5"></i>重置
+             </el-button>
+           </el-form-item>
          </el-form>
       </div>
       <div  class="pagecont-bottom">
@@ -116,22 +121,22 @@
             <el-table-column label="序号" align="center" prop="noticeId" width="100" />
             <el-table-column
                label="公告标题"
-               align="center"
+               align="left"
                prop="noticeTitle"
                :show-overflow-tooltip="true"
             />
-            <el-table-column label="公告类型" align="center" prop="noticeType" width="100">
+            <el-table-column label="公告类型" align="center" prop="noticeType" >
                <template #default="scope">
                   <dict-tag :options="sys_notice_type" :value="scope.row.noticeType" />
                </template>
             </el-table-column>
-            <el-table-column label="状态" align="center" prop="status" width="100">
+            <el-table-column label="状态" align="center" prop="status" >
                <template #default="scope">
                   <dict-tag :options="sys_notice_status" :value="scope.row.status" />
                </template>
             </el-table-column>
-            <el-table-column label="创建者" align="center" prop="createBy" width="100" />
-            <el-table-column label="创建时间" align="center" prop="createTime" width="100">
+            <el-table-column label="创建者" align="center" prop="createBy"  />
+            <el-table-column label="创建时间" align="center" prop="createTime">
                <template #default="scope">
                   <span>{{ parseTime(scope.row.createTime, '{y}-{m}-{d}') }}</span>
                </template>

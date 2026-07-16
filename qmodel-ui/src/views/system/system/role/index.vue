@@ -78,13 +78,19 @@
                end-placeholder="结束日期"
             ></el-date-picker>
          </el-form-item>
-         <el-form-item>
-            <!-- <el-button type="primary" icon="Search" @click="handleQuery">搜索</el-button> -->
-            <el-button type="primary" @click="handleQuery" @mousedown="(e) => e.preventDefault()">
-              <i class="iconfont-mini icon-a-chaxunxianxing mr5"></i>查询
-            </el-button>
-            <el-button icon="Refresh" @click="resetQuery">重置</el-button>
-         </el-form-item>
+        <el-form-item>
+          <el-button
+              plain
+              type="primary"
+              @click="handleQuery"
+              @mousedown="(e) => e.preventDefault()"
+          >
+            <i class="iconfont-mini icon-a-zu22377 mr5"></i>查询
+          </el-button>
+          <el-button @click="resetQuery" @mousedown="(e) => e.preventDefault()">
+            <i class="iconfont-mini icon-a-zu22378 mr5"></i>重置
+          </el-button>
+        </el-form-item>
       </el-form>
     </div>
     <div  class="pagecont-bottom">
@@ -137,11 +143,11 @@
       </div>
 
       <!-- 表格数据 -->
-      <el-table  stripe height="60vh" v-loading="loading" :data="roleList" @selection-change="handleSelectionChange">
+      <el-table  stripe v-loading="loading" :data="roleList" @selection-change="handleSelectionChange">
          <el-table-column type="selection" width="55" align="center" />
          <el-table-column label="角色编号" prop="roleId" align="center"/>
-         <el-table-column label="角色名称" prop="roleName" align="center" :show-overflow-tooltip="true"/>
-         <el-table-column label="权限字符" prop="roleKey" align="center" :show-overflow-tooltip="true"/>
+         <el-table-column label="角色名称" prop="roleName" align="left" :show-overflow-tooltip="true"/>
+         <el-table-column label="权限字符" prop="roleKey" align="left" :show-overflow-tooltip="true"/>
          <el-table-column label="显示顺序" prop="roleSort" align="center"/>
          <el-table-column label="状态" align="center">
             <template #default="scope">
@@ -160,33 +166,35 @@
          </el-table-column>
          <el-table-column label="操作" align="center" class-name="small-padding fixed-width" fixed="right" width="240">
             <template #default="scope">
-              <!-- <el-tooltip content="修改" placement="top" v-if="scope.row.roleId !== 1">
-                <el-button link type="primary" icon="Edit" @click="handleUpdate(scope.row)" v-hasPermi="['system:role:edit']"></el-button>
-              </el-tooltip>
-              <el-tooltip content="删除" placement="top" v-if="scope.row.roleId !== 1">
-                <el-button link type="danger" icon="Delete" @click="handleDelete(scope.row)" v-hasPermi="['system:role:remove']"></el-button>
-              </el-tooltip> -->
-              <!-- <el-tooltip content="数据权限" placement="top" v-if="scope.row.roleId !== 1">
-                <el-button link type="primary" icon="CircleCheck" @click="handleDataScope(scope.row)" v-hasPermi="['system:role:edit']"></el-button>
-              </el-tooltip> -->
-              <!-- <el-tooltip content="分配用户" placement="top" v-if="scope.row.roleId !== 1">
-                <el-button link type="primary" icon="User" @click="handleAuthUser(scope.row)" v-hasPermi="['system:role:edit']"></el-button>
-              </el-tooltip> -->
               <el-button link type="primary"  @click="handleUpdate(scope.row)" v-hasPermi="['system:role:edit']" v-if="scope.row.roleId !== 1">
                 <i class="iconfont-mini icon-a-xiugaixianxing"></i>
                 修改</el-button>
               <el-button link type="danger"  @click="handleDelete(scope.row)" v-hasPermi="['system:role:remove']" v-if="scope.row.roleId !== 1 && scope.row.roleId !== 3">
                 <i class="iconfont-mini icon-a-shanchuxianxing"></i>
                 删除</el-button>
-              <el-popover  placement="bottom" :width="150" trigger="click" v-if="scope.row.roleId !== 1">
+              <el-popover
+                  placement="bottom"
+                  :width="150"
+                  trigger="click"
+                  v-if="scope.row.roleId !== 1"
+              >
                 <template #reference>
-                  <el-button link type="primary"  icon="More">更多</el-button>
+                  <el-button link type="primary" icon="ArrowDown">更多</el-button>
                 </template>
-                <div style="width: 90px;" class="butgdlist">
-                  <el-button style="padding-left: 14px;" link type="primary"  @click="handleDataScope(scope.row)" v-hasPermi="['system:role:edit']">
-                   <i class="iconfont-mini icon-a-mimaxianxing"></i> 数据权限</el-button>
-                  <el-button link type="primary"  @click="handleAuthUser(scope.row)" v-hasPermi="['system:role:edit']">
-                    <i class="iconfont-mini icon-a-yonghuzhanghaoxianxing"></i>分配用户</el-button>
+                <div style="width: 90px" class="butgdlist">
+                  <el-button
+                      style="padding-left: 14px"
+                      link
+                      type="primary"
+                      @click="handleDataScope(scope.row)"
+                  >
+                    <i class="iconfont-mini icon-a-mimaxianxing"></i>
+                    数据权限</el-button
+                  >
+                  <el-button link type="primary" @click="handleAuthUser(scope.row)">
+                    <i class="iconfont-mini icon-a-yonghuzhanghaoxianxing"></i
+                    >分配用户</el-button
+                  >
                 </div>
               </el-popover>
             </template>
