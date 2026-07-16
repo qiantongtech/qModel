@@ -229,15 +229,16 @@ CREATE TABLE `model`  (
 -- ----------------------------
 -- Records of model
 -- ----------------------------
-INSERT INTO `model` VALUES (1, NULL, 1, '工业大模型-动态 Token', 'INDUSTRY_MODEL_TEST', 'API', 'V1.0', '吴同', 0, '[{\"name\":\"工业\"}]', '/2026/05/11/6a01a8f6e4b0d389f4f52e8f.png', '工业大模型接口测试', 1, 0, '吴同', NULL, '2026-07-10 14:14:51', 'qModel', 1, '2026-07-14 10:07:30', '测试数据');
-INSERT INTO `model` VALUES (2, NULL, 8, '线性回归算法', 'LINEAR_REGRESSION', 'API', 'V2.0', '吴同', 0, '[{\"name\":\"NLP\"},{\"name\":\"分类\"}]', '/2026/05/11/6a01aa17e4b0d389f4f52e95.png', '文本分类API，使用固定Bearer Token', 1, 0, '吴同', 2, '2026-07-10 10:00:00', '小桐', 1, '2026-07-10 11:48:06', '固定Token示例');
-INSERT INTO `model` VALUES (3, NULL, 9, '支持向量机算法', 'SVM', 'API', 'V1.5', '吴同', 0, '[{\"name\":\"对话\"},{\"name\":\"生成\"}]', '/2026/05/11/6a01aa0ae4b0d389f4f52e94.png', '模拟OpenAI Chat Completion接口', 1, 0, '吴同', 3, '2026-07-10 09:00:00', '小桐', 1, '2026-07-10 11:58:14', 'APIKey固定鉴权示例');
-INSERT INTO `model` VALUES (4, NULL, 9, '逻辑回归算法', 'LOGISTIC_REGRESSION', 'API', 'V1.0', '吴同', 0, '[{\"name\":\"视觉\"},{\"name\":\"图像识别\"}]', '/2026/05/11/6a01a9f9e4b0d389f4f52e93.png', '内网图片分类识别服务，无需鉴权', 1, 0, '吴同', 4, '2026-07-10 08:00:00', '小桐', 1, '2026-07-10 13:33:41', '无鉴权示例');
-INSERT INTO `model` VALUES (5, NULL, 10, '随机森林算法', 'RANDOM_FOREST', 'API', 'V2.3', '吴同', 0, '[{\"name\":\"问答\"},{\"name\":\"RAG\"}]', '/2026/05/11/6a01a9e9e4b0d389f4f52e92.png', '基于知识库的企业问答接口', 1, 0, '吴同', 5, '2026-07-10 07:30:00', '小桐', 1, '2026-07-10 11:48:15', '动态Token-GET方式示例');
-INSERT INTO `model` VALUES (6, NULL, 11, '降维算法', 'DIMENSIONALITY_REDUCTION', 'PYTHON', 'V1.2', '吴同', 2, '[{\"name\":\"运维\"},{\"name\":\"流水线\"}]', '/2026/05/11/6a01a9d8e4b0d389f4f52e91.png', '数据流水线状态管理接口', 1, 0, '吴同', 6, '2026-07-10 06:00:00', '小桐', 1, '2026-07-10 11:48:13', 'PUT请求+Query注入示例');
-INSERT INTO `model` VALUES (7, NULL, 10, '梯度增强算法', 'GRADIENT_BOOSTING', 'PYTHON', 'V3.0', '吴同', 3, '[{\"name\":\"生成\"},{\"name\":\"多模态\"}]', '/2026/05/11/6a01a9a0e4b0d389f4f52e90.png', '支持文本/图像/音频生成的多模态模型', 1, 0, '吴同', 7, '2026-07-10 05:00:00', '小桐', 1, '2026-07-10 11:48:12', '复杂动态Token示例-组合认证');
-INSERT INTO `model` VALUES (8, NULL, 1, '工业大模型-固定 Token', 'INDUSTRY_MODEL_TEST', 'API', 'v1.0', '吴同', 1, '[{\"name\":\"工业\"}]', '/2026/05/11/6a01a9a0e4b0d389f4f52e99.png', NULL, 1, 0, '小桐', 1, '2026-07-10 11:55:55', 'qModel', 1, '2026-07-10 16:20:19', NULL);
-INSERT INTO `model` VALUES (9, NULL, 17, 'qKnow_周报模板测试', 'QKNOW_WEEKLYREPORT', 'API', 'V1.0', '吴同', 0, '[{\"name\":\"周报\"},{\"name\":\"测试\"}]', NULL, '获取 qKnow 系统中的周报模板测试数据', 1, 0, 'qModel', 1, '2026-07-16 14:25:22', 'qModel', 1, '2026-07-16 14:25:33', NULL);
+INSERT INTO `model` VALUES (1, NULL, 1, '工业大模型-动态 Token', 'INDUSTRY_MODEL_TEST', 'API', 'V1.0', '吴同', 0, '[{\"name\":\"工业\"}]', '/2026/05/11/6a01a8f6e4b0d389f4f52e8f.png', '工业大模型接口', 1, 0, '吴同', NULL, '2026-07-10 14:14:51', '吴同', 1, '2026-07-16 15:23:15', '测试数据');
+INSERT INTO `model` VALUES (2, NULL, 8, '线性回归算法', 'LINEAR_REGRESSION', 'API', 'V2.0', '吴同', 0, '[{\"name\":\"NLP\"},{\"name\":\"分类\"}]', '/2026/05/11/6a01aa17e4b0d389f4f52e95.png', '文本分类API，使用固定Bearer Token', 1, 0, '吴同', 2, '2026-07-10 10:00:00', '吴同', 1, '2026-07-10 11:48:06', '固定Token示例');
+INSERT INTO `model` VALUES (3, NULL, 9, '支持向量机算法', 'SVM', 'API', 'V1.5', '吴同', 0, '[{\"name\":\"对话\"},{\"name\":\"生成\"}]', '/2026/05/11/6a01aa0ae4b0d389f4f52e94.png', '模拟OpenAI Chat Completion接口', 1, 0, '吴同', 3, '2026-07-10 09:00:00', '吴同', 1, '2026-07-10 11:58:14', 'APIKey固定鉴权示例');
+INSERT INTO `model` VALUES (4, NULL, 9, '逻辑回归算法', 'LOGISTIC_REGRESSION', 'API', 'V1.0', '吴同', 0, '[{\"name\":\"视觉\"},{\"name\":\"图像识别\"}]', '/2026/05/11/6a01a9f9e4b0d389f4f52e93.png', '内网图片分类识别服务，无需鉴权', 1, 0, '吴同', 4, '2026-07-10 08:00:00', '吴同', 1, '2026-07-10 13:33:41', '无鉴权示例');
+INSERT INTO `model` VALUES (5, NULL, 10, '随机森林算法', 'RANDOM_FOREST', 'API', 'V2.3', '吴同', 0, '[{\"name\":\"问答\"},{\"name\":\"RAG\"}]', '/2026/05/11/6a01a9e9e4b0d389f4f52e92.png', '基于知识库的企业问答接口', 1, 0, '吴同', 5, '2026-07-10 07:30:00', '吴同', 1, '2026-07-10 11:48:15', '动态Token-GET方式示例');
+INSERT INTO `model` VALUES (6, NULL, 11, '降维算法', 'DIMENSIONALITY_REDUCTION', 'PYTHON', 'V1.2', '吴同', 2, '[{\"name\":\"运维\"},{\"name\":\"流水线\"}]', '/2026/05/11/6a01a9d8e4b0d389f4f52e91.png', '数据流水线状态管理接口', 1, 0, '吴同', 6, '2026-07-10 06:00:00', '吴同', 1, '2026-07-10 11:48:13', 'PUT请求+Query注入示例');
+INSERT INTO `model` VALUES (7, NULL, 10, '梯度增强算法', 'GRADIENT_BOOSTING', 'PYTHON', 'V3.0', '吴同', 3, '[{\"name\":\"生成\"},{\"name\":\"多模态\"}]', '/2026/05/11/6a01a9a0e4b0d389f4f52e90.png', '支持文本/图像/音频生成的多模态模型', 1, 0, '吴同', 7, '2026-07-10 05:00:00', '吴同', 1, '2026-07-10 11:48:12', '复杂动态Token示例-组合认证');
+INSERT INTO `model` VALUES (8, NULL, 1, '工业大模型-固定 Token', 'INDUSTRY_MODEL_TEST', 'API', 'v1.0', '吴同', 1, '[{\"name\":\"工业\"}]', '/2026/05/11/6a01a9a0e4b0d389f4f52e99.png', NULL, 1, 0, '吴同', 1, '2026-07-10 11:55:55', '吴同', 1, '2026-07-10 16:20:19', NULL);
+INSERT INTO `model` VALUES (9, NULL, 17, 'qKnow_周报模板测试', 'QKNOW_WEEKLYREPORT', 'API', 'V1.0', '吴同', 0, '[{\"name\":\"周报\"},{\"name\":\"测试\"}]', NULL, '获取 qKnow 系统中的周报模板测试数据', 1, 0, '吴同', 1, '2026-07-16 14:25:22', '吴同', 1, '2026-07-16 15:33:44', NULL);
+INSERT INTO `model` VALUES (10, NULL, 2, '水位流量插值算法', 'WQIA', 'PYTHON', 'V1.0', '吴同', 1, '[{\"name\":\"水位流量\"},{\"name\":\"预测\"}]', NULL, NULL, 1, 0, '吴同', 1, '2026-07-16 15:09:06', '吴同', 1, '2026-07-16 15:14:37', NULL);
 
 -- ----------------------------
 -- Table structure for model_config
@@ -497,6 +498,7 @@ CREATE TABLE `model_file_resource`  (
 -- ----------------------------
 -- Records of model_file_resource
 -- ----------------------------
+INSERT INTO `model_file_resource` VALUES (5, 10, '水位流量插值算法2.zip', 'main.py', 'temp/2026/07/16/水位流量插值算法2.zip', 'D:\\xmdm\\qModel\\upload\\temp\\extract\\5\\requirements.txt', 1, 2, NULL, NULL, NULL, 'D:\\xmdm\\qModel\\upload\\temp\\extract\\5\\main.py', NULL, NULL, 2, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, NULL, 1, 0, 'qModel', 1, '2026-07-16 15:49:49', 'system', 1, '2026-07-16 15:49:50', NULL, '{\n  \"title\": \"runScript接口入参\",\n  \"type\": \"object\",\n  \"required\": [\"H\"],\n  \"properties\": {\n    \"H\": {\n      \"title\": \"参数H\",\n      \"description\": \"自定义数值参数\",\n      \"type\": \"integer\",\n      \"example\": 3\n    }\n  }\n}', NULL);
 
 -- ----------------------------
 -- Table structure for model_build_log
