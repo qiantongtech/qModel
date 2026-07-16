@@ -48,6 +48,7 @@
 
     <div>
       <FileUpload
+          :model-value="filePath"
           :limit="1"
           :file-type="['zip']"
           :file-size="500"
