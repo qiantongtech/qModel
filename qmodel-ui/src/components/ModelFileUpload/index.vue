@@ -87,8 +87,9 @@
 </template>
 
 <script setup>
+import { computed, ref, watch, getCurrentInstance } from "vue";
 import { getToken } from "@/utils/auth";
-import { Upload } from '@element-plus/icons-vue'
+import { Upload, UploadFilled } from '@element-plus/icons-vue'
 
 const props = defineProps({
   modelValue: [String, Object, Array],
@@ -134,7 +135,7 @@ const emit = defineEmits();
 const number = ref(0);
 const uploadList = ref([]);
 const baseUrl = import.meta.env.VITE_APP_BASE_API;
-const uploadFileUrl = ref(import.meta.env.VITE_APP_BASE_API + "/upload"); // 上传文件服务器地址
+const uploadFileUrl = computed(() => props.actionUrl ? import.meta.env.VITE_APP_BASE_API + props.actionUrl : import.meta.env.VITE_APP_BASE_API + "/upload");
 const headers = ref({ Authorization: "Bearer " + getToken() });
 const fileList = ref([]);
 const uploadData = ref({
@@ -195,18 +196,30 @@ function handleExceed() {
 
 // 上传失败
 function handleUploadError(err) {
+  if (props.actionUrl) {
+    number.value--;
+    proxy.$modal.closeLoading();
+    emit("uploadError", err);
+    return;
+  }
   proxy.$modal.msgError("上传文件失败");
 }
 
 // 上传成功回调
 function handleUploadSuccess(res, file) {
+  if (props.actionUrl) {
+    number.value--;
+    proxy.$modal.closeLoading();
+    emit("uploadSuccess", res, file);
+    return;
+  }
   if (res.url) {
     uploadList.value.push({ name: '/profile/' + res.path + res.filename, url: res.url });
     if (res.size) {
-      emit("update:fileSize", res.size);  // 更新文件大小
+      emit("update:fileSize", res.size);
     }
     if (res.ext) {
-      emit("update:fileExt", res.ext);  // 更新文件后缀名
+      emit("update:fileExt", res.ext);
     }
     uploadedSuccessfully();
   } else {

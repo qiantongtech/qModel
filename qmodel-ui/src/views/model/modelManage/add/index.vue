@@ -218,6 +218,7 @@ const form = reactive({
   // Python 文件上传
   uploadedFile: null,
   filePath: '',
+  fileName: '',
   fileResourceId: null
 })
 
@@ -310,6 +311,7 @@ const loadModelData = async (id) => {
         Object.assign(form, {
           fileResourceId: fileRes.id,
           filePath: fileRes.filePath || '',
+          fileName: fileRes.fileName || '',
           inputSchema: fileRes.inputSchema || '',
           outputSchema: fileRes.outputSchema || ''
         })
@@ -348,9 +350,11 @@ const handleFileChecked = (result) => {
   if (result.pass) {
     form.uploadedFile = result.file
     form.filePath = result.filePath || ''
+    form.fileName = result.fileName || ''
   } else {
     form.uploadedFile = null
     form.filePath = ''
+    form.fileName = ''
   }
 }
 
@@ -418,7 +422,7 @@ const buildModelData = () => {
 
   if (form.accessType === 'PYTHON') {
     modelData.filePath = form.filePath || undefined
-    modelData.fileName = form.uploadedFile?.name || undefined
+    modelData.fileName = form.fileName || form.uploadedFile?.name || undefined
     modelData.fileSize = form.uploadedFile?.size ? Math.round(form.uploadedFile.size / (1024 * 1024)) : undefined
     modelData.scriptName = 'main.py'
     modelData.resourceType = '2'
