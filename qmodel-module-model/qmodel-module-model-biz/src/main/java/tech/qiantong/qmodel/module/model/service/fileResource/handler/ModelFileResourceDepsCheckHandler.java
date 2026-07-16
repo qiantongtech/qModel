@@ -46,6 +46,7 @@ import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
@@ -82,6 +83,18 @@ public class ModelFileResourceDepsCheckHandler {
     private static final String MODEL_STATUS_BUILD_SUCCESS = "0";
 
     private static final String STORAGE_PATH = System.getProperty("user.dir") + "/upload/";
+
+    /**
+     * 镜像源列表（按优先级排序）
+     * 当一个镜像源失败时，自动尝试下一个
+     */
+    private static final List<String> PIP_MIRRORS = Arrays.asList(
+            "https://pypi.tuna.tsinghua.edu.cn/simple",  // 清华镜像（优先）
+            "https://mirrors.aliyun.com/pypi/simple",    // 阿里云镜像
+            "https://repo.huaweicloud.com/repository/pypi/simple",  // 华为云镜像
+            "https://pypi.douban.com/simple",            // 豆瓣镜像
+            "https://pypi.org/simple"                    // 官方源（兜底）
+    );
 
     @Async("threadPoolTaskExecutor")
     public void checkDependencies(Long fileResourceId) {
@@ -434,39 +447,65 @@ public class ModelFileResourceDepsCheckHandler {
     }
 
     private boolean installMissingDependencies(List<String> requirements, Set<String> installedPackages) {
-        List<String> missingPackages = new ArrayList<>();
-        for (String requirement : requirements) {
-            String pkgName = extractPackageName(requirement);
-            String normalizedName = normalizePackageName(pkgName);
-            if (!installedPackages.contains(normalizedName)) {
-                missingPackages.add(requirement);
-            }
-        }
+        // 过滤出需要安装的缺失依赖包
+        List<String> missingPackages = requirements.stream()
+                .map(this::extractPackageName)
+                .map(this::normalizePackageName)
+                .filter(pkg -> !installedPackages.contains(pkg))
+                .collect(Collectors.toList());
 
         if (missingPackages.isEmpty()) {
             return true;
         }
 
         String pythonCmd = getPythonCommand();
+
+        // 依次尝试每个镜像源
+        for (int i = 0; i < PIP_MIRRORS.size(); i++) {
+            String mirror = PIP_MIRRORS.get(i);
+            boolean success = tryInstallWithMirror(pythonCmd, missingPackages, mirror);
+
+            if (success) {
+                log.info("使用镜像源 [{}] 安装依赖成功", mirror);
+                return true;
+            }
+
+            // 如果不是最后一个镜像源，记录日志并尝试下一个
+            if (i < PIP_MIRRORS.size() - 1) {
+                log.warn("镜像源 [{}] 安装失败，尝试下一个镜像源", mirror);
+            }
+        }
+
+        // 所有镜像源都失败
+        log.error("所有镜像源都无法安装依赖包: {}", missingPackages);
+        return false;
+    }
+
+    /**
+     * 使用指定镜像源尝试安装依赖包
+     */
+    private boolean tryInstallWithMirror(String pythonCmd, List<String> missingPackages, String mirror) {
         List<String> cmdArgs = new ArrayList<>();
         cmdArgs.add(pythonCmd);
         cmdArgs.add("-m");
         cmdArgs.add("pip");
         cmdArgs.add("install");
+        cmdArgs.add("-i");
+        cmdArgs.add(mirror);
         cmdArgs.addAll(missingPackages);
 
         try {
             ProcessBuilder pb = new ProcessBuilder(cmdArgs);
             setupProcessBuilder(pb);
 
-            log.info("开始安装依赖包: {}", missingPackages);
+            log.info("使用镜像源 [{}] 安装依赖包: {}", mirror, missingPackages);
             Process process = pb.start();
-            boolean completed = process.waitFor(15, TimeUnit.MINUTES);
+            boolean completed = process.waitFor(30, TimeUnit.MINUTES);
 
             if (completed && process.exitValue() == 0) {
-                log.info("依赖包安装成功");
                 return true;
             } else {
+                // 收集错误信息（不抛出异常，继续尝试下一个镜像源）
                 StringBuilder errorOutput = new StringBuilder();
                 BufferedReader errorReader = new BufferedReader(
                         new InputStreamReader(process.getErrorStream(), StandardCharsets.UTF_8));
@@ -475,25 +514,25 @@ public class ModelFileResourceDepsCheckHandler {
                     errorOutput.append(line).append("\n");
                 }
                 errorReader.close();
-                log.error("依赖包安装失败，退出码: {}, 错误信息: {}", process.exitValue(), errorOutput);
-                if (!completed) {
+
+                if (completed) {
+                    log.warn("镜像源 [{}] 安装失败，退出码: {}", mirror, process.exitValue());
+                } else {
                     process.destroyForcibly();
+                    log.warn("镜像源 [{}] 安装超时", mirror);
                 }
                 return false;
             }
         } catch (Exception e) {
-            log.error("安装依赖包异常", e);
+            log.warn("镜像源 [{}] 安装异常: {}", mirror, e.getMessage());
             return false;
         }
     }
 
     private String getPythonCommand() {
-        String osName = System.getProperty("os.name").toLowerCase();
-        if (osName.contains("win")) {
-            return "python";
-        } else {
-            return "python3";
-        }
+        return System.getProperty("os.name").toLowerCase().contains("win")
+                ? "python"
+                : "python3";
     }
 
     private void setupProcessBuilder(ProcessBuilder pb) {
