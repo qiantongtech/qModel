@@ -85,7 +85,7 @@
           </el-table-column>
           <el-table-column label="说明" min-width="260">
             <template #default="{ row }">
-              <el-input :model-value="row.description || row.title" />
+              <el-input :model-value="row.description || row.title"  disabled/>
             </template>
           </el-table-column>
         </el-table>

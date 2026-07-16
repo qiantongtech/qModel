@@ -27,7 +27,7 @@
           :icon="VideoPlay"
           @click="handleTest"
         >
-          发起调用测试
+          调用测试
         </el-button>
       </div>
 
@@ -50,13 +50,13 @@
               <el-input
                 v-if="row.displayType === 'string'"
                 v-model="formValues[row.key]"
-                :placeholder="`请输入${row.title}`"
+                placeholder="请输入参数值"
                 clearable
               />
               <el-input-number
                 v-else-if="row.displayType === 'integer' || row.displayType === 'number'"
                 v-model="formValues[row.key]"
-                :placeholder="`请输入${row.title}`"
+                placeholder="请输入参数值"
                 :precision="row.displayType === 'integer' ? 0 : 2"
                 controls-position="right"
                 style="width: 100%"
