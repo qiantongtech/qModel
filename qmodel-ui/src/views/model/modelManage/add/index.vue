@@ -116,12 +116,12 @@ import useTagsViewStore from '@/store/system/tagsView'
 import { addModel, getModel, updateModel, saveModelWithConfig } from '@/api/model/model'
 import { listModelConfig } from '@/api/model/config'
 import { listClassify } from '@/api/modelReconstitution/classify'
-import BasicInfoStep from './BasicInfoStep.vue'
-import ApiConfigStep from './ApiConfigStep.vue'
+import BasicInfoStep from './basicInfoStep.vue'
+import ApiConfigStep from './apiConfigStep.vue'
 import CheckUploadFile from './checkUploadFile.vue'
-import ParamDefineStep from './ParamDefineStep.vue'
-import TestSaveStep from './TestSaveStep.vue'
-import ConfirmBuildStep from './ConfirmBuildStep.vue'
+import ParamDefineStep from './paramDefineStep.vue'
+import TestSaveStep from './testSaveStep.vue'
+import ConfirmBuildStep from './confirmBuildStep.vue'
 import { listModelFileResource } from "@/api/model/fileResource.js";
 
 const { proxy } = getCurrentInstance()

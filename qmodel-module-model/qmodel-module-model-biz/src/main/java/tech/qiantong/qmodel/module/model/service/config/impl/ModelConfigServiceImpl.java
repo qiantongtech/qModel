@@ -73,6 +73,7 @@ import tech.qiantong.qmodel.module.model.controller.admin.config.vo.ModelConfigT
 import tech.qiantong.qmodel.module.model.dal.dataobject.config.ModelConfigDO;
 import tech.qiantong.qmodel.module.model.dal.mapper.config.ModelConfigMapper;
 import tech.qiantong.qmodel.module.model.enums.InvokeStatusEnum;
+import tech.qiantong.qmodel.module.model.enums.InvokeTypeEnum;
 import tech.qiantong.qmodel.module.model.service.config.IModelConfigService;
 import tech.qiantong.qmodel.module.model.service.invokeHistory.IModelInvokeHistoryService;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
@@ -283,7 +284,7 @@ public class ModelConfigServiceImpl  extends ServiceImpl<ModelConfigMapper,Model
             logs.add("请求成功，HTTP 状态码：" + response.getStatusCodeValue());
 
             Date endTime = new Date();
-            modelInvokeHistoryService.saveInvokeLogAsync(testReqVO.getModelId(), testReqVO.getModelName(), "1",
+            modelInvokeHistoryService.saveInvokeLogAsync(testReqVO.getModelId(), testReqVO.getModelName(), InvokeTypeEnum.API.getType(),
                     testReqVO.getTestBody(), response.getBody(), InvokeStatusEnum.SUCCESS.getStatus(), null,
                     endTime.getTime() - startTime.getTime(), startTime, endTime, clientIp);
         } catch (RestClientResponseException e) {
@@ -293,7 +294,7 @@ public class ModelConfigServiceImpl  extends ServiceImpl<ModelConfigMapper,Model
             logs.add("请求返回异常状态：" + e.getRawStatusCode() + " " + e.getStatusText());
 
             Date endTime = new Date();
-            modelInvokeHistoryService.saveInvokeLogAsync(testReqVO.getModelId(), testReqVO.getModelName(), "1",
+            modelInvokeHistoryService.saveInvokeLogAsync(testReqVO.getModelId(), testReqVO.getModelName(), InvokeTypeEnum.API.getType(),
                     testReqVO.getTestBody(), e.getResponseBodyAsString(), InvokeStatusEnum.FAILED.getStatus(), e.getStatusText(),
                     endTime.getTime() - startTime.getTime(), startTime, endTime, clientIp);
         } catch (Exception e) {
@@ -302,7 +303,7 @@ public class ModelConfigServiceImpl  extends ServiceImpl<ModelConfigMapper,Model
             log.error("模型配置测试调用异常", e);
 
             Date endTime = new Date();
-            modelInvokeHistoryService.saveInvokeLogAsync(testReqVO.getModelId(), testReqVO.getModelName(), "1",
+            modelInvokeHistoryService.saveInvokeLogAsync(testReqVO.getModelId(), testReqVO.getModelName(), InvokeTypeEnum.API.getType(),
                     testReqVO.getTestBody(), null, InvokeStatusEnum.FAILED.getStatus(), e.getMessage(),
                     endTime.getTime() - startTime.getTime(), startTime, endTime, clientIp);
         }

@@ -66,7 +66,7 @@
 import { ref, computed, watch } from 'vue'
 import { ElMessage } from 'element-plus'
 import { Document, View, Brush } from '@element-plus/icons-vue'
-import SchemaPreview from './SchemaPreview.vue'
+import SchemaPreview from './schemaPreview.vue'
 
 const formData = defineModel('formData', {
   type: Object,

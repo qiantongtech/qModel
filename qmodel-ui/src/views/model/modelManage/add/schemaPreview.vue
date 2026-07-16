@@ -22,7 +22,7 @@
 </template>
 
 <script setup name="SchemaPreview">
-import SchemaNode from './SchemaNode.vue'
+import SchemaNode from './schemaNode.vue'
 
 defineProps({
   schema: {

@@ -66,15 +66,18 @@ import tech.qiantong.qmodel.module.model.controller.admin.fileResource.vo.ModelF
 import tech.qiantong.qmodel.module.model.controller.admin.fileResource.vo.ModelFileResourceSaveReqVO;
 import tech.qiantong.qmodel.module.model.controller.admin.model.vo.ModelSaveReqVO;
 import tech.qiantong.qmodel.module.model.dal.dataobject.fileResource.ModelFileResourceDO;
+import tech.qiantong.qmodel.module.model.dal.dataobject.model.ModelDO;
 import tech.qiantong.qmodel.module.model.dal.mapper.fileResource.ModelFileResourceMapper;
 import tech.qiantong.qmodel.module.model.service.fileResource.IModelFileResourceService;
 import tech.qiantong.qmodel.file.util.FileUploadUtil;
 import org.dromara.x.file.storage.core.FileInfo;
 import tech.qiantong.qmodel.module.model.enums.ImageBuildStatusEnum;
 import tech.qiantong.qmodel.module.model.enums.InvokeStatusEnum;
+import tech.qiantong.qmodel.module.model.enums.InvokeTypeEnum;
 import tech.qiantong.qmodel.module.model.enums.ResourceTypeEnum;
 import tech.qiantong.qmodel.module.model.service.fileResource.handler.ModelFileResourceDepsCheckHandler;
 import tech.qiantong.qmodel.module.model.service.invokeHistory.IModelInvokeHistoryService;
+import tech.qiantong.qmodel.module.model.service.model.IModelService;
 
 
 /**
@@ -92,6 +95,9 @@ public class ModelFileResourceServiceImpl extends ServiceImpl<ModelFileResourceM
 
     @Resource
     private ModelFileResourceDepsCheckHandler depsCheckHandler;
+
+    @Resource
+    private IModelService modelService;
 
     @Resource
     private PythonConfig pythonConfig;
@@ -490,6 +496,12 @@ public class ModelFileResourceServiceImpl extends ServiceImpl<ModelFileResourceM
                         .last("LIMIT 1")
         );
 
+        ModelDO modelInfo = modelService.getModelById(modelId);
+
+        if (modelInfo == null) {
+            throw new ServiceException("模型不存在，modelId: " + modelId);
+        }
+
         if (fileResourceDO == null) {
             throw new ServiceException("模型文件资源不存在，modelId: " + modelId);
         }
@@ -584,20 +596,20 @@ public class ModelFileResourceServiceImpl extends ServiceImpl<ModelFileResourceM
             }
 
             Date endTime = new Date();
-            modelInvokeHistoryService.saveInvokeLogAsync(modelId, fileResourceDO.getFileName(), "1",
+            modelInvokeHistoryService.saveInvokeLogAsync(modelId, modelInfo.getName(), InvokeTypeEnum.PYTHON.getType(),
                     paramJson, JSON.toJSONString(result), InvokeStatusEnum.SUCCESS.getStatus(), null,
                     endTime.getTime() - startTime.getTime(), startTime, endTime, clientIp);
 
             return result;
         } catch (ServiceException e) {
             Date endTime = new Date();
-            modelInvokeHistoryService.saveInvokeLogAsync(modelId, fileResourceDO.getFileName(), "1",
+            modelInvokeHistoryService.saveInvokeLogAsync(modelId, modelInfo.getName(), InvokeTypeEnum.PYTHON.getType(),
                     paramJson, null, InvokeStatusEnum.FAILED.getStatus(), e.getMessage(),
                     endTime.getTime() - startTime.getTime(), startTime, endTime, clientIp);
             throw e;
         } catch (Exception e) {
             Date endTime = new Date();
-            modelInvokeHistoryService.saveInvokeLogAsync(modelId, fileResourceDO.getFileName(), "1",
+            modelInvokeHistoryService.saveInvokeLogAsync(modelId, modelInfo.getName(), InvokeTypeEnum.PYTHON.getType(),
                     paramJson, null, InvokeStatusEnum.FAILED.getStatus(), e.getMessage(),
                     endTime.getTime() - startTime.getTime(), startTime, endTime, clientIp);
             log.error("执行模型脚本失败，modelId: {}", modelId, e);

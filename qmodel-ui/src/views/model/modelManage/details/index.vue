@@ -167,7 +167,7 @@
         </el-tab-pane>
 
         <el-tab-pane name="onlineTest">
-          <template #label>在线调用</template>
+          <template #label>在线调试</template>
           <OnlineTest
             v-if="activeName === 'onlineTest'"
             :model-id="viewInfo.id"
@@ -418,6 +418,9 @@ const actionHistoryRef = ref(null);
 const getModelById = (params) => {
   getModel(params).then((res) => {
     viewInfo.value = res.data;
+    if (route.query.tab) {
+      activeName.value = route.query.tab;
+    }
   });
 };
 
@@ -579,9 +582,6 @@ watch(
 );
 
 onMounted(() => {
-  if (route.query.tab) {
-    activeName.value = route.query.tab;
-  }
   getModelById(modelId.value);
   getTreeSelect();
 });
