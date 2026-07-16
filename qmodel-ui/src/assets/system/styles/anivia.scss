@@ -1278,6 +1278,8 @@
   font-size: 14px;
   line-height: 22px;
   padding: 16px;
+  white-space: normal;
+  word-break: break-word;
 }
 .el-popper.is-dark {
   background: #ffffff !important;
@@ -1287,6 +1289,22 @@
 .el-popper.is-dark .el-popper__arrow:before {
   background: #ffffff !important;
   border: 1px solid var(--el-border-color-light) !important;
+}
+.el-popper.is-dark[data-popper-placement^=top] .el-popper__arrow:before {
+  border-left-color: transparent !important;
+  border-top-color: transparent !important;
+}
+.el-popper.is-dark[data-popper-placement^=bottom] .el-popper__arrow:before {
+  border-bottom-color: transparent !important;
+  border-right-color: transparent !important;
+}
+.el-popper.is-dark[data-popper-placement^=left] .el-popper__arrow:before {
+  border-bottom-color: transparent !important;
+  border-left-color: transparent !important;
+}
+.el-popper.is-dark[data-popper-placement^=right] .el-popper__arrow:before {
+  border-right-color: transparent !important;
+  border-top-color: transparent !important;
 }
 .el-table .cell.el-tooltip {
   display: -webkit-box !important;

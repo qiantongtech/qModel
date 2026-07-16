@@ -182,7 +182,7 @@
                 @sort-change="handleSortChange"
             >
                 <el-table-column type="selection" width="50" align="center" />
-                <el-table-column label="日志编号" align="center" prop="operId" />
+                <el-table-column label="编号" align="center" prop="operId" />
                 <el-table-column
                     label="系统模块"
                     align="center"
