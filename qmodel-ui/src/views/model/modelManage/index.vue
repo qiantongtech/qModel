@@ -459,8 +459,11 @@ const handleUpdate = (row) => {
   });
 };
 
-const handleTest = () => {
-  ElMessage.warning("调试功能正在开发中");
+const handleTest = (row) => {
+  proxy.$router.push({
+    path: "/model/modelManageView",
+    query: { modelId: row.id, tab: "onlineTest" }
+  });
 };
 
 const handleToggleStatus = (row) => {
@@ -486,7 +489,7 @@ const handleToggleStatus = (row) => {
 const handleViewBuildLog = (row) => {
   proxy.$router.push({
     path: "/model/modelManageView",
-    query: { modelId: row.id }
+    query: { modelId: row.id, tab: "buildLog" }
   });
 };
 

@@ -579,6 +579,9 @@ watch(
 );
 
 onMounted(() => {
+  if (route.query.tab) {
+    activeName.value = route.query.tab;
+  }
   getModelById(modelId.value);
   getTreeSelect();
 });

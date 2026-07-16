@@ -44,7 +44,7 @@ export default [
                 path: 'modelManageView',
                 component: () => import('@/views/model/modelManage/details/index.vue'),
                 name: 'modelManageView',
-                meta: { title: '模型详情', noCache: true }
+                meta: { title: '模型详情', noCache: true, activeMenu: '/model/version' }
             },
             {
                 path: 'modelComputeInputOrOutput',
