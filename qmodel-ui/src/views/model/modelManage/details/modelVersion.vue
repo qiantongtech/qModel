@@ -389,7 +389,10 @@ const cancel = () => {
 /** 版本对比 */
 
 const handleCompare = (row) => {
-  ElMessage.info("功能正在开发中");
+  ElMessage({
+    message: '功能正在开发中',
+    type: 'warning'
+  });
 };
 
 // 表单重置

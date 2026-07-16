@@ -80,7 +80,7 @@ public class ModelFileResourceDepsCheckHandler {
     private static final String STATUS_FAILED = "3";
 
     private static final String MODEL_STATUS_BUILD_FAILED = "3";
-    private static final String MODEL_STATUS_BUILD_SUCCESS = "0";
+    private static final String MODEL_STATUS_BUILD_SUCCESS = "1";
 
     private static final String STORAGE_PATH = System.getProperty("user.dir") + "/upload/";
 
