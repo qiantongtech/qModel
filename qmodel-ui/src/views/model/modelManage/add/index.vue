@@ -415,7 +415,7 @@ const buildModelData = () => {
     author: form.author || null,
     status: form.status || '0',
     tags: form.tags || null,
-    icon: form.icon || null,
+    icon: form.icon || '',
     description: form.description || null,
     remark: form.remark || null
   }

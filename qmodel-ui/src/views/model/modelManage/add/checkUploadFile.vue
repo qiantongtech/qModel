@@ -144,12 +144,12 @@ const handleCheckResult = (result) => {
     checkDetail.mainPy = data.mainPy || false
     checkDetail.predictFunction = data.predictFunction || false
     checkDetail.requirementsTxt = data.requirementsTxt || false
-    
+
     let errorMsg = '模型包校验未通过：'
     if (!checkDetail.mainPy) errorMsg += 'main.py不存在；'
     if (!checkDetail.predictFunction) errorMsg += 'predict函数不存在；'
     if (!checkDetail.requirementsTxt) errorMsg += 'requirements.txt不存在；'
-    
+
     ElMessage.error(errorMsg)
     emit('fileChecked', {pass: false, errors: data.errors})
   }
@@ -237,6 +237,9 @@ defineExpose({
     color: #3b82f6;
     margin-right: 12px;
     flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    line-height: 1;
   }
 }
 

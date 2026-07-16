@@ -132,7 +132,7 @@ public class Modelinvokehistoryserviceimpl extends ServiceImpl<ModelInvokeHistor
      */
     @Override
     public String importModelInvokeHistory(List<ModelInvokeHistoryRespVO> importExcelList, boolean isUpdateSupport, String operName) {
-        if (StringUtils.isNull(importExcelList) || importExcelList.size() == 0) {
+        if (StringUtils.isNull(importExcelList) || importExcelList.isEmpty()) {
             throw new ServiceException("导入数据不能为空！");
         }
 

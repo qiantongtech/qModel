@@ -33,6 +33,8 @@
 package tech.qiantong.qmodel.module.model.service.fileResource.impl;
 
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.zip.ZipInputStream;
@@ -42,16 +44,12 @@ import java.util.regex.Pattern;
 import java.util.concurrent.TimeUnit;
 import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.TypeReference;
-
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.transaction.support.TransactionSynchronizationManager;
 import org.springframework.transaction.support.TransactionSynchronization;
-
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.extern.slf4j.Slf4j;
-
 import javax.annotation.Resource;
-
 import org.springframework.web.multipart.MultipartFile;
 import tech.qiantong.qmodel.common.core.page.PageResult;
 import tech.qiantong.qmodel.common.utils.ip.IpUtils;
@@ -371,7 +369,7 @@ public class ModelFileResourceServiceImpl extends ServiceImpl<ModelFileResourceM
         String storagePath = System.getProperty("user.dir") + "/upload/";
         String fullPath = storagePath + filePath;
 
-        try (InputStream is = new FileInputStream(fullPath);
+        try (InputStream is = Files.newInputStream(Paths.get(fullPath));
              ZipInputStream zis = new ZipInputStream(is, StandardCharsets.UTF_8)) {
 
             ZipEntry entry;

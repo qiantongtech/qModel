@@ -72,6 +72,7 @@ import tech.qiantong.qmodel.module.model.controller.admin.config.vo.ModelConfigT
 import tech.qiantong.qmodel.module.model.controller.admin.config.vo.ModelConfigTestRespVO;
 import tech.qiantong.qmodel.module.model.dal.dataobject.config.ModelConfigDO;
 import tech.qiantong.qmodel.module.model.dal.mapper.config.ModelConfigMapper;
+import tech.qiantong.qmodel.module.model.enums.InvokeStatusEnum;
 import tech.qiantong.qmodel.module.model.service.config.IModelConfigService;
 import tech.qiantong.qmodel.module.model.service.invokeHistory.IModelInvokeHistoryService;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
@@ -283,7 +284,7 @@ public class ModelConfigServiceImpl  extends ServiceImpl<ModelConfigMapper,Model
 
             Date endTime = new Date();
             modelInvokeHistoryService.saveInvokeLogAsync(testReqVO.getModelId(), testReqVO.getModelName(), "1",
-                    testReqVO.getTestBody(), response.getBody(), "1", null,
+                    testReqVO.getTestBody(), response.getBody(), InvokeStatusEnum.SUCCESS.getStatus(), null,
                     endTime.getTime() - startTime.getTime(), startTime, endTime, clientIp);
         } catch (RestClientResponseException e) {
             result.setStatusCode(e.getRawStatusCode());
@@ -293,7 +294,7 @@ public class ModelConfigServiceImpl  extends ServiceImpl<ModelConfigMapper,Model
 
             Date endTime = new Date();
             modelInvokeHistoryService.saveInvokeLogAsync(testReqVO.getModelId(), testReqVO.getModelName(), "1",
-                    testReqVO.getTestBody(), e.getResponseBodyAsString(), "2", e.getStatusText(),
+                    testReqVO.getTestBody(), e.getResponseBodyAsString(), InvokeStatusEnum.FAILED.getStatus(), e.getStatusText(),
                     endTime.getTime() - startTime.getTime(), startTime, endTime, clientIp);
         } catch (Exception e) {
             result.setErrorMsg(e.getMessage());
@@ -302,7 +303,7 @@ public class ModelConfigServiceImpl  extends ServiceImpl<ModelConfigMapper,Model
 
             Date endTime = new Date();
             modelInvokeHistoryService.saveInvokeLogAsync(testReqVO.getModelId(), testReqVO.getModelName(), "1",
-                    testReqVO.getTestBody(), null, "2", e.getMessage(),
+                    testReqVO.getTestBody(), null, InvokeStatusEnum.FAILED.getStatus(), e.getMessage(),
                     endTime.getTime() - startTime.getTime(), startTime, endTime, clientIp);
         }
         return result;

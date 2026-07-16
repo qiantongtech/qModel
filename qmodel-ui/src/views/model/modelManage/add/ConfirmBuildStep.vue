@@ -122,6 +122,10 @@ defineExpose({
     color: #3b82f6;
     margin-right: 12px;
     flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    line-height: 1;
+    padding-top: 3px;
   }
 
   .tip-content {
@@ -132,7 +136,7 @@ defineExpose({
     font-size: 18px;
     font-weight: 700;
     color: #1e40af;
-    margin-bottom: 16px;
+    margin-bottom: 6px;
   }
 
   .tip-desc {

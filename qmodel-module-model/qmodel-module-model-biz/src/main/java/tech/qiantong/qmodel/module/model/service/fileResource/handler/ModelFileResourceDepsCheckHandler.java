@@ -244,7 +244,7 @@ public class ModelFileResourceDepsCheckHandler {
     private String readFileContent(String filePath) {
         StringBuilder content = new StringBuilder();
         try (BufferedReader reader = new BufferedReader(
-                new InputStreamReader(new FileInputStream(filePath), StandardCharsets.UTF_8))) {
+                new InputStreamReader(Files.newInputStream(Paths.get(filePath)), StandardCharsets.UTF_8))) {
             String line;
             while ((line = reader.readLine()) != null) {
                 content.append(line).append("\n");
@@ -347,8 +347,8 @@ public class ModelFileResourceDepsCheckHandler {
      * @return 相对路径
      */
     private String getRelativePath(String absolutePath) {
-        if (absolutePath == null || STORAGE_PATH == null) {
-            return absolutePath;
+        if (absolutePath == null) {
+            return null;
         }
         // 移除 STORAGE_PATH 前缀，得到相对路径
         if (absolutePath.startsWith(STORAGE_PATH)) {
@@ -365,7 +365,7 @@ public class ModelFileResourceDepsCheckHandler {
         }
 
         try (BufferedReader reader = new BufferedReader(
-                new InputStreamReader(new FileInputStream(requirementsPath), StandardCharsets.UTF_8))) {
+                new InputStreamReader(Files.newInputStream(Paths.get(requirementsPath)), StandardCharsets.UTF_8))) {
             String line;
             while ((line = reader.readLine()) != null) {
                 line = line.trim();
@@ -568,7 +568,7 @@ public class ModelFileResourceDepsCheckHandler {
                 .set("status", status)
                 .set("update_by", "system")
                 .set("updator_id", 1L)
-                .set("update_time", new java.util.Date());
+                .set("update_time", new Date());
         modelMapper.update(null, wrapper);
     }
 
