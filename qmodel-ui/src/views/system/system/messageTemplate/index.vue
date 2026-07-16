@@ -94,12 +94,12 @@
 
       <el-table stripe height="60vh" v-loading="loading" :data="messageTemplateList">
         <el-table-column label="模版ID" align="center" prop="id"/>
-        <el-table-column label="消息标题" align="center" prop="title">
+        <el-table-column label="消息标题" align="center" prop="title" :show-overflow-tooltip="{ effect: 'light' }">
           <template #default="scope">
             {{ scope.row.title || '-' }}
           </template>
         </el-table-column>
-        <el-table-column label="消息模板内容" align="center" prop="content" width="180" :show-overflow-tooltip="true">
+        <el-table-column label="消息模板内容" align="center" prop="content" width="180" :show-overflow-tooltip="{ effect: 'light' }">
           <template #default="scope">
             {{ scope.row.content || '-' }}
           </template>
@@ -114,7 +114,7 @@
             <dict-tag :options="message_level" :value="scope.row.msgLevel"/>
           </template>
         </el-table-column>
-        <el-table-column label="创建人" align="center" prop="createBy">
+        <el-table-column label="创建人" align="center" prop="createBy" :show-overflow-tooltip="{ effect: 'light' }">
           <template #default="scope">
             {{ scope.row.createBy || '-' }}
           </template>
@@ -124,7 +124,7 @@
             <span>{{ parseTime(scope.row.createTime, '{y}-{m}-{d}') }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="备注" align="center" prop="remark">
+        <el-table-column label="备注" align="center" prop="remark" :show-overflow-tooltip="{ effect: 'light' }">
           <template #default="scope">
             {{ scope.row.remark || '-' }}
           </template>

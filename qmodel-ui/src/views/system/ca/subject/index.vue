@@ -73,13 +73,13 @@
 
       <el-table stripe height="60vh" v-loading="loading" :data="subjectList" @selection-change="handleSelectionChange">
         <el-table-column label="ID" align="center" prop="id" />
-        <el-table-column label="主体名称" align="center" prop="name" :show-overflow-tooltip="true" />
-        <el-table-column label="通用名称" align="center" prop="cn" :show-overflow-tooltip="true" />
-        <el-table-column label="组织部门" align="center" prop="ou" />
-        <el-table-column label="组织名称" align="center" prop="o" />
-        <el-table-column label="城市名称" align="center" prop="l" />
-        <el-table-column label="省名称" align="center" prop="st" />
-        <el-table-column label="国家" align="center" prop="c" />
+        <el-table-column label="主体名称" align="center" prop="name" :show-overflow-tooltip="{ effect: 'light' }" />
+        <el-table-column label="通用名称" align="center" prop="cn" :show-overflow-tooltip="{ effect: 'light' }" />
+        <el-table-column label="组织部门" align="center" prop="ou" :show-overflow-tooltip="{ effect: 'light' }" />
+        <el-table-column label="组织名称" align="center" prop="o" :show-overflow-tooltip="{ effect: 'light' }" />
+        <el-table-column label="城市名称" align="center" prop="l" :show-overflow-tooltip="{ effect: 'light' }" />
+        <el-table-column label="省名称" align="center" prop="st" :show-overflow-tooltip="{ effect: 'light' }" />
+        <el-table-column label="国家" align="center" prop="c" :show-overflow-tooltip="{ effect: 'light' }" />
   <!--      <el-table-column label="备注" align="center" prop="remark" />-->
         <el-table-column label="操作" align="center" class-name="small-padding fixed-width"  fixed="right" width="240">
           <template #default="scope">

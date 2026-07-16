@@ -104,6 +104,7 @@
                     align="center"
                     key="title"
                     prop="title"
+                    :show-overflow-tooltip="{ effect: 'light' }"
                 />
                 <el-table-column label="消息类型" align="center" key="category">
                     <template #default="scope">
@@ -125,6 +126,7 @@
                     align="center"
                     key="content"
                     prop="content"
+                    :show-overflow-tooltip="{ effect: 'light' }"
                 />
 
                 <el-table-column

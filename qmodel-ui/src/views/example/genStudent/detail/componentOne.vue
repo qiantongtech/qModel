@@ -40,7 +40,7 @@
         </el-button>
       </el-col>
       <el-col :span="1.5">
-        <el-button type="warning" plain @click="handleExport" v-hasPermi="['genStudent:genStudent:export']"
+        <el-button type="warning" plain :disabled="multiple" @click="handleExport" v-hasPermi="['genStudent:genStudent:export']"
                    @mousedown="(e) => e.preventDefault()">
           <i class="iconfont-mini icon-download-line mr5"></i>导出
         </el-button>

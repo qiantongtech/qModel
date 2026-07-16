@@ -133,6 +133,7 @@
                   <el-button
                      type="warning"
                      plain
+                     :disabled="multiple"
                      @click="handleExport"
                      v-hasPermi="['system:dict:export']"
                   >
@@ -165,8 +166,8 @@
          <el-table stripe v-loading="loading" :data="typeList" @selection-change="handleSelectionChange">
             <el-table-column type="selection" width="55" align="center" />
             <el-table-column label="字典编号" align="center" prop="dictId" />
-            <el-table-column label="字典名称" align="center" prop="dictName" :show-overflow-tooltip="true"/>
-            <el-table-column label="字典类型" align="left" :show-overflow-tooltip="true">
+            <el-table-column label="字典名称" align="center" prop="dictName" :show-overflow-tooltip="{ effect: 'light' }"/>
+            <el-table-column label="字典类型" align="left" :show-overflow-tooltip="{ effect: 'light' }">
                <template #default="scope">
                   <router-link :to="'/system/dict-data/index/' + scope.row.dictId" class="link-type">
                      <span>{{ scope.row.dictType }}</span>
@@ -178,7 +179,7 @@
                   <dict-tag :options="sys_normal_disable" :value="scope.row.status" />
                </template>
             </el-table-column>
-            <el-table-column label="备注" align="left" prop="remark" :show-overflow-tooltip="true" />
+            <el-table-column label="备注" align="left" prop="remark" :show-overflow-tooltip="{ effect: 'light' }" />
             <el-table-column label="创建时间" align="center" prop="createTime" width="180">
                <template #default="scope">
                   <span>{{ parseTime(scope.row.createTime) }}</span>

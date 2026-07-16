@@ -60,6 +60,7 @@
                 <el-button
                     type="warning"
                     plain
+                    :disabled="multiple"
                     icon="el-icon-download"
                     size="mini"
                     @click="handleExport"

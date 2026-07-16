@@ -132,6 +132,7 @@
               <el-button
                 type="warning"
                 plain
+                :disabled="multiple"
                 @click="handleExport"
                 v-hasPermi="['system:role:export']"
               >
@@ -146,8 +147,8 @@
       <el-table  stripe v-loading="loading" :data="roleList" @selection-change="handleSelectionChange">
          <el-table-column type="selection" width="55" align="center" />
          <el-table-column label="角色编号" prop="roleId" align="center"/>
-         <el-table-column label="角色名称" prop="roleName" align="left" :show-overflow-tooltip="true"/>
-         <el-table-column label="权限字符" prop="roleKey" align="left" :show-overflow-tooltip="true"/>
+         <el-table-column label="角色名称" prop="roleName" align="left" :show-overflow-tooltip="{ effect: 'light' }"/>
+         <el-table-column label="权限字符" prop="roleKey" align="left" :show-overflow-tooltip="{ effect: 'light' }"/>
          <el-table-column label="显示顺序" prop="roleSort" align="center"/>
          <el-table-column label="状态" align="center">
             <template #default="scope">

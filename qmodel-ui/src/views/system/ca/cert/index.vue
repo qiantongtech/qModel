@@ -91,17 +91,17 @@
 
       <el-table  stripe height="60vh" v-loading="loading" :data="certList" @selection-change="handleSelectionChange">
         <el-table-column label="ID" align="center" prop="id" />
-        <el-table-column label="名称" align="center" prop="name"  :show-overflow-tooltip="true" />
-        <el-table-column label="主体名称" align="center" prop="subjectName"  :show-overflow-tooltip="true" />
-        <el-table-column label="颁发者" align="center" prop="issuer"  :show-overflow-tooltip="true" />
-        <el-table-column label="所有者" align="center" prop="possessor" :show-overflow-tooltip="true"/>
+        <el-table-column label="名称" align="center" prop="name"  :show-overflow-tooltip="{ effect: 'light' }" />
+        <el-table-column label="主体名称" align="center" prop="subjectName"  :show-overflow-tooltip="{ effect: 'light' }" />
+        <el-table-column label="颁发者" align="center" prop="issuer"  :show-overflow-tooltip="{ effect: 'light' }" />
+        <el-table-column label="所有者" align="center" prop="possessor" :show-overflow-tooltip="{ effect: 'light' }"/>
         <el-table-column label="有效期" align="center" prop="validTime">
           <template #default="scope">
             {{ scope.row.validTime }} 年
           </template>
         </el-table-column>
-        <el-table-column label="生效时间" align="center" prop="createTime" :show-overflow-tooltip="true"/>
-        <el-table-column label="备注" align="center" prop="remark"  :show-overflow-tooltip="true" >
+        <el-table-column label="生效时间" align="center" prop="createTime" :show-overflow-tooltip="{ effect: 'light' }"/>
+        <el-table-column label="备注" align="center" prop="remark"  :show-overflow-tooltip="{ effect: 'light' }" >
           <template #default="scope">
             <span>{{ scope.row.remark || "-" }}</span>
           </template>

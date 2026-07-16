@@ -65,10 +65,10 @@
 
       <el-table stripe height="60vh" v-loading="loading" :data="userList" @selection-change="handleSelectionChange">
         <el-table-column type="selection" width="55" align="center" />
-        <el-table-column label="用户名称" prop="userName" :show-overflow-tooltip="true" />
-        <el-table-column label="用户昵称" prop="nickName" :show-overflow-tooltip="true" />
-        <el-table-column label="邮箱" prop="email" :show-overflow-tooltip="true" />
-        <el-table-column label="手机" prop="phonenumber" :show-overflow-tooltip="true" />
+        <el-table-column label="用户名称" prop="userName" :show-overflow-tooltip="{ effect: 'light' }" />
+        <el-table-column label="用户昵称" prop="nickName" :show-overflow-tooltip="{ effect: 'light' }" />
+        <el-table-column label="邮箱" prop="email" :show-overflow-tooltip="{ effect: 'light' }" />
+        <el-table-column label="手机" prop="phonenumber" :show-overflow-tooltip="{ effect: 'light' }" />
         <el-table-column label="状态" align="center" prop="status">
           <template #default="scope">
             <dict-tag :options="sys_normal_disable" :value="scope.row.status" />
