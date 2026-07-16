@@ -490,8 +490,8 @@ defineExpose({
   line-height: 1.6;
   border-radius: 4px;
   overflow-y: auto;
-  flex: 1;
-  min-height: 300px;
+  min-height: 400px;
+  height: 400px;
 }
 
 .log-line {
