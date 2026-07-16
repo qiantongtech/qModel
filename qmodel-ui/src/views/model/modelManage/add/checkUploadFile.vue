@@ -20,7 +20,9 @@
     <div class="upload-conditions">
       <div class="conditions-title">
         <div class="tip-icon">
-          <el-icon size="20"><InfoFilled /></el-icon>
+          <el-icon size="20">
+            <InfoFilled/>
+          </el-icon>
         </div>
         <span>上传前提条件</span>
       </div>
@@ -44,65 +46,26 @@
       </ul>
     </div>
 
-    <div v-if="!uploadedFile && checkStatus === 'initial'" class="upload-area" @click="triggerFileInput" @drop.prevent="handleDrop" @dragover.prevent>
-      <div class="upload-icon">
-        <el-icon size="48"><Upload /></el-icon>
-      </div>
-      <div class="upload-text">点击或拖拽上传 ZIP 包</div>
-      <div class="upload-hint">最大支持 500MB</div>
-      <input ref="fileInputRef" type="file" accept=".zip" class="file-input" @change="handleFileChange" />
-    </div>
-
-    <div v-if="checkStatus === 'checking'" class="checking-status">
-      <div class="status-icon">
-        <el-icon size="48" class="loading-icon"><Loading /></el-icon>
-      </div>
-      <div class="status-text">正在上传算法模型包，并进行兼容性检测……</div>
-    </div>
-
-    <div v-if="checkStatus === 'success'" class="success-status">
-      <span class="reupload-btn" @click="handleReupload">重新上传</span>
-      <div class="status-header">
-        <div class="status-icon success">
-          <el-icon size="48"><CircleCheck /></el-icon>
-        </div>
-        <div class="status-text success"><span class="file-name">{{fileName}}</span>  算法包校验通过</div>
-      </div>
-      <div class="check-results">
-        <span class="result-tag success">✓ main.py 存在</span>
-        <span class="result-tag success">✓ predict 函数存在</span>
-        <span class="result-tag success">✓ requirements.txt 存在</span>
-      </div>
-    </div>
-
-    <div v-if="checkStatus === 'failed'" class="failed-status">
-      <span class="reupload-btn" @click="handleReupload">重新上传</span>
-      <div class="status-header">
-        <div class="status-icon failed">
-          <el-icon size="48"><CircleClose /></el-icon>
-        </div>
-        <div class="status-text failed"><span class="file-name">{{fileName}}</span> 算法包校验未通过</div>
-      </div>
-      <div class="check-results">
-        <span class="result-tag" :class="checkDetail.mainPy ? 'success' : 'failed'">
-          {{ checkDetail.mainPy ? '✓' : '✗' }} main.py {{ checkDetail.mainPy ? '存在' : '不存在' }}
-        </span>
-        <span class="result-tag" :class="checkDetail.predictFunction ? 'success' : 'failed'">
-          {{ checkDetail.predictFunction ? '✓' : '✗' }} predict 函数{{ checkDetail.predictFunction ? '存在' : '不存在' }}
-        </span>
-        <span class="result-tag" :class="checkDetail.requirementsTxt ? 'success' : 'failed'">
-          {{ checkDetail.requirementsTxt ? '✓' : '✗' }} requirements.txt {{ checkDetail.requirementsTxt ? '存在' : '不存在' }}
-        </span>
-      </div>
+    <div>
+      <FileUpload
+          :limit="1"
+          :file-type="['zip']"
+          :file-size="500"
+          :drag-flag="true"
+          :is-show-tip="true"
+          @update:model-value="handleFileUpload"
+          @update:file-name="handleFileName"
+      ></FileUpload>
     </div>
   </div>
 </template>
 
 <script setup name="CheckUploadFile">
-import { ref, reactive, watch } from 'vue'
-import { Upload, Loading, CircleCheck, CircleClose, InfoFilled} from '@element-plus/icons-vue'
-import { checkUploadFile } from '@/api/model/fileResource'
-import { ElMessage } from 'element-plus'
+import {ref, reactive, watch} from 'vue'
+import {Loading, CircleCheck, CircleClose, InfoFilled} from '@element-plus/icons-vue'
+import FileUpload from '@/components/ModelFileUpload/index.vue'
+import {checkUploadFile} from '@/api/model/fileResource'
+import {ElMessage} from 'element-plus'
 
 const emit = defineEmits(['fileChecked'])
 
@@ -113,10 +76,8 @@ const props = defineProps({
   }
 })
 
-const fileInputRef = ref(null)
 const fileName = ref('')
 const filePath = ref('')
-const uploadedFile = ref(null)
 const checkStatus = ref('initial')
 const checkDetail = reactive({
   mainPy: false,
@@ -132,43 +93,23 @@ watch(() => props.fileResource, (val) => {
     checkDetail.mainPy = true
     checkDetail.predictFunction = true
     checkDetail.requirementsTxt = true
-    emit('fileChecked', { pass: true, filePath: val.filePath })
+    emit('fileChecked', {pass: true, filePath: val.filePath})
   }
-}, { immediate: true })
+}, {immediate: true})
 
-const triggerFileInput = () => {
-  fileInputRef.value?.click()
+const handleFileName = (name) => {
+  fileName.value = name
 }
 
-const handleFileChange = (event) => {
-  const file = event.target.files?.[0]
-  if (file) {
-    processFile(file)
-  }
-}
+const handleFileUpload = async (value) => {
+  if (!value) return
 
-const handleDrop = (event) => {
-  const file = event.dataTransfer?.files?.[0]
-  if (file) {
-    processFile(file)
-  }
-}
-
-const processFile = async (file) => {
-  if (!file.name.toLowerCase().endsWith('.zip')) {
-    ElMessage.warning('请上传 ZIP 格式的文件')
-    return
-  }
-
-  if (file.size > 500 * 1024 * 1024) {
-    ElMessage.warning('文件大小不能超过 500MB')
-    return
-  }
-
-  uploadedFile.value = file
   checkStatus.value = 'checking'
 
   try {
+    const response = await fetch(value)
+    const blob = await response.blob()
+    const file = new File([blob], fileName.value || 'model.zip', {type: 'application/zip'})
     const result = await checkUploadFile(file)
     handleCheckResult(result)
   } catch (error) {
@@ -178,21 +119,28 @@ const processFile = async (file) => {
 
 const handleCheckResult = (result) => {
   const data = result.data || {}
-  fileName.value = data.fileName || ''
+  fileName.value = data.fileName || fileName.value
   filePath.value = data.filePath || ''
   if (data.pass) {
     checkStatus.value = 'success'
     checkDetail.mainPy = true
     checkDetail.predictFunction = true
     checkDetail.requirementsTxt = true
-
-    emit('fileChecked', { pass: true, file: uploadedFile.value, filePath: data.filePath })
+    ElMessage.success('算法包校验通过')
+    emit('fileChecked', {pass: true, filePath: data.filePath})
   } else {
     checkStatus.value = 'failed'
     checkDetail.mainPy = data.mainPy || false
     checkDetail.predictFunction = data.predictFunction || false
     checkDetail.requirementsTxt = data.requirementsTxt || false
-    emit('fileChecked', { pass: false, errors: data.errors })
+    
+    let errorMsg = '模型包校验未通过：'
+    if (!checkDetail.mainPy) errorMsg += 'main.py不存在；'
+    if (!checkDetail.predictFunction) errorMsg += 'predict函数不存在；'
+    if (!checkDetail.requirementsTxt) errorMsg += 'requirements.txt不存在；'
+    
+    ElMessage.error(errorMsg)
+    emit('fileChecked', {pass: false, errors: data.errors})
   }
 }
 
@@ -226,21 +174,24 @@ const handleCheckError = (error) => {
   }
 
   ElMessage.error(errors[0] || '文件检测失败')
-  emit('fileChecked', { pass: false, errors })
-}
-
-const handleReupload = () => {
-  uploadedFile.value = null
-  checkStatus.value = 'initial'
-  checkDetail.mainPy = false
-  checkDetail.predictFunction = false
-  checkDetail.requirementsTxt = false
-  fileInputRef.value.value = ''
-  emit('fileChecked', { pass: null })
+  emit('fileChecked', {pass: false, errors})
 }
 
 const validate = () => {
-  return checkStatus.value === 'success'
+  if (checkStatus.value !== 'success') {
+    if (checkStatus.value === 'initial') {
+      throw new Error('请先上传并校验模型包')
+    } else if (checkStatus.value === 'failed') {
+      let errorMsg = '模型包校验未通过：'
+      if (!checkDetail.mainPy) errorMsg += 'main.py不存在；'
+      if (!checkDetail.predictFunction) errorMsg += 'predict函数不存在；'
+      if (!checkDetail.requirementsTxt) errorMsg += 'requirements.txt不存在；'
+      throw new Error(errorMsg)
+    } else if (checkStatus.value === 'checking') {
+      throw new Error('正在校验中，请稍后')
+    }
+  }
+  return true
 }
 
 defineExpose({
@@ -271,18 +222,10 @@ defineExpose({
   color: #1e40af;
   margin-bottom: 16px;
 
-  .title-icon {
-    width: 24px;
-    height: 24px;
-    border-radius: 50%;
-    background: #3b82f6;
-    color: #fff;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 14px;
-    font-weight: bold;
-    margin-right: 8px;
+  .tip-icon {
+    color: #3b82f6;
+    margin-right: 12px;
+    flex-shrink: 0;
   }
 }
 
@@ -316,53 +259,6 @@ defineExpose({
   }
 }
 
-.upload-area {
-  border: 2px dashed #d9d9d9;
-  border-radius: 8px;
-  padding: 60px 40px;
-  text-align: center;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  height: 260px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-
-  &:hover {
-    border-color: #409eff;
-    background-color: #f5fafc;
-  }
-
-  &:active {
-    border-color: #409eff;
-  }
-}
-
-.upload-icon {
-  color: #c0c4cc;
-  margin-bottom: 16px;
-
-  &:hover {
-    color: #409eff;
-  }
-}
-
-.upload-text {
-  font-size: 16px;
-  color: #606266;
-  margin-bottom: 8px;
-}
-
-.upload-hint {
-  font-size: 13px;
-  color: #909399;
-}
-
-.file-input {
-  display: none;
-}
-
 .checking-status {
   background: linear-gradient(135deg, #e8f0fe 0%, #dbeafe 100%);
   border-radius: 8px;
@@ -372,7 +268,7 @@ defineExpose({
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  height: 260px;
+  margin-top: 16px;
 }
 
 .status-icon {
@@ -423,25 +319,23 @@ defineExpose({
 .success-status {
   background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
   border-radius: 8px;
-  padding: 60px 40px;
+  padding: 40px;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  position: relative;
-  height: 260px;
+  margin-top: 16px;
 }
 
 .failed-status {
   background: linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%);
   border-radius: 8px;
-  padding: 60px 40px;
+  padding: 40px;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  position: relative;
-  height: 260px;
+  margin-top: 16px;
 }
 
 .status-header {
@@ -460,19 +354,6 @@ defineExpose({
   }
 }
 
-.reupload-btn {
-  color: #409eff;
-  font-size: 14px;
-  cursor: pointer;
-  position: absolute;
-  top: 16px;
-  right: 16px;
-
-  &:hover {
-    text-decoration: underline;
-  }
-}
-
 .check-results {
   display: flex;
   flex-wrap: wrap;
@@ -481,19 +362,22 @@ defineExpose({
   background-color: #fff;
   border: 1px solid #e4e7ed;
   border-radius: 8px;
-  padding: 2px 5px;
+  padding: 12px 20px;
 }
 
 .result-tag {
-  padding: 3px 20px;
+  padding: 4px 16px;
   font-size: 13px;
+  border-radius: 4px;
 
   &.success {
     color: #2e7d32;
+    background-color: #f0fdf4;
   }
 
   &.failed {
     color: #c62828;
+    background-color: #fef2f2;
   }
 }
 </style>

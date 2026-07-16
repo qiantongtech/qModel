@@ -30,12 +30,9 @@
 
     <div class="dockerfile-section">
       <div class="section-title">
-        <span class="title-icon">
-          <el-icon><Document /></el-icon>
-        </span>
-        <span>模型运行环境</span>
+        模型运行环境
       </div>
-      <div class="dockerfile-preview">
+      <div class="dockerfile-body">
         <div v-if="loading" class="dockerfile-empty">
           <el-icon size="48" class="empty-icon"><Loading /></el-icon>
           <div class="empty-text">加载中...</div>
@@ -76,7 +73,7 @@ const envContent = computed(() => {
 
 const fetchEnvInfo = async () => {
   if (!props.filePath) return
-  
+
   loading.value = true
   try {
     const result = await getBuildEnvInfo(props.filePath)
@@ -146,33 +143,35 @@ defineExpose({
 }
 
 .dockerfile-section {
-  background-color: #fff;
-  border: 1px solid #e4e7ed;
-  border-radius: 8px;
-  padding: 20px;
-
   .section-title {
+    font-size: 16px;
+    color: rgba(0, 0, 0, 0.85);
     display: flex;
     align-items: center;
-    font-size: 16px;
-    font-weight: 600;
-    color: #303133;
-    margin-bottom: 16px;
-
-    .title-icon {
-      margin-right: 8px;
-      color: #409eff;
-    }
+    font-weight: 500;
+    margin: 8px 0 15px;
   }
 
-  .dockerfile-preview {
-    border: 1px solid #d9d9d9;
-    border-radius: 8px;
-    overflow: hidden;
-    min-height: 200px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+  .section-title::before {
+    display: inline-block;
+    content: '';
+    width: 6px;
+    height: 16px;
+    border-radius: 3px;
+    background: var(--el-color-primary);
+    margin-right: 8px;
+  }
+
+  .dockerfile-body {
+    background-color: #1e1e1e;
+    color: #d4d4d4;
+    padding: 15px;
+    font-family: 'Consolas', 'Monaco', monospace;
+    font-size: 13px;
+    line-height: 1.6;
+    border-radius: 4px;
+    overflow-y: auto;
+    height: 320px;
   }
 
   .dockerfile-empty {
@@ -180,7 +179,8 @@ defineExpose({
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    color: #909399;
+    height: 100%;
+    color: #858585;
 
     .empty-icon {
       margin-bottom: 12px;
@@ -194,12 +194,12 @@ defineExpose({
 
   .dockerfile-content {
     margin: 0;
-    padding: 16px;
-    font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
-    font-size: 14px;
+    padding: 0;
+    font-family: 'Consolas', 'Monaco', monospace;
+    font-size: 13px;
     line-height: 1.6;
-    color: #303133;
-    background-color: #fafafa;
+    color: #d4d4d4;
+    background-color: transparent;
     white-space: pre-wrap;
     word-break: break-all;
     width: 100%;
