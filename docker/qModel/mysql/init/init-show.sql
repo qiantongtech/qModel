@@ -454,46 +454,116 @@ CREATE TABLE `model_compute` (
 -- Table structure for model_file_resource
 -- ----------------------------
 DROP TABLE IF EXISTS `model_file_resource`;
-CREATE TABLE `model_file_resource` (
-  `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT 'ID',
-  `model_id` bigint(20) NULL DEFAULT NULL COMMENT '模型id',
-  `file_name` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '原始上传文件名',
-  `script_name` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '脚本名称(入口文件)',
-  `file_path` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '文件存储地址',
-  `deps_file_path` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '依赖文件路径',
-  `model_version` int(11) NULL DEFAULT NULL COMMENT '模型版本号',
-  `resource_type` tinyint(4) NULL DEFAULT NULL COMMENT '资源类型：1=模型文件(onnx/pth/safetensors)，2=Python算法脚本(.py)',
-  `file_size` decimal(10, 2) NULL DEFAULT NULL COMMENT '文件大小MB',
-  `log_file_path` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '运行日志文件路径',
-  `exec_timeout` int(11) NULL DEFAULT NULL COMMENT '请求超时秒数',
-  `docker_file_path` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '自动生成dockerFile文件地址',
-  `image_tag` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '构建镜像标签',
-  `image_version` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '镜像版本',
-  `image_build_status` tinyint(4) NULL DEFAULT 0 COMMENT '镜像构建状态（0 = 未构建、1 = 构建中、2 = 构建成功、3 = 构建失败）',
-  `image_build_time` int(11) NULL DEFAULT NULL COMMENT '镜像构建时间',
-  `image_build_log` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '镜像构建日志文件地址',
-  `resource_limit` varchar(3072) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '容器硬件资源配额JSON，gpu_num/gpu_mem_gb/cpu_core/mem_gb',
-  `container_env` varchar(3072) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '容器自定义环境变量，JSON数组格式',
-  `container_mounts` varchar(3072) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '容器额外挂载目录配置，JSON数组格式',
-  `container_ports` int(11) NULL DEFAULT NULL COMMENT '容器暴露端口',
-  `mapped_host_port` int(11) NULL DEFAULT NULL COMMENT '宿主机端口',
-  `container_status` tinyint(4) NULL DEFAULT 0 COMMENT '容器运行状态(容器运行状态：0=待启动，1=运行中，2=运行成功，3=运行失败，4=手动停止，5=已销毁)',
-  `container_id` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '容器id',
-  `valid_flag` tinyint(4) NOT NULL DEFAULT 1 COMMENT '是否有效;0：无效，1：有效',
-  `del_flag` tinyint(4) NOT NULL DEFAULT 0 COMMENT '删除标志;1：已删除，0：未删除',
-  `create_by` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '创建人',
-  `creator_id` bigint(20) NULL DEFAULT NULL COMMENT '创建人id',
-  `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-  `update_by` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '更新人',
-  `updator_id` bigint(20) NULL DEFAULT NULL COMMENT '更新人id',
-  `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
-  `remark` varchar(512) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '备注',
-  PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '模型文件部署表' ROW_FORMAT = Dynamic;
-
+CREATE TABLE `model_file_resource`  (
+    `id` bigint NOT NULL AUTO_INCREMENT COMMENT 'ID',
+    `model_id` bigint NULL DEFAULT NULL COMMENT '模型id',
+    `file_name` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '原始上传文件名',
+    `script_name` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '脚本名称(入口文件)',
+    `file_path` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '文件存储地址',
+    `deps_file_path` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '依赖文件路径',
+    `model_version` int NULL DEFAULT NULL COMMENT '模型版本号',
+    `resource_type` tinyint NULL DEFAULT NULL COMMENT '资源类型：1=模型文件(onnx/pth/safetensors)，2=Python算法脚本(.py)',
+    `file_size` decimal(10, 2) NULL DEFAULT NULL COMMENT '文件大小MB',
+    `log_file_path` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '运行日志文件路径',
+    `exec_timeout` int NULL DEFAULT NULL COMMENT '请求超时秒数',
+    `docker_file_path` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '自动生成dockerFile文件地址',
+    `image_tag` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '构建镜像标签',
+    `image_version` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '镜像版本',
+    `image_build_status` tinyint NULL DEFAULT 0 COMMENT '镜像构建状态（0 = 未构建、1 = 构建中、2 = 构建成功、3 = 构建失败）',
+    `image_build_time` int NULL DEFAULT NULL COMMENT '镜像构建时间',
+    `image_build_log` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '镜像构建日志文件地址',
+    `resource_limit` varchar(3072) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '容器硬件资源配额JSON，gpu_num/gpu_mem_gb/cpu_core/mem_gb',
+    `container_env` varchar(3072) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '容器自定义环境变量，JSON数组格式',
+    `container_mounts` varchar(3072) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '容器额外挂载目录配置，JSON数组格式',
+    `container_ports` int NULL DEFAULT NULL COMMENT '容器暴露端口',
+    `mapped_host_port` int NULL DEFAULT NULL COMMENT '宿主机端口',
+    `container_status` tinyint NULL DEFAULT 0 COMMENT '容器运行状态(容器运行状态：0=待启动，1=运行中，2=运行成功，3=运行失败，4=手动停止，5=已销毁)',
+    `container_id` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '容器id',
+    `valid_flag` tinyint NOT NULL DEFAULT 1 COMMENT '是否有效;0：无效，1：有效',
+    `del_flag` tinyint NOT NULL DEFAULT 0 COMMENT '删除标志;1：已删除，0：未删除',
+    `create_by` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '创建人',
+    `creator_id` bigint NULL DEFAULT NULL COMMENT '创建人id',
+    `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    `update_by` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '更新人',
+    `updator_id` bigint NULL DEFAULT NULL COMMENT '更新人id',
+    `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+    `remark` varchar(512) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '备注',
+    `input_schema` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL COMMENT '入参JSONSchema定义',
+    `output_schema` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL COMMENT '出参JSONSchema定义',
+    PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 5 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '模型文件部署表' ROW_FORMAT = DYNAMIC;
 -- ----------------------------
 -- Records of model_file_resource
 -- ----------------------------
+
+-- ----------------------------
+-- Table structure for model_build_log
+-- ----------------------------
+
+DROP TABLE IF EXISTS `model_build_log`;
+CREATE TABLE `model_build_log`  (
+                                    `id` bigint NOT NULL AUTO_INCREMENT COMMENT 'ID',
+                                    `resource_id` bigint NOT NULL COMMENT '模型文件id',
+                                    `model_id` bigint NULL DEFAULT NULL COMMENT '模型id',
+                                    `model_name` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '模型名称',
+                                    `version_id` bigint NULL DEFAULT NULL COMMENT '版本id',
+                                    `build_type` tinyint UNSIGNED NULL DEFAULT 1 COMMENT '构建类型;构建类型：1=依赖安装，2=Docker镜像构建',
+                                    `status` tinyint UNSIGNED NULL DEFAULT 0 COMMENT '构建状态;构建状态：0=待执行，1=执行中，2=成功，3=失败',
+                                    `start_time` datetime NULL DEFAULT NULL COMMENT '开始时间',
+                                    `end_time` datetime NULL DEFAULT NULL COMMENT '结束时间',
+                                    `duration` int NULL DEFAULT NULL COMMENT '执行耗时',
+                                    `installed_packages` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL COMMENT '已存在的依赖包列表JSON',
+                                    `missing_packages` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL COMMENT '缺失失败的依赖包列表JSON',
+                                    `failed_packages` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL COMMENT '安装失败的依赖包列表JSON',
+                                    `dockerfile_content` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL COMMENT 'dockerFile内容',
+                                    `build_log` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL COMMENT '构建日志',
+                                    `error_message` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL COMMENT '错误日志',
+                                    `requirements` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL COMMENT 'requirements.txt 内容',
+                                    `valid_flag` tinyint(1) NOT NULL DEFAULT 1 COMMENT '是否有效;0：无效，1：有效',
+                                    `del_flag` tinyint(1) NOT NULL DEFAULT 0 COMMENT '删除标志;1：已删除，0：未删除',
+                                    `create_by` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '创建人',
+                                    `creator_id` bigint NULL DEFAULT NULL COMMENT '创建人id',
+                                    `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+                                    `update_by` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '更新人',
+                                    `updator_id` bigint NULL DEFAULT NULL COMMENT '更新人id',
+                                    `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '更新时间',
+                                    `remark` varchar(512) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '备注',
+                                    PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '构建日志表' ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Table structure for model_invoke_history
+-- ----------------------------
+
+DROP TABLE IF EXISTS `model_invoke_history`;
+CREATE TABLE `model_invoke_history`  (
+                                         `id` bigint NOT NULL AUTO_INCREMENT COMMENT 'ID',
+                                         `model_id` bigint NOT NULL COMMENT '模型id',
+                                         `model_name` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '模型名称',
+                                         `resource_id` bigint NULL DEFAULT NULL COMMENT '模型配置资源id',
+                                         `version_id` bigint NULL DEFAULT NULL COMMENT '模型版本id',
+                                         `request_method` tinyint UNSIGNED NULL DEFAULT 1 COMMENT '请求方式;HTTP请求方式：0=GET，1=POST，2=PUT，3=DELETE',
+                                         `invoke_type` tinyint UNSIGNED NULL DEFAULT 1 COMMENT '调用类型;1=在线测试，2=网关服务',
+                                         `input_params` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL COMMENT '输入参数（JSON格式）',
+                                         `output_result` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL COMMENT '输出结果（JSON格式）',
+                                         `start_time` datetime NULL DEFAULT NULL COMMENT '开始时间',
+                                         `end_time` datetime NULL DEFAULT NULL COMMENT '结束时间',
+                                         `duration` int NULL DEFAULT NULL COMMENT '执行耗时（毫秒）',
+                                         `error_message` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL COMMENT '错误信息',
+                                         `status` tinyint UNSIGNED NULL DEFAULT 0 COMMENT '调用状态;0=执行中，1=成功，2=失败，3=超时，4=参数校验阻塞',
+                                         `client_ip` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '客户端操作IP',
+                                         `valid_flag` tinyint(1) NOT NULL DEFAULT 1 COMMENT '是否有效;0：无效，1：有效',
+                                         `del_flag` tinyint(1) NOT NULL DEFAULT 0 COMMENT '删除标志;1：已删除，0：未删除',
+                                         `create_by` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '创建人',
+                                         `creator_id` bigint NULL DEFAULT NULL COMMENT '创建人id',
+                                         `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+                                         `update_by` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '更新人',
+                                         `updator_id` bigint NULL DEFAULT NULL COMMENT '更新人id',
+                                         `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '更新时间',
+                                         `remark` varchar(512) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '备注',
+                                         PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 12 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '模型调用历史记录' ROW_FORMAT = Dynamic;
+
 
 -- ----------------------------
 -- Table structure for model_history

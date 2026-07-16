@@ -318,6 +318,18 @@ INSERT INTO `system_dict_data` VALUES (110, 2, '动态Token', 'DYNAMIC', 'auth_t
 INSERT INTO `system_dict_data` VALUES (111, 0, 'Header', 'Header', 'auth_inject_position', NULL, 'primary', 'Y', '0', 'admin', '2026-07-07 14:14:33', '小桐', '2026-07-10 11:08:03', '注入请求头');
 INSERT INTO `system_dict_data` VALUES (112, 1, 'Query', 'Query', 'auth_inject_position', NULL, 'warning', 'N', '0', 'admin', '2026-07-07 14:14:33', NULL, NULL, '注入URL参数');
 
+INSERT INTO `system_dict_data` VALUES (113, 0, '执行中', '0', 'invoke_history_status', NULL, 'primary', NULL, '0', 'qModel', '2026-07-15 13:52:58', 'qModel', '2026-07-15 13:54:15', NULL);
+INSERT INTO `system_dict_data` VALUES (114, 0, '成功', '1', 'invoke_history_status', NULL, 'success', NULL, '0', 'qModel', '2026-07-15 13:53:05', 'qModel', '2026-07-15 13:53:11', NULL);
+INSERT INTO `system_dict_data` VALUES (115, 0, '失败', '2', 'invoke_history_status', NULL, 'danger', NULL, '0', 'qModel', '2026-07-15 13:53:26', NULL, NULL, NULL);
+INSERT INTO `system_dict_data` VALUES (116, 3, '超时', '3', 'invoke_history_status', NULL, 'warning', NULL, '0', 'qModel', '2026-07-15 13:53:37', NULL, NULL, NULL);
+INSERT INTO `system_dict_data` VALUES (117, 4, '参数校验阻塞', '4', 'invoke_history_status', NULL, 'info', NULL, '0', 'qModel', '2026-07-15 13:53:59', NULL, NULL, NULL);
+INSERT INTO `system_dict_data` VALUES (118, 0, '在线测试', '1', 'invoke_type', NULL, 'primary', NULL, '0', 'qModel', '2026-07-15 13:56:42', 'qModel', '2026-07-15 13:56:48', NULL);
+INSERT INTO `system_dict_data` VALUES (119, 0, '网关服务', '2', 'invoke_type', NULL, 'info', NULL, '0', 'qModel', '2026-07-15 13:57:00', NULL, NULL, NULL);
+INSERT INTO `system_dict_data` VALUES (120, 0, '待执行', '0', 'build_status', NULL, 'primary', NULL, '0', 'qModel', '2026-07-15 14:32:14', NULL, NULL, NULL);
+INSERT INTO `system_dict_data` VALUES (121, 1, '执行中', '1', 'build_status', NULL, 'info', NULL, '0', 'qModel', '2026-07-15 14:32:30', NULL, NULL, NULL);
+INSERT INTO `system_dict_data` VALUES (122, 2, '成功', '2', 'build_status', NULL, 'success', NULL, '0', 'qModel', '2026-07-15 14:32:47', NULL, NULL, NULL);
+INSERT INTO `system_dict_data` VALUES (123, 3, '失败', '3', 'build_status', NULL, 'danger', NULL, '0', 'qModel', '2026-07-15 14:32:57', NULL, NULL, NULL);
+
 -- ----------------------------
 -- Table structure for system_dict_type
 -- ----------------------------
@@ -364,6 +376,9 @@ INSERT INTO `system_dict_type` VALUES (31, '模型接入方式', 'model_access_t
 INSERT INTO `system_dict_type` VALUES (32, '请求内容类型', 'content_type', '0', 'admin', '2026-07-07 14:14:22', NULL, NULL, '模型API请求内容类型');
 INSERT INTO `system_dict_type` VALUES (33, '鉴权类型', 'auth_type', '0', 'admin', '2026-07-07 14:14:22', NULL, NULL, '模型API鉴权类型');
 INSERT INTO `system_dict_type` VALUES (34, '鉴权注入位置', 'auth_inject_position', '0', 'admin', '2026-07-07 14:14:22', NULL, NULL, '鉴权Token注入位置');
+INSERT INTO `system_dict_type` VALUES (35, '模型调用历史状态', 'invoke_history_status', '0', 'qModel', '2026-07-15 13:52:32', NULL, NULL, '0=执行中，1=成功，2=失败，3=超时，4=参数校验阻塞');
+INSERT INTO `system_dict_type` VALUES (36, '模型调用方式', 'invoke_type', '0', 'qModel', '2026-07-15 13:56:22', NULL, NULL, '调用类型;1=在线测试，2=网关服务');
+INSERT INTO `system_dict_type` VALUES (37, '依赖、容器构建状态', 'build_status', '0', 'qModel', '2026-07-15 14:31:50', NULL, NULL, '构建状态;构建状态：0=待执行，1=执行中，2=成功，3=失败');
 
 -- ----------------------------
 -- Table structure for system_job
