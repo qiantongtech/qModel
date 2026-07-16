@@ -112,7 +112,7 @@
   <el-dialog
     :title="title"
     v-model="openDetail"
-    width="800px"
+    width="1000px"
     :append-to="$refs['app-container']"
     draggable
   >
@@ -121,23 +121,23 @@
         {{ title }}
       </span>
     </template>
-    <el-form ref="modelInvokeHistoryRef" :model="form" label-width="80px">
+    <el-form ref="modelInvokeHistoryRef" :model="form" label-width="110px">
       <el-row :gutter="20">
         <el-col :span="12">
           <el-form-item label="模型编号" prop="modelId">
-            <div>{{ form.modelId || "-" }}</div>
+            <div class="form-readonly">{{ form.modelId || "-" }}</div>
           </el-form-item>
         </el-col>
         <el-col :span="12">
           <el-form-item label="模型名称" prop="modelName">
-            <div>{{ form.modelName || "-" }}</div>
+            <div class="form-readonly">{{ form.modelName || "-" }}</div>
           </el-form-item>
         </el-col>
       </el-row>
       <el-row :gutter="20">
         <el-col :span="12">
           <el-form-item label="客户端IP" prop="clientIp">
-            <div>{{ form.clientIp || "-" }}</div>
+            <div class="form-readonly">{{ form.clientIp || "-" }}</div>
           </el-form-item>
         </el-col>
         <el-col :span="12">
@@ -153,14 +153,14 @@
       <el-row :gutter="20">
         <el-col :span="12">
           <el-form-item label="开始时间" prop="startTime">
-            <div>
+            <div class="form-readonly">
               {{ parseTime(form.startTime, "{y}-{m}-{d} {h}:{i}:{s}") || "-" }}
             </div>
           </el-form-item>
         </el-col>
         <el-col :span="12">
           <el-form-item label="结束时间" prop="endTime">
-            <div>
+            <div class="form-readonly">
               {{ parseTime(form.endTime, "{y}-{m}-{d} {h}:{i}:{s}") || "-" }}
             </div>
           </el-form-item>
@@ -169,28 +169,28 @@
       <el-row :gutter="20">
         <el-col :span="12">
           <el-form-item label="执行耗时" prop="duration">
-            <div>{{ form.duration || "-" }}ms</div>
+            <div class="form-readonly">{{ form.duration || "-" }}ms</div>
           </el-form-item>
         </el-col>
       </el-row>
       <el-row :gutter="20">
         <el-col :span="24">
           <el-form-item label="输入参数" prop="inputParams">
-            <pre class="json-pre">{{ form.inputParams || "-" }}</pre>
+            <pre class="form-readonly textarea json-pre">{{ form.inputParams || "-" }}</pre>
           </el-form-item>
         </el-col>
       </el-row>
       <el-row :gutter="20">
         <el-col :span="24">
           <el-form-item label="输出结果" prop="outputResult">
-            <pre class="json-pre">{{ form.outputResult || "-" }}</pre>
+            <pre class="form-readonly textarea json-pre">{{ form.outputResult || "-" }}</pre>
           </el-form-item>
         </el-col>
       </el-row>
       <el-row :gutter="20">
         <el-col :span="24">
           <el-form-item label="错误信息" prop="errorMessage">
-            <div>{{ form.errorMessage || "-" }}</div>
+            <div class="form-readonly textarea">{{ form.errorMessage || "-" }}</div>
           </el-form-item>
         </el-col>
       </el-row>
@@ -360,16 +360,32 @@ onMounted(() => {
   background: transparent;
 }
 
-.json-pre {
-  background: #f5f5f5;
+.form-readonly {
+  width: 100%;
+  border: 1px solid #f1f1f1;
+  padding: 0px 10px;
+  min-height: 34px;
+  background-color: #fcfcfc;
+  border-radius: 2px;
+  color: #333;
+  display: flex;
+  align-items: center;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  word-break: break-all;
+}
+
+.form-readonly.textarea {
+  min-height: 80px;
   padding: 10px;
-  border-radius: 4px;
+  align-items: flex-start;
+}
+
+.json-pre {
   font-family: "Consolas", "Monaco", monospace;
   font-size: 12px;
   max-height: 200px;
   overflow-y: auto;
-  white-space: pre-wrap;
-  word-break: break-all;
 }
 
 .justify-between {
