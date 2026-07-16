@@ -369,7 +369,7 @@ const getList = () => {
         modelName: props.model.name,
         version: props.model.version,
         status: 1,
-        description: "-",
+        description: "调整初始值、预处理参数",
         createBy: props.model.createBy || "张三",
         createTime: props.model.createTime || "2025-09-18 15:13",
       },

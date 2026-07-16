@@ -24,7 +24,8 @@
         align="center"
         width="80"
         prop="id"
-        sortable
+        sortable="custom"
+        :sort-orders="['descending', 'ascending']"
       />
       <el-table-column
         v-if="getColumnVisibility(1)"
@@ -67,7 +68,8 @@
         align="center"
         prop="createTime"
         width="180"
-        sortable
+        sortable="custom"
+        :sort-orders="['descending', 'ascending']"
       >
         <template #default="scope">
           <span>{{
@@ -226,7 +228,7 @@ const loading = ref(true);
 const showSearch = ref(true);
 const total = ref(0);
 const title = ref("");
-const defaultSort = ref({ prop: "createTime", order: "desc" });
+const defaultSort = ref({ prop: "createTime", order: "descending" });
 const openDetail = ref(false);
 
 const columns = ref([
@@ -262,7 +264,7 @@ const queryParams = reactive({
   status: null,
   clientIp: null,
   createTime: null,
-  orderByColumn: "createTime", // 添加默认排序字段
+  orderByColumn: "createTime",
   isAsc: "desc",
 });
 

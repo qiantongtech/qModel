@@ -186,7 +186,7 @@ public class ModelFileResourceServiceImpl extends ServiceImpl<ModelFileResourceM
      */
     @Override
     public String importModelFileResource(List<ModelFileResourceRespVO> importExcelList, boolean isUpdateSupport, String operName) {
-        if (StringUtils.isNull(importExcelList) || importExcelList.size() == 0) {
+        if (StringUtils.isNull(importExcelList) || importExcelList.isEmpty()) {
             throw new ServiceException("导入数据不能为空！");
         }
 
@@ -248,7 +248,7 @@ public class ModelFileResourceServiceImpl extends ServiceImpl<ModelFileResourceM
     /**
      * 检测上传的ZIP文件是否符合模型文件部署的要求
      * @param file 上传的ZIP文件
-     * @return
+     * @return 检测结果
      */
     @Override
     public Map<String, Object> checkZipFile(MultipartFile file) {
