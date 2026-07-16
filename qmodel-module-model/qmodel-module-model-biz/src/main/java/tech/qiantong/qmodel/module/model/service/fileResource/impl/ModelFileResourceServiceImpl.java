@@ -72,6 +72,9 @@ import tech.qiantong.qmodel.module.model.dal.mapper.fileResource.ModelFileResour
 import tech.qiantong.qmodel.module.model.service.fileResource.IModelFileResourceService;
 import tech.qiantong.qmodel.file.util.FileUploadUtil;
 import org.dromara.x.file.storage.core.FileInfo;
+import tech.qiantong.qmodel.module.model.enums.ImageBuildStatusEnum;
+import tech.qiantong.qmodel.module.model.enums.InvokeStatusEnum;
+import tech.qiantong.qmodel.module.model.enums.ResourceTypeEnum;
 import tech.qiantong.qmodel.module.model.service.fileResource.handler.ModelFileResourceDepsCheckHandler;
 import tech.qiantong.qmodel.module.model.service.invokeHistory.IModelInvokeHistoryService;
 
@@ -112,7 +115,7 @@ public class ModelFileResourceServiceImpl extends ServiceImpl<ModelFileResourceM
     @Override
     public Long createModelFileResource(ModelFileResourceSaveReqVO createReqVO) {
         ModelFileResourceDO dictType = BeanUtils.toBean(createReqVO, ModelFileResourceDO.class);
-        dictType.setImageBuildStatus("0");
+        dictType.setImageBuildStatus(ImageBuildStatusEnum.UNCHECKED.getStatus());
         modelFileResourceMapper.insert(dictType);
         final Long fileResourceId = dictType.getId();
         TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronization() {
@@ -408,11 +411,11 @@ public class ModelFileResourceServiceImpl extends ServiceImpl<ModelFileResourceM
         fileResourceDO.setFilePath(saveReqVO.getFilePath());
         fileResourceDO.setFileSize(saveReqVO.getFileSize());
         fileResourceDO.setScriptName(StringUtils.isNotEmpty(saveReqVO.getScriptName()) ? saveReqVO.getScriptName() : "main.py");
-        fileResourceDO.setResourceType(StringUtils.isNotEmpty(saveReqVO.getResourceType()) ? saveReqVO.getResourceType() : "2");
+        fileResourceDO.setResourceType(StringUtils.isNotEmpty(saveReqVO.getResourceType()) ? saveReqVO.getResourceType() : ResourceTypeEnum.PYTHON_SCRIPT.getType());
         fileResourceDO.setModelVersion(saveReqVO.getModelVersion() != null ? saveReqVO.getModelVersion() : 1L);
         fileResourceDO.setInputSchema(saveReqVO.getInputSchema());
         fileResourceDO.setOutputSchema(saveReqVO.getOutputSchema());
-        fileResourceDO.setImageBuildStatus("1");
+        fileResourceDO.setImageBuildStatus(ImageBuildStatusEnum.CHECKING.getStatus());
         fileResourceDO.setValidFlag(true);
 
         if (saveReqVO.getFileResourceId() != null) {
@@ -499,7 +502,7 @@ public class ModelFileResourceServiceImpl extends ServiceImpl<ModelFileResourceM
         }
 
         String buildStatus = fileResourceDO.getImageBuildStatus();
-        if (!"2".equals(buildStatus)) {
+        if (!ImageBuildStatusEnum.SUCCESS.getStatus().equals(buildStatus)) {
             throw new ServiceException("模型构建状态异常，当前状态: " + buildStatus + "，请等待构建完成后再执行");
         }
 
@@ -584,20 +587,20 @@ public class ModelFileResourceServiceImpl extends ServiceImpl<ModelFileResourceM
 
             Date endTime = new Date();
             modelInvokeHistoryService.saveInvokeLogAsync(modelId, fileResourceDO.getFileName(), "1",
-                    paramJson, JSON.toJSONString(result), "1", null,
+                    paramJson, JSON.toJSONString(result), InvokeStatusEnum.SUCCESS.getStatus(), null,
                     endTime.getTime() - startTime.getTime(), startTime, endTime, clientIp);
 
             return result;
         } catch (ServiceException e) {
             Date endTime = new Date();
             modelInvokeHistoryService.saveInvokeLogAsync(modelId, fileResourceDO.getFileName(), "1",
-                    paramJson, null, "2", e.getMessage(),
+                    paramJson, null, InvokeStatusEnum.FAILED.getStatus(), e.getMessage(),
                     endTime.getTime() - startTime.getTime(), startTime, endTime, clientIp);
             throw e;
         } catch (Exception e) {
             Date endTime = new Date();
             modelInvokeHistoryService.saveInvokeLogAsync(modelId, fileResourceDO.getFileName(), "1",
-                    paramJson, null, "2", e.getMessage(),
+                    paramJson, null, InvokeStatusEnum.FAILED.getStatus(), e.getMessage(),
                     endTime.getTime() - startTime.getTime(), startTime, endTime, clientIp);
             log.error("执行模型脚本失败，modelId: {}", modelId, e);
             throw new ServiceException("执行模型脚本失败：" + e.getMessage());

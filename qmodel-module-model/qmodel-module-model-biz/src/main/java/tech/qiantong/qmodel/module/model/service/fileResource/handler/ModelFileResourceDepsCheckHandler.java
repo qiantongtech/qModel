@@ -55,6 +55,9 @@ import tech.qiantong.qmodel.module.model.dal.dataobject.fileResource.ModelFileRe
 import tech.qiantong.qmodel.module.model.dal.dataobject.model.ModelDO;
 import tech.qiantong.qmodel.module.model.dal.mapper.fileResource.ModelFileResourceMapper;
 import tech.qiantong.qmodel.module.model.dal.mapper.model.ModelMapper;
+import tech.qiantong.qmodel.module.model.enums.ImageBuildStatusEnum;
+import tech.qiantong.qmodel.module.model.enums.ModelStatusEnum;
+import tech.qiantong.qmodel.module.model.enums.PipMirrorEnum;
 import tech.qiantong.qmodel.module.model.service.buildLog.IModelBuildLogService;
 import com.alibaba.fastjson.JSON;
 
@@ -73,28 +76,10 @@ public class ModelFileResourceDepsCheckHandler {
 
     private static final Pattern REQUIREMENT_PATTERN = Pattern.compile("^([A-Za-z0-9][A-Za-z0-9._-]*)([><=!~].+)?$");
     private static final Pattern PIP_LIST_PATTERN = Pattern.compile("^([A-Za-z0-9][A-Za-z0-9._-]+)(==.+)?$");
-
-    private static final String STATUS_UNCHECKED = "0";
-    private static final String STATUS_CHECKING = "1";
-    private static final String STATUS_SUCCESS = "2";
-    private static final String STATUS_FAILED = "3";
-
-    private static final String MODEL_STATUS_BUILD_FAILED = "3";
-    private static final String MODEL_STATUS_BUILD_SUCCESS = "1";
-
     private static final String STORAGE_PATH = System.getProperty("user.dir") + "/upload/";
 
-    /**
-     * 镜像源列表（按优先级排序）
-     * 当一个镜像源失败时，自动尝试下一个
-     */
-    private static final List<String> PIP_MIRRORS = Arrays.asList(
-            "https://pypi.tuna.tsinghua.edu.cn/simple",  // 清华镜像（优先）
-            "https://mirrors.aliyun.com/pypi/simple",    // 阿里云镜像
-            "https://repo.huaweicloud.com/repository/pypi/simple",  // 华为云镜像
-            "https://pypi.douban.com/simple",            // 豆瓣镜像
-            "https://pypi.org/simple"                    // 官方源（兜底）
-    );
+    // pip 镜像源列表
+    private static final List<String> PIP_MIRRORS = PipMirrorEnum.getMirrorUrls();
 
     @Async("threadPoolTaskExecutor")
     public void checkDependencies(Long fileResourceId) {
@@ -123,7 +108,7 @@ public class ModelFileResourceDepsCheckHandler {
             buildLogBuilder.append("模型ID: ").append(fileResource.getModelId()).append("\n");
             buildLogBuilder.append("文件名: ").append(fileResource.getFileName()).append("\n\n");
 
-            updateStatus(fileResourceId, STATUS_CHECKING, null, null);
+            updateStatus(fileResourceId, ImageBuildStatusEnum.CHECKING.getStatus(), null, null);
 
             String relativePath = fileResource.getFilePath();
             if (relativePath == null || relativePath.isEmpty()) {
@@ -131,8 +116,8 @@ public class ModelFileResourceDepsCheckHandler {
                 log.warn("{}, fileResourceId: {}", errorMsg, fileResourceId);
                 buildLogBuilder.append("错误: ").append(errorMsg).append("\n");
                 modelBuildLogService.updateBuildLogFailed(buildLogId, errorMsg, null, buildLogBuilder.toString());
-                updateStatus(fileResourceId, STATUS_FAILED, null, null);
-                updateModelStatus(fileResource.getModelId(), MODEL_STATUS_BUILD_FAILED);
+                updateStatus(fileResourceId, ImageBuildStatusEnum.FAILED.getStatus(), null, null);
+                updateModelStatus(fileResource.getModelId(), ModelStatusEnum.BUILD_FAILED.getStatus());
                 return;
             }
 
@@ -145,8 +130,8 @@ public class ModelFileResourceDepsCheckHandler {
                 log.warn("{}, fileResourceId: {}", errorMsg, fileResourceId);
                 buildLogBuilder.append("错误: ").append(errorMsg).append("\n");
                 modelBuildLogService.updateBuildLogFailed(buildLogId, errorMsg, null, buildLogBuilder.toString());
-                updateStatus(fileResourceId, STATUS_FAILED, null, null);
-                updateModelStatus(fileResource.getModelId(), MODEL_STATUS_BUILD_FAILED);
+                updateStatus(fileResourceId, ImageBuildStatusEnum.FAILED.getStatus(), null, null);
+                updateModelStatus(fileResource.getModelId(), ModelStatusEnum.BUILD_FAILED.getStatus());
                 return;
             }
 //            buildLogBuilder.append("解压目录: ").append(extractDir).append("\n");
@@ -176,7 +161,7 @@ public class ModelFileResourceDepsCheckHandler {
                         requirementsContent,
                         buildLogBuilder.toString()
                 );
-                updateStatus(fileResourceId, STATUS_SUCCESS, scriptPath, depsPath);
+                updateStatus(fileResourceId, ImageBuildStatusEnum.SUCCESS.getStatus(), scriptPath, depsPath);
                 return;
             }
 
@@ -206,8 +191,8 @@ public class ModelFileResourceDepsCheckHandler {
                         requirementsContent,
                         buildLogBuilder.toString()
                 );
-                updateStatus(fileResourceId, STATUS_SUCCESS, scriptPath, depsPath);
-                updateModelStatus(fileResource.getModelId(), MODEL_STATUS_BUILD_SUCCESS);
+                updateStatus(fileResourceId, ImageBuildStatusEnum.SUCCESS.getStatus(), scriptPath, depsPath);
+                updateModelStatus(fileResource.getModelId(), ModelStatusEnum.ENABLED.getStatus());
                 log.info("依赖检测通过，fileResourceId: {}", fileResourceId);
             } else {
                 buildLogBuilder.append("开始安装缺失的依赖包...\n");
@@ -222,8 +207,8 @@ public class ModelFileResourceDepsCheckHandler {
                             requirementsContent,
                             buildLogBuilder.toString()
                     );
-                    updateStatus(fileResourceId, STATUS_SUCCESS, scriptPath, depsPath);
-                    updateModelStatus(fileResource.getModelId(), MODEL_STATUS_BUILD_SUCCESS);
+                    updateStatus(fileResourceId, ImageBuildStatusEnum.SUCCESS.getStatus(), scriptPath, depsPath);
+                    updateModelStatus(fileResource.getModelId(), ModelStatusEnum.ENABLED.getStatus());
                     log.info("依赖安装成功，fileResourceId: {}", fileResourceId);
                 } else {
                     buildLogBuilder.append("依赖包安装失败\n");
@@ -234,8 +219,8 @@ public class ModelFileResourceDepsCheckHandler {
                             JSON.toJSONString(requirements),
                             buildLogBuilder.toString()
                     );
-                    updateStatus(fileResourceId, STATUS_FAILED, scriptPath, depsPath);
-                    updateModelStatus(fileResource.getModelId(), MODEL_STATUS_BUILD_FAILED);
+                    updateStatus(fileResourceId, ImageBuildStatusEnum.FAILED.getStatus(), scriptPath, depsPath);
+                    updateModelStatus(fileResource.getModelId(), ModelStatusEnum.BUILD_FAILED.getStatus());
                     log.warn("依赖安装失败，fileResourceId: {}", fileResourceId);
                 }
             }
@@ -248,8 +233,8 @@ public class ModelFileResourceDepsCheckHandler {
                 modelBuildLogService.updateBuildLogFailed(buildLogId, e.getMessage(), null, buildLogBuilder.toString());
             }
             try {
-                updateStatus(fileResourceId, STATUS_FAILED, null, null);
-                updateModelStatus(fileResource.getModelId(), MODEL_STATUS_BUILD_FAILED);
+                updateStatus(fileResourceId, ImageBuildStatusEnum.FAILED.getStatus(), null, null);
+                updateModelStatus(fileResource.getModelId(), ModelStatusEnum.BUILD_FAILED.getStatus());
             } catch (Exception updateEx) {
                 log.error("更新状态失败，fileResourceId: {}", fileResourceId, updateEx);
             }
