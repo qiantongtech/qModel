@@ -379,9 +379,10 @@ const handleNextStep = async () => {
       if (form.accessType === 'API') {
         await apiStepRef.value.validate()
       } else if (form.accessType === 'PYTHON') {
-        if (!checkUploadFileRef.value || !checkUploadFileRef.value.validate()) {
+        if (!checkUploadFileRef.value) {
           throw new Error('请上传并检测通过 ZIP 模型包')
         }
+        checkUploadFileRef.value.validate()
       }
     }
     if (activeStep.value === 2) {
@@ -394,7 +395,7 @@ const handleNextStep = async () => {
       activeStep.value++
     }
   } catch (error) {
-    ElMessage.warning(error?.message || '请检查填写内容')
+    ElMessage.error(error?.message || '请检查填写内容')
   }
 }
 
