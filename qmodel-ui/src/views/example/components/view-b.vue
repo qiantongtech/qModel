@@ -35,7 +35,7 @@
         <dp-shrink width="260px" placement="left">
             <template #flex>
                 <el-table class="video-list" :data="videoList">
-                    <el-table-column label="监控名称" prop="name" show-overflow-tooltip>
+                    <el-table-column label="监控名称" prop="name" :show-overflow-tooltip="{ effect: 'light' }">
                     </el-table-column>
                     <el-table-column label="状态" align="center" width="80">
                         <template #default="scope">

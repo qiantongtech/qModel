@@ -64,7 +64,7 @@
               label="缓存名称"
               align="center"
               prop="cacheName"
-              :show-overflow-tooltip="true"
+              :show-overflow-tooltip="{ effect: 'light' }"
               :formatter="nameFormatter"
             ></el-table-column>
 
@@ -72,7 +72,7 @@
               label="备注"
               align="center"
               prop="remark"
-              :show-overflow-tooltip="true"
+              :show-overflow-tooltip="{ effect: 'light' }"
             />
             <el-table-column
               label="操作"
@@ -122,7 +122,7 @@
             <el-table-column
               label="缓存键名"
               align="center"
-              :show-overflow-tooltip="true"
+              :show-overflow-tooltip="{ effect: 'light' }"
               :formatter="keyFormatter"
             >
             </el-table-column>

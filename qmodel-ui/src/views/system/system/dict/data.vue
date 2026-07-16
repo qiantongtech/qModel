@@ -136,7 +136,7 @@
          <el-table stripe height="60vh" v-loading="loading" :data="dataList" @selection-change="handleSelectionChange">
             <el-table-column type="selection" width="55" align="center" />
             <el-table-column label="字典编码" align="center" prop="dictCode" />
-            <el-table-column label="字典标签" align="center" prop="dictLabel">
+            <el-table-column label="字典标签" align="center" prop="dictLabel" :show-overflow-tooltip="{ effect: 'light' }">
                <template #default="scope">
                   <span v-if="(scope.row.listClass == '' || scope.row.listClass == 'default') && (scope.row.cssClass == '' || scope.row.cssClass == null)">{{ scope.row.dictLabel }}</span>
                   <el-tag v-else :type="scope.row.listClass == 'primary' ? '' : scope.row.listClass" :class="scope.row.cssClass">{{ scope.row.dictLabel }}</el-tag>
@@ -149,7 +149,7 @@
                   <dict-tag :options="sys_normal_disable" :value="scope.row.status" />
                </template>
             </el-table-column>
-            <el-table-column label="备注" align="center" prop="remark" :show-overflow-tooltip="true" />
+            <el-table-column label="备注" align="center" prop="remark" :show-overflow-tooltip="{ effect: 'light' }" />
             <el-table-column label="创建时间" align="center" prop="createTime" width="180">
                <template #default="scope">
                   <span>{{ parseTime(scope.row.createTime) }}</span>

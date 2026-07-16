@@ -103,19 +103,19 @@
             :default-expand-all="isExpandAll"
             :tree-props="{ children: 'children', hasChildren: 'hasChildren' }"
          >
-            <el-table-column prop="menuName" label="菜单名称" :show-overflow-tooltip="true" width="160"></el-table-column>
+            <el-table-column prop="menuName" label="菜单名称" :show-overflow-tooltip="{ effect: 'light' }" width="160"></el-table-column>
             <el-table-column prop="icon" label="图标" align="center" width="100">
                <template #default="scope">
                   <svg-icon :icon-class="scope.row.icon" />
                </template>
             </el-table-column>
             <el-table-column prop="orderNum" label="排序" align="center" width="60"></el-table-column>
-            <el-table-column prop="perms" label="权限标识" align="left" :show-overflow-tooltip="true">
+            <el-table-column prop="perms" label="权限标识" align="left" :show-overflow-tooltip="{ effect: 'light' }">
                <template #default="scope">
                   <span>{{ scope.row.perms || "-" }}</span>
                </template>
             </el-table-column>
-            <el-table-column prop="component" label="组件路径" align="left" :show-overflow-tooltip="true">
+            <el-table-column prop="component" label="组件路径" align="left" :show-overflow-tooltip="{ effect: 'light' }">
                <template #default="scope">
                   <span>{{ scope.row.component || "-" }}</span>
                </template>

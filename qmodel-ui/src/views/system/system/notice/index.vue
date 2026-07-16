@@ -123,7 +123,7 @@
                label="公告标题"
                align="left"
                prop="noticeTitle"
-               :show-overflow-tooltip="true"
+               :show-overflow-tooltip="{ effect: 'light' }"
             />
             <el-table-column label="公告类型" align="center" prop="noticeType" >
                <template #default="scope">
@@ -135,7 +135,7 @@
                   <dict-tag :options="sys_notice_status" :value="scope.row.status" />
                </template>
             </el-table-column>
-            <el-table-column label="创建者" align="center" prop="createBy"  />
+            <el-table-column label="创建者" align="center" prop="createBy" :show-overflow-tooltip="{ effect: 'light' }" />
             <el-table-column label="创建时间" align="center" prop="createTime">
                <template #default="scope">
                   <span>{{ parseTime(scope.row.createTime, '{y}-{m}-{d}') }}</span>

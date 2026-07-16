@@ -110,7 +110,7 @@
           prop="name"
           align="left"
           width="250px"
-          :show-overflow-tooltip="true"
+          :show-overflow-tooltip="{ effect: 'light' }"
         >
           <template #default="scope">
             {{ scope.row.name || '-' }}

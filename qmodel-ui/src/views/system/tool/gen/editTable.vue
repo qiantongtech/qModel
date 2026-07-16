@@ -44,7 +44,7 @@
                     label="字段列名"
                     prop="columnName"
                     width="150"
-                    :show-overflow-tooltip="true"
+                    :show-overflow-tooltip="{ effect: 'light' }"
             />
             <el-table-column label="字段描述" min-width="150" align="center">
               <template #default="scope">
@@ -55,7 +55,7 @@
                     label="物理类型"
                     prop="columnType"
                     width="150"
-                    :show-overflow-tooltip="true"
+                    :show-overflow-tooltip="{ effect: 'light' }"
                     align="center"
             />
             <el-table-column label="Java类型" width="150" align="center">

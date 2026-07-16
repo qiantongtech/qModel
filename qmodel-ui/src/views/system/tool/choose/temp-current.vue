@@ -127,12 +127,12 @@
         label="字典名称"
         align="center"
         prop="dictName"
-        :show-overflow-tooltip="true"
+        :show-overflow-tooltip="{ effect: 'light' }"
       />
       <el-table-column
         label="字典类型"
         align="center"
-        :show-overflow-tooltip="true"
+        :show-overflow-tooltip="{ effect: 'light' }"
       >
         <template #default="scope">
           <router-link
@@ -152,7 +152,7 @@
         label="备注"
         align="center"
         prop="remark"
-        :show-overflow-tooltip="true"
+        :show-overflow-tooltip="{ effect: 'light' }"
       />
       <el-table-column label="创建时间" align="center" prop="createTime">
         <template #default="scope">
