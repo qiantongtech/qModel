@@ -220,11 +220,22 @@
                            :columns="columns"></right-toolbar>
           </div>
 
-          <el-table stripe height="544px" v-loading="loading" :data="userList"
-                    @selection-change="handleSelectionChange">
-            <el-table-column type="selection" width="50" align="center"/>
-            <el-table-column label="编号" align="center" key="userId" prop="userId"
-                             v-if="columns[0].visible"/>
+          <el-table
+              stripe
+              v-loading="loading"
+              :data="userList"
+              @selection-change="handleSelectionChange"
+              :default-sort="defaultSort"
+              @sort-change="handleSortChange"
+          >
+            <el-table-column type="selection" width="50" align="center" />
+            <el-table-column
+                label="编号"
+                align="center"
+                key="userId"
+                prop="userId"
+                v-if="columns[0].visible"
+            />
             <el-table-column
                 label="登录账号"
                 key="userName"
@@ -232,13 +243,33 @@
                 v-if="columns[1].visible"
                 :show-overflow-tooltip="{ effect: 'light' }"
             />
-            <el-table-column label="用户姓名"  key="nickName" prop="nickName"
-                             v-if="columns[2].visible" :show-overflow-tooltip="true"/>
-            <el-table-column label="部门"  key="deptName" prop="dept.deptName"
-                             v-if="columns[3].visible" :show-overflow-tooltip="true"/>
-            <el-table-column label="手机号码"  key="phonenumber" prop="phonenumber"
-                             v-if="columns[4].visible" width="120"/>
-            <el-table-column label="状态" align="center" key="status" v-if="columns[5].visible">
+            <el-table-column
+                label="用户姓名"
+                key="nickName"
+                prop="nickName"
+                v-if="columns[2].visible"
+                :show-overflow-tooltip="{ effect: 'light' }"
+            />
+            <el-table-column
+                label="部门"
+                key="deptName"
+                prop="dept.deptName"
+                v-if="columns[3].visible"
+                :show-overflow-tooltip="{ effect: 'light' }"
+            />
+            <el-table-column
+                label="手机号码"
+                key="phonenumber"
+                prop="phonenumber"
+                v-if="columns[4].visible"
+                width="120"
+            />
+            <el-table-column
+                label="状态"
+                align="center"
+                key="status"
+                v-if="columns[5].visible"
+            >
               <template #default="scope">
                 <el-switch
                     v-model="scope.row.status"
@@ -261,8 +292,15 @@
                                 </span>
               </template>
             </el-table-column>
-            <el-table-column label="操作" align="center" class-name="small-padding fixed-width" fixed="right"
-                             width="240">
+
+            <el-table-column
+                v-if="columns[7].visible"
+                label="操作"
+                align="center"
+                class-name="small-padding fixed-width"
+                fixed="right"
+                width="240"
+            >
               <template #default="scope">
                 <!-- <el-tooltip content="修改" placement="top" v-if="scope.row.userId !== 1">
                    <el-button link type="primary" icon="Edit" @click="handleUpdate(scope.row)" v-hasPermi="['system:user:edit']"></el-button>
@@ -276,15 +314,23 @@
                 <el-tooltip content="分配角色" placement="top" v-if="scope.row.userId !== 1">
                    <el-button link type="primary" icon="CircleCheck" @click="handleAuthRole(scope.row)" v-hasPermi="['system:user:edit']"></el-button>
                 </el-tooltip> -->
-                <el-button link type="primary" @click="handleUpdate(scope.row)"
-                           v-hasPermi="['system:user:edit']" v-if="scope.row.userId !== 1">
-                  <i class="iconfont-mini icon-a-xiugaixianxing"></i>
-                  修改
+                <el-button
+                    link
+                    type="primary"
+                    icon="Edit"
+                    @click="handleUpdate(scope.row)"
+                    v-hasPermi="['system:user:edit']"
+                    v-if="scope.row.userId !== 1"
+                >修改
                 </el-button>
-                <el-button link type="danger" @click="handleDelete(scope.row)"
-                           v-hasPermi="['system:user:remove']" v-if="scope.row.userId !== 1">
-                  <i class="iconfont-mini icon-a-shanchuxianxing"></i>
-                  删除
+                <el-button
+                    link
+                    type="danger"
+                    icon="Delete"
+                    @click="handleDelete(scope.row)"
+                    v-hasPermi="['system:user:remove']"
+                    v-if="scope.row.userId !== 1"
+                >删除
                 </el-button>
                 <el-popover
                     placement="bottom"
@@ -307,6 +353,10 @@
                         v-hasPermi="['system:user:resetPwd']"
                     >重置密码
                     </el-button>
+                    <!--                    <el-button link type="primary" icon="CircleCheck" @click="handleAuthRole(scope.row)"-->
+                    <!--                      v-hasPermi="['system:user:edit']">-->
+                    <!--                      分配角色-->
+                    <!--                    </el-button>-->
                   </div>
                 </el-popover>
               </template>

@@ -115,8 +115,8 @@
         @selection-change="handleSelectionChange"
         @sort-change="handleSortChange"
       >
-        <el-table-column v-if="getColumnVisibility(0)" label="编号" align="center" prop="id" width="80" sortable="custom"  :sort-orders="['descending', 'ascending']"/>
-        <el-table-column v-if="getColumnVisibility(1)" label="计算名称" align="left" prop="name" />
+        <el-table-column v-if="getColumnVisibility(0)" label="编号" align="center" prop="id" width="85" sortable="custom"  :sort-orders="['descending', 'ascending']"/>
+        <el-table-column v-if="getColumnVisibility(1)" label="计算名称" align="left" prop="name" width="250"/>
         <el-table-column v-if="getColumnVisibility(3)" label="模型名称" align="left" prop="modelName" />
         <el-table-column v-if="getColumnVisibility(4)" label="版本号" align="center" prop="modelVersion">
           <template #default="scope">
@@ -219,17 +219,17 @@
         </span>
       </template>
       <el-form ref="formref" :model="form" :rules="rules" label-width="95px">
-        <el-form-item label="计算名称：" prop="name">
+        <el-form-item label="计算名称" prop="name">
           <el-input
             clearable
             v-model="form.name"
             placeholder="请输入计算名称"
           />
         </el-form-item>
-        <el-form-item label="模型名称：" prop="modelId">
+        <el-form-item label="模型名称" prop="modelId">
           <el-select
             v-model="form.modelId"
-            placeholder="请选择所属模型"
+            placeholder="请选择模型名称"
             clearable
             @change="
               getAllModelVersion(form.modelId), (form.modelVersion = null)
@@ -244,10 +244,10 @@
             />
           </el-select>
         </el-form-item>
-        <el-form-item label="模型版本：" prop="modelVersion">
+        <el-form-item label="模型版本" prop="modelVersion">
           <el-select
             v-model="form.modelVersion"
-            placeholder="请先选择所属模型"
+            placeholder="请选择模型版本"
             clearable
           >
             <el-option
