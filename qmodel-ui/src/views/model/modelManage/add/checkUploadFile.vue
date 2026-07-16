@@ -19,7 +19,9 @@
   <div class="check-upload-file">
     <div class="upload-conditions">
       <div class="conditions-title">
-        <span class="title-icon">!</span>
+        <div class="tip-icon">
+          <el-icon size="20"><InfoFilled /></el-icon>
+        </div>
         <span>上传前提条件</span>
       </div>
       <ul class="conditions-list">
@@ -98,7 +100,7 @@
 
 <script setup name="CheckUploadFile">
 import { ref, reactive, watch } from 'vue'
-import { Upload, Loading, CircleCheck, CircleClose } from '@element-plus/icons-vue'
+import { Upload, Loading, CircleCheck, CircleClose, InfoFilled} from '@element-plus/icons-vue'
 import { checkUploadFile } from '@/api/model/fileResource'
 import { ElMessage } from 'element-plus'
 

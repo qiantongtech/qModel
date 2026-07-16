@@ -1,15 +1,15 @@
 <template>
   <div class="build-log">
-    <div class="build-status-header">
-      <div class="status-info">
-        <div class="h2-titles">构建状态 </div>
-        <dict-tag :options="build_status" :value="buildStatus" class="con-value access-tag" />
-      </div>
+<!--    <div class="build-status-header">-->
+<!--      <div class="status-info">-->
+<!--        <div class="h2-titles">构建状态 </div>-->
+<!--        <dict-tag :options="build_status" :value="buildStatus" class="con-value access-tag" />-->
+<!--      </div>-->
 
-    </div>
+<!--    </div>-->
 
     <div class="log-content">
-      <div class="h2-titles">构建日志</div>
+<!--      <div class="h2-titles">构建日志</div>-->
       <div ref="logRef" class="log-body">
         <div v-for="(line, index) in logs" :key="index" :class="['log-line', line.type]">
           <span class="log-time">{{ line.time }}</span>

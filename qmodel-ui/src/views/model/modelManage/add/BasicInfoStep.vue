@@ -279,12 +279,12 @@ const accessTypeOptions = computed(() => {
     return props.dictAccessType.map((item) => ({
       value: item.value,
       label: item.label,
-      desc: item.value === 'API' ? '外部部署，通过 HTTP 协议调用模型接口，适用于已部署在服务器或云端的模型服务。' : '上传包含模型代码的 Zip 包，由平台沙箱环境加载运行，适用于本地 Python 模型。'
+      desc: item.value === 'API' ? '外部部署，通过 HTTP 协议调用模型接口，适用于已部署在服务器或云端的模型服务。' : '上传包含模型代码的 zip 包，由平台沙箱环境加载运行，适用于本地 Python 模型。'
     }))
   }
   return [
     { value: 'API', label: 'API 接口模型', desc: '外部部署，通过 HTTP 协议调用模型接口，适用于已部署在服务器或云端的模型服务。' },
-    { value: 'PYTHON', label: 'Python 本地模型', desc: '上传包含模型代码的 Zip 包，由平台沙箱环境加载运行，适用于本地 Python 模型。' }
+    { value: 'PYTHON', label: 'Python 本地模型', desc: '上传包含模型代码的 zip 包，由平台沙箱环境加载运行，适用于本地 Python 模型。' }
   ]
 })
 

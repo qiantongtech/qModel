@@ -1,45 +1,5 @@
 <template>
   <div class="invoke-history">
-    <div class="pagecont-top" v-show="showSearch">
-      <el-form class="btn-style" :model="queryParams" ref="queryRef" :inline="true"  v-show="showSearch" @submit.prevent>
-        <el-form-item label="客户端IP地址" prop="clientIp">
-          <el-input
-            class="el-form-input-width"
-            v-model="queryParams.clientIp"
-            placeholder="请输入客户端IP地址"
-            clearable
-            @keyup.enter="handleQuery"
-          />
-        </el-form-item>
-        <el-form-item label="开始时间" prop="startTime">
-          <el-date-picker class="el-form-input-width"
-            clearable
-            v-model="queryParams.startTime"
-            type="date"
-            value-format="YYYY-MM-DD"
-            placeholder="请选择开始时间">
-          </el-date-picker>
-        </el-form-item>
-        <el-form-item label="结束时间" prop="endTime">
-          <el-date-picker class="el-form-input-width"
-            clearable
-            v-model="queryParams.endTime"
-            type="date"
-            value-format="YYYY-MM-DD"
-            placeholder="请选择结束时间">
-          </el-date-picker>
-        </el-form-item>
-        <el-form-item>
-          <el-button plain type="primary" @click="handleQuery" @mousedown="(e) => e.preventDefault()">
-            <i class="iconfont-mini icon-a-zu22377 mr5"></i>查询
-          </el-button>
-          <el-button @click="resetQuery" @mousedown="(e) => e.preventDefault()">
-            <i class="iconfont-mini icon-a-zu22378 mr5"></i>重置
-          </el-button>
-        </el-form-item>
-      </el-form>
-    </div>
-
     <div class="pagecont-bottom">
       <el-table stripe height="58vh" v-loading="loading" :data="modelInvokeHistoryList" :default-sort="defaultSort" @sort-change="handleSortChange">
         <el-table-column label="编号" align="center" prop="id" sortable />

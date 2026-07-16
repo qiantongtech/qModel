@@ -32,42 +32,9 @@
 
 <template>
   <div class="app-container">
-    <el-form
-      :model="queryParams"
-      ref="queryFormRef"
-      :inline="true"
-      v-show="showSearch"
-      @submit.prevent
-    >
-      <el-form-item label="模型版名称" prop="modelVersion">
-        <el-input
-            v-model="queryParams.name"
-            placeholder="请输入模型名称"
-            clearable
-            @keyup.enter="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item>
-        <el-button type="primary" @click="handleQuery">
-          <i class="iconfont-mini icon-a-zu22377 mr5"></i>搜索</el-button
-        >
-        <el-button @click="resetQuery" class="btn">
-          <i class="iconfont-mini icon-a-zu22378 mr5"></i>重置</el-button
-        >
-      </el-form-item>
-    </el-form>
 
-    <el-row :gutter="10" class="mb8">
-<!--      <el-col :span="1.5">-->
-<!--        <el-button type="primary" plain @click="handleAdd">-->
-<!--          <i class="iconfont-mini icon-xinzeng"></i>新增-->
-<!--        </el-button>-->
-<!--      </el-col>-->
-<!--      <right-toolbar-->
-<!--        v-model:showSearch="showSearch"-->
-<!--        @queryTable="getList"-->
-<!--      ></right-toolbar>-->
-    </el-row>
+
+
 
     <el-table
       v-loading="loading"

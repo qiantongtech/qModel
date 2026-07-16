@@ -116,13 +116,13 @@ defineExpose({
 .build-tip {
   display: flex;
   align-items: flex-start;
-  background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%);
+  background: linear-gradient(135deg, #e8f0fe 0%, #dbeafe 100%);
   border-radius: 8px;
-  padding: 16px 20px;
+  padding: 20px;
   margin-bottom: 24px;
 
   .tip-icon {
-    color: #d97706;
+    color: #3b82f6;
     margin-right: 12px;
     flex-shrink: 0;
   }
@@ -132,15 +132,15 @@ defineExpose({
   }
 
   .tip-title {
-    font-size: 16px;
-    font-weight: 600;
-    color: #92400e;
-    margin-bottom: 8px;
+    font-size: 18px;
+    font-weight: 700;
+    color: #1e40af;
+    margin-bottom: 16px;
   }
 
   .tip-desc {
     font-size: 14px;
-    color: #b45309;
+    color: #3b82f6;
     line-height: 1.6;
   }
 }

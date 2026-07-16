@@ -75,6 +75,7 @@
                   :key="opt.value"
                   :label="opt.label"
                   :value="opt.value"
+                  disabled
                 />
               </el-select>
             </template>
