@@ -1157,6 +1157,25 @@
       font-size: 18px;
       font-weight: 600;
     }
+    .task-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-weight: 600;
+      .task-id {
+        display: inline-flex;
+        justify-content: center;
+        align-items: center;
+        padding: 2px;
+        background-color: #2666fb;
+        color: #fff;
+        font-size: 14px;
+        border-radius: 0;
+        aspect-ratio: 1 / 1;
+        min-width: 20px;
+        min-height: 20px;
+      }
+    }
     .border-top {
       border-top: 1px solid #f0f3f9;
     }
@@ -1171,20 +1190,26 @@
     .infotop-row-lable {
       width: 150px;
       border-right: 1px solid #f0f3f9;
-      height: 50px;
+      height: 40px;
       display: flex;
       align-items: center;
       padding: 10px;
       background: #fafafa;
       color: #a8aaae;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
     .infotop-row-value {
-      height: 50px;
       flex: 1;
+      height: 40px;
       display: flex;
       align-items: center;
       padding: 10px;
       color: #494a4a;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      overflow: hidden;
     }
   }
 
@@ -1216,3 +1241,11 @@ input:-webkit-autofill {
 input:-internal-autofill-selected {
   background-color: white !important;
 }
+
+
+ .handle-svg-icon {
+ 	font-size: 13px !important;
+ 	margin-right: 7px;
+  width: 12px;
+  height: 12px;
+ }

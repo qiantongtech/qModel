@@ -35,8 +35,17 @@
     <div class="pagecont-top" v-show="showSearch" style="padding-bottom: 15px">
       <div class="infotop">
         <div class="infotop-title mb15">
-          <el-tag class="id-tag">{{ viewInfo.id }}</el-tag>
-          <span style="margin-left: 8px">{{ viewInfo.name || '-' }}</span>
+          <div class="task-item">
+            <!-- 正方形编号 -->
+            <div class="task-id">
+              {{ viewInfo.id || "-" }}
+            </div>
+
+            <!-- 名称 -->
+            <div class="task-name">
+              {{ viewInfo.name || "" }}
+            </div>
+          </div>
           <el-row :gutter="15" class="btn-style" style="margin-left: auto">
             <el-col :span="1.5">
               <el-button
@@ -46,9 +55,12 @@
                 plain
                 @click="goBack"
                 @mousedown="(e) => e.preventDefault()"
-              ><el-icon>
-                <Back />
-              </el-icon>返回
+              >
+                <svg-icon
+                  style="width: 12px; height: 12px; margin-right: 3px"
+                  :iconClass="'fhs'"
+                />
+                返回
               </el-button>
             </el-col>
           </el-row>
@@ -58,39 +70,49 @@
           <el-col :span="8">
             <div class="infotop-row border-top">
               <div class="infotop-row-lable">模型编号</div>
-              <div class="infotop-row-value">{{ viewInfo.code || '-' }}</div>
+              <div class="infotop-row-value">{{ viewInfo.code || "-" }}</div>
             </div>
           </el-col>
           <el-col :span="8">
             <div class="infotop-row border-top">
               <div class="infotop-row-lable">模型分类</div>
-              <div class="infotop-row-value">{{ viewInfo.classifyName || '-' }}</div>
+              <div class="infotop-row-value">
+                {{ viewInfo.classifyName || "-" }}
+              </div>
             </div>
           </el-col>
+
           <el-col :span="8">
             <div class="infotop-row border-top">
-              <div class="infotop-row-lable">模型版本号</div>
+              <div class="infotop-row-lable">图标</div>
               <div class="infotop-row-value">
-                <el-tag size="small">Version {{ viewInfo.version || '-' }}</el-tag>
+                <img
+                  v-if="viewInfo.icon"
+                  :src="getIconUrl(viewInfo.icon)"
+                  class="icon-preview"
+                  @click="previewIcon"
+                  alt="图标"
+                />
+                <span v-else>-</span>
               </div>
             </div>
           </el-col>
         </el-row>
-        <el-row :gutter="3">
-          <el-col :span="24">
+
+        <el-row :gutter="3" style="margin-bottom: 3px">
+          <el-col :span="8">
             <div class="infotop-row border-top">
-              <div class="infotop-row-lable">描述</div>
-              <div class="infotop-row-value">{{ viewInfo.description || '-' }}</div>
+              <div class="infotop-row-lable">版本号</div>
+              <div class="infotop-row-value">
+                {{ viewInfo.version || "-" }}
+              </div>
             </div>
           </el-col>
-        </el-row>
-        <el-row :gutter="3" style="margin-bottom: 3px">
-
           <el-col :span="8">
             <div class="infotop-row border-top">
               <div class="infotop-row-lable">作者</div>
               <div class="infotop-row-value">
-                <span>{{ viewInfo.author || '-' }}</span>
+                <span>{{ viewInfo.author || "-" }}</span>
               </div>
             </div>
           </el-col>
@@ -110,30 +132,22 @@
               </div>
             </div>
           </el-col>
-          <el-col :span="8">
+        </el-row>
+        <el-row :gutter="3" style="margin-bottom: 3px">
+          <el-col :span="24">
             <div class="infotop-row border-top">
-              <div class="infotop-row-lable">图标</div>
+              <div class="infotop-row-lable">描述</div>
               <div class="infotop-row-value">
-                <img
-                    v-if="viewInfo.icon"
-                    :src="getIconUrl(viewInfo.icon)"
-                    class="icon-preview"
-                    @click="previewIcon"
-                    alt="图标"
-                />
-                <span v-else>-</span>
+                {{ viewInfo.description || "-" }}
               </div>
             </div>
           </el-col>
         </el-row>
-
-
-
         <el-row :gutter="3">
           <el-col :span="24">
             <div class="infotop-row border-top">
               <div class="infotop-row-lable">备注</div>
-              <div class="infotop-row-value">{{ viewInfo.remark || '-' }}</div>
+              <div class="infotop-row-value">{{ viewInfo.remark || "-" }}</div>
             </div>
           </el-col>
         </el-row>
@@ -180,8 +194,6 @@
             style="margin: 0; padding: 0"
           />
         </el-tab-pane>
-
-
       </el-tabs>
     </div>
 
@@ -241,8 +253,12 @@
         <el-row>
           <el-col :span="20">
             <el-form-item label="接入方式：" prop="accessMode">
-              <el-radio v-model="form.accessMode" :label="Number(0)">python脚本</el-radio>
-              <el-radio v-model="form.accessMode" :label="Number(1)">API接口</el-radio>
+              <el-radio v-model="form.accessMode" :label="Number(0)"
+                >python脚本</el-radio
+              >
+              <el-radio v-model="form.accessMode" :label="Number(1)"
+                >API接口</el-radio
+              >
               <el-tooltip placement="top">
                 <template #content>
                   Tips: 核心信息请在详情页版本控制里面修改
@@ -308,14 +324,17 @@
 </template>
 
 <script setup>
-import { ref, reactive, computed, onMounted, getCurrentInstance, watch } from "vue";
+import {
+  ref,
+  reactive,
+  computed,
+  onMounted,
+  getCurrentInstance,
+  watch,
+} from "vue";
 import { useRouter, useRoute } from "vue-router";
 import { ElMessage, ElMessageBox, ElImageViewer } from "element-plus";
-import {
-  getModel,
-  updateModel,
-  addModel,
-} from "@/api/model/model";
+import { getModel, updateModel, addModel } from "@/api/model/model";
 import { listClassify } from "@/api/modelReconstitution/classify";
 import { listInterfaceAddress } from "@/api/modelReconstitution/interfaceAddress";
 import { useDict } from "@/utils/dict.js";
@@ -476,7 +495,7 @@ const closeIconPreview = () => {
 
 const getTreeSelect = () => {
   listClassify().then((res) => {
-    console.log(res)
+    console.log(res);
     for (let i = 0; i < res.data.length; i++) {
       let arrTemp = [];
       for (let j = 0; j < res.data.length; j++) {
@@ -522,8 +541,6 @@ const normalizer = (node) => {
     children: node.children,
   };
 };
-
-
 
 const submitForm = () => {
   if (formRef.value) {
@@ -601,61 +618,6 @@ onMounted(() => {
   margin-right: 8px;
 }
 
-.infotop {
-  .infotop-title {
-    color: #333333;
-    display: flex;
-    align-items: center;
-    font-size: 18px;
-    font-weight: 600;
-    margin-bottom: 15px;
-    flex-wrap: wrap;
-    gap: 8px;
-  }
-
-  .infotop-row {
-    display: flex;
-    align-items: center;
-    border-bottom: 1px solid #f0f3f9;
-    border-left: 1px solid #f0f3f9;
-    border-right: 1px solid #f0f3f9;
-    min-height: 50px;
-
-    &.border-top {
-      border-top: 1px solid #f0f3f9;
-    }
-  }
-
-  .infotop-row-lable {
-    width: 150px;
-    border-right: 1px solid #f0f3f9;
-    height: 50px;
-    display: flex;
-    align-items: center;
-    padding-left: 15px;
-    color: #666666;
-    font-weight: 500;
-    flex-shrink: 0;
-  }
-
-  .infotop-row-value {
-    height: 50px;
-    flex: 1;
-    display: flex;
-    align-items: center;
-    padding: 10px 15px;
-    color: #333333;
-    word-break: break-all;
-
-    .tag-list {
-      display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-      gap: 8px;
-    }
-  }
-}
-
 .icon-preview {
   width: 40px;
   height: 40px;
@@ -666,31 +628,6 @@ onMounted(() => {
 
   &:hover {
     transform: scale(1.1);
-  }
-}
-
-@media (max-width: 768px) {
-  .infotop-row-lable {
-    width: 120px;
-    padding-left: 10px;
-    font-size: 14px;
-  }
-
-  .infotop-row-value {
-    padding: 10px;
-    font-size: 14px;
-  }
-
-  .infotop-title {
-    font-size: 16px;
-    flex-direction: column;
-    align-items: flex-start;
-  }
-
-  .btn-style {
-    margin-left: 0 !important;
-    margin-top: 10px;
-    width: 100%;
   }
 }
 </style>

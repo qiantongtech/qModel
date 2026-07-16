@@ -32,51 +32,87 @@
 
 <template>
   <div class="app-container">
-
-
-
+    <div class="justify-between mb15">
+      <div class="justify-end top-right-btn">
+        <right-toolbar
+          v-model:showSearch="showSearch"
+          @queryTable="getList"
+          :columns="columns"
+          :search="false"
+        ></right-toolbar>
+      </div>
+    </div>
 
     <el-table
+      stripe
       v-loading="loading"
       :data="versionList"
       @selection-change="handleSelectionChange"
     >
-      <el-table-column label="编号" align="center" prop="version" sortable>
+      <el-table-column
+        v-if="getColumnVisibility(0)"
+        label="编号"
+        align="center"
+        width="80"
+        prop="id"
+        sortable
+      >
+        <template #default="scope"> 1 </template>
+      </el-table-column>
+      <el-table-column
+        v-if="getColumnVisibility(1)"
+        label="版本号"
+        align="center"
+        prop="version"
+        width="200px"
+      >
         <template #default="scope">
-          1
+          {{ scope.row.version }}
         </template>
       </el-table-column>
-      <el-table-column label="模型版本号" align="center" prop="version" >
-        <template #default="scope">
-          <el-tag size="small">Version {{ scope.row.version }}</el-tag>
-        </template>
-      </el-table-column>
-      <el-table-column label="变更类型" align="center" prop="description"/>
-      <el-table-column label="变更详情" align="center" prop="description"/>
-      <el-table-column label="操作人" align="center" prop="updateBy">
+      <el-table-column
+        v-if="getColumnVisibility(2)"
+        label="版本描述"
+        align="left"
+        prop="description"
+        width="250px"
+        :show-overflow-tooltip="{ effect: 'light' }"
+      />
+      <el-table-column
+        v-if="getColumnVisibility(3)"
+        label="创建人"
+        align="center"
+        prop="updateBy"
+      >
         <template #default="scope">
           <span>{{ scope.row.createBy }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="版本生成时间" align="center" prop="createTime" sortable>
+      <el-table-column
+        v-if="getColumnVisibility(4)"
+        label="创建时间"
+        align="center"
+        prop="createTime"
+        sortable
+      >
         <template #default="scope">
-          <span>{{ parseTime(scope.row.createTime, '{y}-{m}-{d} {h}:{i}') }}</span>
+          <span>{{
+            parseTime(scope.row.createTime, "{y}-{m}-{d} {h}:{i}")
+          }}</span>
         </template>
       </el-table-column>
 
       <el-table-column
+        v-if="getColumnVisibility(5)"
         label="操作"
         align="center"
         class-name="small-padding fixed-width"
       >
         <template #default="scope">
-
           <el-button link type="primary" @click="handleCompare(scope.row)">
-<!--            <Edit class="icon-mini" />-->
+            <svg-icon icon-class="meta-version" class="handle-svg-icon" />
             版本对比
           </el-button>
-
-
         </template>
       </el-table-column>
     </el-table>
@@ -193,6 +229,7 @@ import {
 import { getModel } from "@/api/modelReconstitution/model";
 import { listClassify } from "@/api/modelReconstitution/classify";
 import FileNameUpload from "@/components/FileNameUpload/index.vue";
+import RightToolbar from "@/components/RightToolbar/index.vue";
 import { ref, reactive, computed, onMounted, watch } from "vue";
 import { useRoute } from "vue-router";
 import { ElMessage, ElMessageBox } from "element-plus";
@@ -227,6 +264,21 @@ const modelForm = ref({});
 const queryFormRef = ref();
 const formRef = ref();
 const versionData = ref([]);
+
+const columns = ref([
+  { key: 0, label: "编号", visible: true },
+  { key: 1, label: "版本号", visible: true },
+  { key: 2, label: "版本描述", visible: true },
+  { key: 3, label: "创建人", visible: true },
+  { key: 4, label: "创建时间", visible: true },
+  { key: 5, label: "操作", visible: true },
+]);
+
+const getColumnVisibility = (key) => {
+  const column = columns.value.find((col) => col.key === key);
+  if (!column) return true;
+  return column.visible;
+};
 // 查询参数
 const queryParams = reactive({
   classifyId: null,
@@ -285,13 +337,13 @@ const modelId = computed(() => {
 
 // 监听器
 watch(
-    () => props.model,
-    (newModel) => {
-      if (newModel && newModel.version) {
-        getList();
-      }
-    },
-    { deep: true }
+  () => props.model,
+  (newModel) => {
+    if (newModel && newModel.version) {
+      getList();
+    }
+  },
+  { deep: true }
 );
 
 // 方法
@@ -308,23 +360,24 @@ const getList = () => {
   loading.value = true;
   const mid = route.query.modelId;
   queryParams.modelId = mid;
-  let data =  [];
+  let data = [];
   if (data.length === 0 && props.model && props.model.version) {
-    data = [{
-      id: null,
-      modelId: mid,
-      modelName: props.model.name,
-      version: props.model.version,
-      status: 1,
-      description: '-',
-      createBy: props.model.createBy || '张三',
-      createTime: props.model.createTime || '2025-09-18 15:13',
-    }];
+    data = [
+      {
+        id: null,
+        modelId: mid,
+        modelName: props.model.name,
+        version: props.model.version,
+        status: 1,
+        description: "-",
+        createBy: props.model.createBy || "张三",
+        createTime: props.model.createTime || "2025-09-18 15:13",
+      },
+    ];
   }
   versionList.value = data;
   total.value = data.length;
   loading.value = false;
-
 };
 
 // 取消按钮
@@ -337,7 +390,7 @@ const cancel = () => {
 
 const handleCompare = (row) => {
   ElMessage.info("功能正在开发中");
-}
+};
 
 // 表单重置
 const reset = () => {
@@ -616,5 +669,25 @@ onMounted(() => {
     height: 1em;
     margin-right: 8px;
   }
+}
+
+.justify-between {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.justify-end {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.mb15 {
+  margin-bottom: 15px;
+}
+
+.top-right-btn {
+  display: flex;
+  align-items: center;
 }
 </style>
