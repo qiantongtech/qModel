@@ -71,6 +71,7 @@
             <el-button
               type="warning"
               plain
+              :disabled="multiple"
               @click="handleExport"
               v-hasPermi="['system:user:export']"
             >

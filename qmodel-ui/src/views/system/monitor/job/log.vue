@@ -120,6 +120,7 @@
                <el-button
                   type="warning"
                   plain
+                  :disabled="multiple"
                   icon="Download"
                   @click="handleExport"
                   v-hasPermi="['monitor:job:export']"

@@ -140,6 +140,7 @@
                <el-button
                   type="warning"
                   plain
+                  :disabled="multiple"
                   @click="handleExport"
                   v-hasPermi="['monitor:operlog:export']"
                >  <i class="iconfont-mini icon-daochu"></i>

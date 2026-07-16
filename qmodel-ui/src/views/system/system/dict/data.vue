@@ -109,6 +109,7 @@
                   <el-button
                      type="warning"
                      plain
+                     :disabled="multiple"
                      icon="Download"
                      @click="handleExport"
                      v-hasPermi="['system:dict:export']"
