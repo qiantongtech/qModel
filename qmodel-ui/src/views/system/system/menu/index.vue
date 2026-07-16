@@ -53,14 +53,19 @@
                   />
                </el-select>
             </el-form-item>
-            <el-form-item>
-               <el-button type="primary" @click="handleQuery" @mousedown="(e) => e.preventDefault()">
-                  <i class="iconfont-mini icon-a-chaxunxianxing mr5"></i>查询
-               </el-button>
-               <el-button @click="resetQuery" @mousedown="e => e.preventDefault()">
-                  <i class="iconfont-mini icon-a-shuaxinxianxing mr5"></i>重置
-               </el-button>
-            </el-form-item>
+           <el-form-item>
+             <el-button
+                 plain
+                 type="primary"
+                 @click="handleQuery"
+                 @mousedown="(e) => e.preventDefault()"
+             >
+               <i class="iconfont-mini icon-a-zu22377 mr5"></i>查询
+             </el-button>
+             <el-button @click="resetQuery" @mousedown="(e) => e.preventDefault()">
+               <i class="iconfont-mini icon-a-zu22378 mr5"></i>重置
+             </el-button>
+           </el-form-item>
          </el-form>
       </div>
       <div  class="pagecont-bottom">
@@ -105,12 +110,12 @@
                </template>
             </el-table-column>
             <el-table-column prop="orderNum" label="排序" align="center" width="60"></el-table-column>
-            <el-table-column prop="perms" label="权限标识" align="center" :show-overflow-tooltip="true">
+            <el-table-column prop="perms" label="权限标识" align="left" :show-overflow-tooltip="true">
                <template #default="scope">
                   <span>{{ scope.row.perms || "-" }}</span>
                </template>
             </el-table-column>
-            <el-table-column prop="component" label="组件路径" align="center" :show-overflow-tooltip="true">
+            <el-table-column prop="component" label="组件路径" align="left" :show-overflow-tooltip="true">
                <template #default="scope">
                   <span>{{ scope.row.component || "-" }}</span>
                </template>

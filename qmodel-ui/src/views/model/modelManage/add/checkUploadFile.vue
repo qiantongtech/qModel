@@ -54,6 +54,9 @@
           :file-size="500"
           :drag-flag="true"
           :is-show-tip="true"
+          :action-url="'/model/modelFileResource/checkUploadFile'"
+          @upload-success="handleUploadSuccess"
+          @upload-error="handleUploadError"
           @update:model-value="handleFileUpload"
           @update:file-name="handleFileName"
       ></FileUpload>
@@ -65,7 +68,6 @@
 import {ref, reactive, watch} from 'vue'
 import {Loading, CircleCheck, CircleClose, InfoFilled} from '@element-plus/icons-vue'
 import FileUpload from '@/components/ModelFileUpload/index.vue'
-import {checkUploadFile} from '@/api/model/fileResource'
 import {ElMessage} from 'element-plus'
 
 const emit = defineEmits(['fileChecked'])
@@ -102,19 +104,27 @@ const handleFileName = (name) => {
   fileName.value = name
 }
 
-const handleFileUpload = async (value) => {
-  if (!value) return
-
+const handleUploadSuccess = (res, file) => {
   checkStatus.value = 'checking'
+  if (file?.name) {
+    fileName.value = file.name
+  }
+  handleCheckResult(res)
+}
 
-  try {
-    const response = await fetch(value)
-    const blob = await response.blob()
-    const file = new File([blob], fileName.value || 'model.zip', {type: 'application/zip'})
-    const result = await checkUploadFile(file)
-    handleCheckResult(result)
-  } catch (error) {
-    handleCheckError(error)
+const handleUploadError = (error) => {
+  handleCheckError(error)
+}
+
+const handleFileUpload = (value) => {
+  if (!value) {
+    checkStatus.value = 'initial'
+    fileName.value = ''
+    filePath.value = ''
+    checkDetail.mainPy = false
+    checkDetail.predictFunction = false
+    checkDetail.requirementsTxt = false
+    emit('fileChecked', {pass: false, errors: []})
   }
 }
 
@@ -128,7 +138,7 @@ const handleCheckResult = (result) => {
     checkDetail.predictFunction = true
     checkDetail.requirementsTxt = true
     ElMessage.success('算法包校验通过')
-    emit('fileChecked', {pass: true, filePath: data.filePath})
+    emit('fileChecked', {pass: true, filePath: data.filePath, fileName: data.fileName})
   } else {
     checkStatus.value = 'failed'
     checkDetail.mainPy = data.mainPy || false

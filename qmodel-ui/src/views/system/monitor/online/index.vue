@@ -52,14 +52,19 @@
                   @keyup.enter="handleQuery"
                />
             </el-form-item>
-            <el-form-item>
-               <el-button type="primary" @click="handleQuery" @mousedown="(e) => e.preventDefault()">
-                  <i class="iconfont-mini icon-a-chaxunxianxing mr5"></i>查询
-               </el-button>
-               <el-button @click="resetQuery" @mousedown="e => e.preventDefault()">
-                  <i class="iconfont-mini icon-a-shuaxinxianxing mr5"></i>重置
-               </el-button>
-            </el-form-item>
+           <el-form-item>
+             <el-button
+                 plain
+                 type="primary"
+                 @click="handleQuery"
+                 @mousedown="(e) => e.preventDefault()"
+             >
+               <i class="iconfont-mini icon-a-zu22377 mr5"></i>查询
+             </el-button>
+             <el-button @click="resetQuery" @mousedown="(e) => e.preventDefault()">
+               <i class="iconfont-mini icon-a-zu22378 mr5"></i>重置
+             </el-button>
+           </el-form-item>
          </el-form>
       </div>
       <div  class="pagecont-bottom">
@@ -76,13 +81,13 @@
                   <span>{{ (pageNum - 1) * pageSize + scope.$index + 1 }}</span>
                </template>
             </el-table-column>
-            <el-table-column label="会话编号" align="center" prop="tokenId" :show-overflow-tooltip="true" />
-            <el-table-column label="登录名称" align="center" prop="userName" :show-overflow-tooltip="true" />
-            <el-table-column label="所属部门" align="center" prop="deptName" :show-overflow-tooltip="true" />
-            <el-table-column label="主机" align="center" prop="ipaddr" :show-overflow-tooltip="true" />
-            <el-table-column label="登录地点" align="center" prop="loginLocation" :show-overflow-tooltip="true" />
-            <el-table-column label="操作系统" align="center" prop="os" :show-overflow-tooltip="true" />
-            <el-table-column label="浏览器" align="center" prop="browser" :show-overflow-tooltip="true" />
+            <el-table-column label="会话编号" align="center" prop="tokenId" :show-overflow-tooltip="{ effect: 'light' }" />
+            <el-table-column label="登录名称" align="center" prop="userName" :show-overflow-tooltip="{ effect: 'light' }" />
+            <el-table-column label="所属部门" align="center" prop="deptName" :show-overflow-tooltip="{ effect: 'light' }" />
+            <el-table-column label="主机" align="center" prop="ipaddr" :show-overflow-tooltip="{ effect: 'light' }" />
+            <el-table-column label="登录地点" align="center" prop="loginLocation" :show-overflow-tooltip="{ effect: 'light' }" />
+            <el-table-column label="操作系统" align="center" prop="os" :show-overflow-tooltip="{ effect: 'light' }" />
+            <el-table-column label="浏览器" align="center" prop="browser" :show-overflow-tooltip="{ effect: 'light' }" />
             <el-table-column label="登录时间" align="center" prop="loginTime" width="180">
                <template #default="scope">
                   <span>{{ parseTime(scope.row.loginTime) }}</span>

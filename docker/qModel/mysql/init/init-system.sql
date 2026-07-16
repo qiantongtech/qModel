@@ -306,7 +306,7 @@ INSERT INTO `system_dict_data` VALUES (98, 0, 'get', '0', 'model_access_mode', N
 INSERT INTO `system_dict_data` VALUES (99, 1, 'post', '1', 'model_access_mode', NULL, 'warning', 'N', '0', '小桐', '2026-01-20 15:35:56', '小桐', '2026-01-21 14:23:42', NULL);
 INSERT INTO `system_dict_data` VALUES (100, 2, 'put', '2', 'model_access_mode', NULL, 'warning', 'N', '0', '小桐', '2026-01-20 15:36:08', '小桐', '2026-01-21 14:24:40', NULL);
 INSERT INTO `system_dict_data` VALUES (101, 3, 'delete', '3', 'model_access_mode', NULL, 'danger', 'N', '0', '小桐', '2026-01-20 15:36:20', '小桐', '2026-01-21 14:23:52', NULL);
-INSERT INTO `system_dict_data` VALUES (102, 0, 'API', 'API', 'model_access_type', NULL, 'primary', 'Y', '0', 'admin', '2026-07-07 14:14:33', '小桐', '2026-07-09 19:02:13', 'API接口接入');
+INSERT INTO `system_dict_data` VALUES (102, 0, 'API', 'API', 'model_access_type', NULL, 'warning', 'Y', '0', 'admin', '2026-07-07 14:14:33', 'qModel', '2026-07-16 09:42:13', 'API接口接入');
 INSERT INTO `system_dict_data` VALUES (103, 1, 'Python', 'PYTHON', 'model_access_type', NULL, 'info', 'N', '0', 'admin', '2026-07-07 14:14:33', '小桐', '2026-07-09 19:03:47', 'Python本地接入');
 INSERT INTO `system_dict_data` VALUES (104, 0, 'application/json', 'application/json', 'content_type', NULL, 'primary', 'Y', '0', 'admin', '2026-07-07 14:14:33', NULL, NULL, 'application/json');
 INSERT INTO `system_dict_data` VALUES (105, 1, 'application/x-www-form-urlencoded', 'application/x-www-form-urlencoded', 'content_type', NULL, 'warning', 'N', '0', 'admin', '2026-07-07 14:14:33', NULL, NULL, 'application/x-www-form-urlencoded');
@@ -663,7 +663,7 @@ INSERT INTO `system_menu` VALUES (2249, '历史记录', 2251, 5, 'operate', 'mod
 INSERT INTO `system_menu` VALUES (2250, '类目管理', 0, 10, 'model/modelClassify', NULL, NULL, 1, 0, NULL, 'M', '1', '1', '', 'category-management', 'admin', '2025-12-29 16:06:15', 'qModel', '2026-07-14 15:48:03', NULL);
 INSERT INTO `system_menu` VALUES (2251, '计算历史', 0, 13, 'model/operateList', NULL, NULL, 1, 0, NULL, 'M', '0', '0', NULL, 'calculate-history', 'admin', '2025-12-29 16:09:40', '小桐', '2025-12-31 10:02:09', NULL);
 INSERT INTO `system_menu` VALUES (2252, '模型计算', 0, 12, 'model/computeList', NULL, NULL, 1, 0, NULL, 'M', '0', '0', NULL, 'model-calculation', 'admin', '2025-12-29 16:18:52', '小桐', '2026-01-06 12:01:25', NULL);
-INSERT INTO `system_menu` VALUES (2253, 'API 服务网关', 2243, 4, 'apiGateway', 'model/apiGateway/index', NULL, 1, 0, NULL, 'C', '0', '0', '', NULL, 'qModel', '2026-07-14 15:49:56', 'qModel', '2026-07-14 15:50:05', NULL);
+INSERT INTO `system_menu` VALUES (2253, '模型审批', 2243, 4, 'approval', 'model/approval/index', NULL, 1, 0, NULL, 'C', '0', '0', '', NULL, 'qModel', '2026-07-14 15:49:56', 'qModel', '2026-07-16 10:14:01', NULL);
 
 -- ----------------------------
 -- Table structure for system_notice

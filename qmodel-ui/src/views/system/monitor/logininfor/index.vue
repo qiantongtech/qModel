@@ -79,14 +79,19 @@
                   :default-time="[new Date(2000, 1, 1, 0, 0, 0), new Date(2000, 1, 1, 23, 59, 59)]"
                ></el-date-picker>
             </el-form-item>
-            <el-form-item>
-               <el-button type="primary" @click="handleQuery" @mousedown="(e) => e.preventDefault()">
-                  <i class="iconfont-mini icon-a-chaxunxianxing mr5"></i>查询
-               </el-button>
-               <el-button @click="resetQuery" @mousedown="e => e.preventDefault()">
-                  <i class="iconfont-mini icon-a-shuaxinxianxing mr5"></i>重置
-               </el-button>
-            </el-form-item>
+           <el-form-item>
+             <el-button
+                 plain
+                 type="primary"
+                 @click="handleQuery"
+                 @mousedown="(e) => e.preventDefault()"
+             >
+               <i class="iconfont-mini icon-a-zu22377 mr5"></i>查询
+             </el-button>
+             <el-button @click="resetQuery" @mousedown="(e) => e.preventDefault()">
+               <i class="iconfont-mini icon-a-zu22378 mr5"></i>重置
+             </el-button>
+           </el-form-item>
          </el-form>
       </div>
       <div  class="pagecont-bottom">
