@@ -438,6 +438,7 @@ CREATE TABLE `model_file_resource`  (
 -- Records of model_file_resource
 -- ----------------------------
 
+INSERT INTO `model_file_resource` VALUES (5, 10, '水位流量插值算法.zip', 'main.py', 'temp/2026/07/17/水位流量插值算法.zip', 'D:\\xmdm\\qModel\\upload\\temp\\extract\\5\\requirements.txt', 1, 2, NULL, NULL, NULL, 'D:\\xmdm\\qModel\\upload\\temp\\extract\\5\\main.py', NULL, NULL, 2, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, NULL, 1, 0, 'qModel', 1, '2026-07-16 15:49:49', 'system', 1, '2026-07-17 09:24:46', NULL, '{\n  \"title\": \"runScript接口入参\",\n  \"type\": \"object\",\n  \"required\": [\"H\"],\n  \"properties\": {\n    \"H\": {\n      \"title\": \"参数H\",\n      \"description\": \"自定义数值参数\",\n      \"type\": \"integer\",\n      \"example\": 3\n    }\n  }\n}', NULL);
 
 -- ----------------------------
 -- Table structure for model_build_log
