@@ -67,7 +67,7 @@
         width="200px"
       >
         <template #default="scope">
-          {{ scope.row.version }}
+          <span class="ellipsis-text">{{ scope.row.version }}</span>
         </template>
       </el-table-column>
       <el-table-column
@@ -76,8 +76,13 @@
         align="left"
         prop="description"
         width="250px"
-        :show-overflow-tooltip="{ effect: 'light' }"
-      />
+      >
+        <template #default="scope">
+          <el-tooltip :content="scope.row.description || '-'" placement="top" effect="light">
+            <span class="ellipsis-text">{{ scope.row.description }}</span>
+          </el-tooltip>
+        </template>
+      </el-table-column>
       <el-table-column
         v-if="getColumnVisibility(3)"
         label="创建人"
@@ -85,7 +90,7 @@
         prop="updateBy"
       >
         <template #default="scope">
-          <span>{{ scope.row.createBy }}</span>
+          <span class="ellipsis-text">{{ scope.row.createBy }}</span>
         </template>
       </el-table-column>
       <el-table-column
@@ -664,6 +669,15 @@ onMounted(() => {
 </script>
 
 <style lang="scss" scoped>
+.ellipsis-text {
+  display: inline-block;
+  width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  vertical-align: middle;
+}
+
 .app-container {
   min-height: 0;
   background: transparent;
