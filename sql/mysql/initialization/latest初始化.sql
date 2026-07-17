@@ -2029,6 +2029,12 @@ INSERT INTO `system_role_menu` VALUES (4, 2249);
 INSERT INTO `system_role_menu` VALUES (4, 2251);
 INSERT INTO `system_role_menu` VALUES (4, 2252);
 INSERT INTO `system_role_menu` VALUES (4, 2253);
+INSERT INTO `system_role_menu` VALUES (4, 2254);
+INSERT INTO `system_role_menu` VALUES (4, 2255);
+INSERT INTO `system_role_menu` VALUES (4, 2256);
+INSERT INTO `system_role_menu` VALUES (4, 2257);
+INSERT INTO `system_role_menu` VALUES (4, 2258);
+INSERT INTO `system_role_menu` VALUES (4, 2259);
 
 -- ----------------------------
 -- Table structure for system_user

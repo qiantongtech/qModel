@@ -74,7 +74,7 @@
               type="primary"
               plain
               @click="handleAdd"
-              v-hasPermi="['model:classify:add']"
+              v-hasPermi="['model:classify:classify:add']"
               @mousedown="(e) => e.preventDefault()"
             >
               <i class="iconfont-mini icon-xinzeng mr5"></i>新增
@@ -174,21 +174,21 @@
               type="primary"
               icon="Plus"
               @click="handleAdd(scope.row)"
-              v-hasPermi="['model:classify:add']"
+              v-hasPermi="['model:classify:classify:add']"
             >新增</el-button>
             <el-button
               link
               type="primary"
               icon="Edit"
               @click="handleUpdate(scope.row)"
-              v-hasPermi="['model:classify:edit']"
+              v-hasPermi="['model:classify:classify:edit']"
             >修改</el-button>
             <el-button
               link
               type="danger"
               icon="Delete"
               @click="handleDelete(scope.row)"
-              v-hasPermi="['model:classify:remove']"
+              v-hasPermi="['model:classify:classify:remove']"
             >删除</el-button>
           </template>
         </el-table-column>
