@@ -226,7 +226,7 @@
                             placement="bottom"
                             :width="150"
                             trigger="click"
-                            v-if="scope.row.roleId !== 1"
+                            v-if="scope.row.roleId !== 1 && hasPermi(['system:role:edit'])"
                         >
                             <template #reference>
                                 <el-button link type="primary" icon="ArrowDown">更多</el-button>
@@ -431,6 +431,7 @@
         deptTreeSelect
     } from '@/api/system/system/role.js';
     import { roleMenuTreeselect, treeselect as menuTreeselect } from '@/api/system/system/menu.js';
+    import useUserStore from '@/store/system/user';
 
     const router = useRouter();
     const { proxy } = getCurrentInstance();
@@ -777,6 +778,17 @@
     function cancelDataScope() {
         openDataScope.value = false;
         reset();
+    }
+
+    function hasPermi(permission) {
+      // 从 store 或 localStorage 获取用户权限列表
+      const permissions = useUserStore().permissions;
+
+      if (Array.isArray(permission)) {
+        return permission.some((p) => permissions.includes(p));
+      } else {
+        return permissions.includes(permission);
+      }
     }
 
     getList();

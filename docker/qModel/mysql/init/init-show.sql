@@ -237,8 +237,8 @@ INSERT INTO `model` VALUES (5, NULL, 10, '随机森林算法', 'RANDOM_FOREST', 
 INSERT INTO `model` VALUES (6, NULL, 11, '降维算法', 'DIMENSIONALITY_REDUCTION', 'PYTHON', 'V1.2', '吴同', 2, '[{\"name\":\"运维\"},{\"name\":\"流水线\"}]', '/2026/05/11/6a01a9d8e4b0d389f4f52e91.png', '数据流水线状态管理接口', 1, 0, '吴同', 6, '2026-07-10 06:00:00', '吴同', 1, '2026-07-10 11:48:13', 'PUT请求+Query注入示例');
 INSERT INTO `model` VALUES (7, NULL, 10, '梯度增强算法', 'GRADIENT_BOOSTING', 'PYTHON', 'V3.0', '吴同', 3, '[{\"name\":\"生成\"},{\"name\":\"多模态\"}]', '/2026/05/11/6a01a9a0e4b0d389f4f52e90.png', '支持文本/图像/音频生成的多模态模型', 1, 0, '吴同', 7, '2026-07-10 05:00:00', '吴同', 1, '2026-07-10 11:48:12', '复杂动态Token示例-组合认证');
 INSERT INTO `model` VALUES (8, NULL, 1, '工业大模型-固定 Token', 'INDUSTRY_MODEL_TEST', 'API', 'v1.0', '吴同', 1, '[{\"name\":\"工业\"}]', '/2026/05/11/6a01a9a0e4b0d389f4f52e99.png', NULL, 1, 0, '吴同', 1, '2026-07-10 11:55:55', '吴同', 1, '2026-07-10 16:20:19', NULL);
-INSERT INTO `model` VALUES (9, NULL, 17, 'qKnow_周报模板测试', 'QKNOW_WEEKLYREPORT', 'API', 'V1.0', '吴同', 0, '[{\"name\":\"周报\"},{\"name\":\"测试\"}]', NULL, '获取 qKnow 系统中的周报模板测试数据', 1, 0, '吴同', 1, '2026-07-16 14:25:22', '吴同', 1, '2026-07-16 15:33:44', NULL);
-INSERT INTO `model` VALUES (10, NULL, 2, '水位流量插值算法', 'WQIA', 'PYTHON', 'V1.0', '吴同', 1, '[{\"name\":\"水位流量\"},{\"name\":\"预测\"}]', NULL, NULL, 1, 0, '吴同', 1, '2026-07-16 15:09:06', '吴同', 1, '2026-07-16 15:14:37', NULL);
+INSERT INTO `model` VALUES (9, NULL, 17, 'qKnow_周报模板测试', 'QKNOW_WEEKLYREPORT', 'API', 'V1.0', '吴同', 0, '[{\"name\":\"周报\"},{\"name\":\"测试\"}]', '/2026/05/11/6a01a9a0e4b0d389f4f52f99.png', '获取 qKnow 系统中的周报模板测试数据', 1, 0, '吴同', 1, '2026-07-16 14:25:22', 'qModel', 1, '2026-07-16 15:58:40', NULL);
+INSERT INTO `model` VALUES (10, NULL, 2, '水位流量插值算法', 'WQIA', 'PYTHON', 'V1.0', '吴同', 1, '[{\"name\":\"水位流量\"},{\"name\":\"预测\"}]', '/2026/05/11/6a01a9a0e4b0d389f4f5ff99.png', NULL, 1, 0, '吴同', 1, '2026-07-16 15:09:06', 'system', 1, '2026-07-17 09:24:46', NULL);
 
 -- ----------------------------
 -- Table structure for model_config
@@ -498,7 +498,7 @@ CREATE TABLE `model_file_resource`  (
 -- ----------------------------
 -- Records of model_file_resource
 -- ----------------------------
-INSERT INTO `model_file_resource` VALUES (5, 10, '水位流量插值算法.zip', 'main.py', 'temp/2026/07/17/水位流量插值算法.zip', 'D:\\xmdm\\qModel\\upload\\temp\\extract\\5\\requirements.txt', 1, 2, NULL, NULL, NULL, 'D:\\xmdm\\qModel\\upload\\temp\\extract\\5\\main.py', NULL, NULL, 2, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, NULL, 1, 0, 'qModel', 1, '2026-07-16 15:49:49', 'system', 1, '2026-07-17 09:24:46', NULL, '{\n  \"title\": \"runScript接口入参\",\n  \"type\": \"object\",\n  \"required\": [\"H\"],\n  \"properties\": {\n    \"H\": {\n      \"title\": \"参数H\",\n      \"description\": \"自定义数值参数\",\n      \"type\": \"integer\",\n      \"example\": 3\n    }\n  }\n}', NULL);
+INSERT INTO `model_file_resource` VALUES (5, 10, '水位流量插值算法.zip', 'main.py', 'temp/2026/07/17/水位流量插值算法.zip', '/usr/app/jar/upload/temp/extract/5/requirements.txt', 1, 2, NULL, NULL, NULL, '/usr/app/jar/upload/temp/extract/5/main.py', NULL, NULL, 2, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, NULL, 1, 0, 'qModel', 1, '2026-07-16 15:49:49', 'system', 1, '2026-07-17 17:49:47', NULL, '{\n  \"title\": \"runScript接口入参\",\n  \"type\": \"object\",\n  \"required\": [\"H\"],\n  \"properties\": {\n    \"H\": {\n      \"title\": \"参数H\",\n      \"description\": \"自定义数值参数\",\n      \"type\": \"integer\",\n      \"example\": 3\n    }\n  }\n}', NULL);
 
 -- ----------------------------
 -- Table structure for model_build_log
