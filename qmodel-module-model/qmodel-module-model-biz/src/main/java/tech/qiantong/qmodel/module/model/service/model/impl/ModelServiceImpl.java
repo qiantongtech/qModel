@@ -92,6 +92,11 @@ public class ModelServiceImpl extends ServiceImpl<ModelMapper, ModelDO> implemen
 
     @Override
     public Long createModel(ModelSaveReqVO createReqVO) {
+
+        if (ACCESS_TYPE_PYTHON.equals(createReqVO.getAccessType())) {
+            throw new ServiceException("由于服务器资源问题，暂不支持在演示站中创建Python类型模型，请在本地搭建使用。");
+        }
+
         ModelDO modelDO = BeanUtils.toBean(createReqVO, ModelDO.class);
         modelMapper.insert(modelDO);
         Long modelId = modelDO.getId();
@@ -108,6 +113,9 @@ public class ModelServiceImpl extends ServiceImpl<ModelMapper, ModelDO> implemen
 
     @Override
     public int updateModel(ModelSaveReqVO updateReqVO) {
+        if (ACCESS_TYPE_PYTHON.equals(updateReqVO.getAccessType())) {
+            throw new ServiceException("由于服务器资源问题，暂不支持在演示站中创建Python类型模型，请在本地搭建使用。");
+        }
         ModelDO updateObj = BeanUtils.toBean(updateReqVO, ModelDO.class);
         modelMapper.updateById(updateObj);
         Long modelId = updateReqVO.getId();

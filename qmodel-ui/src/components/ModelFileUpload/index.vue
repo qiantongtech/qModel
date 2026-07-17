@@ -127,6 +127,11 @@ const props = defineProps({
   actionUrl: {
     type: String,
     default: ""
+  },
+  // 上传前回调，返回 false 则阻止上传
+  beforeUpload: {
+    type: Function,
+    default: null
   }
 });
 
@@ -166,6 +171,13 @@ watch(() => props.modelValue, val => {
 
 // 上传前校检格式和大小
 function handleBeforeUpload(file) {
+  // 自定义上传前回调
+  if (props.beforeUpload) {
+    const result = props.beforeUpload(file);
+    if (result === false) {
+      return false;
+    }
+  }
   // 校检文件类型
   if (props.fileType.length) {
     const fileName = file.name.split('.');

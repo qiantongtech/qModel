@@ -55,6 +55,7 @@
           :drag-flag="true"
           :is-show-tip="true"
           :action-url="'/model/modelFileResource/checkUploadFile'"
+          :before-upload="handleBeforeUpload"
           @upload-success="handleUploadSuccess"
           @upload-error="handleUploadError"
           @update:model-value="handleFileUpload"
@@ -71,6 +72,11 @@ import FileUpload from '@/components/ModelFileUpload/index.vue'
 import {ElMessage} from 'element-plus'
 
 const emit = defineEmits(['fileChecked'])
+
+const handleBeforeUpload = () => {
+  ElMessage.warning('由于服务器资源问题，暂不支持在演示站中创建Python类型模型，请在本地搭建使用。')
+  return false
+}
 
 const props = defineProps({
   fileResource: {
@@ -129,6 +135,10 @@ const handleFileUpload = (value) => {
 }
 
 const handleCheckResult = (result) => {
+  if(true){
+    ElMessage.success('由于服务器资源问题，暂不支持在演示站中创建Python类型模型，请在本地搭建使用。')
+    return
+  }
   const data = result.data || {}
   fileName.value = data.fileName || fileName.value
   filePath.value = data.filePath || ''
