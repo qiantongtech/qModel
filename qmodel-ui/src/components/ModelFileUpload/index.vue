@@ -195,10 +195,16 @@ function handleExceed() {
 }
 
 // 上传失败
-function handleUploadError(err) {
+function handleUploadError(err, file) {
   if (props.actionUrl) {
     number.value--;
     proxy.$modal.closeLoading();
+    // 上传失败时也清理 el-upload 内部列表，避免 limit 限制
+    proxy.$refs.fileUpload.clearFiles()
+    // 显示文件名，方便用户删除后重新上传
+    if (file?.name) {
+      fileList.value = [{ name: file.name, url: '', uid: file.uid }]
+    }
     emit("uploadError", err);
     return;
   }
@@ -210,6 +216,19 @@ function handleUploadSuccess(res, file) {
   if (props.actionUrl) {
     number.value--;
     proxy.$modal.closeLoading();
+    // 先把文件从 el-upload 内部列表移除，避免 limit 限制导致无法重新上传
+    proxy.$refs.fileUpload.clearFiles()
+    // actionUrl 模式下，将文件加入自定义 fileList，支持删除后重新上传
+    if (res?.data?.filePath || res?.url) {
+      const filePath = res.data?.filePath || res.url
+      const fileName = res.data?.fileName || file.name
+      fileList.value = [{ name: fileName, url: filePath, uid: file.uid }]
+      emit("update:modelValue", filePath);
+      emit("update:fileName", fileName);
+    } else {
+      // 业务失败（如校验未通过），也要显示文件名，方便用户删除后重新上传
+      fileList.value = [{ name: file.name, url: '', uid: file.uid }]
+    }
     emit("uploadSuccess", res, file);
     return;
   }

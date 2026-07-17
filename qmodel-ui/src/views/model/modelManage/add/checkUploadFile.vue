@@ -228,7 +228,7 @@ defineExpose({
 .conditions-title {
   display: flex;
   align-items: center;
-  font-size: 18px;
+  font-size: 16px;
   font-weight: 700;
   color: #1e40af;
   margin-bottom: 16px;
