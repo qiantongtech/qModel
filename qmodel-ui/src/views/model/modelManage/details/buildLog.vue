@@ -118,7 +118,9 @@ const getBuildLogs = () => {
   listModelBuildLog({
     modelId: props.modelId,
     pageNum: 1,
-    pageSize: 10
+    pageSize: 10,
+    orderByColumn: "createTime",
+    isAsc: "desc"
   }).then(response => {
     const data = response.data.rows || [];
 
