@@ -166,7 +166,7 @@
                 />
                 <el-table-column label="创建时间" align="center" prop="createTime">
                     <template #default="scope">
-                        <span>{{ parseTime(scope.row.createTime, '{y}-{m}-{d}') }}</span>
+                        <span>{{ parseTime(scope.row.createTime, '{y}-{m}-{d} {h}:{i}') }}</span>
                     </template>
                 </el-table-column>
                 <el-table-column

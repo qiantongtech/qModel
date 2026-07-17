@@ -170,14 +170,12 @@
                 @sort-change="handleSortChange"
             >
                 <el-table-column type="selection" width="55" align="center" />
-                <el-table-column label="编号" align="center" prop="infoId" />
+                <el-table-column label="编号" align="center" width="100" prop="infoId" />
                 <el-table-column
                     label="用户名称"
                     width="120"
                     prop="nickName"
                     :show-overflow-tooltip="{ effect: 'light' }"
-                    sortable="custom"
-                    :sort-orders="['descending', 'ascending']"
                 />
                 <el-table-column
                     label="地址"
@@ -222,7 +220,7 @@
                     width="180"
                 >
                     <template #default="scope">
-                        <span>{{ parseTime(scope.row.loginTime) }}</span>
+                        <span>{{ parseTime(scope.row.loginTime, '{y}-{m}-{d} {h}:{i}') }}</span>
                     </template>
                 </el-table-column>
             </el-table>

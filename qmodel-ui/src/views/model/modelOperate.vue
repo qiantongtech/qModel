@@ -71,7 +71,7 @@
         </el-row>
 
         <el-table v-loading="loading" :data="operateList" @selection-change="handleSelectionChange">
-            <el-table-column label="操作模块" align="center" prop="moduleName"> </el-table-column>
+            <el-table-column label="操作模块" prop="moduleName"> </el-table-column>
             <el-table-column label="操作类型" align="center" prop="type">
                 <template #default="scope">
                     <dict-tag
@@ -80,7 +80,7 @@
                     />
                 </template>
             </el-table-column>
-            <el-table-column label="操作内容" align="center" prop="content" />
+            <el-table-column label="操作内容" prop="content" />
             <el-table-column label="操作人员" align="center" prop="createBy" />
             <el-table-column label="操作日期" align="center" prop="createTime" />
             <el-table-column label="操作" align="center" class-name="small-padding fixed-width">

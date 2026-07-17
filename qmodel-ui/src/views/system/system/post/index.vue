@@ -173,7 +173,7 @@
                 </el-table-column>
                 <el-table-column label="创建时间" align="center" prop="createTime" width="180">
                     <template #default="scope">
-                        <span>{{ parseTime(scope.row.createTime) }}</span>
+                        <span>{{ parseTime(scope.row.createTime, '{y}-{m}-{d} {h}:{i}') }}</span>
                     </template>
                 </el-table-column>
                 <el-table-column

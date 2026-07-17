@@ -182,7 +182,7 @@
                 @sort-change="handleSortChange"
             >
                 <el-table-column type="selection" width="50" align="center" />
-                <el-table-column label="编号" align="center" prop="operId" />
+                <el-table-column label="编号" align="center" width="100" prop="operId" />
                 <el-table-column
                     label="系统模块"
                     align="center"
@@ -195,13 +195,11 @@
                     </template>
                 </el-table-column>
                 <el-table-column
-                    label="操作人员"
+                    label="创建人"
                     align="center"
                     width="110"
                     prop="operName"
                     :show-overflow-tooltip="{ effect: 'light' }"
-                    sortable="custom"
-                    :sort-orders="['descending', 'ascending']"
                 />
                 <el-table-column
                     label="操作地址"
@@ -216,7 +214,7 @@
                     </template>
                 </el-table-column>
                 <el-table-column
-                    label="操作日期"
+                    label="创建日期"
                     align="center"
                     prop="operTime"
                     width="180"
@@ -224,7 +222,7 @@
                     :sort-orders="['descending', 'ascending']"
                 >
                     <template #default="scope">
-                        <span>{{ parseTime(scope.row.operTime) }}</span>
+                        <span>{{ parseTime(scope.row.operTime, '{y}-{m}-{d} {h}:{i}') }}</span>
                     </template>
                 </el-table-column>
                 <el-table-column
