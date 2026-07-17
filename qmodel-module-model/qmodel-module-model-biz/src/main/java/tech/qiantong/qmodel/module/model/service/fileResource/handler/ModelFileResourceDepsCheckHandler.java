@@ -475,6 +475,8 @@ public class ModelFileResourceDepsCheckHandler {
         cmdArgs.add("-m");
         cmdArgs.add("pip");
         cmdArgs.add("install");
+        cmdArgs.add("--break-system-packages");
+        cmdArgs.add("-v");
         cmdArgs.add("-i");
         cmdArgs.add(mirror);
         cmdArgs.addAll(missingPackages);
