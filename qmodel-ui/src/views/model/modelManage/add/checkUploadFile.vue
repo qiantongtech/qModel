@@ -55,6 +55,7 @@
           :drag-flag="true"
           :is-show-tip="true"
           :action-url="'/model/modelFileResource/checkUploadFile'"
+          :before-upload="handleBeforeUpload"
           @upload-success="handleUploadSuccess"
           @upload-error="handleUploadError"
           @update:model-value="handleFileUpload"
@@ -71,6 +72,8 @@ import FileUpload from '@/components/ModelFileUpload/index.vue'
 import {ElMessage} from 'element-plus'
 
 const emit = defineEmits(['fileChecked'])
+
+
 
 const props = defineProps({
   fileResource: {
@@ -129,6 +132,7 @@ const handleFileUpload = (value) => {
 }
 
 const handleCheckResult = (result) => {
+
   const data = result.data || {}
   fileName.value = data.fileName || fileName.value
   filePath.value = data.filePath || ''
@@ -228,7 +232,7 @@ defineExpose({
 .conditions-title {
   display: flex;
   align-items: center;
-  font-size: 18px;
+  font-size: 16px;
   font-weight: 700;
   color: #1e40af;
   margin-bottom: 16px;

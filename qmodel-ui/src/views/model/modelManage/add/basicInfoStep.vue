@@ -333,7 +333,7 @@ defineExpose({
   flex-direction: column;
 
   :deep(.el-form-item) {
-    margin-bottom: 10px;
+    margin-bottom: 16px;
   }
 }
 

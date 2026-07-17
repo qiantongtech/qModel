@@ -594,7 +594,7 @@ INSERT INTO `system_menu` VALUES (2020, '主体管理修改', 2017, 3, '#', NULL
 INSERT INTO `system_menu` VALUES (2021, '主体管理删除', 2017, 4, '#', NULL, NULL, 1, 0, NULL, 'F', '0', '0', 'ca:subject:remove', '#', 'admin', '2024-08-18 01:49:32', NULL, NULL, NULL);
 INSERT INTO `system_menu` VALUES (2022, '主体管理导出', 2017, 5, '#', NULL, NULL, 1, 0, NULL, 'F', '0', '0', 'ca:subject:export', '#', 'admin', '2024-08-18 01:49:32', NULL, NULL, NULL);
 INSERT INTO `system_menu` VALUES (2023, '实例演示', 0, 80, 'example', NULL, NULL, 1, 0, NULL, 'M', '1', '1', NULL, 'code_new_iocn', 'admin', '2024-08-20 22:54:16', '小桐', '2026-01-08 17:35:00', NULL);
-INSERT INTO `system_menu` VALUES (2024, 'websocket', 2023, 0, 'websocket', 'example/websocket', NULL, 1, 0, NULL, 'C', '0', '0', NULL, NULL, 'admin', '2024-08-20 22:57:35', 'admin', '2024-08-20 22:58:19', NULL);
+INSERT INTO `system_menu` VALUES (2024, 'websocket', 2023, 0, 'websocket', 'example/websocket', NULL, 1, 0, NULL, 'C', '0', '0', '*:*:*', NULL, 'admin', '2024-08-20 22:57:35', '超级管理员', '2026-07-17 14:05:19', NULL);
 INSERT INTO `system_menu` VALUES (2025, '支付演示', 2023, 1, 'pay', 'example/pay', NULL, 1, 0, 'pay', 'C', '0', '0', NULL, NULL, 'admin', '2024-08-25 16:33:48', NULL, NULL, NULL);
 INSERT INTO `system_menu` VALUES (2026, '应用管理', 1, 1, 'client', 'system/auth/client/index', NULL, 1, 0, NULL, 'C', '1', '1', 'auth:client:list', 'github', 'admin', '2024-08-31 14:33:05', '小桐', '2025-12-31 15:38:56', '应用管理菜单');
 INSERT INTO `system_menu` VALUES (2027, '应用管理查询', 2026, 1, '#', NULL, NULL, 1, 0, NULL, 'F', '0', '0', 'auth:client:query', '#', 'admin', '2024-08-31 14:33:05', NULL, NULL, NULL);
@@ -679,6 +679,31 @@ INSERT INTO `system_menu` VALUES (2250, '类目管理', 0, 10, 'model/modelClass
 INSERT INTO `system_menu` VALUES (2251, '计算历史', 0, 13, 'model/operateList', NULL, NULL, 1, 0, NULL, 'M', '0', '0', NULL, 'calculate-history', 'admin', '2025-12-29 16:09:40', '小桐', '2025-12-31 10:02:09', NULL);
 INSERT INTO `system_menu` VALUES (2252, '模型计算', 0, 12, 'model/computeList', NULL, NULL, 1, 0, NULL, 'M', '0', '0', NULL, 'model-calculation', 'admin', '2025-12-29 16:18:52', '小桐', '2026-01-06 12:01:25', NULL);
 INSERT INTO `system_menu` VALUES (2253, '模型审批', 2243, 4, 'approval', 'model/approval/index', NULL, 1, 0, NULL, 'C', '0', '0', '', NULL, 'qModel', '2026-07-14 15:49:56', 'qModel', '2026-07-16 10:14:01', NULL);
+
+INSERT INTO `system_menu` VALUES (2254, '模型文件部署', 2245, 1, 'modelFileResource', 'model/fileResource/index', NULL, 1, 0, NULL, 'C', '0', '0', 'model:fileResource:fileresource:list', '#', 'admin', '2026-07-17 13:38:23', '', NULL, '模型文件部署菜单');
+INSERT INTO `system_menu` VALUES (2255, '模型文件部署查询', 2254, 1, '#', '', NULL, 1, 0, NULL, 'F', '0', '0', 'model:fileResource:fileresource:query', '#', 'admin', '2026-07-17 13:38:23', '', NULL, '');
+INSERT INTO `system_menu` VALUES (2256, '模型文件部署新增', 2254, 2, '#', '', NULL, 1, 0, NULL, 'F', '0', '0', 'model:fileResource:fileresource:add', '#', 'admin', '2026-07-17 13:38:23', '', NULL, '');
+INSERT INTO `system_menu` VALUES (2257, '模型文件部署修改', 2254, 3, '#', '', NULL, 1, 0, NULL, 'F', '0', '0', 'model:fileResource:fileresource:edit', '#', 'admin', '2026-07-17 13:38:23', '', NULL, '');
+INSERT INTO `system_menu` VALUES (2258, '模型文件部署删除', 2254, 4, '#', '', NULL, 1, 0, NULL, 'F', '0', '0', 'model:fileResource:fileresource:remove', '#', 'admin', '2026-07-17 13:38:23', '', NULL, '');
+INSERT INTO `system_menu` VALUES (2259, '模型文件部署导出', 2254, 5, '#', '', NULL, 1, 0, NULL, 'F', '0', '0', 'model:fileResource:fileresource:export', '#', 'admin', '2026-07-17 13:38:23', '', NULL, '');
+INSERT INTO `system_menu` VALUES (2260, '模型文件部署导入', 2254, 6, '#', '', NULL, 1, 0, NULL, 'F', '0', '0', 'model:fileResource:fileresource:import', '#', 'admin', '2026-07-17 13:38:23', '', NULL, '');
+
+INSERT INTO `system_menu` VALUES (2261, '构建日志', 2243, 1, 'modelBuildLog', 'model/buildLog/index', NULL, 1, 0, NULL, 'C', '0', '0', 'model:buildLog:buildlog:list', '#', 'admin', '2026-07-17 13:39:16', '', NULL, '构建日志菜单');
+INSERT INTO `system_menu` VALUES (2262, '构建日志查询', 2261, 1, '#', '', NULL, 1, 0, NULL, 'F', '0', '0', 'model:buildLog:buildlog:query', '#', 'admin', '2026-07-17 13:39:16', '', NULL, '');
+INSERT INTO `system_menu` VALUES (2263, '构建日志新增', 2261, 2, '#', '', NULL, 1, 0, NULL, 'F', '0', '0', 'model:buildLog:buildlog:add', '#', 'admin', '2026-07-17 13:39:16', '', NULL, '');
+INSERT INTO `system_menu` VALUES (2264, '构建日志修改', 2261, 3, '#', '', NULL, 1, 0, NULL, 'F', '0', '0', 'model:buildLog:buildlog:edit', '#', 'admin', '2026-07-17 13:39:16', '', NULL, '');
+INSERT INTO `system_menu` VALUES (2265, '构建日志删除', 2261, 4, '#', '', NULL, 1, 0, NULL, 'F', '0', '0', 'model:buildLog:buildlog:remove', '#', 'admin', '2026-07-17 13:39:16', '', NULL, '');
+INSERT INTO `system_menu` VALUES (2266, '构建日志导出', 2261, 5, '#', '', NULL, 1, 0, NULL, 'F', '0', '0', 'model:buildLog:buildlog:export', '#', 'admin', '2026-07-17 13:39:16', '', NULL, '');
+INSERT INTO `system_menu` VALUES (2267, '构建日志导入', 2261, 6, '#', '', NULL, 1, 0, NULL, 'F', '0', '0', 'model:buildLog:buildlog:import', '#', 'admin', '2026-07-17 13:39:16', '', NULL, '');
+
+INSERT INTO `system_menu` VALUES (2268, '模型调用历史记录', 2243, 1, 'modelInvokeHistory', 'model/invokeHistory/index', NULL, 1, 0, NULL, 'C', '0', '0', 'model:invokeHistory:invokehistory:list', '#', 'admin', '2026-07-17 13:39:50', '', NULL, '模型调用历史记录菜单');
+INSERT INTO `system_menu` VALUES (2269, '模型调用历史记录查询', 2268, 1, '#', '', NULL, 1, 0, NULL, 'F', '0', '0', 'model:invokeHistory:invokehistory:query', '#', 'admin', '2026-07-17 13:39:50', '', NULL, '');
+INSERT INTO `system_menu` VALUES (2270, '模型调用历史记录新增', 2268, 2, '#', '', NULL, 1, 0, NULL, 'F', '0', '0', 'model:invokeHistory:invokehistory:add', '#', 'admin', '2026-07-17 13:39:50', '', NULL, '');
+INSERT INTO `system_menu` VALUES (2271, '模型调用历史记录修改', 2268, 3, '#', '', NULL, 1, 0, NULL, 'F', '0', '0', 'model:invokeHistory:invokehistory:edit', '#', 'admin', '2026-07-17 13:39:50', '', NULL, '');
+INSERT INTO `system_menu` VALUES (2272, '模型调用历史记录删除', 2268, 4, '#', '', NULL, 1, 0, NULL, 'F', '0', '0', 'model:invokeHistory:invokehistory:remove', '#', 'admin', '2026-07-17 13:39:50', '', NULL, '');
+INSERT INTO `system_menu` VALUES (2273, '模型调用历史记录导出', 2268, 5, '#', '', NULL, 1, 0, NULL, 'F', '0', '0', 'model:invokeHistory:invokehistory:export', '#', 'admin', '2026-07-17 13:39:50', '', NULL, '');
+INSERT INTO `system_menu` VALUES (2274, '模型调用历史记录导入', 2268, 6, '#', '', NULL, 1, 0, NULL, 'F', '0', '0', 'model:invokeHistory:invokehistory:import', '#', 'admin', '2026-07-17 13:39:50', '', NULL, '');
+
 
 -- ----------------------------
 -- Table structure for system_notice
@@ -794,9 +819,9 @@ CREATE TABLE `system_role` (
 -- Records of system_role
 -- ----------------------------
 INSERT INTO `system_role` VALUES (1, '超级管理员', 'admin', 1, '1', 1, 1, '0', '0', 'admin', '2024-05-06 06:12:17', NULL, NULL, '超级管理员');
-INSERT INTO `system_role` VALUES (2, '普通角色', 'common', 2, '1', 1, 1, '0', '0', 'admin', '2024-05-06 06:12:17', 'admin', '2025-11-11 14:45:59', '普通角色');
-INSERT INTO `system_role` VALUES (3, '默认角色', 'default', 3, '1', 1, 1, '0', '0', 'admin', '2024-12-20 14:54:59', 'admin', '2025-02-14 15:31:42', NULL);
-INSERT INTO `system_role` VALUES (4, '组态图和图元管理测试', 'topo', 0, '1', 1, 1, '0', '0', 'admin', '2025-09-18 13:02:58', 'admin', '2025-09-18 13:57:37', NULL);
+INSERT INTO `system_role` VALUES (2, '普通角色', 'common', 3, '1', 1, 1, '0', '0', 'admin', '2024-05-06 06:12:17', 'qModel', '2026-07-17 11:11:00', '普通角色');
+INSERT INTO `system_role` VALUES (3, '默认角色', 'default', 4, '1', 1, 1, '0', '0', 'admin', '2024-12-20 14:54:59', 'admin', '2025-02-14 15:31:42', NULL);
+INSERT INTO `system_role` VALUES (4, '系统管理员', 'system', 2, '1', 1, 1, '0', '0', 'qModel', '2026-07-17 11:21:31', 'qModel', '2026-07-17 14:00:22', '系统管理员');
 
 -- ----------------------------
 -- Table structure for system_role_dept
@@ -1133,6 +1158,148 @@ INSERT INTO `system_role_menu` VALUES (3, 2138);
 INSERT INTO `system_role_menu` VALUES (3, 2139);
 INSERT INTO `system_role_menu` VALUES (3, 2140);
 INSERT INTO `system_role_menu` VALUES (3, 2141);
+INSERT INTO `system_role_menu` VALUES (4, 1);
+INSERT INTO `system_role_menu` VALUES (4, 2);
+INSERT INTO `system_role_menu` VALUES (4, 3);
+INSERT INTO `system_role_menu` VALUES (4, 100);
+INSERT INTO `system_role_menu` VALUES (4, 101);
+INSERT INTO `system_role_menu` VALUES (4, 102);
+INSERT INTO `system_role_menu` VALUES (4, 103);
+INSERT INTO `system_role_menu` VALUES (4, 104);
+INSERT INTO `system_role_menu` VALUES (4, 105);
+INSERT INTO `system_role_menu` VALUES (4, 106);
+INSERT INTO `system_role_menu` VALUES (4, 107);
+INSERT INTO `system_role_menu` VALUES (4, 109);
+INSERT INTO `system_role_menu` VALUES (4, 110);
+INSERT INTO `system_role_menu` VALUES (4, 111);
+INSERT INTO `system_role_menu` VALUES (4, 112);
+INSERT INTO `system_role_menu` VALUES (4, 113);
+INSERT INTO `system_role_menu` VALUES (4, 114);
+INSERT INTO `system_role_menu` VALUES (4, 115);
+INSERT INTO `system_role_menu` VALUES (4, 116);
+INSERT INTO `system_role_menu` VALUES (4, 117);
+INSERT INTO `system_role_menu` VALUES (4, 1000);
+INSERT INTO `system_role_menu` VALUES (4, 1001);
+INSERT INTO `system_role_menu` VALUES (4, 1002);
+INSERT INTO `system_role_menu` VALUES (4, 1003);
+INSERT INTO `system_role_menu` VALUES (4, 1004);
+INSERT INTO `system_role_menu` VALUES (4, 1005);
+INSERT INTO `system_role_menu` VALUES (4, 1006);
+INSERT INTO `system_role_menu` VALUES (4, 1007);
+INSERT INTO `system_role_menu` VALUES (4, 1008);
+INSERT INTO `system_role_menu` VALUES (4, 1009);
+INSERT INTO `system_role_menu` VALUES (4, 1010);
+INSERT INTO `system_role_menu` VALUES (4, 1011);
+INSERT INTO `system_role_menu` VALUES (4, 1012);
+INSERT INTO `system_role_menu` VALUES (4, 1013);
+INSERT INTO `system_role_menu` VALUES (4, 1014);
+INSERT INTO `system_role_menu` VALUES (4, 1015);
+INSERT INTO `system_role_menu` VALUES (4, 1016);
+INSERT INTO `system_role_menu` VALUES (4, 1017);
+INSERT INTO `system_role_menu` VALUES (4, 1018);
+INSERT INTO `system_role_menu` VALUES (4, 1019);
+INSERT INTO `system_role_menu` VALUES (4, 1020);
+INSERT INTO `system_role_menu` VALUES (4, 1021);
+INSERT INTO `system_role_menu` VALUES (4, 1022);
+INSERT INTO `system_role_menu` VALUES (4, 1023);
+INSERT INTO `system_role_menu` VALUES (4, 1024);
+INSERT INTO `system_role_menu` VALUES (4, 1025);
+INSERT INTO `system_role_menu` VALUES (4, 1026);
+INSERT INTO `system_role_menu` VALUES (4, 1027);
+INSERT INTO `system_role_menu` VALUES (4, 1028);
+INSERT INTO `system_role_menu` VALUES (4, 1029);
+INSERT INTO `system_role_menu` VALUES (4, 1030);
+INSERT INTO `system_role_menu` VALUES (4, 1031);
+INSERT INTO `system_role_menu` VALUES (4, 1032);
+INSERT INTO `system_role_menu` VALUES (4, 1033);
+INSERT INTO `system_role_menu` VALUES (4, 1034);
+INSERT INTO `system_role_menu` VALUES (4, 1035);
+INSERT INTO `system_role_menu` VALUES (4, 1036);
+INSERT INTO `system_role_menu` VALUES (4, 1037);
+INSERT INTO `system_role_menu` VALUES (4, 1038);
+INSERT INTO `system_role_menu` VALUES (4, 1046);
+INSERT INTO `system_role_menu` VALUES (4, 1047);
+INSERT INTO `system_role_menu` VALUES (4, 1048);
+INSERT INTO `system_role_menu` VALUES (4, 1049);
+INSERT INTO `system_role_menu` VALUES (4, 1050);
+INSERT INTO `system_role_menu` VALUES (4, 1051);
+INSERT INTO `system_role_menu` VALUES (4, 1052);
+INSERT INTO `system_role_menu` VALUES (4, 1053);
+INSERT INTO `system_role_menu` VALUES (4, 1054);
+INSERT INTO `system_role_menu` VALUES (4, 1055);
+INSERT INTO `system_role_menu` VALUES (4, 1056);
+INSERT INTO `system_role_menu` VALUES (4, 1057);
+INSERT INTO `system_role_menu` VALUES (4, 1058);
+INSERT INTO `system_role_menu` VALUES (4, 1059);
+INSERT INTO `system_role_menu` VALUES (4, 1060);
+INSERT INTO `system_role_menu` VALUES (4, 2000);
+INSERT INTO `system_role_menu` VALUES (4, 2001);
+INSERT INTO `system_role_menu` VALUES (4, 2002);
+INSERT INTO `system_role_menu` VALUES (4, 2003);
+INSERT INTO `system_role_menu` VALUES (4, 2004);
+INSERT INTO `system_role_menu` VALUES (4, 2005);
+INSERT INTO `system_role_menu` VALUES (4, 2006);
+INSERT INTO `system_role_menu` VALUES (4, 2007);
+INSERT INTO `system_role_menu` VALUES (4, 2008);
+INSERT INTO `system_role_menu` VALUES (4, 2009);
+INSERT INTO `system_role_menu` VALUES (4, 2010);
+INSERT INTO `system_role_menu` VALUES (4, 2011);
+INSERT INTO `system_role_menu` VALUES (4, 2012);
+INSERT INTO `system_role_menu` VALUES (4, 2013);
+INSERT INTO `system_role_menu` VALUES (4, 2014);
+INSERT INTO `system_role_menu` VALUES (4, 2015);
+INSERT INTO `system_role_menu` VALUES (4, 2016);
+INSERT INTO `system_role_menu` VALUES (4, 2017);
+INSERT INTO `system_role_menu` VALUES (4, 2018);
+INSERT INTO `system_role_menu` VALUES (4, 2019);
+INSERT INTO `system_role_menu` VALUES (4, 2020);
+INSERT INTO `system_role_menu` VALUES (4, 2021);
+INSERT INTO `system_role_menu` VALUES (4, 2022);
+INSERT INTO `system_role_menu` VALUES (4, 2023);
+INSERT INTO `system_role_menu` VALUES (4, 2024);
+INSERT INTO `system_role_menu` VALUES (4, 2025);
+INSERT INTO `system_role_menu` VALUES (4, 2026);
+INSERT INTO `system_role_menu` VALUES (4, 2027);
+INSERT INTO `system_role_menu` VALUES (4, 2028);
+INSERT INTO `system_role_menu` VALUES (4, 2029);
+INSERT INTO `system_role_menu` VALUES (4, 2030);
+INSERT INTO `system_role_menu` VALUES (4, 2031);
+INSERT INTO `system_role_menu` VALUES (4, 2062);
+INSERT INTO `system_role_menu` VALUES (4, 2063);
+INSERT INTO `system_role_menu` VALUES (4, 2064);
+INSERT INTO `system_role_menu` VALUES (4, 2065);
+INSERT INTO `system_role_menu` VALUES (4, 2066);
+INSERT INTO `system_role_menu` VALUES (4, 2067);
+INSERT INTO `system_role_menu` VALUES (4, 2068);
+INSERT INTO `system_role_menu` VALUES (4, 2069);
+INSERT INTO `system_role_menu` VALUES (4, 2070);
+INSERT INTO `system_role_menu` VALUES (4, 2071);
+INSERT INTO `system_role_menu` VALUES (4, 2072);
+INSERT INTO `system_role_menu` VALUES (4, 2073);
+INSERT INTO `system_role_menu` VALUES (4, 2075);
+INSERT INTO `system_role_menu` VALUES (4, 2076);
+INSERT INTO `system_role_menu` VALUES (4, 2084);
+INSERT INTO `system_role_menu` VALUES (4, 2085);
+INSERT INTO `system_role_menu` VALUES (4, 2086);
+INSERT INTO `system_role_menu` VALUES (4, 2087);
+INSERT INTO `system_role_menu` VALUES (4, 2088);
+INSERT INTO `system_role_menu` VALUES (4, 2089);
+INSERT INTO `system_role_menu` VALUES (4, 2092);
+INSERT INTO `system_role_menu` VALUES (4, 2123);
+INSERT INTO `system_role_menu` VALUES (4, 2124);
+INSERT INTO `system_role_menu` VALUES (4, 2125);
+INSERT INTO `system_role_menu` VALUES (4, 2126);
+INSERT INTO `system_role_menu` VALUES (4, 2127);
+INSERT INTO `system_role_menu` VALUES (4, 2128);
+INSERT INTO `system_role_menu` VALUES (4, 2135);
+INSERT INTO `system_role_menu` VALUES (4, 2136);
+INSERT INTO `system_role_menu` VALUES (4, 2137);
+INSERT INTO `system_role_menu` VALUES (4, 2138);
+INSERT INTO `system_role_menu` VALUES (4, 2139);
+INSERT INTO `system_role_menu` VALUES (4, 2140);
+INSERT INTO `system_role_menu` VALUES (4, 2141);
+INSERT INTO `system_role_menu` VALUES (4, 2190);
+INSERT INTO `system_role_menu` VALUES (4, 2191);
 INSERT INTO `system_role_menu` VALUES (4, 2192);
 INSERT INTO `system_role_menu` VALUES (4, 2193);
 INSERT INTO `system_role_menu` VALUES (4, 2194);
@@ -1156,6 +1323,24 @@ INSERT INTO `system_role_menu` VALUES (4, 2218);
 INSERT INTO `system_role_menu` VALUES (4, 2219);
 INSERT INTO `system_role_menu` VALUES (4, 2220);
 INSERT INTO `system_role_menu` VALUES (4, 2221);
+INSERT INTO `system_role_menu` VALUES (4, 2236);
+INSERT INTO `system_role_menu` VALUES (4, 2237);
+INSERT INTO `system_role_menu` VALUES (4, 2238);
+INSERT INTO `system_role_menu` VALUES (4, 2239);
+INSERT INTO `system_role_menu` VALUES (4, 2240);
+INSERT INTO `system_role_menu` VALUES (4, 2241);
+INSERT INTO `system_role_menu` VALUES (4, 2242);
+INSERT INTO `system_role_menu` VALUES (4, 2243);
+INSERT INTO `system_role_menu` VALUES (4, 2244);
+INSERT INTO `system_role_menu` VALUES (4, 2245);
+INSERT INTO `system_role_menu` VALUES (4, 2246);
+INSERT INTO `system_role_menu` VALUES (4, 2247);
+INSERT INTO `system_role_menu` VALUES (4, 2248);
+INSERT INTO `system_role_menu` VALUES (4, 2249);
+INSERT INTO `system_role_menu` VALUES (4, 2250);
+INSERT INTO `system_role_menu` VALUES (4, 2251);
+INSERT INTO `system_role_menu` VALUES (4, 2252);
+INSERT INTO `system_role_menu` VALUES (4, 2253);
 
 -- ----------------------------
 -- Table structure for system_user
@@ -1188,18 +1373,8 @@ CREATE TABLE `system_user` (
 -- ----------------------------
 -- Records of system_user
 -- ----------------------------
-INSERT INTO `system_user` VALUES (1, 103, 'qModel', 'qModel', '00', 'support@qiantong.tech', '19951942682', '1', NULL, '$2a$10$butlDwq0TSIeP/rT9PGx6u571M.2VE.VsTAPoSSMOyQ0jmTc9TEyy', '0', '0', '127.0.0.1', '2026-07-07 17:17:27', '小桐', '2024-05-06 06:12:17', NULL, '2026-07-07 17:17:25', '管理员', NULL);
-INSERT INTO `system_user` VALUES (746, 105, 'bf2', '冰凤2', '00', 'bf1@qq.com', '15666666666', '0', NULL, '$2a$10$nK.l4FTmawh45nZnOmn4Le8lk9Otw/AbrDBfr31Qji1015a/bW72e', '0', '0', '127.0.0.1', '2025-09-25 13:52:09', '小桐', '2024-05-06 06:12:17', 'admin', '2025-09-25 13:52:09', '测试员', NULL);
-INSERT INTO `system_user` VALUES (749, 104, '陈锦尧', '17351555046', '00', NULL, '17351555046', '0', NULL, '$2a$10$dDcEvUlsZW16jXJa79dBuONL.YZloAAT607ZoyFyrBkd/hZJ.kfCy', '0', '0', NULL, NULL, '小桐', '2025-01-17 15:53:58', 'admin', '2025-02-06 15:38:26', NULL, NULL);
-INSERT INTO `system_user` VALUES (750, 103, 'jinpeng', '金鹏', '00', NULL, '15951995970', '0', NULL, '$2a$10$Y2q8oI7LzS1ACaQG5KtUEuHZ0JFO71R.oE7mFO8hUyb/tAdkYScfa', '0', '0', '127.0.0.1', '2025-04-28 17:40:33', '小桐', '2025-02-04 16:56:39', 'admin', '2025-04-28 17:40:34', NULL, NULL);
-INSERT INTO `system_user` VALUES (751, 103, 'muyuanxiang', '穆远祥', '00', NULL, '18599297916', '0', NULL, '$2a$10$Agn.bofA2qGoPNzYjJVne.KfYpIWDAzNH4Kf1GazgDzpD55mOAjX6', '0', '0', NULL, NULL, '小桐', '2025-02-10 13:58:41', NULL, NULL, NULL, NULL);
-INSERT INTO `system_user` VALUES (752, 852, 'liuchanglei', '刘长磊', '00', NULL, '18240679712', '0', NULL, '$2a$10$bcMDapX9AZlG5c5.zFUSyeYC2IBlziPwnbUVnzSHabF.PPGRpz0sO', '0', '0', '127.0.0.1', '2025-02-13 10:19:52', '小桐', '2025-02-11 13:38:43', NULL, '2025-02-13 10:19:51', NULL, NULL);
-INSERT INTO `system_user` VALUES (755, 852, '张冬冬', '张冬冬', '00', NULL, '13213118204', '0', NULL, '$2a$10$fne9FkTU2AhLeNouSBxHBuF.zI4FkazYagSS.kRpH8NEaoEYoXaQ2', '0', '0', '127.0.0.1', '2025-03-07 17:00:47', '小桐', '2025-02-12 09:47:54', 'admin', '2025-03-07 17:00:47', NULL, NULL);
-INSERT INTO `system_user` VALUES (756, 102, 'zyg', '张雨果', '00', NULL, '17760752680', '0', NULL, '$2a$10$yyS.DVfJ81ArgD3P5IRvcur3ui19nEns8z9/Me5mHzNEZa.O8d1Jy', '0', '0', '127.0.0.1', '2025-09-18 13:56:24', '小桐', '2025-09-18 13:02:01', 'admin', '2025-09-18 13:56:27', '123', NULL);
-INSERT INTO `system_user` VALUES (757, 100, 'chuhongen', '楚洪恩', '00', NULL, '15539056859', '0', NULL, '$2a$10$Rg2utB7rOyEY22vSIGosQ.0H25boy5IncmVm3Pcvq3VrSWTI1ywdG', '0', '0', '127.0.0.1', '2025-10-29 10:47:39', '小桐', '2025-09-23 14:19:21', NULL, '2025-10-29 10:47:37', NULL, NULL);
-INSERT INTO `system_user` VALUES (758, 100, 'wangyu', '王禹', '00', NULL, '13951171340', '0', NULL, '$2a$10$IFZCQy65rgVMMBqdpL7WYeGPzmavEX5Npygv359/pbCIgPSVoN6tS', '0', '0', '127.0.0.1', '2025-09-28 09:32:32', '小桐', '2025-09-23 14:20:13', NULL, '2025-09-28 09:32:31', NULL, NULL);
-INSERT INTO `system_user` VALUES (760, 100, 'chengguishun', '程桂顺', '00', NULL, '18256679835', '0', NULL, '$2a$10$GthBi0nmv8GGnxeyCI7yCe.D86JzuX/K2TfCJFpxPF6yZkBew9yUy', '0', '0', '127.0.0.1', '2025-11-12 09:34:47', '小桐', '2025-09-30 15:30:57', NULL, '2025-11-12 09:34:46', NULL, NULL);
-INSERT INTO `system_user` VALUES (762, 100, 'panlong', '潘龙', '00', NULL, '15026084418', '0', NULL, '$2a$10$IQNgBO6dH06oeX0vy9BoQOMSXr/dB3PCTRMbN5lNdAHHlnwcfH.TG', '0', '0', '127.0.0.1', '2025-11-10 14:28:17', '小桐', '2025-10-29 10:55:04', NULL, '2025-11-10 14:28:18', NULL, NULL);
+INSERT INTO `system_user` VALUES (1, 103, 'admin', '超级管理员', '00', NULL, '13812345678', '0', NULL, '$2a$10$rCwuIzApQ0YwaQPD8ivtSeOGvpXpjo2ZVRx8/iSFV0TiyUZmmjTL2', '0', '0', '127.0.0.1', '2026-07-17 14:03:41', 'qModel', '2026-07-17 10:47:27', 'qModel', '2026-07-17 14:03:40', '超级管理员', NULL);
+INSERT INTO `system_user` VALUES (2, 103, 'qModel', 'qModel', '00', 'support@qiantong.tech', '19951942682', '1', NULL, '$2a$10$butlDwq0TSIeP/rT9PGx6u571M.2VE.VsTAPoSSMOyQ0jmTc9TEyy', '0', '0', '127.0.0.1', '2026-07-17 14:05:30', '小桐', '2024-05-06 06:12:17', 'qModel', '2026-07-17 14:05:30', '管理员', NULL);
 
 -- ----------------------------
 -- Table structure for system_user_post
@@ -1236,20 +1411,6 @@ CREATE TABLE `system_user_role` (
 -- Records of system_user_role
 -- ----------------------------
 INSERT INTO `system_user_role` VALUES (1, 1);
-INSERT INTO `system_user_role` VALUES (1, 4);
-INSERT INTO `system_user_role` VALUES (2, 2);
-INSERT INTO `system_user_role` VALUES (729, 2);
-INSERT INTO `system_user_role` VALUES (730, 2);
-INSERT INTO `system_user_role` VALUES (731, 2);
-INSERT INTO `system_user_role` VALUES (733, 2);
-INSERT INTO `system_user_role` VALUES (734, 2);
-INSERT INTO `system_user_role` VALUES (737, 2);
-INSERT INTO `system_user_role` VALUES (738, 4);
-INSERT INTO `system_user_role` VALUES (739, 2);
-INSERT INTO `system_user_role` VALUES (739, 4);
-INSERT INTO `system_user_role` VALUES (740, 2);
-INSERT INTO `system_user_role` VALUES (740, 4);
-INSERT INTO `system_user_role` VALUES (742, 2);
-INSERT INTO `system_user_role` VALUES (744, 2);
+INSERT INTO `system_user_role` VALUES (2, 4);
 
 SET FOREIGN_KEY_CHECKS = 1;
