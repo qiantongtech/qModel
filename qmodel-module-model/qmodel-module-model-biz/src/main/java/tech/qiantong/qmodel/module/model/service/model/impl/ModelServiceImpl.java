@@ -33,11 +33,13 @@
 package tech.qiantong.qmodel.module.model.service.model.impl;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.ObjectUtil;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.extern.slf4j.Slf4j;
@@ -64,6 +66,7 @@ import tech.qiantong.qmodel.module.model.service.classify.IModelClassifyService;
 import tech.qiantong.qmodel.module.model.service.config.IModelConfigService;
 import tech.qiantong.qmodel.module.model.service.model.IModelService;
 import tech.qiantong.qmodel.module.model.service.fileResource.IModelFileResourceService;
+import tech.qiantong.qmodel.module.model.enums.AccessTypeEnum;
 
 @Slf4j
 @Service
@@ -76,8 +79,6 @@ public class ModelServiceImpl extends ServiceImpl<ModelMapper, ModelDO> implemen
 
     @Resource
     private IModelClassifyService modelClassifyService;
-
-    private static final String ACCESS_TYPE_PYTHON = "PYTHON";
 
     @Resource
     private ModelConfigMapper modelConfigMapper;
@@ -99,7 +100,7 @@ public class ModelServiceImpl extends ServiceImpl<ModelMapper, ModelDO> implemen
         modelMapper.insert(modelDO);
         Long modelId = modelDO.getId();
 
-        if (ACCESS_TYPE_PYTHON.equals(createReqVO.getAccessType())) {
+        if (AccessTypeEnum.PYTHON.getType().equals(createReqVO.getAccessType())) {
             if (StringUtils.isEmpty(createReqVO.getFilePath())) {
                 throw new ServiceException("Python类型模型必须上传文件");
             }
@@ -111,12 +112,12 @@ public class ModelServiceImpl extends ServiceImpl<ModelMapper, ModelDO> implemen
 
     @Override
     public int updateModel(ModelSaveReqVO updateReqVO) {
-        
+
         ModelDO updateObj = BeanUtils.toBean(updateReqVO, ModelDO.class);
         modelMapper.updateById(updateObj);
         Long modelId = updateReqVO.getId();
 
-        if (ACCESS_TYPE_PYTHON.equals(updateReqVO.getAccessType())) {
+        if (AccessTypeEnum.PYTHON.getType().equals(updateReqVO.getAccessType())) {
             modelFileResourceService.saveFileResourceFromModel(updateReqVO, modelId);
         }
 
@@ -125,6 +126,27 @@ public class ModelServiceImpl extends ServiceImpl<ModelMapper, ModelDO> implemen
 
     @Override
     public int removeModel(Collection<Long> idList) {
+        if (CollectionUtil.isEmpty(idList)) {
+            return 0;
+        }
+        List<ModelDO> modelList = modelMapper.selectBatchIds(idList);
+        for (ModelDO model : modelList) {
+            if (AccessTypeEnum.PYTHON.getType().equals(model.getAccessType())) {
+                ModelFileResourceDO fileResource = modelFileResourceService.getOne(
+                        new QueryWrapper<ModelFileResourceDO>().eq("model_id", model.getId())
+                );
+                if (fileResource != null) {
+                    modelFileResourceService.removeModelFileResource(Collections.singletonList(fileResource.getId()));
+                }
+            } else if (AccessTypeEnum.API.getType().equals(model.getAccessType())) {
+                ModelConfigDO config = modelConfigMapper.selectOne(
+                        new QueryWrapper<ModelConfigDO>().eq("model_id", model.getId())
+                );
+                if (config != null) {
+                    modelConfigService.removeModelConfig(Collections.singletonList(config.getId()));
+                }
+            }
+        }
         return modelMapper.deleteBatchIds(idList);
     }
 
@@ -132,7 +154,7 @@ public class ModelServiceImpl extends ServiceImpl<ModelMapper, ModelDO> implemen
     public ModelDO getModelById(Long id) {
         ModelDO modelDO = modelMapper.selectById(id);
         if(ObjectUtil.isNotNull(modelDO)){
-            if(ACCESS_TYPE_PYTHON.equals(modelDO.getAccessType())){
+            if(AccessTypeEnum.PYTHON.getType().equals(modelDO.getAccessType())){
                 ModelFileResourceDO one = modelFileResourceService.getOne(new QueryWrapper<ModelFileResourceDO>()
                         .eq("model_id",id));
                 modelDO.setModelFileResourceRespVO(one);
