@@ -43,7 +43,9 @@
 
             <!-- 名称 -->
             <div class="task-name">
-              {{ viewInfo.name || "" }}
+              <el-tooltip :content="viewInfo.name || ''" placement="top" effect="light">
+                <span class="ellipsis-text">{{ viewInfo.name || "" }}</span>
+              </el-tooltip>
             </div>
           </div>
           <el-row :gutter="15" class="btn-style" style="margin-left: auto">
@@ -70,14 +72,20 @@
           <el-col :span="8">
             <div class="infotop-row border-top">
               <div class="infotop-row-lable">模型编号</div>
-              <div class="infotop-row-value">{{ viewInfo.code || "-" }}</div>
+              <div class="infotop-row-value">
+                <el-tooltip :content="viewInfo.code || '-'" placement="top" effect="light">
+                  <span class="ellipsis-text">{{ viewInfo.code || "-" }}</span>
+                </el-tooltip>
+              </div>
             </div>
           </el-col>
           <el-col :span="8">
             <div class="infotop-row border-top">
               <div class="infotop-row-lable">模型分类</div>
               <div class="infotop-row-value">
-                {{ viewInfo.classifyName || "-" }}
+                <el-tooltip :content="viewInfo.classifyName || '-'" placement="top" effect="light">
+                  <span class="ellipsis-text">{{ viewInfo.classifyName || "-" }}</span>
+                </el-tooltip>
               </div>
             </div>
           </el-col>
@@ -104,7 +112,9 @@
             <div class="infotop-row border-top">
               <div class="infotop-row-lable">版本号</div>
               <div class="infotop-row-value">
-                {{ viewInfo.version || "-" }}
+                <el-tooltip :content="viewInfo.version || '-'" placement="top" effect="light">
+                  <span class="ellipsis-text">{{ viewInfo.version || "-" }}</span>
+                </el-tooltip>
               </div>
             </div>
           </el-col>
@@ -112,7 +122,9 @@
             <div class="infotop-row border-top">
               <div class="infotop-row-lable">作者</div>
               <div class="infotop-row-value">
-                <span>{{ viewInfo.author || "-" }}</span>
+                <el-tooltip :content="viewInfo.author || '-'" placement="top" effect="light">
+                  <span class="ellipsis-text">{{ viewInfo.author || "-" }}</span>
+                </el-tooltip>
               </div>
             </div>
           </el-col>
@@ -138,7 +150,9 @@
             <div class="infotop-row border-top">
               <div class="infotop-row-lable">描述</div>
               <div class="infotop-row-value">
-                {{ viewInfo.description || "-" }}
+                <el-tooltip :content="viewInfo.description || '-'" placement="top" effect="light">
+                  <span class="ellipsis-text">{{ viewInfo.description || "-" }}</span>
+                </el-tooltip>
               </div>
             </div>
           </el-col>
@@ -147,7 +161,11 @@
           <el-col :span="24">
             <div class="infotop-row border-top">
               <div class="infotop-row-lable">备注</div>
-              <div class="infotop-row-value">{{ viewInfo.remark || "-" }}</div>
+              <div class="infotop-row-value">
+                <el-tooltip :content="viewInfo.remark || '-'" placement="top" effect="light">
+                  <span class="ellipsis-text">{{ viewInfo.remark || "-" }}</span>
+                </el-tooltip>
+              </div>
             </div>
           </el-col>
         </el-row>
@@ -591,6 +609,15 @@ onMounted(() => {
 </script>
 
 <style lang="scss" scoped>
+.ellipsis-text {
+  display: inline-block;
+  width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  vertical-align: middle;
+}
+
 .id-tag {
   display: inline-flex;
   justify-content: center;
