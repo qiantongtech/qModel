@@ -10,7 +10,7 @@ import tech.qiantong.qmodel.module.example.dal.dataobject.user.UserTypeDO;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2026-07-10T14:10:13+0800",
+    date = "2026-07-17T16:02:56+0800",
     comments = "version: 1.5.5.Final, compiler: javac, environment: Java 1.8.0_492 (Amazon.com Inc.)"
 )
 public class UserTypeConvertImpl implements UserTypeConvert {

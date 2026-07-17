@@ -38,6 +38,20 @@ docker exec -i qmodel-mysql57-1 mysql -uroot -p'lJ7gP0cA5dD2dA1hA3bJ' < ./qModel
 echo "✅ 阶段 B 完成：MySQL 已初始化"
 echo "----------------------------------------"
 
+
+# ==================================================================
+# 阶段 C: 重置 upload 数据
+# ==================================================================
+echo "🔄 阶段 C: 重置 upload 数据"
+
+# 重置数据
+cp -r ./qModel/server/upload-init/* ./qModel/server/upload
+sudo chown -R $USER:$USER ./qModel/server/upload
+
+
+echo "✅ 阶段 C 完成：upload 数据已初始化"
+echo "----------------------------------------"
+
 # 启动 qModel API 容器（忽略已停止的情况）
 docker start qmodel-qmodel-api-1
 
