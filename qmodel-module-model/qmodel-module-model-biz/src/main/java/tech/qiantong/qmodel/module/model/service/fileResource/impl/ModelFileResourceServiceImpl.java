@@ -68,13 +68,10 @@ import tech.qiantong.qmodel.module.model.controller.admin.model.vo.ModelSaveReqV
 import tech.qiantong.qmodel.module.model.dal.dataobject.fileResource.ModelFileResourceDO;
 import tech.qiantong.qmodel.module.model.dal.dataobject.model.ModelDO;
 import tech.qiantong.qmodel.module.model.dal.mapper.fileResource.ModelFileResourceMapper;
+import tech.qiantong.qmodel.module.model.enums.*;
 import tech.qiantong.qmodel.module.model.service.fileResource.IModelFileResourceService;
 import tech.qiantong.qmodel.file.util.FileUploadUtil;
 import org.dromara.x.file.storage.core.FileInfo;
-import tech.qiantong.qmodel.module.model.enums.ImageBuildStatusEnum;
-import tech.qiantong.qmodel.module.model.enums.InvokeStatusEnum;
-import tech.qiantong.qmodel.module.model.enums.InvokeTypeEnum;
-import tech.qiantong.qmodel.module.model.enums.ResourceTypeEnum;
 import tech.qiantong.qmodel.module.model.service.fileResource.handler.ModelFileResourceDepsCheckHandler;
 import tech.qiantong.qmodel.module.model.service.invokeHistory.IModelInvokeHistoryService;
 import tech.qiantong.qmodel.module.model.service.model.IModelService;
@@ -252,6 +249,9 @@ public class ModelFileResourceServiceImpl extends ServiceImpl<ModelFileResourceM
      */
     @Override
     public Map<String, Object> checkZipFile(MultipartFile file) {
+        if(true){
+            throw new ServiceException("由于服务器资源问题，暂不支持在演示站中创建Python类型模型，请在本地搭建使用。");
+        }
 
 
         Map<String, Object> result = new HashMap<>();
