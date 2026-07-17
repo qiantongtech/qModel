@@ -252,6 +252,8 @@ public class ModelFileResourceServiceImpl extends ServiceImpl<ModelFileResourceM
      */
     @Override
     public Map<String, Object> checkZipFile(MultipartFile file) {
+
+
         Map<String, Object> result = new HashMap<>();
         List<String> errors = new ArrayList<>();
         boolean pass = true;

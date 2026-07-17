@@ -399,7 +399,7 @@ const handleNextStep = async () => {
       activeStep.value++
     }
   } catch (error) {
-    // ElMessage.error(error?.message || '请检查填写内容')
+    ElMessage.error(error?.message || '请上传并检测通过 ZIP 模型包')
   }
 }
 
