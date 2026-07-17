@@ -475,7 +475,7 @@ public class ModelFileResourceDepsCheckHandler {
         cmdArgs.add("-m");
         cmdArgs.add("pip");
         cmdArgs.add("install");
-        cmdArgs.add("--break-system-packages");
+        cmdArgs.add("--break-system-packages");//docker镜像运行时，需要添加此参数，否则会报错，提示系统包已被冻结
         cmdArgs.add("-v");
         cmdArgs.add("-i");
         cmdArgs.add(mirror);
