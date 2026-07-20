@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14.001" viewBox="0 0 14 14.001">
+  <g id="构建日志" data-name="构建日志" transform="translate(0 0.001)">
+    <path d="M0 0H14V14H0Z" transform="translate(0 -0.001)" fill="#a6adb4" opacity="0.01"/>
+    <path fill-rule="evenodd" d="M1.2 2.05A1.35 1.35 0 0 1 2.55.7h8.9a1.35 1.35 0 0 1 1.35 1.35v9.9a1.35 1.35 0 0 1-1.35 1.35h-8.9a1.35 1.35 0 0 1-1.35-1.35Zm1.2 1.7h9.2v8.35H2.4Zm0-1.7v.6h9.2v-.6a.15.15 0 0 0-.15-.15h-8.9a.15.15 0 0 0-.15.15Z" fill="#a6adb4"/>
+    <path d="M3.2 5.25 4.85 6.9 3.2 8.55l.82.82L6.5 6.9 4.02 4.43Zm3.2 3.05h3.9v1.15H6.4Z" fill="#a6adb4"/>
+  </g>
+</svg>
