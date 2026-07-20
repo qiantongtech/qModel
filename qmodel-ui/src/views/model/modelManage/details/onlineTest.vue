@@ -2,7 +2,7 @@
   <div class="online-test">
     <div class="test-card">
       <div class="test-card-header">
-        <div class="h2-titles">测试请求</div>
+        <div class="h2-titles">调用请求</div>
         <el-button
           type="primary"
           size="default"
@@ -14,7 +14,28 @@
         </el-button>
       </div>
 
+      <div class="version-section">
+        <div class="h2-titles">调试版本</div>
+        <div class="version-select-row">
+          <span class="version-label">版本号</span>
+          <el-select
+            v-model="selectedVersion"
+            placeholder="请选择版本"
+            size="default"
+            style="width: 300px"
+          >
+            <el-option
+              v-for="ver in versionList"
+              :key="ver.version"
+              :label="ver.version"
+              :value="ver.version"
+            />
+          </el-select>
+        </div>
+      </div>
+
       <div class="form-body" v-loading="configLoading">
+        <div class="h2-titles">请求参数</div>
         <el-table
           v-if="fieldList.length > 0"
           :data="fieldList"
@@ -157,6 +178,13 @@ const logs = ref([]);
 const logRef = ref(null);
 const formValues = reactive({});
 const fieldTypeMap = reactive({});
+const selectedVersion = ref("v1.0.0");
+const versionList = ref([
+  {
+    version: "v1.0.0",
+    description: "调整初始值、预处理参数",
+  },
+]);
 
 const configData = reactive({
   inputSchema: "",
@@ -532,6 +560,23 @@ const formatJson = (str) => {
   justify-content: space-between;
   margin-bottom: 15px;
   flex-shrink: 0;
+}
+
+.version-section {
+  margin-bottom: 15px;
+}
+
+.version-select-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.version-label {
+  font-size: 14px;
+  color: #606266;
+  font-weight: 500;
 }
 
 .form-body {
