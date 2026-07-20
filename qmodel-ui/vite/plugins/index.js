@@ -42,7 +42,7 @@ export default function createVitePlugins(viteEnv, isBuild = false) {
   const vitePlugins = [vue()];
   vitePlugins.push(createAutoImport());
   vitePlugins.push(createSetupExtend());
-  vitePlugins.push(createSvgIcon(isBuild));
+  vitePlugins.push(createSvgIcon());
   // vitePlugins.push(
   //   visualizer({
   //     gzipSize: true,

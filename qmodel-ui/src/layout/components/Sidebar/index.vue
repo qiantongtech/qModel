@@ -31,8 +31,10 @@
 -->
 
 <template>
-  <div :class="{ 'has-logo': showLogo }"
-       :style="{ backgroundColor: sideTheme === 'theme-dark' ? variables.menuBackground : variables.menuLightBackground }">
+  <div
+      :class="{ 'has-logo': showLogo }"
+      :style="{ backgroundColor: sideTheme === 'theme-dark' ? variables.menuBackground : variables.menuLightBackground }"
+  >
     <logo v-if="showLogo" :collapse="isCollapse"/>
     <el-scrollbar :class="sideTheme" wrap-class="scrollbar-wrapper">
       <el-menu
@@ -103,6 +105,18 @@ const activeMenu = computed(() => {
 }
 
 :deep {
+  .el-menu-item .svg-icon,
+  .el-sub-menu__title .svg-icon {
+    color: inherit;
+  }
+
+  .el-menu-item.is-active .svg-icon,
+  .el-menu-item:hover .svg-icon,
+  .el-sub-menu.is-active > .el-sub-menu__title .svg-icon,
+  .el-sub-menu__title:hover .svg-icon {
+    color: currentColor;
+  }
+
   .el-menu-item{
     .svg-icon {
       width: 19px;
@@ -122,7 +136,5 @@ const activeMenu = computed(() => {
       }
     }
   }
-
-
 }
 </style>

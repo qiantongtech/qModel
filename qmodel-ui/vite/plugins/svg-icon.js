@@ -33,10 +33,23 @@
 import { createSvgIconsPlugin } from 'vite-plugin-svg-icons'
 import path from 'path'
 
-export default function createSvgIcon(isBuild) {
+export default function createSvgIcon() {
     return createSvgIconsPlugin({
-		iconDirs: [path.resolve(process.cwd(), 'src/assets/icons/svg')],
+        iconDirs: [path.resolve(process.cwd(), 'src/assets/icons/svg')],
         symbolId: 'icon-[dir]-[name]',
-        svgoOptions: isBuild
+        svgoOptions: {
+            plugins: [
+                {
+                    name: 'preset-default',
+                    params: {
+                        overrides: {
+                            convertColors: {
+                                currentColor: true
+                            }
+                        }
+                    }
+                }
+            ]
+        }
     })
 }
