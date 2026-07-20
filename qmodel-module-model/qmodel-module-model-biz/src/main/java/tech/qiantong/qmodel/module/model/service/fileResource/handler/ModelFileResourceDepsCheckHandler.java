@@ -316,7 +316,7 @@ public class ModelFileResourceDepsCheckHandler {
         try {
             return Files.walk(extractPath)
                     .filter(Files::isRegularFile)
-                    .filter(p -> p.getFileName().toString().equals("main.py"))
+                    .filter(p -> "main.py".equals(p.getFileName().toString()))
                     .findFirst()
                     .map(p -> p.toAbsolutePath().normalize().toString())
                     .orElse(null);
@@ -331,7 +331,7 @@ public class ModelFileResourceDepsCheckHandler {
         try {
             return Files.walk(extractPath)
                     .filter(Files::isRegularFile)
-                    .filter(p -> p.getFileName().toString().equals("requirements.txt"))
+                    .filter(p -> "requirements.txt".equals(p.getFileName().toString()))
                     .findFirst()
                     .map(p -> p.toAbsolutePath().normalize().toString())  // 返回规范化的绝对路径
                     .orElse(null);
