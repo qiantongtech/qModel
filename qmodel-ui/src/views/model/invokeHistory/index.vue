@@ -44,14 +44,20 @@
               @keyup.enter="handleQuery"
           />
         </el-form-item>
-        <el-form-item label="调用类型" prop="versionId">
-          <el-input
-              class="el-form-input-width"
-              v-model="queryParams.versionId"
-              placeholder="请输入模型版本id"
+        <el-form-item label="调用类型" prop="invokeType">
+          <el-select
+              v-model="queryParams.invokeType"
+              placeholder="请选择调用类型"
               clearable
-              @keyup.enter="handleQuery"
-          />
+              style="width: 210px"
+          >
+            <el-option
+                v-for="dict in invoke_type"
+                :key="dict.value"
+                :label="dict.label"
+                :value="dict.value"
+            />
+          </el-select>
         </el-form-item>
         <el-form-item>
           <el-button plain type="primary" @click="handleQuery" @mousedown="(e) => e.preventDefault()">
@@ -107,7 +113,7 @@
         </el-table-column>
         <el-table-column v-if="getColumnVisibility(6)" label="执行耗时" align="center" prop="duration" width="120">
           <template #default="scope">
-            {{ scope.row.duration +' ms' || '-' }}
+            {{ scope.row.duration ? scope.row.duration + ' ms' : '-' }}
           </template>
         </el-table-column>
         <el-table-column v-if="getColumnVisibility(7)" label="调用状态" align="center" prop="status" width="80">

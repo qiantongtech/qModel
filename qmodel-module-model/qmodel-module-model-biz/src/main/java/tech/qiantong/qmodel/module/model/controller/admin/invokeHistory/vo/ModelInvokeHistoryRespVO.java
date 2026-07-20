@@ -153,8 +153,9 @@ public class ModelInvokeHistoryRespVO implements Serializable {
     @Schema(description = "备注", example = "")
     private String remark;
 
-    /** 编码 */
+    @Schema(description = "模型编码", example = "")
     private String code;
-    /** 版本号 */
+
+    @Schema(description = "模型版本号", example = "")
     private String version;
 }

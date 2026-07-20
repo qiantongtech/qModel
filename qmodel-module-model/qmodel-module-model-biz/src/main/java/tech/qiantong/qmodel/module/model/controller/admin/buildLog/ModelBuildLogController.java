@@ -37,6 +37,9 @@ import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -56,9 +59,12 @@ import tech.qiantong.qmodel.common.exception.enums.GlobalErrorCodeConstants;
 import tech.qiantong.qmodel.module.model.controller.admin.buildLog.vo.ModelBuildLogPageReqVO;
 import tech.qiantong.qmodel.module.model.controller.admin.buildLog.vo.ModelBuildLogRespVO;
 import tech.qiantong.qmodel.module.model.controller.admin.buildLog.vo.ModelBuildLogSaveReqVO;
+import tech.qiantong.qmodel.module.model.controller.admin.invokeHistory.vo.ModelInvokeHistoryRespVO;
 import tech.qiantong.qmodel.module.model.convert.buildLog.ModelBuildLogConvert;
 import tech.qiantong.qmodel.module.model.dal.dataobject.buildLog.ModelBuildLogDO;
+import tech.qiantong.qmodel.module.model.dal.dataobject.model.ModelDO;
 import tech.qiantong.qmodel.module.model.service.buildLog.IModelBuildLogService;
+import tech.qiantong.qmodel.module.model.service.model.IModelService;
 
 /**
  * 构建日志Controller
@@ -73,13 +79,24 @@ import tech.qiantong.qmodel.module.model.service.buildLog.IModelBuildLogService;
 public class ModelBuildLogController extends BaseController {
     @Resource
     private IModelBuildLogService modelBuildLogService;
+    @Resource
+    private IModelService modelService;
 
     @Operation(summary = "查询构建日志列表")
     @PreAuthorize("@ss.hasPermi('model:buildLog:buildlog:list')")
     @GetMapping("/list")
     public CommonResult<PageResult<ModelBuildLogRespVO>> list(ModelBuildLogPageReqVO modelBuildLog) {
         PageResult<ModelBuildLogDO> page = modelBuildLogService.getModelBuildLogPage(modelBuildLog);
-        return CommonResult.success(BeanUtils.toBean(page, ModelBuildLogRespVO.class));
+        Map<Long, ModelDO> modelMap = modelService.getModelMap();
+        PageResult<ModelBuildLogRespVO> result = BeanUtils.toBean(page, ModelBuildLogRespVO.class, vo -> {
+            ModelDO modelDO = modelMap.get(vo.getModelId());
+            if (Objects.isNull(modelDO)) {
+                return;
+            }
+            vo.setCode(modelDO.getCode());
+            vo.setVersion(modelDO.getVersion());
+        });
+        return CommonResult.success(result);
     }
 
     @Operation(summary = "导出构建日志列表")

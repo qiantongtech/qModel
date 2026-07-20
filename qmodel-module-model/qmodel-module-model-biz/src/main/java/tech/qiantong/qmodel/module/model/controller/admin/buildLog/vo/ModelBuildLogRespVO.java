@@ -161,4 +161,10 @@ public class ModelBuildLogRespVO implements Serializable {
     @Schema(description = "备注", example = "")
     private String remark;
 
+    @Schema(description = "模型编码", example = "")
+    private String code;
+
+    @Schema(description = "模型版本号", example = "")
+    private String version;
+
 }
