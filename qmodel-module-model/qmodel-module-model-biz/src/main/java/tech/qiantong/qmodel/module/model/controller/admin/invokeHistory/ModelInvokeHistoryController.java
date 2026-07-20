@@ -37,6 +37,9 @@ import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -58,7 +61,9 @@ import tech.qiantong.qmodel.module.model.controller.admin.invokeHistory.vo.Model
 import tech.qiantong.qmodel.module.model.controller.admin.invokeHistory.vo.ModelInvokeHistorySaveReqVO;
 import tech.qiantong.qmodel.module.model.convert.invokeHistory.ModelInvokeHistoryConvert;
 import tech.qiantong.qmodel.module.model.dal.dataobject.invokeHistory.ModelInvokeHistoryDO;
+import tech.qiantong.qmodel.module.model.dal.dataobject.model.ModelDO;
 import tech.qiantong.qmodel.module.model.service.invokeHistory.IModelInvokeHistoryService;
+import tech.qiantong.qmodel.module.model.service.model.IModelService;
 
 /**
  * 模型调用历史记录Controller
@@ -73,13 +78,24 @@ import tech.qiantong.qmodel.module.model.service.invokeHistory.IModelInvokeHisto
 public class ModelInvokeHistoryController extends BaseController {
     @Resource
     private IModelInvokeHistoryService modelInvokeHistoryService;
+    @Resource
+    private IModelService modelService;
 
     @Operation(summary = "查询模型调用历史记录列表")
     @PreAuthorize("@ss.hasPermi('model:invokeHistory:invokehistory:list')")
     @GetMapping("/list")
     public CommonResult<PageResult<ModelInvokeHistoryRespVO>> list(ModelInvokeHistoryPageReqVO modelInvokeHistory) {
         PageResult<ModelInvokeHistoryDO> page = modelInvokeHistoryService.getModelInvokeHistoryPage(modelInvokeHistory);
-        return CommonResult.success(BeanUtils.toBean(page, ModelInvokeHistoryRespVO.class));
+        Map<Long, ModelDO> modelMap = modelService.getModelMap();
+        PageResult<ModelInvokeHistoryRespVO> result = BeanUtils.toBean(page, ModelInvokeHistoryRespVO.class, vo -> {
+            ModelDO modelDO = modelMap.get(vo.getModelId());
+            if (Objects.isNull(modelDO)) {
+                return;
+            }
+            vo.setCode(modelDO.getCode());
+            vo.setVersion(modelDO.getVersion());
+        });
+        return CommonResult.success(result);
     }
 
     @Operation(summary = "导出模型调用历史记录列表")
