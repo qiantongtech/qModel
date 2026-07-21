@@ -72,6 +72,14 @@
 
     <div class="pagecont-bottom">
       <div class="justify-between mb15">
+        <el-row :gutter="15" class="btn-style">
+          <el-col :span="1.5">
+            <el-button type="danger" plain :disabled="multiple" @click="handleDelete" v-hasPermi="['model:buildLog:buildlog:remove']"
+                       @mousedown="(e) => e.preventDefault()">
+              <i class="iconfont-mini icon-shanchu-huise mr5"></i>删除
+            </el-button>
+          </el-col>
+        </el-row>
         <div class="justify-end top-right-btn">
           <right-toolbar v-model:showSearch="showSearch" @queryTable="getList" :columns="columns"></right-toolbar>
         </div>
@@ -82,12 +90,14 @@
         <el-table-column v-if="getColumnVisibility(0)" label="编号" align="center" width="80" prop="id"
                          sortable="custom"
                          :sort-orders="['descending', 'ascending']"/>
-        <el-table-column v-if="getColumnVisibility(1)" label="模型名称" align="left" prop="modelName">
+        <el-table-column v-if="getColumnVisibility(1)" label="模型名称" align="left" prop="modelName"
+                         :show-overflow-tooltip="{ effect: 'light' }">
           <template #default="scope">
             {{ scope.row.modelName || '-' }}
           </template>
         </el-table-column>
-        <el-table-column v-if="getColumnVisibility(2)" label="模型编码" align="left" prop="code">
+        <el-table-column v-if="getColumnVisibility(2)" label="模型编码" align="left" prop="code"
+                         :show-overflow-tooltip="{ effect: 'light' }">
           <template #default="scope">
             {{ scope.row.code || '-' }}
           </template>
@@ -106,6 +116,11 @@
             />
           </template>
         </el-table-column>
+        <el-table-column v-if="getColumnVisibility(8)" label="创建人" align="center" prop="createBy" width="120">
+          <template #default="scope">
+            {{ scope.row.createBy || '-' }}
+          </template>
+        </el-table-column>
         <el-table-column v-if="getColumnVisibility(5)" label="开始时间" align="center" prop="createTime" width="180"
                          sortable="custom" :sort-orders="['descending', 'ascending']">
           <template #default="scope">
@@ -122,11 +137,7 @@
         <!--           {{ scope.row.duration ? scope.row.duration + ' ms' : '-' }}-->
         <!--         </template>-->
         <!--       </el-table-column>-->
-        <el-table-column v-if="getColumnVisibility(8)" label="创建人" align="center" prop="createBy" width="120">
-          <template #default="scope">
-            {{ scope.row.createBy || '-' }}
-          </template>
-        </el-table-column>
+
         <el-table-column v-if="getColumnVisibility(9)" label="操作" align="center"
                          class-name="small-padding fixed-width" fixed="right" width="140">
           <template #default="scope">
@@ -161,34 +172,62 @@
       </template>
       <el-form ref="modelBuildLogRef" :model="form" label-width="80px">
         <el-row :gutter="20">
-          <el-col :span="24">
+          <el-col :span="12">
+            <el-form-item label="编号" prop="id">
+              <div class="form-readonly">
+                {{ form.id || "-" }}
+              </div>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
             <el-form-item label="模型名称" prop="modelName">
               <div class="form-readonly">
                 {{ form.modelName || "-" }}
               </div>
             </el-form-item>
           </el-col>
-          <el-col :span="24">
+          <el-col :span="12">
             <el-form-item label="模型编码" prop="versionId">
               <div class="form-readonly">
                 {{ form.code }}
               </div>
             </el-form-item>
           </el-col>
-          <el-col :span="24">
+          <el-col :span="12">
             <el-form-item label="模型版本" prop="versionId">
               <div class="form-readonly">
                 {{ form.version }}
               </div>
             </el-form-item>
           </el-col>
-          <el-col :span="24">
+          <el-col :span="12">
             <el-form-item label="构建状态" prop="status">
               <dict-tag
                   :options="build_status"
                   :value="form.status"
                   class="con-value access-tag"
               />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="创建人" prop="createBy">
+              <div class="form-readonly">
+                {{ form.createBy }}
+              </div>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="开始时间" prop="createTime">
+              <div class="form-readonly">
+                {{ form.createTime }}
+              </div>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="结束时间" prop="endTime">
+              <div class="form-readonly">
+                {{ form.endTime }}
+              </div>
             </el-form-item>
           </el-col>
         </el-row>
@@ -240,10 +279,10 @@ const columns = ref([
   {key: 2, label: "模型编码", visible: true},
   {key: 3, label: "模型版本", visible: true},
   {key: 4, label: "构建状态", visible: true},
+  {key: 8, label: "创建人", visible: true},
   {key: 5, label: "开始时间", visible: true},
   {key: 6, label: "结束时间", visible: true},
   // { key: 7, label: "执行耗时", visible: true },
-  {key: 8, label: "创建人", visible: true},
   {key: 9, label: "操作", visible: true}
 ]);
 
@@ -431,7 +470,6 @@ const parseLogContent = (logContent) => {
 function handleDetail(row) {
   reset();
   const _id = row.id || ids.value
-  console.log(row)
   getModelBuildLog(_id).then(response => {
     form.value = response.data;
     form.value.version = row.version;

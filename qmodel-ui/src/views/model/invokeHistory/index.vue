@@ -72,6 +72,14 @@
 
     <div class="pagecont-bottom">
       <div class="justify-between mb15">
+        <el-row :gutter="15" class="btn-style">
+          <el-col :span="1.5">
+            <el-button type="danger" plain :disabled="multiple" @click="handleDelete"
+                       v-hasPermi="['model:invokeHistory:invokehistory:remove']" @mousedown="(e) => e.preventDefault()">
+              <i class="iconfont-mini icon-shanchu-huise mr5"></i>删除
+            </el-button>
+          </el-col>
+        </el-row>
         <div class="justify-end top-right-btn">
           <right-toolbar v-model:showSearch="showSearch" @queryTable="getList" :columns="columns"></right-toolbar>
         </div>
@@ -81,17 +89,19 @@
         <el-table-column type="selection" width="55" align="center"/>
         <el-table-column v-if="getColumnVisibility(0)" label="编号" align="center" width="80" prop="id" sortable="custom"
                          :sort-orders="['descending', 'ascending']"/>
-        <el-table-column v-if="getColumnVisibility(1)" label="模型名称" align="left" prop="modelName">
+        <el-table-column v-if="getColumnVisibility(1)" label="模型名称" align="left" prop="modelName"
+                         :show-overflow-tooltip="{ effect: 'light' }">
           <template #default="scope">
             {{ scope.row.modelName || '-' }}
           </template>
         </el-table-column>
-        <el-table-column v-if="getColumnVisibility(2)" label="模型编码" align="left" prop="code">
+        <el-table-column v-if="getColumnVisibility(2)" label="模型编码" align="left" prop="code"
+                         :show-overflow-tooltip="{ effect: 'light' }">
           <template #default="scope">
             {{ scope.row.code || '-' }}
           </template>
         </el-table-column>
-        <el-table-column v-if="getColumnVisibility(3)" label="模型版本" align="left" prop="versionId">
+        <el-table-column v-if="getColumnVisibility(3)" label="模型版本" align="left" prop="version">
           <template #default="scope">
             {{ scope.row.version || '-' }}
           </template>
@@ -105,10 +115,9 @@
             />
           </template>
         </el-table-column>
-        <el-table-column v-if="getColumnVisibility(5)" label="请求时间" align="center" prop="createTime" width="180"
-                         sortable="custom" :sort-orders="['descending', 'ascending']">
+        <el-table-column v-if="getColumnVisibility(8)" label="客户端IP" align="center" prop="clientIp" width="120">
           <template #default="scope">
-            <span>{{ parseTime(scope.row.createTime, "{y}-{m}-{d} {h}:{i}") }}</span>
+            {{ scope.row.clientIp || '-' }}
           </template>
         </el-table-column>
         <el-table-column v-if="getColumnVisibility(6)" label="执行耗时" align="center" prop="duration" width="120">
@@ -125,17 +134,17 @@
             />
           </template>
         </el-table-column>
-        <el-table-column v-if="getColumnVisibility(8)" label="客户端IP" align="center" prop="clientIp" width="120">
-          <template #default="scope">
-            {{ scope.row.clientIp || '-' }}
-          </template>
-        </el-table-column>
         <el-table-column v-if="getColumnVisibility(9)" label="调用人" align="center" prop="createBy" width="120">
           <template #default="scope">
             {{ scope.row.createBy || '-' }}
           </template>
         </el-table-column>
-
+        <el-table-column v-if="getColumnVisibility(5)" label="调用时间" align="center" prop="createTime" width="180"
+                         sortable="custom" :sort-orders="['descending', 'ascending']">
+          <template #default="scope">
+            <span>{{ parseTime(scope.row.createTime, "{y}-{m}-{d} {h}:{i}") }}</span>
+          </template>
+        </el-table-column>
         <el-table-column v-if="getColumnVisibility(10)" label="操作" align="center" class-name="small-padding fixed-width" fixed="right" width="140">
           <template #default="scope">
             <el-button link type="primary" icon="view" @click="handleDetail(scope.row)"
@@ -177,7 +186,7 @@
       <el-form ref="modelInvokeHistoryRef" :model="form" label-width="110px">
         <el-row :gutter="20">
           <el-col :span="12">
-            <el-form-item label="模型编号" prop="modelId">
+            <el-form-item label="编号" prop="modelId">
               <div class="form-readonly">{{ form.modelId || "-" }}</div>
             </el-form-item>
           </el-col>
@@ -186,11 +195,33 @@
               <div class="form-readonly">{{ form.modelName || "-" }}</div>
             </el-form-item>
           </el-col>
-        </el-row>
-        <el-row :gutter="20">
+          <el-col :span="12">
+            <el-form-item label="模型编码" prop="code">
+              <div class="form-readonly">{{ form.code || "-" }}</div>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="模型版本" prop="version">
+              <div class="form-readonly">{{ form.version || "-" }}</div>
+            </el-form-item>
+          </el-col>
           <el-col :span="12">
             <el-form-item label="客户端IP" prop="clientIp">
               <div class="form-readonly">{{ form.clientIp || "-" }}</div>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="执行耗时" prop="duration">
+              <div class="form-readonly">{{ form.duration+" ms" || "-" }}</div>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="调用类型" prop="invokeType">
+              <dict-tag
+                  :options="invoke_type"
+                  :value="form.invokeType"
+                  class="con-value access-tag"
+              />
             </el-form-item>
           </el-col>
           <el-col :span="12">
@@ -202,8 +233,6 @@
               />
             </el-form-item>
           </el-col>
-        </el-row>
-        <el-row :gutter="20">
           <el-col :span="12">
             <el-form-item label="开始时间" prop="startTime">
               <div class="form-readonly">
@@ -216,13 +245,6 @@
               <div class="form-readonly">
                 {{ parseTime(form.endTime, "{y}-{m}-{d} {h}:{i}:{s}") || "-" }}
               </div>
-            </el-form-item>
-          </el-col>
-        </el-row>
-        <el-row :gutter="20">
-          <el-col :span="12">
-            <el-form-item label="执行耗时" prop="duration">
-              <div class="form-readonly">{{ form.duration+" ms" || "-" }}</div>
             </el-form-item>
           </el-col>
         </el-row>
@@ -281,11 +303,11 @@ const columns = ref([
   {key: 2, label: "模型编码", visible: true},
   {key: 3, label: "模型版本", visible: true},
   {key: 4, label: "调用类型", visible: true},
-  {key: 5, label: "请求时间", visible: true},
+  {key: 8, label: "客户端IP", visible: true},
   {key: 6, label: "执行耗时", visible: true},
   {key: 7, label: "调用状态", visible: true},
-  {key: 8, label: "客户端IP", visible: true},
   {key: 9, label: "调用人", visible: true},
+  {key: 5, label: "调用时间", visible: true},
   {key: 10, label: "操作", visible: true},
 ]);
 const { invoke_history_status,invoke_type } = proxy.useDict("invoke_history_status","invoke_type");
@@ -309,7 +331,7 @@ const data = reactive({
     modelId: null,
     modelName: null,
     resourceId: null,
-    versionId: null,
+    version: null,
     requestMethod: null,
     invokeType: null,
     inputParams: null,
@@ -365,7 +387,7 @@ function reset() {
     modelId: null,
     modelName: null,
     resourceId: null,
-    versionId: null,
+    version: null,
     requestMethod: null,
     invokeType: null,
     inputParams: null,
@@ -439,6 +461,8 @@ const handleDetail = (row) => {
   const _id = row.id;
   getModelInvokeHistory(_id).then((response) => {
     form.value = response.data;
+    form.value.version = row.version;
+    form.value.code = row.code;
     openDetail.value = true;
     title.value = "调用记录详情";
   });
