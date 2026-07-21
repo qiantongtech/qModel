@@ -1020,8 +1020,8 @@ CREATE TABLE `system_user` (
 -- ----------------------------
 -- Records of system_user
 -- ----------------------------
-INSERT INTO `system_user` VALUES (1, 103, 'admin', '超级管理员', '00', NULL, '13812345678', '0', NULL, '$2a$10$rCwuIzApQ0YwaQPD8ivtSeOGvpXpjo2ZVRx8/iSFV0TiyUZmmjTL2', '0', '0', '127.0.0.1', '2026-07-17 16:43:02', '吴同', '2026-07-17 10:47:27', '吴同', '2026-07-17 16:43:02', '超级管理员', NULL);
-INSERT INTO `system_user` VALUES (2, 103, 'qModel', '吴同', '00', 'support@qiantong.tech', '19951942682', '1', NULL, '$2a$10$butlDwq0TSIeP/rT9PGx6u571M.2VE.VsTAPoSSMOyQ0jmTc9TEyy', '0', '0', '127.0.0.1', '2026-07-17 16:02:40', '吴同', '2024-05-06 06:12:17', '吴同', '2026-07-17 16:02:40', '管理员', NULL);
+INSERT INTO `system_user` VALUES (1, 103, 'admin', '超级管理员', '00', NULL, '13812345678', '0', '/profile/avatar/2026/07/21/profilePhoto.png', '$2a$10$rCwuIzApQ0YwaQPD8ivtSeOGvpXpjo2ZVRx8/iSFV0TiyUZmmjTL2', '0', '0', '127.0.0.1', '2026-07-17 16:43:02', '吴同', '2026-07-17 10:47:27', '吴同', '2026-07-17 16:43:02', '超级管理员', NULL);
+INSERT INTO `system_user` VALUES (2, 103, 'qModel', '吴同', '00', 'support@qiantong.tech', '19951942682', '1', '/profile/avatar/2026/07/21/profilePhoto.png', '$2a$10$butlDwq0TSIeP/rT9PGx6u571M.2VE.VsTAPoSSMOyQ0jmTc9TEyy', '0', '0', '127.0.0.1', '2026-07-17 16:02:40', '吴同', '2024-05-06 06:12:17', '吴同', '2026-07-17 16:02:40', '管理员', NULL);
 
 -- ----------------------------
 -- Table structure for system_user_post
