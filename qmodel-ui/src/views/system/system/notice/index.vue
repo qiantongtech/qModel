@@ -297,7 +297,9 @@
             pageSize: 10,
             noticeTitle: undefined,
             createBy: undefined,
-            status: undefined
+            status: undefined,
+            orderByColumn: 'createTime',
+            isAsc: 'descending'
         },
         rules: {
             noticeTitle: [{ required: true, message: '公告标题不能为空', trigger: 'blur' }],

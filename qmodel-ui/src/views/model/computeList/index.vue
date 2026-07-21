@@ -31,7 +31,7 @@
 -->
 
 <template>
-    <div class="app-container">
+    <div class="app-container" ref="app-container">
         <div class="pagecont-top" v-show="showSearch">
             <el-form
                 :model="queryParams"
@@ -39,8 +39,10 @@
                 :inline="true"
                 v-show="showSearch"
                 class="btn-style"
+                label-width="100px"
+                @submit.prevent
             >
-                <el-form-item label="计算名称" prop="modelVersion">
+                <el-form-item label="计算名称" prop="name">
                     <el-input
                         class="el-form-input-width"
                         v-model="queryParams.name"
@@ -48,7 +50,7 @@
                         clearable
                     />
                 </el-form-item>
-                <el-form-item label="模型名称" prop="modelVersion">
+                <el-form-item label="模型名称" prop="modelName">
                     <el-input
                         class="el-form-input-width"
                         v-model="queryParams.modelName"
@@ -89,26 +91,30 @@
 
         <div class="pagecont-bottom">
             <div class="justify-between mb15">
-                <el-row :gutter="10" class="btn-style">
+                <el-row :gutter="15" class="btn-style">
                     <el-col :span="1.5">
                         <el-button
                             type="primary"
                             plain
                             @click="handleAdd"
                             v-hasPermi="['model:cacl:add']"
+                            @mousedown="(e) => e.preventDefault()"
                         >
                             <i class="iconfont-mini icon-xinzeng mr5"></i>新增
                         </el-button>
                     </el-col>
                 </el-row>
-                <right-toolbar
-                    v-model:showSearch="showSearch"
-                    @queryTable="getList"
-                    :columns="columns"
-                ></right-toolbar>
+                <div class="justify-end top-right-btn">
+                    <right-toolbar
+                        v-model:showSearch="showSearch"
+                        @queryTable="getList"
+                        :columns="columns"
+                    ></right-toolbar>
+                </div>
             </div>
 
             <el-table
+                stripe
                 v-loading="loading"
                 :data="caclList"
                 :default-sort="defaultSort"
@@ -120,31 +126,49 @@
                     label="编号"
                     align="center"
                     prop="id"
-                    width="85"
+                    width="80"
+                    :show-overflow-tooltip="{ effect: 'light' }"
                     sortable="custom"
                     :sort-orders="['descending', 'ascending']"
-                />
+                >
+                    <template #default="scope">
+                        {{ scope.row.id || "-" }}
+                    </template>
+                </el-table-column>
                 <el-table-column
                     v-if="getColumnVisibility(1)"
                     label="计算名称"
                     align="left"
                     prop="name"
+                    :show-overflow-tooltip="{ effect: 'light' }"
                     width="250"
-                />
+                >
+                    <template #default="scope">
+                        {{ scope.row.name || "-" }}
+                    </template>
+                </el-table-column>
                 <el-table-column
                     v-if="getColumnVisibility(3)"
                     label="模型名称"
                     align="left"
                     prop="modelName"
-                />
+                    :show-overflow-tooltip="{ effect: 'light' }"
+                    width="250"
+                >
+                    <template #default="scope">
+                        {{ scope.row.modelName || "-" }}
+                    </template>
+                </el-table-column>
                 <el-table-column
                     v-if="getColumnVisibility(4)"
                     label="版本号"
                     align="center"
                     prop="modelVersion"
+                    width="120"
                 >
                     <template #default="scope">
-                        <el-tag size="small">Version {{ scope.row.modelVersion }}</el-tag>
+                        <el-tag size="small" v-if="scope.row.modelVersion">Version {{ scope.row.modelVersion }}</el-tag>
+                        <span v-else>-</span>
                     </template>
                 </el-table-column>
                 <el-table-column
@@ -152,10 +176,12 @@
                     label="开始时间"
                     align="center"
                     prop="startTime"
-                    width="180"
+                    width="160"
+                    sortable="custom"
+                    :sort-orders="['descending', 'ascending']"
                 >
                     <template #default="scope">
-                        <span>{{ parseTime(scope.row.startTime, '{y}-{m}-{d} {h}:{i}') }}</span>
+                        <span>{{ parseTime(scope.row.startTime, '{y}-{m}-{d} {h}:{i}') || "-" }}</span>
                     </template>
                 </el-table-column>
                 <el-table-column
@@ -163,10 +189,12 @@
                     label="结束时间"
                     align="center"
                     prop="endTime"
-                    width="180"
+                    width="160"
+                    sortable="custom"
+                    :sort-orders="['descending', 'ascending']"
                 >
                     <template #default="scope">
-                        <span>{{ parseTime(scope.row.endTime, '{y}-{m}-{d} {h}:{i}') }}</span>
+                        <span>{{ parseTime(scope.row.endTime, '{y}-{m}-{d} {h}:{i}') || "-" }}</span>
                     </template>
                 </el-table-column>
                 <el-table-column
@@ -174,19 +202,24 @@
                     label="创建人"
                     align="center"
                     prop="createBy"
+                    width="120"
+                    :show-overflow-tooltip="{ effect: 'light' }"
                 >
+                    <template #default="scope">
+                        {{ scope.row.createBy || "-" }}
+                    </template>
                 </el-table-column>
                 <el-table-column
                     v-if="getColumnVisibility(8)"
                     label="创建时间"
                     align="center"
-                    width="180"
+                    width="160"
                     prop="createTime"
                     sortable="custom"
                     :sort-orders="['descending', 'ascending']"
                 >
                     <template #default="scope">
-                        <span>{{ parseTime(scope.row.createTime, '{y}-{m}-{d} {h}:{i}') }}</span>
+                        <span>{{ parseTime(scope.row.createTime, '{y}-{m}-{d} {h}:{i}') || "-" }}</span>
                     </template>
                 </el-table-column>
                 <el-table-column
@@ -194,20 +227,39 @@
                     label="操作"
                     align="center"
                     class-name="small-padding fixed-width"
-                    width="300"
+                    fixed="right"
+                    width="280"
                 >
                     <template #default="scope">
-                        <el-button link type="primary" icon="Edit" @click="setParams(scope.row)"
-                            >设置参数</el-button
-                        >
-                        <el-button link type="primary" icon="cpu" @click="handleCompute(scope.row)"
-                            >开始计算</el-button
-                        >
-                        <el-button link type="primary" icon="view" @click="handleView(scope.row)"
-                            >查看结果</el-button
-                        >
+                        <el-button
+                            link
+                            type="primary"
+                            icon="Edit"
+                            @click="setParams(scope.row)"
+                            >设置参数
+                        </el-button>
+                        <el-button
+                            link
+                            type="primary"
+                            icon="cpu"
+                            @click="handleCompute(scope.row)"
+                            >开始计算
+                        </el-button>
+                        <el-button
+                            link
+                            type="primary"
+                            icon="view"
+                            @click="handleView(scope.row)"
+                            >查看结果
+                        </el-button>
                     </template>
                 </el-table-column>
+                <template #empty>
+                    <div class="emptyBg">
+                        <img src="@/assets/system/images/no_data/noData.png" alt="" />
+                        <p>暂无记录</p>
+                    </div>
+                </template>
             </el-table>
 
             <pagination
@@ -264,8 +316,8 @@
             </el-form>
             <template #footer>
                 <div class="dialog-footer">
-                    <el-button type="primary" @click="submitForm">确 定</el-button>
-                    <el-button @click="cancel">取 消</el-button>
+                    <el-button size="mini" @click="cancel">取 消</el-button>
+                    <el-button type="primary" size="mini" @click="submitForm">确 定</el-button>
                 </div>
             </template>
         </el-dialog>
@@ -302,84 +354,6 @@
     // Component state
     const inputMap = ref(new Map());
     const inputMultipleContent = ref([]);
-    const csDatas = ref([
-        'CS1',
-        'CS2',
-        'CS3',
-        'CS4',
-        'CS5',
-        'CS6',
-        'CS7',
-        'CS8',
-        'CS9',
-        'CS10',
-        'CS11',
-        'CS12',
-        'CS13',
-        'CS14',
-        'CS15',
-        'CS16',
-        'CS17',
-        'CS18',
-        'CS19',
-        'CS20',
-        'CS21',
-        'CS22',
-        'CS23',
-        'CS24',
-        'CS25',
-        'CS26',
-        'CS27',
-        'CS28',
-        'CS29',
-        'CS30',
-        'CS31',
-        'CS32',
-        'cs东1',
-        'cs东2',
-        'cs西2',
-        'cs东3',
-        'cs西3'
-    ]);
-    const csChineseName = ref([
-        '小山口一级电站下游断面',
-        '小山口一、二级之间断面',
-        '小山口二级电站上游断面',
-        '小山口二级电站下游断面',
-        '小山口三级电站上游断面(0-2312)',
-        '开都河一枢纽上游断面(0-0669)',
-        '开都河一枢纽下游河道断面(2+021)',
-        '开都河一枢纽河道断面(4+079)',
-        '开都河一枢纽河道断面(6+0533)',
-        '开都河一枢纽河道断面(9+888)',
-        '开都河一枢纽河道断面(12+089)',
-        '开都河一枢纽河道断面(15+574)',
-        '开都河一枢纽河道断面(18+838)',
-        '开都河一枢纽河道断面(21+060)',
-        '开都河一枢纽河道断面(23+993)',
-        '开都河一枢纽河道断面(26+293)',
-        '开都河一枢纽河道断面(27+783)',
-        '开都河一枢纽河道断面(30+349)',
-        '开都河一枢纽河道断面(35+508)',
-        '开都河一枢纽河道断面(38+245)',
-        '开都河一枢纽河道断面(42+202)',
-        '开都河一枢纽河道断面(45+253)',
-        '开都河二枢纽闸前断面(47+855)',
-        '开都河二枢纽河道断面(50+235)',
-        '开都河二枢纽河道断面(53+424)',
-        '开都河二枢纽吐和高速公路桥断面(55+002)',
-        '开都河二枢纽焉耆大桥断面(58+961)',
-        '开都河二枢纽河道断面(60+633)',
-        '开都河二枢纽河道断面(62+106)',
-        '开都河二枢纽河道断面(64+151)',
-        '开都河二枢纽河道断面(66+882)',
-        '开都河三枢纽闸前断面(68+909)',
-        'cs东1',
-        'cs东2',
-        'cs西2',
-        'cs东3',
-        'cs西3'
-    ]);
     const inputContentJsonData = ref({});
     const modelCacl = ref({});
     // 查看结果的数据json
@@ -445,7 +419,9 @@
         modelName: null,
         modelVersion: null,
         startTime: null,
-        endTime: null
+        endTime: null,
+        orderByColumn: 'createTime',
+        isAsc: 'desc'
     });
     // 表单参数
     const form = ref({});
@@ -468,7 +444,7 @@
         createTime: [{ required: true, message: '创建时间不能为空', trigger: 'blur' }],
         updateTime: [{ required: true, message: '更新时间不能为空', trigger: 'blur' }]
     });
-    const defaultSort = ref({ prop: 'createTime', order: 'desc' });
+    const defaultSort = ref({ prop: 'createTime', order: 'descending' });
     // 列显隐信息
     const columns = ref([
         { key: 0, label: '编号', visible: true },
@@ -1130,8 +1106,8 @@
     };
 
     function handleSortChange(column, prop, order) {
-        queryParams.value.orderByColumn = column.prop;
-        queryParams.value.isAsc = column.order;
+        queryParams.orderByColumn = column.prop;
+        queryParams.isAsc = column.order;
         getList();
     }
 </script>

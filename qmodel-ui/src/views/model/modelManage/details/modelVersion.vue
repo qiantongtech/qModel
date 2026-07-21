@@ -65,9 +65,10 @@
         align="center"
         prop="version"
         width="200px"
+        :show-overflow-tooltip="{ effect: 'light' }"
       >
         <template #default="scope">
-          <span class="ellipsis-text">{{ scope.row.version }}</span>
+          {{ scope.row.version }}
         </template>
       </el-table-column>
       <el-table-column
@@ -76,10 +77,11 @@
         align="left"
         prop="description"
         width="250px"
+        :show-overflow-tooltip="{ effect: 'light' }"
       >
         <template #default="scope">
           <el-tooltip :content="scope.row.description || '-'" placement="top" effect="light">
-            <span class="ellipsis-text">{{ scope.row.description }}</span>
+            {{ scope.row.description }}
           </el-tooltip>
         </template>
       </el-table-column>
@@ -88,9 +90,10 @@
         label="创建人"
         align="center"
         prop="updateBy"
+        :show-overflow-tooltip="{ effect: 'light' }"
       >
         <template #default="scope">
-          <span class="ellipsis-text">{{ scope.row.createBy }}</span>
+          <span>{{ scope.row.createBy }}</span>
         </template>
       </el-table-column>
       <el-table-column
@@ -374,7 +377,7 @@ const getList = () => {
         modelName: props.model.name,
         version: props.model.version,
         status: 1,
-        description: "调整初始值、预处理参数",
+        description: "调整初始值、预处理参数  调整初始值、预处理参数调整初始值、预处理参数调整初始值、预处理参数调整初始值、预处理参数调整初始值、预处理参数调整初始值、预处理参数调整初始值、预处理参数",
         createBy: props.model.createBy || "张三",
         createTime: props.model.createTime || "2025-09-18 15:13",
       },
@@ -669,15 +672,6 @@ onMounted(() => {
 </script>
 
 <style lang="scss" scoped>
-.ellipsis-text {
-  display: inline-block;
-  width: 100%;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  vertical-align: middle;
-}
-
 .app-container {
   min-height: 0;
   background: transparent;

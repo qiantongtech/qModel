@@ -237,34 +237,34 @@
     const entranceList = [
         {
             name: '模型分类',
-            path: '/model/modelClassify/type',
+            path: 'Classify',
             query: {},
-            perm: ['kmcDocument:kmcDocument:document:list'],
+            perm: ['model:classify:classify:list'],
             icon: '知识中心',
             color: 'color-primary'
         },
         {
-            name: '模型管理',
-            path: '/model/version',
+            name: '模型中心',
+            path: 'version',
             query: {},
             icon: '知识抽取',
-            perm: ['ext:extUnstructTask:unstructtask:list'],
+            perm: ['model:model:list'],
             color: 'color-pale-blue'
         },
         {
             name: '模型计算',
-            path: '/model/computeList/compute',
+            path: 'modelCompute',
             query: {},
             icon: '知识推理',
-            perm: ['ext:extStructTask:struct:list'],
+            perm: ['model:modelCacl:cacl:list'],
             color: 'color-orange'
         },
         {
-            name: '计算历史',
-            path: '/model/operateList/operate',
+            name: '历史记录',
+            path: 'Operate',
             query: {},
             icon: '知识应用',
-            perm: [''],
+            perm: ['model:operate:operate:list'],
             color: 'color-pink'
         }
     ];
@@ -729,7 +729,9 @@
     function initModule6() {
         let query = {
             pageNum: 1,
-            pageSize: 5
+            pageSize: 5,
+            orderByColumn: 'createTime',
+            isAsc: 'descending'
         };
         listNotice(query).then((response) => {
             module6.value = response.rows;

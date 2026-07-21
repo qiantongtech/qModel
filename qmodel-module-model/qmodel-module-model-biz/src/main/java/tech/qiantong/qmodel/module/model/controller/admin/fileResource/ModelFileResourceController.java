@@ -145,20 +145,21 @@ public class ModelFileResourceController extends BaseController {
     }
 
     @Operation(summary = "获取构建环境信息")
-    @PreAuthorize("@ss.hasPermi('model:fileResource:fileresource:add')")
+    @PreAuthorize("@ss.hasPermi('model:fileResource:fileresource:query')")
     @GetMapping("/getBuildEnvInfo")
     public CommonResult<Map<String, Object>> getBuildEnvInfo(@RequestParam("filePath") String filePath) {
         return CommonResult.success(modelFileResourceService.getBuildEnvInfo(filePath));
     }
 
     @Operation(summary = "执行模型脚本")
-    @PreAuthorize("@ss.hasPermi('model:fileResource:fileresource:add')")
+    @PreAuthorize("@ss.hasPermi('model:fileResource:fileresource:query')")
     @PostMapping("/runScript/{modelId}")
     public CommonResult<Object> runScript(@PathVariable("modelId") Long modelId, @RequestBody(required = false) Map<String, Object> inputParam) {
         return CommonResult.success(modelFileResourceService.runModelScript(modelId, inputParam));
     }
 
     @Operation(summary = "调用模型参数文件上传")
+    @PreAuthorize("@ss.hasPermi('model:fileResource:fileresource:add')")
     @PostMapping("/uploadParamFile")
     public CommonResult<Map<String, Object>> uploadParamFile(
             @RequestParam("file") MultipartFile file,

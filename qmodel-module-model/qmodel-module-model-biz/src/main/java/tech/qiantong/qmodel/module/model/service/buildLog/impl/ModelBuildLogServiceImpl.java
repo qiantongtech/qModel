@@ -74,8 +74,6 @@ public class ModelBuildLogServiceImpl  extends ServiceImpl<ModelBuildLogMapper,M
     @Resource
     private ModelBuildLogMapper modelBuildLogMapper;
 
-    @Resource
-    private JdbcTemplate jdbcTemplate;
 
     @Override
     public PageResult<ModelBuildLogDO> getModelBuildLogPage(ModelBuildLogPageReqVO pageReqVO) {
@@ -128,7 +126,7 @@ public class ModelBuildLogServiceImpl  extends ServiceImpl<ModelBuildLogMapper,M
 
         /**
          * 导入构建日志数据
-         *  
+         *
          * @param importExcelList 构建日志数据列表
          * @param isUpdateSupport 是否更新支持，如果已存在，则进行更新数据
          * @param operName 操作用户

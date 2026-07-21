@@ -31,7 +31,7 @@
 -->
 
 <template>
-    <div class="app-container">
+    <div class="app-container" ref="app-container">
         <div class="pagecont-top" v-show="showSearch">
             <el-form
                 :model="queryParams"
@@ -39,9 +39,12 @@
                 :inline="true"
                 v-show="showSearch"
                 class="btn-style"
+                label-width="100px"
+                @submit.prevent
             >
                 <el-form-item label="模型名称" prop="moduleName">
                     <el-input
+                        class="el-form-input-width"
                         v-model="queryParams.moduleName"
                         placeholder="请输入模型名称"
                         clearable
@@ -66,7 +69,7 @@
 
         <div class="pagecont-bottom">
             <div class="justify-between mb15">
-                <el-row :gutter="10" class="btn-style">
+                <el-row :gutter="15" class="btn-style">
                     <el-col :span="1.5">
                         <el-button
                             type="warning"
@@ -74,44 +77,62 @@
                             :disabled="multiple"
                             @click="handleExport"
                             v-hasPermi="['system:user:export']"
+                            @mousedown="(e) => e.preventDefault()"
                         >
-                            <i class="iconfont-mini icon-daochu"></i>
+                            <i class="iconfont-mini icon-daochu mr5"></i>
                             导出
                         </el-button>
                     </el-col>
                 </el-row>
-                <right-toolbar
-                    v-model:showSearch="showSearch"
-                    @queryTable="getList"
-                    :columns="columns"
-                ></right-toolbar>
+                <div class="justify-end top-right-btn">
+                    <right-toolbar
+                        v-model:showSearch="showSearch"
+                        @queryTable="getList"
+                        :columns="columns"
+                    ></right-toolbar>
+                </div>
             </div>
 
             <el-table
+                stripe
                 v-loading="loading"
                 :data="operateList"
+                :default-sort="defaultSort"
                 @selection-change="handleSelectionChange"
+                @sort-change="handleSortChange"
             >
                 <el-table-column
                     v-if="getColumnVisibility(0)"
                     label="编号"
                     align="center"
                     prop="id"
-                    width="65"
+                    width="80"
+                    :show-overflow-tooltip="{ effect: 'light' }"
+                    sortable="custom"
+                    :sort-orders="['descending', 'ascending']"
                 >
+                    <template #default="scope">
+                        {{ scope.row.id || "-" }}
+                    </template>
                 </el-table-column>
                 <el-table-column
                     v-if="getColumnVisibility(1)"
                     label="操作模块"
                     align="left"
                     prop="moduleName"
+                    :show-overflow-tooltip="{ effect: 'light' }"
+                    width="200"
                 >
+                    <template #default="scope">
+                        {{ scope.row.moduleName || "-" }}
+                    </template>
                 </el-table-column>
                 <el-table-column
                     v-if="getColumnVisibility(2)"
                     label="操作类型"
                     align="center"
                     prop="type"
+                    width="120"
                 >
                     <template #default="scope">
                         <dict-tag :options="model_access_mode" :value="scope.row.type" />
@@ -122,24 +143,35 @@
                     label="操作内容"
                     align="left"
                     prop="content"
-                />
+                    :show-overflow-tooltip="{ effect: 'light' }"
+                >
+                    <template #default="scope">
+                        {{ scope.row.content || "-" }}
+                    </template>
+                </el-table-column>
                 <el-table-column
                     v-if="getColumnVisibility(4)"
                     label="创建人"
                     align="center"
                     prop="createBy"
-                />
+                    width="120"
+                    :show-overflow-tooltip="{ effect: 'light' }"
+                >
+                    <template #default="scope">
+                        {{ scope.row.createBy || "-" }}
+                    </template>
+                </el-table-column>
                 <el-table-column
                     v-if="getColumnVisibility(5)"
                     label="创建时间"
                     align="center"
-                    width="180"
+                    width="160"
                     prop="createTime"
                     sortable="custom"
                     :sort-orders="['descending', 'ascending']"
                 >
                     <template #default="scope">
-                        <span>{{ parseTime(scope.row.createTime, '{y}-{m}-{d} {h}:{i}') }}</span>
+                        <span>{{ parseTime(scope.row.createTime, '{y}-{m}-{d} {h}:{i}') || "-" }}</span>
                     </template>
                 </el-table-column>
                 <el-table-column
@@ -147,13 +179,25 @@
                     label="操作"
                     align="center"
                     class-name="small-padding fixed-width"
+                    fixed="right"
+                    width="120"
                 >
                     <template #default="scope">
-                        <el-button link type="primary" icon="view" @click="handleView(scope.row)"
+                        <el-button
+                            link
+                            type="primary"
+                            icon="view"
+                            @click="handleView(scope.row)"
                             >详情
                         </el-button>
                     </template>
                 </el-table-column>
+                <template #empty>
+                    <div class="emptyBg">
+                        <img src="@/assets/system/images/no_data/noData.png" alt="" />
+                        <p>暂无记录</p>
+                    </div>
+                </template>
             </el-table>
 
             <pagination
@@ -165,14 +209,20 @@
             />
         </div>
 
-        <!-- 添加或修改模型历史管理 对话框 -->
+        <!-- 历史记录详情对话框 -->
         <el-dialog
             :title="title"
             v-model="open"
             width="800px"
             :close-on-click-modal="false"
-            append-to="body"
+            :append-to="$refs['app-container']"
+            draggable
         >
+            <template #header="{ close, titleId, titleClass }">
+                <span role="heading" aria-level="2" class="el-dialog__title">
+                    {{ title }}
+                </span>
+            </template>
             <el-form ref="formRef" :model="form" label-width="100px" size="mini">
                 <el-row>
                     <el-col :span="12">
@@ -183,7 +233,6 @@
                     </el-col>
                     <el-col :span="24">
                         <el-form-item label="修改前信息：" v-if="form.type != 0 && form.type != 2">
-                            <!-- {{ form.reqContent }} -->
                             <json-viewer
                                 :value="
                                     form.reqContent != undefined
@@ -205,7 +254,6 @@
                     </el-col>
                     <el-col :span="24">
                         <el-form-item :label="form.type == 0 ? '操作细节：' : '修改后信息：'">
-                            <!-- {{ form.respContent }} -->
                             <json-viewer
                                 :value="
                                     form.respContent != undefined
@@ -237,11 +285,11 @@
                     </el-col>
                 </el-row>
             </el-form>
-            <!-- <template #footer>
-                  <div class="dialog-footer">
-              <el-button type="primary" @click="submitForm">确 定</el-button>
-              <el-button @click="cancel">取 消</el-button>
-            </div> -->
+            <template #footer>
+                <div class="dialog-footer">
+                    <el-button size="mini" @click="cancel">取 消</el-button>
+                </div>
+            </template>
         </el-dialog>
     </div>
 </template>
@@ -302,6 +350,8 @@
     const title = ref('');
     // 是否显示弹出层
     const open = ref(false);
+    // 默认排序
+    const defaultSort = ref({ prop: 'createTime', order: 'descending' });
     // 查询参数
     const queryParams = reactive({
         pageNum: 1,
@@ -318,7 +368,9 @@
         status: null,
         validFlag: null,
         creatorId: null,
-        updatorId: null
+        updatorId: null,
+        orderByColumn: 'createTime',
+        isAsc: 'desc'
     });
     // 表单参数
     const form = ref({});
@@ -416,6 +468,13 @@
         ids.value = selection.map((item) => item.id);
         single.value = selection.length !== 1;
         multiple.value = !selection.length;
+    };
+
+    /** 排序触发事件 */
+    const handleSortChange = (column, prop, order) => {
+        queryParams.orderByColumn = column.prop;
+        queryParams.isAsc = column.order;
+        getList();
     };
 
     /** 详细按钮操作 */
