@@ -1,18 +1,15 @@
-# Open Source License
+Copyright © 2025-present Jiangsu Qiantong Technology Co., Ltd.
 
-qModel is licensed under a modified version of the Apache License 2.0, with the following additional conditions:
+This file is part of qModel Module Platform (Open Source Edition).
 
-1. qModel may be utilized commercially, including as a backend service for other applications or as an application development platform for enterprises. Should the conditions below be met, a commercial license must be obtained from the producer:
+qModel is licensed under Apache License 2.0 with additional qModel terms.
+You may use qModel for commercial purposes, but you may not remove, hide,
+modify, or replace the qModel logo, copyright notices, license notices,
+or attribution information without a separate commercial license.
 
-a. LOGO and copyright information: In the process of using qModel's frontend, you may not remove or modify the LOGO or copyright information in the qModel console or applications.
+White-label use, OEM distribution, rebranding, or presenting qModel as
+another product requires separate commercial authorization from
+Jiangsu Qiantong Technology Co., Ltd.
 
-2. As a contributor, you should agree that:
-
-a. The producer can adjust the open-source agreement to be more strict or relaxed as deemed necessary.
-b. Your contributed code may be used for commercial purposes, including but not limited to its cloud business operations.
-
-Apart from the specific conditions mentioned above, all other rights and restrictions follow the Apache License 2.0. Detailed information about the Apache License 2.0 can be found at http://www.apache.org/licenses/LICENSE-2.0.
-
-The interactive design of this product is protected by appearance patent.
-
-© 2025 Jiangsu Qiantong Technology Co., Ltd
+Business License: https://qmodel.tech/
+See the LICENSE file in the project root for full license information.
