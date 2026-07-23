@@ -1,10 +1,10 @@
 {
   "name": "anivia",
-  "describe": "anivia",
+  "describe": "qmodel",
   "avatar": "",
   "version": "4.9.4",
   "createdTime": "2024-8-30 21:54:48",
-  "updatedTime": "2026-7-14 10:34:31",
+  "updatedTime": "2026-7-23 13:37:22",
   "dbConns": [],
   "profile": {
     "default": {
@@ -15848,6 +15848,485 @@
       "correlations": [],
       "indexes": [],
       "type": "P"
+    },
+    {
+      "id": "E43D4F19-1023-4D8A-B71F-D79C9DF19FD4",
+      "env": {
+        "base": {
+          "nameSpace": "",
+          "codeRoot": ""
+        }
+      },
+      "defKey": "model_audit",
+      "defName": "模型审核",
+      "comment": "",
+      "properties": {
+        "partitioned by": "(date string)",
+        "row format delimited": "",
+        "fields terminated by ','": "",
+        "collection items terminated by '-'": "",
+        "map keys terminated by ':'": "",
+        "store as textfile;": ""
+      },
+      "sysProps": {
+        "nameTemplate": "{defKey}[{defName}]"
+      },
+      "notes": {},
+      "headers": [
+        {
+          "refKey": "hideInGraph",
+          "hideInGraph": true
+        },
+        {
+          "refKey": "defKey",
+          "freeze": false,
+          "hideInGraph": false
+        },
+        {
+          "refKey": "defName",
+          "freeze": false,
+          "hideInGraph": false
+        },
+        {
+          "refKey": "primaryKey",
+          "freeze": false,
+          "hideInGraph": false
+        },
+        {
+          "refKey": "notNull",
+          "freeze": false,
+          "hideInGraph": true
+        },
+        {
+          "refKey": "autoIncrement",
+          "freeze": false,
+          "hideInGraph": true
+        },
+        {
+          "refKey": "domain",
+          "freeze": false,
+          "hideInGraph": true
+        },
+        {
+          "refKey": "type",
+          "freeze": false,
+          "hideInGraph": false
+        },
+        {
+          "refKey": "len",
+          "freeze": false,
+          "hideInGraph": false
+        },
+        {
+          "refKey": "scale",
+          "freeze": false,
+          "hideInGraph": false
+        },
+        {
+          "refKey": "comment",
+          "freeze": false,
+          "hideInGraph": true
+        },
+        {
+          "refKey": "refDict",
+          "freeze": false,
+          "hideInGraph": true
+        },
+        {
+          "refKey": "defaultValue",
+          "freeze": false,
+          "hideInGraph": true
+        },
+        {
+          "refKey": "isStandard",
+          "freeze": false,
+          "hideInGraph": false
+        },
+        {
+          "refKey": "uiHint",
+          "freeze": false,
+          "hideInGraph": true
+        },
+        {
+          "refKey": "extProps",
+          "freeze": false,
+          "hideInGraph": true
+        },
+        {
+          "refKey": "attr1",
+          "freeze": false,
+          "hideInGraph": true
+        },
+        {
+          "refKey": "attr2",
+          "freeze": false,
+          "hideInGraph": true
+        },
+        {
+          "refKey": "attr3",
+          "freeze": false,
+          "hideInGraph": true
+        },
+        {
+          "refKey": "attr4",
+          "freeze": false,
+          "hideInGraph": true
+        },
+        {
+          "refKey": "attr5",
+          "freeze": false,
+          "hideInGraph": true
+        },
+        {
+          "refKey": "attr6",
+          "freeze": false,
+          "hideInGraph": true
+        },
+        {
+          "refKey": "attr7",
+          "freeze": false,
+          "hideInGraph": true
+        },
+        {
+          "refKey": "attr8",
+          "freeze": false,
+          "hideInGraph": true
+        },
+        {
+          "refKey": "attr9",
+          "freeze": false,
+          "hideInGraph": true
+        }
+      ],
+      "fields": [
+        {
+          "defKey": "id",
+          "defName": "ID",
+          "comment": "",
+          "type": "",
+          "len": "",
+          "scale": "",
+          "primaryKey": true,
+          "notNull": true,
+          "autoIncrement": true,
+          "defaultValue": "",
+          "hideInGraph": false,
+          "refDict": "",
+          "baseType": "1D764C4A-6F9F-421E-B11A-6F3E23B51811",
+          "extProps": {},
+          "domain": "D9CF4D8E-CD60-499C-B46E-2304C7ED36DE",
+          "id": "5EAE2347-7880-4AE7-AF05-8DD432040A00"
+        },
+        {
+          "defKey": "model_id",
+          "defName": "模型id",
+          "comment": "",
+          "type": "",
+          "len": "",
+          "scale": "",
+          "primaryKey": false,
+          "notNull": true,
+          "autoIncrement": false,
+          "defaultValue": "",
+          "hideInGraph": false,
+          "refDict": "",
+          "baseType": "FC9790A7-36B8-4A48-8F9A-BC1042BCFE64",
+          "extProps": {},
+          "domain": "D9CF4D8E-CD60-499C-B46E-2304C7ED36DE",
+          "id": "60B6FC88-9D63-4061-8A7C-EE57C7B26417"
+        },
+        {
+          "defKey": "apply_id",
+          "defName": "申请人",
+          "comment": "",
+          "type": "",
+          "len": "",
+          "scale": "",
+          "primaryKey": false,
+          "notNull": true,
+          "autoIncrement": false,
+          "defaultValue": "",
+          "hideInGraph": false,
+          "refDict": "",
+          "baseType": "FC9790A7-36B8-4A48-8F9A-BC1042BCFE64",
+          "extProps": {},
+          "domain": "D9CF4D8E-CD60-499C-B46E-2304C7ED36DE",
+          "id": "7CAAF807-A128-4199-BC1B-40765D3584F5"
+        },
+        {
+          "defKey": "apply_time",
+          "defName": "申请时间",
+          "comment": "",
+          "type": "",
+          "len": "",
+          "scale": "",
+          "primaryKey": false,
+          "notNull": true,
+          "autoIncrement": false,
+          "defaultValue": "",
+          "hideInGraph": false,
+          "refDict": "",
+          "baseType": "89D69E81-EA34-42EE-9FA2-93B8BD27E098",
+          "extProps": {},
+          "domain": "C49EBB99-CEE0-40B1-9146-6779D2CEC2FD",
+          "id": "C9AE5A9F-BB9A-4A92-9ED0-8B98333A27CC"
+        },
+        {
+          "defKey": "apply_reason",
+          "defName": "申请理由",
+          "comment": "",
+          "type": "",
+          "len": "",
+          "scale": "",
+          "primaryKey": false,
+          "notNull": false,
+          "autoIncrement": false,
+          "defaultValue": "",
+          "hideInGraph": false,
+          "refDict": "",
+          "baseType": "FC9790A7-36B8-4A48-8F9A-BC1042BCFE64",
+          "extProps": {},
+          "domain": "118A9191-7E4C-4F66-96D0-EFE23833A5EA",
+          "id": "FFEE9F96-D473-43C1-A6B0-1B41E4052AB3"
+        },
+        {
+          "defKey": "audit_status",
+          "defName": "审核状态",
+          "comment": "0：待审核，1：审核通过，2：审核拒绝",
+          "type": "",
+          "len": "",
+          "scale": "",
+          "primaryKey": false,
+          "notNull": false,
+          "autoIncrement": false,
+          "defaultValue": "",
+          "hideInGraph": false,
+          "refDict": "",
+          "baseType": "80DA554F-03A8-499C-A2BE-605035BBA744",
+          "extProps": {},
+          "domain": "DFC2F6CB-AB7C-4B82-A45D-3EDC26759919",
+          "id": "83DBF7BD-256D-4FAE-A8DC-549D2EC4BFE1"
+        },
+        {
+          "defKey": "auditor_id",
+          "defName": "审核人",
+          "comment": "",
+          "type": "",
+          "len": "",
+          "scale": "",
+          "primaryKey": false,
+          "notNull": false,
+          "autoIncrement": false,
+          "defaultValue": "",
+          "hideInGraph": false,
+          "refDict": "",
+          "baseType": "1D764C4A-6F9F-421E-B11A-6F3E23B51811",
+          "extProps": {},
+          "domain": "D9CF4D8E-CD60-499C-B46E-2304C7ED36DE",
+          "id": "F9FBF826-1BDA-4841-9322-9F360C30B218"
+        },
+        {
+          "defKey": "audit_time",
+          "defName": "审核时间",
+          "comment": "",
+          "type": "",
+          "len": "",
+          "scale": "",
+          "primaryKey": false,
+          "notNull": false,
+          "autoIncrement": false,
+          "defaultValue": "",
+          "hideInGraph": false,
+          "refDict": "",
+          "baseType": "89D69E81-EA34-42EE-9FA2-93B8BD27E098",
+          "extProps": {},
+          "domain": "C49EBB99-CEE0-40B1-9146-6779D2CEC2FD",
+          "id": "589D9D73-E24A-43DC-99DD-BF8ED06C4C5E"
+        },
+        {
+          "defKey": "audit_reason",
+          "defName": "审核理由",
+          "comment": "",
+          "type": "",
+          "len": "",
+          "scale": "",
+          "primaryKey": false,
+          "notNull": false,
+          "autoIncrement": false,
+          "defaultValue": "",
+          "hideInGraph": false,
+          "refDict": "",
+          "baseType": "FC9790A7-36B8-4A48-8F9A-BC1042BCFE64",
+          "extProps": {},
+          "domain": "118A9191-7E4C-4F66-96D0-EFE23833A5EA",
+          "id": "E42D6527-2E29-4B99-A180-AEF83C20FE26"
+        },
+        {
+          "defKey": "valid_flag",
+          "defName": "是否有效",
+          "comment": "0：无效，1：有效",
+          "type": "",
+          "len": "",
+          "scale": "",
+          "primaryKey": false,
+          "notNull": true,
+          "autoIncrement": false,
+          "defaultValue": "1",
+          "hideInGraph": false,
+          "refDict": "",
+          "baseType": "DF3C37DA-5934-40A4-913C-756D5AAA79ED",
+          "extProps": {},
+          "domain": "81DA4EBC-5A13-4CC2-8359-7C76F17726BA",
+          "id": "224C95D1-8266-4998-967A-B88588E72DB1"
+        },
+        {
+          "defKey": "del_flag",
+          "defName": "删除标志",
+          "comment": "1：已删除，0：未删除",
+          "type": "",
+          "len": "",
+          "scale": "",
+          "primaryKey": false,
+          "notNull": true,
+          "autoIncrement": false,
+          "defaultValue": "0",
+          "hideInGraph": false,
+          "refDict": "",
+          "baseType": "DF3C37DA-5934-40A4-913C-756D5AAA79ED",
+          "extProps": {},
+          "domain": "81DA4EBC-5A13-4CC2-8359-7C76F17726BA",
+          "id": "037B9B43-B9CC-4DB2-B78E-9381F1676119"
+        },
+        {
+          "defKey": "create_by",
+          "defName": "创建人",
+          "comment": "",
+          "type": "",
+          "len": "",
+          "scale": "",
+          "primaryKey": false,
+          "notNull": false,
+          "autoIncrement": false,
+          "defaultValue": "",
+          "hideInGraph": false,
+          "refDict": "",
+          "baseType": "FC9790A7-36B8-4A48-8F9A-BC1042BCFE64",
+          "extProps": {},
+          "domain": "7B55AA86-D2C8-46AC-82D6-80455B687987",
+          "id": "E79B50ED-B780-480A-99DC-BDFE3DDBB9FB"
+        },
+        {
+          "defKey": "creator_id",
+          "defName": "创建人id",
+          "comment": "",
+          "type": "",
+          "len": "",
+          "scale": "",
+          "primaryKey": false,
+          "notNull": false,
+          "autoIncrement": false,
+          "defaultValue": "",
+          "hideInGraph": false,
+          "refDict": "",
+          "baseType": "1D764C4A-6F9F-421E-B11A-6F3E23B51811",
+          "extProps": {},
+          "domain": "D9CF4D8E-CD60-499C-B46E-2304C7ED36DE",
+          "id": "212E4F30-0192-4230-B4C2-DBE6608BAE7C"
+        },
+        {
+          "defKey": "create_time",
+          "defName": "创建时间",
+          "comment": "",
+          "type": "",
+          "len": "",
+          "scale": "",
+          "primaryKey": false,
+          "notNull": true,
+          "autoIncrement": false,
+          "defaultValue": "CURRENT_TIMESTAMP",
+          "hideInGraph": false,
+          "refDict": "",
+          "baseType": "89D69E81-EA34-42EE-9FA2-93B8BD27E098",
+          "extProps": {},
+          "domain": "C49EBB99-CEE0-40B1-9146-6779D2CEC2FD",
+          "id": "36390026-3C5F-4C2C-9EA6-DC42122A3D8B"
+        },
+        {
+          "defKey": "update_by",
+          "defName": "更新人",
+          "comment": "",
+          "type": "",
+          "len": "",
+          "scale": "",
+          "primaryKey": false,
+          "notNull": false,
+          "autoIncrement": false,
+          "defaultValue": "",
+          "hideInGraph": false,
+          "refDict": "",
+          "baseType": "FC9790A7-36B8-4A48-8F9A-BC1042BCFE64",
+          "extProps": {},
+          "domain": "7B55AA86-D2C8-46AC-82D6-80455B687987",
+          "id": "ED1920AE-F76D-4D31-89F8-135AF96BCDA1"
+        },
+        {
+          "defKey": "updator_id",
+          "defName": "更新人id",
+          "comment": "",
+          "type": "",
+          "len": "",
+          "scale": "",
+          "primaryKey": false,
+          "notNull": false,
+          "autoIncrement": false,
+          "defaultValue": "",
+          "hideInGraph": false,
+          "refDict": "",
+          "baseType": "1D764C4A-6F9F-421E-B11A-6F3E23B51811",
+          "extProps": {},
+          "domain": "D9CF4D8E-CD60-499C-B46E-2304C7ED36DE",
+          "id": "50BC3C67-3277-4A2C-B5EF-E365CDC7EB7E"
+        },
+        {
+          "defKey": "update_time",
+          "defName": "更新时间",
+          "comment": "",
+          "type": "",
+          "len": "",
+          "scale": "",
+          "primaryKey": false,
+          "notNull": true,
+          "autoIncrement": false,
+          "defaultValue": "CURRENT_TIMESTAMP",
+          "hideInGraph": false,
+          "refDict": "",
+          "baseType": "89D69E81-EA34-42EE-9FA2-93B8BD27E098",
+          "extProps": {},
+          "domain": "C49EBB99-CEE0-40B1-9146-6779D2CEC2FD",
+          "id": "C1F9BCC4-B921-4C2D-967F-22407A9E6239"
+        },
+        {
+          "defKey": "remark",
+          "defName": "备注",
+          "comment": "",
+          "type": "",
+          "len": "",
+          "scale": "",
+          "primaryKey": false,
+          "notNull": false,
+          "autoIncrement": false,
+          "defaultValue": "",
+          "hideInGraph": false,
+          "refDict": "",
+          "baseType": "FC9790A7-36B8-4A48-8F9A-BC1042BCFE64",
+          "extProps": {},
+          "domain": "F3FBE692-EA98-420A-BC09-CC3A68CA0F1E",
+          "id": "7006D396-335C-4985-833A-A70E76174208"
+        }
+      ],
+      "correlations": [],
+      "indexes": [],
+      "type": "P"
     }
   ],
   "views": [],
@@ -16031,7 +16510,8 @@
         "BB2130B0-4B8B-4FF9-8791-DE193B40DECA",
         "B762D3C1-BE19-4E0F-AAF3-ABCBD282A133",
         "F602F142-3408-4080-90B4-3674F2FE0D8E",
-        "AFD9B3FB-D1AF-41C7-B4FF-F327DE9761C4"
+        "AFD9B3FB-D1AF-41C7-B4FF-F327DE9761C4",
+        "E43D4F19-1023-4D8A-B71F-D79C9DF19FD4"
       ],
       "refViews": [],
       "refDiagrams": [],

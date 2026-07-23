@@ -21,39 +21,22 @@ package tech.qiantong.qmodel.module.model.enums;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
-/**
- * 模型状态枚举
- *
- * @author qModel
- * @date 2026-07-16
- */
 @Getter
 @AllArgsConstructor
-public enum ModelStatusEnum {
-
-    BUILDING("0", "部署中"),
-    BUILD_SUCCESS("1", "构建成功"),
-    BUILD_FAILED("2", "构建失败"),
-    CUT_IN("3", "已接入"),
-    AUDITING("4", "审核中"),
-    PUBLISHED("5", "已发布"),
-    AUDIT_FAILED("6", "审核拒绝"),
-    OFFLINE("7", "已下线"),
-    ;
+public enum ModelAuditStatusEnum {
+    WAITING("0", "待审核"),
+    SUCCESS("1", "审核通过"),
+    FAILED("2", "审核拒绝");
 
     private final String status;
     private final String desc;
 
-    public static ModelStatusEnum getByStatus(String status) {
-        for (ModelStatusEnum statusEnum : values()) {
+    public static ModelAuditStatusEnum getByStatus(String status) {
+        for (ModelAuditStatusEnum statusEnum : values()) {
             if (statusEnum.getStatus().equals(status)) {
                 return statusEnum;
             }
         }
         return null;
-    }
-
-    public String getValue() {
-        return status;
     }
 }
