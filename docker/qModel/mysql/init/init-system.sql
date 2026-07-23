@@ -348,6 +348,16 @@ INSERT INTO `system_dict_data` VALUES (121, 1, '执行中', '1', 'build_status',
 INSERT INTO `system_dict_data` VALUES (122, 2, '成功', '2', 'build_status', NULL, 'success', NULL, '0', 'qModel', '2026-07-15 14:32:47', NULL, NULL, NULL);
 INSERT INTO `system_dict_data` VALUES (123, 3, '失败', '3', 'build_status', NULL, 'danger', NULL, '0', 'qModel', '2026-07-15 14:32:57', NULL, NULL, NULL);
 
+INSERT INTO `system_dict_data` VALUES (124, 0, '待执行', '0', 'model_calc_status', NULL, 'primary', NULL, '0', '超级管理员', '2026-07-23 15:18:55', '超级管理员', '2026-07-23 15:19:08', NULL);
+INSERT INTO `system_dict_data` VALUES (125, 1, '运行中', '1', 'model_calc_status', NULL, 'info', NULL, '0', '超级管理员', '2026-07-23 15:19:20', NULL, NULL, NULL);
+INSERT INTO `system_dict_data` VALUES (126, 2, '运行成功', '2', 'model_calc_status', NULL, 'success', NULL, '0', '超级管理员', '2026-07-23 15:19:30', '超级管理员', '2026-07-23 15:19:57', NULL);
+INSERT INTO `system_dict_data` VALUES (127, 3, '运行失败', '3', 'model_calc_status', NULL, 'danger', NULL, '0', '超级管理员', '2026-07-23 15:20:10', NULL, NULL, NULL);
+INSERT INTO `system_dict_data` VALUES (128, 4, '已终止', '4', 'model_calc_status', NULL, 'warning', NULL, '0', '超级管理员', '2026-07-23 15:20:24', NULL, NULL, NULL);
+INSERT INTO `system_dict_data` VALUES (129, 5, '排队中', '5', 'model_calc_status', NULL, 'default', NULL, '0', '超级管理员', '2026-07-23 15:20:38', NULL, NULL, NULL);
+INSERT INTO `system_dict_data` VALUES (130, 0, '高', '1', 'model_calc_priority', NULL, 'primary', NULL, '0', '超级管理员', '2026-07-23 15:21:41', NULL, NULL, NULL);
+INSERT INTO `system_dict_data` VALUES (131, 2, '中', '2', 'model_calc_priority', NULL, 'info', NULL, '0', '超级管理员', '2026-07-23 15:21:53', NULL, NULL, NULL);
+INSERT INTO `system_dict_data` VALUES (132, 3, '低', '3', 'model_calc_priority', NULL, 'danger', NULL, '0', '超级管理员', '2026-07-23 15:22:06', NULL, NULL, NULL);
+
 -- ----------------------------
 -- Table structure for system_dict_type
 -- ----------------------------
@@ -397,6 +407,9 @@ INSERT INTO `system_dict_type` VALUES (34, '鉴权注入位置', 'auth_inject_po
 INSERT INTO `system_dict_type` VALUES (35, '模型调用历史状态', 'invoke_history_status', '0', 'qModel', '2026-07-15 13:52:32', NULL, NULL, '0=执行中，1=成功，2=失败，3=超时，4=参数校验阻塞');
 INSERT INTO `system_dict_type` VALUES (36, '模型调用方式', 'invoke_type', '0', 'qModel', '2026-07-15 13:56:22', NULL, NULL, '调用类型;1=在线测试，2=网关服务');
 INSERT INTO `system_dict_type` VALUES (37, '依赖、容器构建状态', 'build_status', '0', 'qModel', '2026-07-15 14:31:50', NULL, NULL, '构建状态;构建状态：0=待执行，1=执行中，2=成功，3=失败');
+INSERT INTO `system_dict_type` VALUES (38, '模型计算状态', 'model_calc_status', '0', '超级管理员', '2026-07-23 15:18:37', NULL, NULL, '计算状态:0-待执行,1-运行中,2-计算成功,3-计算失败,4-已终止,5-排队中');
+INSERT INTO `system_dict_type` VALUES (39, '模型计算优先级', 'model_calc_priority', '0', '超级管理员', '2026-07-23 15:21:17', NULL, NULL, '优先级:1-高,2-中,3-低');
+
 
 -- ----------------------------
 -- Table structure for system_job

@@ -235,9 +235,6 @@ public class ModelFileResourceServiceImpl extends ServiceImpl<ModelFileResourceM
      */
     @Override
     public Map<String, Object> checkZipFile(MultipartFile file) {
-        if(true){
-            throw new ServiceException("由于服务器资源问题，暂不支持在演示站中创建Python类型模型，请在本地搭建使用。");
-        }
 
 
         Map<String, Object> result = new HashMap<>();

@@ -809,6 +809,46 @@ CREATE TABLE `model_reconstitution` (
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 23 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '模型库重构表' ROW_FORMAT = DYNAMIC;
 
+
+DROP TABLE IF EXISTS `model_calc`;
+CREATE TABLE `model_calc` (
+  `id` BIGINT NOT NULL AUTO_INCREMENT COMMENT 'ID',
+  `company_id` BIGINT COMMENT '租户/公司ID',
+  `code` VARCHAR(32) COMMENT '计算编码',
+  `name` VARCHAR(32) COMMENT '任务名称',
+  `classify_id` BIGINT COMMENT '模型分类ID',
+  `classify_name` VARCHAR(32) COMMENT '模型分类名称',
+  `model_id` BIGINT NOT NULL COMMENT '关联模型ID',
+  `model_name` VARCHAR(32) COMMENT '模型名称',
+  `model_version` VARCHAR(32) COMMENT '模型版本号',
+  `model_version_id` BIGINT COMMENT '模型版本ID',
+  `description` TEXT COMMENT '描述',
+  `input_params` TEXT COMMENT '输入参数(JSON格式)',
+  `output_result` TEXT COMMENT '输出结果(JSON格式)',
+  `start_time` DATETIME COMMENT '开始时间',
+  `end_time` DATETIME COMMENT '结束时间',
+  `duration` INT COMMENT '耗时(毫秒)',
+  `status` TINYINT UNSIGNED COMMENT '计算状态:0-待执行,1-运行中,2-计算成功,3-计算失败,4-已终止,5-排队中',
+  `timeout_seconds` INT COMMENT '超时时间(秒)',
+  `retry_count` INT COMMENT '已重试次数',
+  `max_retry_count` INT COMMENT '最大重试次数',
+  `priority` TINYINT UNSIGNED COMMENT '优先级:1-高,2-中,3-低',
+  `error_message` TEXT COMMENT '错误信息',
+  `resource_id` BIGINT COMMENT '文件或接口资源ID',
+  `calc_type` TINYINT UNSIGNED COMMENT '接入方式: 0-API接口, 1-Python本地',
+  `valid_flag` TINYINT NOT NULL DEFAULT 1 COMMENT '是否有效;0：无效，1：有效',
+  `del_flag` TINYINT NOT NULL DEFAULT 0 COMMENT '删除标志;1：已删除，0：未删除',
+  `create_by` VARCHAR(32) COMMENT '创建人',
+  `creator_id` BIGINT COMMENT '创建人id',
+  `create_time` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `update_by` VARCHAR(32) COMMENT '更新人',
+  `updator_id` BIGINT COMMENT '更新人id',
+  `update_time` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+  `remark` VARCHAR(512) COMMENT '备注',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='模型计算任务';
+
+
 -- ----------------------------
 -- Records of model_reconstitution
 -- ----------------------------
