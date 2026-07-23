@@ -18,15 +18,10 @@
 
 package tech.qiantong.qmodel.module.model.service.modelAudit;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Collection;
-
 import com.baomidou.mybatisplus.extension.service.IService;
 import tech.qiantong.qmodel.common.core.page.PageResult;
-import tech.qiantong.qmodel.module.model.controller.admin.modelAudit.vo.ModelAuditSaveReqVO;
 import tech.qiantong.qmodel.module.model.controller.admin.modelAudit.vo.ModelAuditPageReqVO;
-import tech.qiantong.qmodel.module.model.controller.admin.modelAudit.vo.ModelAuditRespVO;
+import tech.qiantong.qmodel.module.model.controller.admin.modelAudit.vo.ModelAuditSaveReqVO;
 import tech.qiantong.qmodel.module.model.dal.dataobject.modelAudit.ModelAuditDO;
 
 /**
@@ -43,15 +38,7 @@ public interface IModelAuditService extends IService<ModelAuditDO> {
      * @param pageReqVO 分页请求
      * @return 模型审批分页列表
      */
-    PageResult<ModelAuditDO> getModelAuditPage(ModelAuditPageReqVO pageReqVO);
-
-    /**
-     * 创建模型审批
-     *
-     * @param createReqVO 模型审批信息
-     * @return 模型审批编号
-     */
-    Long createModelAudit(ModelAuditSaveReqVO createReqVO);
+    PageResult<ModelAuditPageReqVO> getModelAuditPage(ModelAuditPageReqVO pageReqVO);
 
     /**
      * 更新模型审批
@@ -61,43 +48,10 @@ public interface IModelAuditService extends IService<ModelAuditDO> {
     int updateModelAudit(ModelAuditSaveReqVO updateReqVO);
 
     /**
-     * 删除模型审批
-     *
-     * @param idList 模型审批编号
-     */
-    int removeModelAudit(Collection<Long> idList);
-
-    /**
      * 获得模型审批详情
      *
      * @param id 模型审批编号
      * @return 模型审批
      */
     ModelAuditDO getModelAuditById(Long id);
-
-    /**
-     * 获得全部模型审批列表
-     *
-     * @return 模型审批列表
-     */
-    List<ModelAuditDO> getModelAuditList();
-
-    /**
-     * 获得全部模型审批 Map
-     *
-     * @return 模型审批 Map
-     */
-    Map<Long, ModelAuditDO> getModelAuditMap();
-
-
-    /**
-     * 导入模型审批数据
-     *
-     * @param importExcelList 模型审批数据列表
-     * @param isUpdateSupport 是否更新支持，如果已存在，则进行更新数据
-     * @param operName        操作用户
-     * @return 结果
-     */
-    String importModelAudit(List<ModelAuditRespVO> importExcelList, boolean isUpdateSupport, String operName);
-
 }

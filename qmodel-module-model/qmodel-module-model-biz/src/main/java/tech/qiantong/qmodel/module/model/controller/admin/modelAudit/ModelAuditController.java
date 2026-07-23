@@ -18,33 +18,25 @@
 
 package tech.qiantong.qmodel.module.model.controller.admin.modelAudit;
 
-import javax.annotation.Resource;
-import javax.servlet.http.HttpServletResponse;
-import javax.validation.Valid;
-import java.util.Arrays;
-import java.util.List;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
-import tech.qiantong.qmodel.common.core.page.PageParam;
-import tech.qiantong.qmodel.common.core.domain.AjaxResult;
 import tech.qiantong.qmodel.common.annotation.Log;
 import tech.qiantong.qmodel.common.core.controller.BaseController;
 import tech.qiantong.qmodel.common.core.domain.CommonResult;
 import tech.qiantong.qmodel.common.core.page.PageResult;
 import tech.qiantong.qmodel.common.enums.BusinessType;
 import tech.qiantong.qmodel.common.utils.object.BeanUtils;
-import tech.qiantong.qmodel.common.utils.poi.ExcelUtil;
-import tech.qiantong.qmodel.common.exception.enums.GlobalErrorCodeConstants;
 import tech.qiantong.qmodel.module.model.controller.admin.modelAudit.vo.ModelAuditPageReqVO;
 import tech.qiantong.qmodel.module.model.controller.admin.modelAudit.vo.ModelAuditRespVO;
 import tech.qiantong.qmodel.module.model.controller.admin.modelAudit.vo.ModelAuditSaveReqVO;
-import tech.qiantong.qmodel.module.model.convert.modelAudit.ModelAuditConvert;
 import tech.qiantong.qmodel.module.model.dal.dataobject.modelAudit.ModelAuditDO;
 import tech.qiantong.qmodel.module.model.service.modelAudit.IModelAuditService;
+
+import javax.annotation.Resource;
+import javax.validation.Valid;
 
 /**
  * 模型审批Controller
@@ -63,32 +55,8 @@ public class ModelAuditController extends BaseController {
     @Operation(summary = "查询模型审批列表")
     @PreAuthorize("@ss.hasPermi('model:modelAudit:audit:list')")
     @GetMapping("/list")
-    public CommonResult<PageResult<ModelAuditRespVO>> list(ModelAuditPageReqVO modelAudit) {
-        PageResult<ModelAuditDO> page = modelAuditService.getModelAuditPage(modelAudit);
-        return CommonResult.success(BeanUtils.toBean(page, ModelAuditRespVO.class));
-    }
-
-    @Operation(summary = "导出模型审批列表")
-    @PreAuthorize("@ss.hasPermi('model:modelAudit:audit:export')")
-    @Log(title = "模型审批", businessType = BusinessType.EXPORT)
-    @PostMapping("/export")
-    public void export(HttpServletResponse response, ModelAuditPageReqVO exportReqVO) {
-        exportReqVO.setPageSize(PageParam.PAGE_SIZE_NONE);
-        List<ModelAuditDO> list = (List<ModelAuditDO>) modelAuditService.getModelAuditPage(exportReqVO).getRows();
-        ExcelUtil<ModelAuditRespVO> util = new ExcelUtil<>(ModelAuditRespVO.class);
-        util.exportExcel(response, ModelAuditConvert.INSTANCE.convertToRespVOList(list), "应用管理数据");
-    }
-
-    @Operation(summary = "导入模型审批列表")
-    @PreAuthorize("@ss.hasPermi('model:modelAudit:audit:import')")
-    @Log(title = "模型审批", businessType = BusinessType.IMPORT)
-    @PostMapping("/importData")
-    public AjaxResult importData(MultipartFile file, boolean updateSupport) throws Exception {
-        ExcelUtil<ModelAuditRespVO> util = new ExcelUtil<>(ModelAuditRespVO.class);
-        List<ModelAuditRespVO> importExcelList = util.importExcel(file.getInputStream());
-        String operName = getUsername();
-        String message = modelAuditService.importModelAudit(importExcelList, updateSupport, operName);
-        return success(message);
+    public CommonResult<PageResult<ModelAuditPageReqVO>> list(ModelAuditPageReqVO modelAudit) {
+        return CommonResult.success(modelAuditService.getModelAuditPage(modelAudit));
     }
 
     @Operation(summary = "获取模型审批详细信息")
@@ -99,28 +67,12 @@ public class ModelAuditController extends BaseController {
         return CommonResult.success(BeanUtils.toBean(modelAuditDO, ModelAuditRespVO.class));
     }
 
-    @Operation(summary = "新增模型审批")
-    @PreAuthorize("@ss.hasPermi('model:modelAudit:audit:add')")
-    @Log(title = "模型审批", businessType = BusinessType.INSERT)
-    @PostMapping
-    public CommonResult<Long> add(@Valid @RequestBody ModelAuditSaveReqVO modelAudit) {
-        return CommonResult.toAjax(modelAuditService.createModelAudit(modelAudit));
-    }
-
     @Operation(summary = "修改模型审批")
     @PreAuthorize("@ss.hasPermi('model:modelAudit:audit:edit')")
     @Log(title = "模型审批", businessType = BusinessType.UPDATE)
     @PutMapping
     public CommonResult<Integer> edit(@Valid @RequestBody ModelAuditSaveReqVO modelAudit) {
         return CommonResult.toAjax(modelAuditService.updateModelAudit(modelAudit));
-    }
-
-    @Operation(summary = "删除模型审批")
-    @PreAuthorize("@ss.hasPermi('model:modelAudit:audit:remove')")
-    @Log(title = "模型审批", businessType = BusinessType.DELETE)
-    @DeleteMapping("/{ids}")
-    public CommonResult<Integer> remove(@PathVariable Long[] ids) {
-        return CommonResult.toAjax(modelAuditService.removeModelAudit(Arrays.asList(ids)));
     }
 
 }

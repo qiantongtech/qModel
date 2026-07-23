@@ -18,19 +18,11 @@
 
 package tech.qiantong.qmodel.module.model.dal.mapper.modelAudit;
 
-import tech.qiantong.qmodel.module.model.dal.dataobject.modelAudit.ModelAuditDO;
-
-import java.util.Arrays;
-
-import com.github.yulichang.base.MPJBaseMapper;
-import tech.qiantong.qmodel.common.core.page.PageResult;
-
-import java.util.HashSet;
-import java.util.Set;
-
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import org.apache.ibatis.annotations.Param;
 import tech.qiantong.qmodel.module.model.controller.admin.modelAudit.vo.ModelAuditPageReqVO;
+import tech.qiantong.qmodel.module.model.dal.dataobject.modelAudit.ModelAuditDO;
 import tech.qiantong.qmodel.mybatis.core.mapper.BaseMapperX;
-import tech.qiantong.qmodel.mybatis.core.query.LambdaQueryWrapperX;
 
 /**
  * 模型审批Mapper接口
@@ -40,24 +32,12 @@ import tech.qiantong.qmodel.mybatis.core.query.LambdaQueryWrapperX;
  */
 public interface ModelAuditMapper extends BaseMapperX<ModelAuditDO> {
 
-    default PageResult<ModelAuditDO> selectPage(ModelAuditPageReqVO reqVO) {
-        // 定义排序的字段（防止 SQL 注入，与数据库字段名称一致）
-        Set<String> allowedColumns = new HashSet<>(Arrays.asList("id", "create_time", "update_time"));
-
-        // 构造动态查询条件
-        return selectPage(reqVO, new LambdaQueryWrapperX<ModelAuditDO>()
-                .eqIfPresent(ModelAuditDO::getModelId, reqVO.getModelId())
-                .eqIfPresent(ModelAuditDO::getApplyId, reqVO.getApplyId())
-                .eqIfPresent(ModelAuditDO::getApplyTime, reqVO.getApplyTime())
-                .eqIfPresent(ModelAuditDO::getApplyReason, reqVO.getApplyReason())
-                .eqIfPresent(ModelAuditDO::getAuditStatus, reqVO.getAuditStatus())
-                .eqIfPresent(ModelAuditDO::getAuditorId, reqVO.getAuditorId())
-                .eqIfPresent(ModelAuditDO::getAuditTime, reqVO.getAuditTime())
-                .eqIfPresent(ModelAuditDO::getAuditReason, reqVO.getAuditReason())
-                .eqIfPresent(ModelAuditDO::getCreateTime, reqVO.getCreateTime())
-                // 如果 reqVO.getName() 不为空，则添加 name 的精确匹配条件（name = '<name>'）
-                // .likeIfPresent(ModelAuditDO::getName, reqVO.getName())
-                // 按照 createTime 字段降序排序
-                .orderBy(reqVO.getOrderByColumn(), reqVO.getIsAsc(), allowedColumns));
-    }
+    /**
+     * 模型审批分页
+     *
+     * @param page  分页数据
+     * @param query 筛选条件
+     * @return 分页数据
+     */
+    IPage<ModelAuditPageReqVO> selectPage(IPage<ModelAuditPageReqVO> page, @Param("query") ModelAuditPageReqVO query);
 }

@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+  Copyright © 2025-present Jiangsu Qiantong Technology Co., Ltd.
+   *
+  This file is part of qModel Module Platform (Open Source Edition).
+   *
+  qModel is licensed under Apache License 2.0 with additional qModel terms.
+  You may use qModel for commercial purposes, but you may not remove, hide,
+  modify, or replace the qModel logo, copyright notices, license notices,
+  or attribution information without a separate commercial license.
+   *
+  White-label use, OEM distribution, rebranding, or presenting qModel as
+  another product requires separate commercial authorization from
+  Jiangsu Qiantong Technology Co., Ltd.
+   *
+  Business License: `https://qmodel.tech/`
+  See the LICENSE file in the project root for full license information.
+-->
+
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="tech.qiantong.qmodel.module.model.dal.mapper.modelAudit.ModelAuditMapper">
+
+    <select id="selectPage" resultType="tech.qiantong.qmodel.module.model.controller.admin.modelAudit.vo.ModelAuditPageReqVO">
+        SELECT ma.*,
+            m.name model_name,
+            m.code model_code,
+            ap.nick_name apply_name,
+            au.nick_name auditor_name
+        from model_audit ma
+         LEFT JOIN model m on ma.model_id = m.id and m.del_flag = 0
+         LEFT JOIN system_user ap on ma.apply_id = ap.user_id and ap.del_flag = 0
+         LEFT JOIN system_user au on ma.auditor_id = au.user_id and au.del_flag = 0
+        WHERE ma.del_flag = 0 and ma.valid_flag = 1
+        <if test="query.modelName != null and query.modelName != '' ">
+            and m.name like #{query.modelName}
+        </if>
+        <if test="query.modelCode != null and query.modelCode != '' ">
+            and m.code like #{query.modelCode}
+        </if>
+        <if test="query.auditStatus != null and query.auditStatus != '' ">
+            and ma.audit_status = #{query.auditStatus}
+        </if>
+        order by
+        <choose>
+            <when test="query.orderByColumn == 'id' ">ma.id</when>
+            <when test="query.orderByColumn == 'applyTime' ">ma.apply_time</when>
+            <otherwise>ma.apply_time</otherwise>
+        </choose>
+        <choose>
+            <when test="query.isAsc == 'asc' ">ASC</when>
+            <otherwise>DESC</otherwise>
+        </choose>
+    </select>
+</mapper>

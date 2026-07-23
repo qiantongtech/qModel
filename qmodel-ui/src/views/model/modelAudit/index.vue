@@ -21,23 +21,23 @@
     <div class="pagecont-top" v-show="showSearch">
       <el-form class="btn-style" :model="queryParams" ref="queryRef" :inline="true" label-width="75px"
                v-show="showSearch" @submit.prevent>
-        <el-form-item label="模型id" prop="modelId">
+        <el-form-item label="模型名称" prop="modelName">
           <el-input
               class="el-form-input-width"
-              v-model="queryParams.modelId"
-              placeholder="请输入模型id"
+              v-model="queryParams.modelName"
+              placeholder="请输入模型名称"
               clearable
               @keyup.enter="handleQuery"
           />
         </el-form-item>
-        <el-form-item label="申请时间" prop="applyTime">
-          <el-date-picker class="el-form-input-width"
-                          clearable
-                          v-model="queryParams.applyTime"
-                          type="date"
-                          value-format="YYYY-MM-DD"
-                          placeholder="请选择申请时间">
-          </el-date-picker>
+        <el-form-item label="模型编码" prop="modelCode">
+          <el-input
+              class="el-form-input-width"
+              v-model="queryParams.modelCode"
+              placeholder="请输入模型编码"
+              clearable
+              @keyup.enter="handleQuery"
+          />
         </el-form-item>
         <el-form-item label="审核状态" prop="auditStatus">
           <el-select class="el-form-input-width" v-model="queryParams.auditStatus" placeholder="请选择审核状态"
@@ -77,55 +77,51 @@
             {{ scope.row.modelName || '-' }}
           </template>
         </el-table-column>
-        <el-table-column v-if="getColumnVisibility(2)" label="模型编码" align="left" prop="code"
+        <el-table-column v-if="getColumnVisibility(2)" label="模型编码" align="left" prop="modelCode"
                          :show-overflow-tooltip="{ effect: 'light' }">
           <template #default="scope">
-            {{ scope.row.code || '-' }}
+            {{ scope.row.modelCode || '-' }}
           </template>
         </el-table-column>
-        <el-table-column v-if="getColumnVisibility(3)" label="申请人" align="center" prop="applyId">
+        <el-table-column v-if="getColumnVisibility(3)" label="申请人" align="center" prop="applyName" width="80">
           <template #default="scope">
-            <dict-tag :options="model_audit_status" :value="scope.row.applyId"/>
+            {{ scope.row.applyName || '-' }}
           </template>
         </el-table-column>
-        <el-table-column v-if="getColumnVisibility(4)" label="申请时间" align="center" prop="applyTime" width="180"
+        <el-table-column v-if="getColumnVisibility(4)" label="申请时间" align="center" prop="applyTime" width="140"
                          sortable="custom" :sort-orders="['descending', 'ascending']">
           <template #default="scope">
             <span>{{ parseTime(scope.row.applyTime, '{y}-{m}-{d}  {h}:{i}') }}</span>
           </template>
         </el-table-column>
-        <el-table-column v-if="getColumnVisibility(5)" label="申请理由" align="left" prop="applyReason">
+        <el-table-column v-if="getColumnVisibility(5)" label="申请理由" align="left" prop="applyReason"
+                         :show-overflow-tooltip="{ effect: 'light' }">
           <template #default="scope">
             <dict-tag :options="model_audit_status" :value="scope.row.applyReason"/>
           </template>
         </el-table-column>
-        <el-table-column v-if="getColumnVisibility(6)" label="审核状态" align="center" prop="auditStatus">
+        <el-table-column v-if="getColumnVisibility(6)" label="审核状态" align="center" prop="auditStatus" width="90">
           <template #default="scope">
             <dict-tag :options="model_audit_status" :value="scope.row.auditStatus"/>
           </template>
         </el-table-column>
-        <el-table-column v-if="getColumnVisibility(7)" label="审核人" align="center" prop="auditorId">
+        <el-table-column v-if="getColumnVisibility(7)" label="审核人" align="center" prop="auditorName" width="80">
           <template #default="scope">
-            <dict-tag :options="model_audit_status" :value="scope.row.auditorId"/>
+            {{ scope.row.auditorName || '-' }}
           </template>
         </el-table-column>
-        <el-table-column v-if="getColumnVisibility(8)" label="审核时间" align="center" prop="auditTime" width="180">
+        <el-table-column v-if="getColumnVisibility(8)" label="审核时间" align="center" prop="auditTime" width="140">
           <template #default="scope">
             <span>{{ parseTime(scope.row.auditTime, "{y}-{m}-{d} {h}:{i}") }}</span>
           </template>
         </el-table-column>
-        <el-table-column v-if="getColumnVisibility(9)" label="审核理由" align="left" prop="auditReason">
-          <template #default="scope">
-            <dict-tag :options="model_audit_status" :value="scope.row.auditReason"/>
-          </template>
-        </el-table-column>
         <el-table-column v-if="getColumnVisibility(10)" label="操作" align="center" class-name="small-padding fixed-width" fixed="right" width="180">
           <template #default="scope">
-            <el-button link type="success" icon="Check" @click="handleUpdate(scope.row)"
-                       v-hasPermi="['model:modelAudit:audit:edit']">通过
+            <el-button link type="primary" icon="view" @click="handleUpdate(scope.row)"
+                       v-hasPermi="['model:modelAudit:audit:query']">详情
             </el-button>
-            <el-button link type="danger" icon="Close" @click="handleDetail(scope.row)"
-                       v-hasPermi="['model:modelAudit:audit:edit']">驳回
+            <el-button link type="primary" icon="Finished" @click="handleDetail(scope.row)"
+                       v-hasPermi="['model:modelAudit:audit:edit']">审批
             </el-button>
           </template>
         </el-table-column>
@@ -340,17 +336,16 @@ const auditList = ref([]);
 
 // 列显隐信息
 const columns = ref([
-  {key: 1, label: "模型id", visible: true},
-  {key: 2, label: "申请人", visible: true},
-  {key: 3, label: "申请时间", visible: true},
-  {key: 4, label: "申请理由", visible: true},
-  {key: 5, label: "审核状态", visible: true},
-  {key: 6, label: "审核人", visible: true},
-  {key: 7, label: "审核时间", visible: true},
-  {key: 8, label: "审核理由", visible: true},
-  {key: 11, label: "创建人", visible: true},
-  {key: 13, label: "创建时间", visible: true},
-  {key: 17, label: "备注", visible: true}
+  {key: 0, label: "编号", visible: true},
+  {key: 1, label: "模型名称", visible: true},
+  {key: 2, label: "模型编码", visible: true},
+  {key: 3, label: "申请人", visible: true},
+  {key: 4, label: "申请时间", visible: true},
+  {key: 5, label: "申请理由", visible: true},
+  {key: 6, label: "审核状态", visible: true},
+  {key: 7, label: "审核人", visible: true},
+  {key: 8, label: "审核时间", visible: true},
+  {key: 10, label: "操作", visible: true}
 ]);
 
 const getColumnVisibility = (key) => {
@@ -380,8 +375,6 @@ const data = reactive({
   queryParams: {
     pageNum: 1,
     pageSize: 10,
-    modelId: null,
-    applyId: null,
     applyTime: null,
     applyReason: null,
     auditStatus: null,
@@ -389,6 +382,7 @@ const data = reactive({
     auditTime: null,
     auditReason: null,
     createTime: null,
+    isAsc: "desc",
   },
   rules: {
     modelId: [{required: true, message: "模型id不能为空", trigger: "blur"}],

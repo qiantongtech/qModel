@@ -23,6 +23,7 @@ import java.util.Date;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
+import tech.qiantong.qmodel.common.annotation.Excel;
 import tech.qiantong.qmodel.common.core.page.PageParam;
 
 /**
@@ -62,5 +63,20 @@ public class ModelAuditPageReqVO extends PageParam {
     @Schema(description = "审核理由", example = "")
     private String auditReason;
 
+    @Excel(name = "模型名称")
+    @Schema(description = "模型名称", example = "")
+    private String modelName;
+
+    @Excel(name = "模型编码")
+    @Schema(description = "模型编码", example = "")
+    private String modelCode;
+
+    @Excel(name = "申请人姓名")
+    @Schema(description = "申请人姓名", example = "")
+    private String applyName;
+
+    @Excel(name = "审核人姓名")
+    @Schema(description = "审核人姓名", example = "")
+    private String auditorName;
 
 }

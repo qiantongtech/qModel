@@ -178,7 +178,8 @@ public class ModelFileResourceDepsCheckHandler {
                         buildLogBuilder.toString()
                 );
                 updateStatus(fileResourceId, ImageBuildStatusEnum.SUCCESS.getStatus(), scriptPath, depsPath);
-                updateModelStatus(fileResource.getModelId(), ModelStatusEnum.ENABLED.getStatus());
+                // todo
+//                updateModelStatus(fileResource.getModelId(), ModelStatusEnum.ENABLED.getStatus());
                 log.info("依赖检测通过，fileResourceId: {}", fileResourceId);
             } else {
                 buildLogBuilder.append("开始安装缺失的依赖包...\n");
@@ -194,7 +195,8 @@ public class ModelFileResourceDepsCheckHandler {
                             buildLogBuilder.toString()
                     );
                     updateStatus(fileResourceId, ImageBuildStatusEnum.SUCCESS.getStatus(), scriptPath, depsPath);
-                    updateModelStatus(fileResource.getModelId(), ModelStatusEnum.ENABLED.getStatus());
+                    // todo
+//                    updateModelStatus(fileResource.getModelId(), ModelStatusEnum.ENABLED.getStatus());
                     log.info("依赖安装成功，fileResourceId: {}", fileResourceId);
                 } else {
                     buildLogBuilder.append("依赖包安装失败\n");

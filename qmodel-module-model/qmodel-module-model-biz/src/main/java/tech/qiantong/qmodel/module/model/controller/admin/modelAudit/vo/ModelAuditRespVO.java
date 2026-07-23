@@ -116,4 +116,20 @@ public class ModelAuditRespVO implements Serializable {
     @Schema(description = "备注", example = "")
     private String remark;
 
+    @Excel(name = "模型名称")
+    @Schema(description = "模型名称", example = "")
+    private String modelName;
+
+    @Excel(name = "模型编码")
+    @Schema(description = "模型编码", example = "")
+    private String modelCode;
+
+    @Excel(name = "申请人姓名")
+    @Schema(description = "申请人姓名", example = "")
+    private String applyName;
+
+    @Excel(name = "审核人姓名")
+    @Schema(description = "审核人姓名", example = "")
+    private String auditorName;
+
 }
