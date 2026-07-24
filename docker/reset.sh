@@ -3,18 +3,18 @@
 # 文件名: reset.sh
 # 功能: 重置 qModel开源版 系统演示数据
 # 作者: qModel
-# 日期: 2025-11-07
+# 日期: 2026-07-07
 # 注意: 必须在项目根目录下运行此脚本（即 docker/ 目录）
 # ==================================================================
 
 set -e  # 遇错立即退出
 
 # docker-compose 项目的路径
-COMPOSE_DIR="/home/qtt/opt/qmodel/docker"
+COMPOSE_DIR="/home/qtt/opt/qModel-demo/docker"
 
 cd "$COMPOSE_DIR"
 
-echo "🔄 开始执行系统重置流程（共 2 个阶段）..."
+echo "🔄 开始执行系统重置流程（共 3 个阶段）..."
 echo "========================================"
 
 # ==================================================================
@@ -27,7 +27,7 @@ echo "   → 停止 qModel API 服务..."
 docker stop qmodel-qmodel-api-1
 
 # ==================================================================
-# 阶段 B: 重置 MySQL 数据 + 启动 qModel API
+# 阶段 B: 重置 MySQL 数据
 # ==================================================================
 echo "🔄 阶段 B: 初始化 MySQL 并启动 qModel API"
 
@@ -44,8 +44,12 @@ echo "----------------------------------------"
 # ==================================================================
 echo "🔄 阶段 C: 重置 upload 数据"
 
+
+# 清理 upload 数据
+sudo rm -rf ./qModel/server/upload/*
+
 # 重置数据
-cp -r ./qModel/server/upload-init/* ./qModel/server/upload
+cp -r ./qModel/server/upload-init/* ./qModel/server/upload/
 sudo chown -R $USER:$USER ./qModel/server/upload
 
 
