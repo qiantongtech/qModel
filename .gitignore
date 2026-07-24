@@ -48,6 +48,8 @@ nbdist/
 *.xml.versionsBackup
 *.swp
 *.class
+**/*.class
+.class
 
 
 !*/build/*.java
