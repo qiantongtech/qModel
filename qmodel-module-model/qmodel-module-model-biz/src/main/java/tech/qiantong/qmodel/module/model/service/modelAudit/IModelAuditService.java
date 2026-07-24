@@ -45,7 +45,7 @@ public interface IModelAuditService extends IService<ModelAuditDO> {
      *
      * @param updateReqVO 模型审批信息
      */
-    int updateModelAudit(ModelAuditSaveReqVO updateReqVO);
+    int audit(ModelAuditSaveReqVO updateReqVO);
 
     /**
      * 获得模型审批详情

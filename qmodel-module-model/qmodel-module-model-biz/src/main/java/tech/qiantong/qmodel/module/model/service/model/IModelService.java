@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Collection;
 import com.baomidou.mybatisplus.extension.service.IService;
+import tech.qiantong.qmodel.common.core.domain.model.LoginUser;
 import tech.qiantong.qmodel.common.core.page.PageResult;
 import tech.qiantong.qmodel.module.model.controller.admin.model.vo.ModelSaveReqVO;
 import tech.qiantong.qmodel.module.model.controller.admin.model.vo.ModelSaveWithConfigReqVO;
@@ -115,4 +116,13 @@ public interface IModelService extends IService<ModelDO> {
      */
     void updateModelStatus(Long id, String status);
 
+    /**
+     * 发布模型
+     *
+     * @param id 模型基础信息编号
+     * @param applyReason 申请原因
+     * @param currentUser 当前用户
+     * @return 是否成功
+     */
+    Boolean publishModel(Long id, String applyReason, LoginUser currentUser);
 }

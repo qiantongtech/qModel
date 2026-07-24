@@ -78,6 +78,18 @@ export function updateModelStatus(id, status) {
   })
 }
 
+// 发布模型
+export function publishModel(id, applyReason) {
+  return request({
+    url: '/model/model/publishModel',
+    method: 'put',
+    params: {
+      id: id,
+      applyReason: applyReason
+    }
+  })
+}
+
 // 导出模型基础信息
 export function exportModel(query) {
   return request({

@@ -120,7 +120,7 @@
             <el-button link type="primary" icon="view" @click="handleDetail(scope.row)"
                        v-hasPermi="['model:modelAudit:audit:query']">详情
             </el-button>
-            <el-button link type="primary" :disabled="scope.row.auditStatus !== '0'" icon="Finished" @click="handleUpdate(scope.row)"
+            <el-button link type="primary" :disabled="scope.row.auditStatus !== '0'" icon="Finished" @click="handleAudit(scope.row)"
                        v-hasPermi="['model:modelAudit:audit:edit']">审批
             </el-button>
           </template>
@@ -181,7 +181,7 @@
           </el-col>
           <el-col :span="24">
             <el-form-item label="申请理由" prop="applyReason">
-              <el-input v-model="form.applyReason" type="textarea" disabled placeholder="请输入内容"/>
+              <el-input v-model="form.applyReason" type="textarea" disabled placeholder="请输入申请理由"/>
             </el-form-item>
           </el-col>
         </el-row>
@@ -296,34 +296,10 @@
 
 <script setup name="Audit">
 import {listAudit, getAudit, updateAudit} from "@/api/model/audit";
-
-const {proxy} = getCurrentInstance();
 import { parseTime } from '@/utils/anivia.js'
 
+const {proxy} = getCurrentInstance();
 const auditList = ref([]);
-
-// 列显隐信息
-const columns = ref([
-  {key: 0, label: "编号", visible: true},
-  {key: 1, label: "模型名称", visible: true},
-  {key: 2, label: "模型编码", visible: true},
-  {key: 3, label: "申请人", visible: true},
-  {key: 4, label: "申请时间", visible: true},
-  {key: 5, label: "申请理由", visible: true},
-  {key: 6, label: "审批状态", visible: true},
-  {key: 7, label: "审批人", visible: true},
-  {key: 8, label: "审批时间", visible: true},
-  {key: 10, label: "操作", visible: true}
-]);
-
-const getColumnVisibility = (key) => {
-  const column = columns.value.find(col => col.key === key);
-  // 如果没有找到对应列配置，默认显示
-  if (!column) return true;
-  // 如果找到对应列配置，根据visible属性来控制显示
-  return column.visible;
-};
-
 const open = ref(false);
 const openDetail = ref(false);
 const loading = ref(true);
@@ -353,12 +329,42 @@ const data = reactive({
     isAsc: "desc",
   },
   rules: {
-    auditStatus: [{required: true, message: "审批状态不能为空", trigger: "blur"}]
+    auditStatus: [{required: true, message: "审批状态不能为空", trigger: "blur"},
+      {
+        validator: (rule, value, callback) => {
+          if (value !== "1" && value !== "2") {
+            return callback(new Error('审批状态不能为空'))
+          }
+          callback()
+        },
+        trigger: ['blur' ]
+      }
+    ]
   }
 });
+// 列显隐信息
+const columns = ref([
+  {key: 0, label: "编号", visible: true},
+  {key: 1, label: "模型名称", visible: true},
+  {key: 2, label: "模型编码", visible: true},
+  {key: 3, label: "申请人", visible: true},
+  {key: 4, label: "申请时间", visible: true},
+  {key: 5, label: "申请理由", visible: true},
+  {key: 6, label: "审批状态", visible: true},
+  {key: 7, label: "审批人", visible: true},
+  {key: 8, label: "审批时间", visible: true},
+  {key: 10, label: "操作", visible: true}
+]);
 
 const {queryParams, form, rules} = toRefs(data);
 
+const getColumnVisibility = (key) => {
+  const column = columns.value.find(col => col.key === key);
+  // 如果没有找到对应列配置，默认显示
+  if (!column) return true;
+  // 如果找到对应列配置，根据visible属性来控制显示
+  return column.visible;
+};
 /** 查询模型审批列表 */
 function getList() {
   loading.value = true;
@@ -435,11 +441,11 @@ function handleAdd() {
 }
 
 /** 修改按钮操作 */
-function handleUpdate(row) {
+function handleAudit(row) {
   reset();
   form.value = {...row};
   form.value.applyTime = parseTime(row.applyTime, "{y}-{m}-{d} {h}:{i}:{s}")
-  form.value.auditStatus = '1';
+  // form.value.auditStatus = '1';
   open.value = true;
   title.value = "模型审批";
 }

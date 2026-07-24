@@ -267,7 +267,7 @@ const loadModelData = async (id) => {
       accessType,
       version: modelData.version || 'V1.0',
       author: modelData.author || '',
-      status: modelData.status != null ? String(modelData.status) : '0',
+      status: modelData.status != null ? String(modelData.status) : '3',
       tags: modelData.tags || '',
       icon: modelData.icon || '',
       description: modelData.description || '',
@@ -414,7 +414,7 @@ const buildModelData = () => {
     accessType: form.accessType,
     version: form.version,
     author: form.author || null,
-    status: form.status || '0',
+    status: form.status || '3',
     tags: form.tags || null,
     icon: form.icon || '',
     description: form.description || null,
@@ -427,7 +427,7 @@ const buildModelData = () => {
     modelData.fileSize = form.uploadedFile?.size ? Math.round(form.uploadedFile.size / (1024 * 1024)) : undefined
     modelData.scriptName = 'main.py'
     modelData.resourceType = '2'
-    modelData.status = '2'
+    modelData.status = '0'
     modelData.modelVersion = 1
     modelData.inputSchema = form.inputSchema || undefined
     modelData.outputSchema = form.outputSchema || undefined

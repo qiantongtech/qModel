@@ -18,11 +18,7 @@
 
 package tech.qiantong.qmodel.module.model.service.model.impl;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import java.util.ArrayList;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import cn.hutool.core.collection.CollectionUtil;
@@ -30,6 +26,8 @@ import cn.hutool.core.util.ObjectUtil;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import javax.annotation.Resource;
+
+import tech.qiantong.qmodel.common.core.domain.model.LoginUser;
 import tech.qiantong.qmodel.common.core.page.PageResult;
 import tech.qiantong.qmodel.common.utils.object.BeanUtils;
 import tech.qiantong.qmodel.common.utils.StringUtils;
@@ -46,13 +44,18 @@ import tech.qiantong.qmodel.module.model.dal.dataobject.classify.ModelClassifyDO
 import tech.qiantong.qmodel.module.model.dal.dataobject.config.ModelConfigDO;
 import tech.qiantong.qmodel.module.model.dal.dataobject.fileResource.ModelFileResourceDO;
 import tech.qiantong.qmodel.module.model.dal.dataobject.model.ModelDO;
+import tech.qiantong.qmodel.module.model.dal.dataobject.modelAudit.ModelAuditDO;
 import tech.qiantong.qmodel.module.model.dal.mapper.config.ModelConfigMapper;
 import tech.qiantong.qmodel.module.model.dal.mapper.model.ModelMapper;
+import tech.qiantong.qmodel.module.model.dal.mapper.modelAudit.ModelAuditMapper;
+import tech.qiantong.qmodel.module.model.enums.ModelAuditStatusEnum;
+import tech.qiantong.qmodel.module.model.enums.ModelStatusEnum;
 import tech.qiantong.qmodel.module.model.service.classify.IModelClassifyService;
 import tech.qiantong.qmodel.module.model.service.config.IModelConfigService;
 import tech.qiantong.qmodel.module.model.service.model.IModelService;
 import tech.qiantong.qmodel.module.model.service.fileResource.IModelFileResourceService;
 import tech.qiantong.qmodel.module.model.enums.AccessTypeEnum;
+import tech.qiantong.qmodel.module.model.service.modelAudit.IModelAuditService;
 
 @Slf4j
 @Service
@@ -71,6 +74,8 @@ public class ModelServiceImpl extends ServiceImpl<ModelMapper, ModelDO> implemen
 
     @Resource
     private IModelConfigService modelConfigService;
+    @Resource
+    private ModelAuditMapper modelAuditMapper;
 
     @Override
     public PageResult<ModelDO> getModelPage(ModelPageReqVO pageReqVO) {
@@ -242,11 +247,37 @@ public class ModelServiceImpl extends ServiceImpl<ModelMapper, ModelDO> implemen
         modelMapper.updateById(updateObj);
     }
 
+    /**
+     * 发布模型
+     *
+     * @param id 模型基础信息编号
+     * @param applyReason 申请原因
+     * @param currentUser 当前用户
+     * @return 是否成功
+     */
+    @Override
+    public Boolean publishModel(Long id, String applyReason, LoginUser currentUser) {
+        ModelAuditDO auditDO = new ModelAuditDO();
+        auditDO.setModelId(id);
+        auditDO.setApplyReason(applyReason);
+        auditDO.setApplyTime(new Date());
+        auditDO.setApplyId(currentUser.getUserId());
+        auditDO.setAuditStatus(ModelAuditStatusEnum.WAITING.getStatus());
+        modelAuditMapper.insert(auditDO);
+        updateModelStatus(id, ModelStatusEnum.AUDITING.getStatus());
+        return true;
+    }
+
     @Override
     public Long saveModelWithConfig(ModelSaveWithConfigReqVO saveReqVO) {
         ModelSaveReqVO modelReq = saveReqVO.getModel();
         ModelConfigSaveReqVO configReq = saveReqVO.getConfig();
 
+        if (Objects.equals(AccessTypeEnum.API.getType(), modelReq.getAccessType())){
+            modelReq.setStatus(ModelStatusEnum.CUT_IN.getStatus());
+        } else if (Objects.equals(AccessTypeEnum.PYTHON.getType(), modelReq.getAccessType())) {
+            modelReq.setStatus(ModelStatusEnum.BUILDING.getStatus());
+        }
         // 1. 保存模型基础信息
         Long modelId;
         if (modelReq.getId() != null) {

@@ -67,13 +67,13 @@ public class ModelAuditController extends BaseController {
         return CommonResult.success(BeanUtils.toBean(modelAuditDO, ModelAuditRespVO.class));
     }
 
-    @Operation(summary = "修改模型审批")
+    @Operation(summary = "模型审批")
     @PreAuthorize("@ss.hasPermi('model:modelAudit:audit:edit')")
     @Log(title = "模型审批", businessType = BusinessType.UPDATE)
     @PutMapping
-    public CommonResult<Integer> edit(@Valid @RequestBody ModelAuditSaveReqVO modelAudit) {
+    public CommonResult<Integer> audit(@Valid @RequestBody ModelAuditSaveReqVO modelAudit) {
         modelAudit.setAuditorId(super.getUserId());
-        return CommonResult.toAjax(modelAuditService.updateModelAudit(modelAudit));
+        return CommonResult.toAjax(modelAuditService.audit(modelAudit));
     }
 
 }

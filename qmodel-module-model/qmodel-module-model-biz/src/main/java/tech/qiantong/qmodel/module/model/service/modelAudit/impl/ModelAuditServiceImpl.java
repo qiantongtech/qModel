@@ -19,7 +19,9 @@
 package tech.qiantong.qmodel.module.model.service.modelAudit.impl;
 
 import cn.hutool.core.util.StrUtil;
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.extern.slf4j.Slf4j;
@@ -29,11 +31,17 @@ import tech.qiantong.qmodel.common.core.page.PageResult;
 import tech.qiantong.qmodel.common.utils.object.BeanUtils;
 import tech.qiantong.qmodel.module.model.controller.admin.modelAudit.vo.ModelAuditPageReqVO;
 import tech.qiantong.qmodel.module.model.controller.admin.modelAudit.vo.ModelAuditSaveReqVO;
+import tech.qiantong.qmodel.module.model.dal.dataobject.model.ModelDO;
 import tech.qiantong.qmodel.module.model.dal.dataobject.modelAudit.ModelAuditDO;
+import tech.qiantong.qmodel.module.model.dal.mapper.model.ModelMapper;
 import tech.qiantong.qmodel.module.model.dal.mapper.modelAudit.ModelAuditMapper;
+import tech.qiantong.qmodel.module.model.enums.ModelAuditStatusEnum;
+import tech.qiantong.qmodel.module.model.enums.ModelStatusEnum;
 import tech.qiantong.qmodel.module.model.service.modelAudit.IModelAuditService;
 
+import javax.annotation.Resource;
 import java.util.Date;
+import java.util.Objects;
 
 /**
  * 模型审批Service业务层处理
@@ -45,6 +53,9 @@ import java.util.Date;
 @Service
 @Transactional(rollbackFor = Exception.class)
 public class ModelAuditServiceImpl extends ServiceImpl<ModelAuditMapper, ModelAuditDO> implements IModelAuditService {
+
+    @Resource
+    private ModelMapper modelMapper;
 
     /**
      * 模型审批分页列表
@@ -66,13 +77,24 @@ public class ModelAuditServiceImpl extends ServiceImpl<ModelAuditMapper, ModelAu
         return new PageResult<>(page.getRecords(),page.getTotal());
     }
 
+    /**
+     * 模型审批
+     * @param updateReqVO 模型审批信息
+     * @return 模型审批结果
+     */
     @Override
-    public int updateModelAudit(ModelAuditSaveReqVO updateReqVO) {
-        // 相关校验
-
-        // 更新模型审批
+    public int audit(ModelAuditSaveReqVO updateReqVO) {
         updateReqVO.setAuditTime(new Date());
+        ModelAuditStatusEnum auditStatus = ModelAuditStatusEnum.getByStatus(updateReqVO.getAuditStatus());
+        ModelDO modelDO = new ModelDO();
+        modelDO.setId(updateReqVO.getModelId());
+        if (Objects.equals(auditStatus, ModelAuditStatusEnum.SUCCESS)){
+            modelDO.setStatus(ModelStatusEnum.PUBLISHED.getStatus());
+        } else if (Objects.equals(auditStatus, ModelAuditStatusEnum.FAILED)) {
+            modelDO.setStatus(ModelStatusEnum.AUDIT_FAILED.getStatus());
+        }
         ModelAuditDO updateObj = BeanUtils.toBean(updateReqVO, ModelAuditDO.class);
+        modelMapper.updateById(modelDO);
         return baseMapper.updateById(updateObj);
     }
 

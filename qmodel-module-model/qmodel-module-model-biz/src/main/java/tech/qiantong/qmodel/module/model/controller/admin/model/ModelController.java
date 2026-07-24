@@ -141,4 +141,13 @@ public class ModelController extends BaseController {
         return CommonResult.success(true);
     }
 
+    @Operation(summary = "发布模型")
+    @PreAuthorize("@ss.hasPermi('model:model:edit')")
+    @Log(title = "发布模型", businessType = BusinessType.UPDATE)
+    @PutMapping("/publishModel")
+    public CommonResult<Boolean> publishModel(@RequestParam("id") Long id,
+                                              @RequestParam("applyReason") String applyReason) {
+        return CommonResult.success(modelService.publishModel(id, applyReason,super.getLoginUser()));
+    }
+
 }

@@ -46,6 +46,7 @@ public class ModelAuditSaveReqVO extends BaseEntity {
     private Long id;
 
     @Schema(description = "模型id", example = "")
+    @NotNull(message = "模型id不能为空")
     private Long modelId;
 
     @Schema(description = "申请人", example = "")
