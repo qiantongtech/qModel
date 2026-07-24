@@ -1,12 +1,11 @@
 ######################################################################
 # Build Tools
-
 .gradle
 /build/
 !gradle/wrapper/gradle-wrapper.jar
 
-target/
-**/target/
+# Maven 全局所有子模块target
+**/target/**
 !.mvn/wrapper/maven-wrapper.jar
 
 ######################################################################
@@ -31,13 +30,11 @@ rebel.xml
 
 ### NetBeans ###
 nbproject/private/
-build/*
 nbbuild/
 dist/
-!*/qmodel-ui/dist/
-!*/qmodel-ui/node_modules/
-/qmodel-ui/dist/
-/qmodel-ui/node_modules/
+# 前端编译产物、依赖
+**/qmodel-ui/dist/
+**/qmodel-ui/node_modules/
 !*/resources/static
 nbdist/
 .nb-gradle/
@@ -48,6 +45,8 @@ nbdist/
 *.xml.versionsBackup
 *.swp
 *.class
+**/*.class
+.class
 
 
 !*/build/*.java

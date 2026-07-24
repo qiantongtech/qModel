@@ -1,49 +1,35 @@
-# Copyright © 2026 Qiantong Technology Co., Ltd.
-# qModel Model Platform(Open Source Edition)
-#  *
-# License:
-# Released under the Apache License, Version 2.0.
-# You may use, modify, and distribute this software for commercial purposes
-# under the terms of the License.
-#  *
-# Special Notice:
-# All derivative versions are strictly prohibited from modifying or removing
-# the default system logo and copyright information.
-# For brand customization, please apply for brand customization authorization via official channels.
-#  *
-# More information: https://qmodel.qiantong.tech/business.html
-#  *
-# ============================================================================
-#  *
-# 版权所有 © 2026 江苏千桐科技有限公司
-# qModel 模型平台（开源版）
-#  *
-# 许可协议：
-# 本项目基于 Apache License 2.0 开源协议发布，
-# 允许在遵守协议的前提下进行商用、修改和分发。
-#  *
-# 特别说明：
-# 所有衍生版本不得修改或移除系统默认的 LOGO 和版权信息；
-# 如需定制品牌，请通过官方渠道申请品牌定制授权。
-#  *
-# 更多信息请访问：https://qmodel.qiantong.tech/business.html
+# Copyright © 2025-present Jiangsu Qiantong Technology Co., Ltd.
+#  
+# This file is part of qModel Module Platform (Open Source Edition).
+#  
+# qModel is licensed under Apache License 2.0 with additional qModel terms.
+# You may use qModel for commercial purposes, but you may not remove, hide,
+# modify, or replace the qModel logo, copyright notices, license notices,
+# or attribution information without a separate commercial license.
+#  
+# White-label use, OEM distribution, rebranding, or presenting qModel as
+# another product requires separate commercial authorization from
+# Jiangsu Qiantong Technology Co., Ltd.
+#  
+# Business License: `https://qmodel.tech/`
+# See the LICENSE file in the project root for full license information.
 
-# 主数据源选择
+
 datasource:
-  type: dm8
+  type: mysql
 
 # Spring配置
 spring:
   # redis 配置
   redis:
     # 地址
-    host: 127.0.0.1
+    host: redis
     # 端口，默认为6379
     port: 6379
     # 数据库索引
-    database: 13
+    database: 0
     # 密码
-    password: J98%FHF#9h@e88h9fre0
+    password: J98%FHF#9h@e88h9fre9
     # 连接超时时间
     timeout: 10s
     lettuce:
@@ -63,7 +49,7 @@ spring:
         # 是否启用Druid的监控统计功能
         enabled: true
         # 访问Druid监控页面的用户名
-        loginUsername: anivia
+        loginUsername: qModel
         # 访问Druid监控页面的密码
         loginPassword: 123456
     dynamic:
@@ -113,6 +99,17 @@ spring:
 #          url: jdbc:dm://127.0.0.1:5236/MOON?STU&zeroDateTimeBehavior=convertToNull&useUnicode=true&characterEncoding=utf-8&schema=MOON&serverTimezone=Asia/Shanghai
 #          username: MOON
 #          password: 1234567890
+
+# MySQL配置文件
+mysql:
+  # JDBC驱动类名
+  driver-class-name: com.mysql.cj.jdbc.Driver
+  # 主库JDBC连接URL
+  url: jdbc:mysql://mysql57:3306/qmodel_demo?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=false&serverTimezone=GMT%2B8
+  # 主库用户名
+  username: root
+  # 主库密码
+  password: lJ7gP0cA5dD2dA1hA3bJ
 
 # 达梦配置文件
 dm8:
