@@ -19,9 +19,7 @@
 package tech.qiantong.qmodel.module.model.service.modelAudit.impl;
 
 import cn.hutool.core.util.StrUtil;
-import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.extern.slf4j.Slf4j;
@@ -65,20 +63,21 @@ public class ModelAuditServiceImpl extends ServiceImpl<ModelAuditMapper, ModelAu
      */
     @Override
     public PageResult<ModelAuditPageReqVO> getModelAuditPage(ModelAuditPageReqVO pageReqVO) {
-        if (StrUtil.isNotBlank(pageReqVO.getModelName())){
+        if (StrUtil.isNotBlank(pageReqVO.getModelName())) {
             pageReqVO.setModelName("%" + pageReqVO.getModelName() + "%");
         }
-        if (StrUtil.isNotBlank(pageReqVO.getModelCode())){
+        if (StrUtil.isNotBlank(pageReqVO.getModelCode())) {
             pageReqVO.setModelCode("%" + pageReqVO.getModelCode() + "%");
         }
         IPage<ModelAuditPageReqVO> page = new Page<>(pageReqVO.getPageNum(), pageReqVO.getPageSize());
         page = baseMapper.selectPage(page, pageReqVO);
 
-        return new PageResult<>(page.getRecords(),page.getTotal());
+        return new PageResult<>(page.getRecords(), page.getTotal());
     }
 
     /**
      * 模型审批
+     *
      * @param updateReqVO 模型审批信息
      * @return 模型审批结果
      */
@@ -88,13 +87,13 @@ public class ModelAuditServiceImpl extends ServiceImpl<ModelAuditMapper, ModelAu
         ModelAuditStatusEnum auditStatus = ModelAuditStatusEnum.getByStatus(updateReqVO.getAuditStatus());
         ModelDO modelDO = new ModelDO();
         modelDO.setId(updateReqVO.getModelId());
-        if (Objects.equals(auditStatus, ModelAuditStatusEnum.SUCCESS)){
+        if (Objects.equals(auditStatus, ModelAuditStatusEnum.SUCCESS)) {
             modelDO.setStatus(ModelStatusEnum.PUBLISHED.getStatus());
         } else if (Objects.equals(auditStatus, ModelAuditStatusEnum.FAILED)) {
             modelDO.setStatus(ModelStatusEnum.AUDIT_FAILED.getStatus());
         }
         ModelAuditDO updateObj = BeanUtils.toBean(updateReqVO, ModelAuditDO.class);
-        modelMapper.updateById(modelDO);
+        modelMapper.updateById(modelDO);// 更新模型状态
         return baseMapper.updateById(updateObj);
     }
 

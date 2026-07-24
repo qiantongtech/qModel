@@ -18,17 +18,19 @@
 
 package tech.qiantong.qmodel.module.model.service.model;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Collection;
 import com.baomidou.mybatisplus.extension.service.IService;
 import tech.qiantong.qmodel.common.core.domain.model.LoginUser;
 import tech.qiantong.qmodel.common.core.page.PageResult;
-import tech.qiantong.qmodel.module.model.controller.admin.model.vo.ModelSaveReqVO;
-import tech.qiantong.qmodel.module.model.controller.admin.model.vo.ModelSaveWithConfigReqVO;
 import tech.qiantong.qmodel.module.model.controller.admin.model.vo.ModelPageReqVO;
 import tech.qiantong.qmodel.module.model.controller.admin.model.vo.ModelRespVO;
+import tech.qiantong.qmodel.module.model.controller.admin.model.vo.ModelSaveReqVO;
+import tech.qiantong.qmodel.module.model.controller.admin.model.vo.ModelSaveWithConfigReqVO;
 import tech.qiantong.qmodel.module.model.dal.dataobject.model.ModelDO;
+
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
+
 /**
  * 模型基础信息Service接口
  *
@@ -95,7 +97,7 @@ public interface IModelService extends IService<ModelDO> {
      *
      * @param importExcelList 模型基础信息数据列表
      * @param isUpdateSupport 是否更新支持，如果已存在，则进行更新数据
-     * @param operName 操作用户
+     * @param operName        操作用户
      * @return 结果
      */
     String importModel(List<ModelRespVO> importExcelList, boolean isUpdateSupport, String operName);
@@ -111,7 +113,7 @@ public interface IModelService extends IService<ModelDO> {
     /**
      * 更新模型状态
      *
-     * @param id 模型基础信息编号
+     * @param id     模型基础信息编号
      * @param status 状态
      */
     void updateModelStatus(Long id, String status);
@@ -119,7 +121,7 @@ public interface IModelService extends IService<ModelDO> {
     /**
      * 发布模型
      *
-     * @param id 模型基础信息编号
+     * @param id          模型基础信息编号
      * @param applyReason 申请原因
      * @param currentUser 当前用户
      * @return 是否成功

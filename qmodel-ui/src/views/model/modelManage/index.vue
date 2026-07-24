@@ -72,10 +72,12 @@
                                 clearable
                                 style="width: 210px"
                             >
-                                <el-option key="0" label="停用" value="0" />
-                                <el-option key="1" label="启用" value="1" />
-                                <el-option key="2" label="构建部署中" value="2" />
-                                <el-option key="3" label="构建失败" value="3" />
+                              <el-option
+                                  v-for="dict in model_status"
+                                  :key="dict.value"
+                                  :label="dict.label"
+                                  :value="dict.value"
+                              />
                             </el-select>
                         </el-form-item>
                         <el-form-item>
@@ -212,51 +214,83 @@
                                                     type="primary"
                                                     icon="View"
                                                     @click.stop="handleViewBuildLog(item)"
-                                                    >查看日志</el-button
-                                                >
-                                            </template>
-                                            <template v-else>
-                                                <el-button
-                                                    link
-                                                    type="primary"
-                                                    icon="Edit"
-                                                    :disabled="['4'].includes(String(item.status))"
-                                                    @click.stop="handleUpdate(item)"
-                                                    >修改</el-button
-                                                >
+                                                    >查看日志</el-button>
                                                 <div class="btn-divider"></div>
-                                              <el-button
-                                                  link
-                                                  type="primary"
-                                                  icon="VideoPlay"
-                                                  @click.stop="handleTest(item)"
-                                              >调试</el-button>
-                                              <div class="btn-divider"></div>
-                                              <el-button
-                                                  link
-                                                  type="primary"
-                                                  icon="Upload"
-                                                  v-if="['3','4','6','7'].includes(String(item.status))"
-                                                  :disabled="['4'].includes(String(item.status))"
-                                                  @click.stop="handlePublish(item)"
-                                              >发布</el-button>
-                                              <el-button
-                                                  link
-                                                  type="primary"
-                                                  icon="Remove"
-                                                  v-if="['5'].includes(String(item.status))"
-                                                  @click.stop="handleOffline(item)"
-                                              >下线</el-button>
-                                              <div class="btn-divider"></div>
-                                                <el-button
-                                                    link
-                                                    type="danger"
-                                                    icon="Delete"
-                                                    @click.stop="handleDelete(item)"
-                                                    :disabled="['4'].includes(String(item.status))"
-                                                    >删除</el-button
-                                                >
+                                              <el-popover
+                                                  placement="bottom"
+                                                  trigger="click"
+                                                  :width="150"
+                                                  v-if="['2'].includes(String(item.status))"
+                                              >
+                                                <template #reference>
+                                                  <el-button type="primary" icon="More" link @click.stop
+                                                  >更多</el-button>
+                                                </template>
+                                                <div class="card-button-group">
+                                                  <el-button
+                                                      link
+                                                      type="primary"
+                                                      icon="Edit"
+                                                      @click.stop="handleUpdate(item)"
+                                                      style="padding-left: 12px"
+                                                  >修改</el-button>
+                                                  <el-button
+                                                      link
+                                                      type="primary"
+                                                      icon="VideoPlay"
+                                                      @click.stop="handleTest(item)"
+                                                  >调试</el-button>
+                                                  <el-button
+                                                      link
+                                                      type="danger"
+                                                      icon="Delete"
+                                                      @click.stop="handleDelete(item)"
+                                                  >删除</el-button>
+                                                </div>
+                                              </el-popover>
                                             </template>
+                                          <template v-else>
+                                            <el-button
+                                                link
+                                                type="primary"
+                                                icon="Edit"
+                                                :disabled="['4'].includes(String(item.status))"
+                                                @click.stop="handleUpdate(item)"
+                                            >修改</el-button>
+                                            <div class="btn-divider"></div>
+                                            <el-button
+                                                link
+                                                type="primary"
+                                                icon="VideoPlay"
+                                                @click.stop="handleTest(item)"
+                                            >调试</el-button>
+                                            <div class="btn-divider"></div>
+                                            <el-button
+                                                link
+                                                type="primary"
+                                                icon="Upload"
+                                                v-if="['3','4','6','7'].includes(String(item.status))"
+                                                :disabled="['4'].includes(String(item.status))"
+                                                @click.stop="handlePublish(item)"
+                                            >发布
+                                            </el-button>
+                                            <el-button
+                                                link
+                                                type="primary"
+                                                icon="Remove"
+                                                v-if="['5'].includes(String(item.status))"
+                                                @click.stop="handleOffline(item)"
+                                            >下线
+                                            </el-button>
+                                            <div class="btn-divider"></div>
+                                            <el-button
+                                                link
+                                                type="danger"
+                                                icon="Delete"
+                                                @click.stop="handleDelete(item)"
+                                                :disabled="['4'].includes(String(item.status))"
+                                            >删除</el-button>
+                                          </template>
                                         </div>
                                     </div>
                                 </el-card>
@@ -317,7 +351,7 @@
 
     const { proxy } = getCurrentInstance();
 
-    const { model_access_type } = proxy.useDict('model_access_type');
+    const { model_access_type,model_status } = proxy.useDict('model_access_type','model_status');
 
     const queryFormRef = ref(null);
     const deptTreeRef = ref(null);
@@ -409,28 +443,20 @@
 
     const getStatusText = (val) => {
         const str = String(val);
-
-        // if (str === '3') return '构建失败';
-        // if (str === '2') return '构建部署中';
-        // if (str === '1') return '启用';
-        // if (str === '0') return '停用';
-        if (str === '7') return '已下线';
-        if (str === '6') return '审核拒绝';
-        if (str === '5') return '已发布';
-        if (str === '4') return '审核中';
-        if (str === '3') return '已接入';
-        if (str === '2') return '构建失败';
-        if (str === '1') return '构建成功';
-        if (str === '0') return '部署中';
-        return '未知';
+        for (let i = 0; i < model_status.value.length; i++){
+          if (model_status.value[i].value === str) {
+            return model_status.value[i].label;
+          }
+        }
     };
 
     const getStatusClass = (val) => {
         const str = String(val);
         if (['1','5'].includes(str)) return 'status-active';// #35bf53 绿色
-        if (['0','4','7'].includes(str)) return 'status-inactive';// 灰色
+        if (['0','7'].includes(str)) return 'status-inactive';// 灰色
         if (['3'].includes(str)) return 'status-building';// 蓝色
         if (['2','6'].includes(str)) return 'status-failed';// 红色
+        if (['4'].includes(str)) return 'status-auditing';//
         return '';
     };
 
@@ -848,6 +874,16 @@
                 }
             }
 
+            .status-auditing {
+                color: rgb(255, 184, 0);
+                background: rgba(255, 184, 0, 0.1);
+                border: 1px solid #ffbd72;
+
+                .status-dot {
+                    background: rgb(255, 184, 0);
+                }
+              }
+
             .status-failed {
                 color: #f2657d;
                 background: rgba(242, 101, 125, 0.062745);
@@ -980,4 +1016,11 @@
             margin-top: 15px;
         }
     }
+    .card-button-group {
+      width: 100px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
 </style>

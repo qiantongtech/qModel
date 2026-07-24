@@ -152,29 +152,29 @@
       </template>
       <el-form ref="auditRef" :model="form" :rules="rules" label-width="80px" @submit.prevent>
         <el-row :gutter="20">
-          <el-col :span="12">
+          <el-col :span="24">
             <el-form-item label="编号" prop="id">
               <el-input v-model="form.id" disabled placeholder="请输入编号"/>
             </el-form-item>
           </el-col>
-          <el-col :span="12">
+          <el-col :span="24">
             <el-form-item label="模型名称" prop="modelName">
               <el-input v-model="form.modelName" disabled placeholder="请输入模型名称"/>
             </el-form-item>
           </el-col>
-          <el-col :span="12">
+          <el-col :span="24">
             <el-form-item label="模型编码" prop="modelCode">
               <el-input v-model="form.modelCode" disabled placeholder="请输入模型编码"/>
             </el-form-item>
           </el-col>
         </el-row>
         <el-row :gutter="20">
-          <el-col :span="12">
+          <el-col :span="24">
             <el-form-item label="申请人" prop="applyName">
               <el-input v-model="form.applyName" disabled placeholder="请输入申请人"/>
             </el-form-item>
           </el-col>
-          <el-col :span="12">
+          <el-col :span="24">
             <el-form-item label="申请时间" prop="applyTime">
               <el-input v-model="form.applyTime" disabled />
             </el-form-item>
@@ -186,7 +186,7 @@
           </el-col>
         </el-row>
         <el-row :gutter="20">
-          <el-col :span="12">
+          <el-col :span="24">
             <el-form-item label="审批状态" prop="auditStatus">
               <el-radio-group v-model="form.auditStatus">
                 <el-radio value="1">通过</el-radio>
@@ -233,6 +233,15 @@
               <div class="form-readonly">{{ form.modelCode || "-" }}</div>
             </el-form-item>
           </el-col>
+          <el-col :span="12">
+            <el-form-item label="审批状态" prop="auditStatus">
+              <dict-tag
+                  :options="model_audit_status"
+                  :value="form.auditStatus"
+                  class="con-value access-tag"
+              />
+            </el-form-item>
+          </el-col>
         </el-row>
         <el-row :gutter="20">
           <el-col :span="12">
@@ -254,15 +263,6 @@
           </el-col>
         </el-row>
         <el-row :gutter="20">
-          <el-col :span="12">
-            <el-form-item label="审批状态" prop="auditStatus">
-              <dict-tag
-                  :options="model_audit_status"
-                  :value="form.auditStatus"
-                  class="con-value access-tag"
-              />
-            </el-form-item>
-          </el-col>
           <el-col :span="12">
             <el-form-item label="审批时间" prop="auditTime">
               <div class="form-readonly">
