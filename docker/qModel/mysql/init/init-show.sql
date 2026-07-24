@@ -1174,4 +1174,31 @@ CREATE TABLE `rel_user_auth_product` (
 -- Records of rel_user_auth_product
 -- ----------------------------
 
+-- ----------------------------
+-- Table structure for model_audit
+-- ----------------------------
+DROP TABLE IF EXISTS `model_audit`;
+CREATE TABLE `model_audit`  (
+    `id` bigint NOT NULL AUTO_INCREMENT COMMENT 'ID',
+    `model_id` bigint NOT NULL COMMENT '模型id',
+    `apply_id` bigint NOT NULL COMMENT '申请人',
+    `apply_time` datetime NOT NULL COMMENT '申请时间',
+    `apply_reason` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '申请理由',
+    `audit_status` tinyint UNSIGNED NULL DEFAULT NULL COMMENT '审核状态;0：待审核，1：审核通过，2：审核拒绝',
+    `auditor_id` bigint NULL DEFAULT NULL COMMENT '审核人',
+    `audit_time` datetime NULL DEFAULT NULL COMMENT '审核时间',
+    `audit_reason` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '审核理由',
+    `valid_flag` tinyint(1) NOT NULL DEFAULT 1 COMMENT '是否有效;0：无效，1：有效',
+    `del_flag` tinyint(1) NOT NULL DEFAULT 0 COMMENT '删除标志;1：已删除，0：未删除',
+    `create_by` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '创建人',
+    `creator_id` bigint NULL DEFAULT NULL COMMENT '创建人id',
+    `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    `update_by` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '更新人',
+    `updator_id` bigint NULL DEFAULT NULL COMMENT '更新人id',
+    `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '更新时间',
+    `remark` varchar(512) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '备注',
+    PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 4 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '模型审核' ROW_FORMAT = Dynamic;
+
+
 SET FOREIGN_KEY_CHECKS = 1;

@@ -358,6 +358,18 @@ INSERT INTO `system_dict_data` VALUES (130, 0, '高', '1', 'model_calc_priority'
 INSERT INTO `system_dict_data` VALUES (131, 2, '中', '2', 'model_calc_priority', NULL, 'info', NULL, '0', '超级管理员', '2026-07-23 15:21:53', NULL, NULL, NULL);
 INSERT INTO `system_dict_data` VALUES (132, 3, '低', '3', 'model_calc_priority', NULL, 'danger', NULL, '0', '超级管理员', '2026-07-23 15:22:06', NULL, NULL, NULL);
 
+INSERT INTO `system_dict_data` VALUES (133, 1, '待审核', '0', 'model_audit_status', NULL, 'primary', NULL, '0', '吴同', '2026-07-23 14:20:34', '吴同', '2026-07-23 14:21:07', NULL);
+INSERT INTO `system_dict_data` VALUES (134, 2, '审核通过', '1', 'model_audit_status', NULL, 'success', NULL, '0', '吴同', '2026-07-23 14:21:02', NULL, NULL, NULL);
+INSERT INTO `system_dict_data` VALUES (135, 3, '审核拒绝', '2', 'model_audit_status', NULL, 'danger', NULL, '0', '吴同', '2026-07-23 14:21:28', NULL, NULL, NULL);
+INSERT INTO `system_dict_data` VALUES (136, 1, '构建中', '0', 'model_status', NULL, 'primary', NULL, '0', '吴同', '2026-07-23 14:30:35', '吴同', '2026-07-24 17:40:09', NULL);
+INSERT INTO `system_dict_data` VALUES (137, 2, '构建成功', '1', 'model_status', NULL, 'default', NULL, '1', '吴同', '2026-07-23 14:30:51', '吴同', '2026-07-24 17:39:25', NULL);
+INSERT INTO `system_dict_data` VALUES (138, 3, '构建失败', '2', 'model_status', NULL, 'danger', NULL, '0', '吴同', '2026-07-23 14:31:05', '吴同', '2026-07-23 14:35:14', NULL);
+INSERT INTO `system_dict_data` VALUES (139, 4, '已接入', '3', 'model_status', NULL, 'primary', NULL, '0', '吴同', '2026-07-23 14:31:17', '吴同', '2026-07-23 14:37:06', NULL);
+INSERT INTO `system_dict_data` VALUES (140, 5, '审批中', '4', 'model_status', NULL, 'warning', NULL, '0', '吴同', '2026-07-23 14:31:27', '吴同', '2026-07-24 17:39:46', NULL);
+INSERT INTO `system_dict_data` VALUES (141, 6, '已发布', '5', 'model_status', NULL, 'success', NULL, '0', '吴同', '2026-07-23 14:31:39', '吴同', '2026-07-23 14:36:02', NULL);
+INSERT INTO `system_dict_data` VALUES (142, 7, '审批拒绝', '6', 'model_status', NULL, 'danger', NULL, '0', '吴同', '2026-07-23 14:31:52', '吴同', '2026-07-24 17:39:55', NULL);
+INSERT INTO `system_dict_data` VALUES (143, 8, '已下线', '7', 'model_status', NULL, 'info', NULL, '0', '吴同', '2026-07-23 14:32:12', '吴同', '2026-07-23 14:38:45', NULL);
+
 -- ----------------------------
 -- Table structure for system_dict_type
 -- ----------------------------
@@ -409,6 +421,8 @@ INSERT INTO `system_dict_type` VALUES (36, '模型调用方式', 'invoke_type', 
 INSERT INTO `system_dict_type` VALUES (37, '依赖、容器构建状态', 'build_status', '0', 'qModel', '2026-07-15 14:31:50', NULL, NULL, '构建状态;构建状态：0=待执行，1=执行中，2=成功，3=失败');
 INSERT INTO `system_dict_type` VALUES (38, '模型计算状态', 'model_calc_status', '0', '超级管理员', '2026-07-23 15:18:37', NULL, NULL, '计算状态:0-待执行,1-运行中,2-计算成功,3-计算失败,4-已终止,5-排队中');
 INSERT INTO `system_dict_type` VALUES (39, '模型计算优先级', 'model_calc_priority', '0', '超级管理员', '2026-07-23 15:21:17', NULL, NULL, '优先级:1-高,2-中,3-低');
+INSERT INTO `system_dict_type` VALUES (40, '模型审批状态', 'model_audit_status', '0', '吴同', '2026-07-23 14:13:44', NULL, NULL, NULL);
+INSERT INTO `system_dict_type` VALUES (41, '模型状态', 'model_status', '0', '吴同', '2026-07-23 14:29:10', NULL, NULL, NULL);
 
 
 -- ----------------------------
@@ -638,7 +652,7 @@ INSERT INTO `system_menu` VALUES (2072, '消息模板删除', 2068, 4, '#', NULL
 INSERT INTO `system_menu` VALUES (2073, '消息模板导出', 2068, 5, '#', NULL, NULL, 1, 0, NULL, 'F', '0', '0', 'system:message:messageTemplate:export', '#', 'admin', '2024-11-01 09:52:03', NULL, NULL, NULL);
 INSERT INTO `system_menu` VALUES (2190, '系统配置', 1, 11, 'sysContent', 'system/system/content/index', NULL, 1, 0, NULL, 'C', '1', '1', 'system:system:content:query', 'build', 'admin', '2024-12-31 11:16:14', '小桐', '2025-12-31 15:39:08', NULL);
 INSERT INTO `system_menu` VALUES (2245, '模型中心', 0, 2, 'model/version', 'model/modelManage/index', NULL, 1, 0, NULL, 'C', '0', '0', 'model:model:list', 'model-administration', 'admin', '2025-11-14 15:32:43', 'qModel', '2026-07-20 14:19:25', NULL);
-INSERT INTO `system_menu` VALUES (2253, '模型审批', 0, 5, 'apiGateway', 'model/approval/index', NULL, 1, 0, NULL, 'C', '0', '0', '', 'model-approve', 'qModel', '2026-07-14 15:49:56', 'qModel', '2026-07-20 14:14:23', NULL);
+INSERT INTO `system_menu` VALUES (2253, '模型审批', 0, 5, 'audit', 'model/modelAudit/index', NULL, 1, 0, NULL, 'C', '0', '0', 'model:modelAudit:audit:list', 'model-approve', '	\r\n吴同', '2026-07-14 15:49:56', 'qModel', '2026-07-20 14:14:23', NULL);
 INSERT INTO `system_menu` VALUES (2254, '模型文件部署', 2245, 10, 'modelFileResource', 'model/fileResource/index', NULL, 1, 0, NULL, 'C', '1', '0', 'model:fileResource:fileresource:list', '#', 'admin', '2026-07-17 13:38:23', 'qModel', '2026-07-20 11:50:27', '模型文件部署菜单');
 INSERT INTO `system_menu` VALUES (2255, '模型文件部署查询', 2254, 1, '#', '', NULL, 1, 0, NULL, 'F', '0', '0', 'model:fileResource:fileresource:query', '#', 'admin', '2026-07-17 13:38:23', '', NULL, '');
 INSERT INTO `system_menu` VALUES (2256, '模型文件部署新增', 2254, 2, '#', '', NULL, 1, 0, NULL, 'F', '0', '0', 'model:fileResource:fileresource:add', '#', 'admin', '2026-07-17 13:38:23', '', NULL, '');
@@ -694,7 +708,8 @@ INSERT INTO `system_menu` VALUES (2313, '模型计算修改', 2310, 3, '#', '', 
 INSERT INTO `system_menu` VALUES (2314, '模型计算删除', 2310, 4, '#', '', NULL, 1, 0, NULL, 'F', '0', '0', 'model:modelCacl:cacl:remove', '#', 'admin', '2026-07-20 14:27:32', '超级管理员', '2026-07-21 10:18:23', '');
 INSERT INTO `system_menu` VALUES (2315, '模型计算导出', 2310, 5, '#', '', NULL, 1, 0, NULL, 'F', '0', '0', 'model:modelCacl:cacl:export', '#', 'admin', '2026-07-20 14:27:32', '超级管理员', '2026-07-21 10:18:18', '');
 INSERT INTO `system_menu` VALUES (2316, '模型计算导入', 2310, 6, '#', '', NULL, 1, 0, NULL, 'F', '0', '0', 'model:modelCacl:cacl:import', '#', 'admin', '2026-07-20 14:27:32', '超级管理员', '2026-07-21 10:18:13', '');
-
+INSERT INTO `system_menu` VALUES (2317, '模型审批修改', 2253, 3, '#', '', NULL, 1, 0, NULL, 'F', '0', '0', 'model:modelAudit:audit:edit', '#', '	\r\n吴同', '2026-07-23 13:51:31', '', NULL, '');
+INSERT INTO `system_menu` VALUES (2318, '模型审批查询', 2253, 1, '#', '', NULL, 1, 0, NULL, 'F', '0', '0', 'model:modelAudit:audit:query', '#', '吴同', '2026-07-23 13:51:31', '', NULL, '');
 
 -- ----------------------------
 -- Table structure for system_notice
@@ -916,6 +931,8 @@ INSERT INTO `system_role_menu` VALUES (2, 2313);
 INSERT INTO `system_role_menu` VALUES (2, 2314);
 INSERT INTO `system_role_menu` VALUES (2, 2315);
 INSERT INTO `system_role_menu` VALUES (2, 2316);
+INSERT INTO `system_role_menu` VALUES (2, 2317);
+INSERT INTO `system_role_menu` VALUES (2, 2318);
 INSERT INTO `system_role_menu` VALUES (4, 1);
 INSERT INTO `system_role_menu` VALUES (4, 2);
 INSERT INTO `system_role_menu` VALUES (4, 101);
@@ -1019,6 +1036,8 @@ INSERT INTO `system_role_menu` VALUES (4, 2313);
 INSERT INTO `system_role_menu` VALUES (4, 2314);
 INSERT INTO `system_role_menu` VALUES (4, 2315);
 INSERT INTO `system_role_menu` VALUES (4, 2316);
+INSERT INTO `system_role_menu` VALUES (4, 2317);
+INSERT INTO `system_role_menu` VALUES (4, 2318);
 
 -- ----------------------------
 -- Table structure for system_user
