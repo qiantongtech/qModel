@@ -72,6 +72,7 @@ public class ModelAuditController extends BaseController {
     @Log(title = "模型审批", businessType = BusinessType.UPDATE)
     @PutMapping
     public CommonResult<Integer> edit(@Valid @RequestBody ModelAuditSaveReqVO modelAudit) {
+        modelAudit.setAuditorId(super.getUserId());
         return CommonResult.toAjax(modelAuditService.updateModelAudit(modelAudit));
     }
 

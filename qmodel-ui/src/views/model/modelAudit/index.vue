@@ -39,8 +39,8 @@
               @keyup.enter="handleQuery"
           />
         </el-form-item>
-        <el-form-item label="审核状态" prop="auditStatus">
-          <el-select class="el-form-input-width" v-model="queryParams.auditStatus" placeholder="请选择审核状态"
+        <el-form-item label="审批状态" prop="auditStatus">
+          <el-select class="el-form-input-width" v-model="queryParams.auditStatus" placeholder="请选择审批状态"
                      clearable>
             <el-option
                 v-for="dict in model_audit_status"
@@ -97,30 +97,30 @@
         <el-table-column v-if="getColumnVisibility(5)" label="申请理由" align="left" prop="applyReason"
                          :show-overflow-tooltip="{ effect: 'light' }">
           <template #default="scope">
-            <dict-tag :options="model_audit_status" :value="scope.row.applyReason"/>
+            {{ scope.row.applyReason || "-" }}
           </template>
         </el-table-column>
-        <el-table-column v-if="getColumnVisibility(6)" label="审核状态" align="center" prop="auditStatus" width="90">
+        <el-table-column v-if="getColumnVisibility(6)" label="审批状态" align="center" prop="auditStatus" width="90">
           <template #default="scope">
             <dict-tag :options="model_audit_status" :value="scope.row.auditStatus"/>
           </template>
         </el-table-column>
-        <el-table-column v-if="getColumnVisibility(7)" label="审核人" align="center" prop="auditorName" width="80">
+        <el-table-column v-if="getColumnVisibility(7)" label="审批人" align="center" prop="auditorName" width="80">
           <template #default="scope">
             {{ scope.row.auditorName || '-' }}
           </template>
         </el-table-column>
-        <el-table-column v-if="getColumnVisibility(8)" label="审核时间" align="center" prop="auditTime" width="140">
+        <el-table-column v-if="getColumnVisibility(8)" label="审批时间" align="center" prop="auditTime" width="140">
           <template #default="scope">
-            <span>{{ parseTime(scope.row.auditTime, "{y}-{m}-{d} {h}:{i}") }}</span>
+            <span>{{ parseTime(scope.row.auditTime, "{y}-{m}-{d} {h}:{i}") || "-" }}</span>
           </template>
         </el-table-column>
         <el-table-column v-if="getColumnVisibility(10)" label="操作" align="center" class-name="small-padding fixed-width" fixed="right" width="180">
           <template #default="scope">
-            <el-button link type="primary" icon="view" @click="handleUpdate(scope.row)"
+            <el-button link type="primary" icon="view" @click="handleDetail(scope.row)"
                        v-hasPermi="['model:modelAudit:audit:query']">详情
             </el-button>
-            <el-button link type="primary" icon="Finished" @click="handleDetail(scope.row)"
+            <el-button link type="primary" :disabled="scope.row.auditStatus !== '0'" icon="Finished" @click="handleUpdate(scope.row)"
                        v-hasPermi="['model:modelAudit:audit:edit']">审批
             </el-button>
           </template>
@@ -143,7 +143,7 @@
       />
     </div>
 
-    <!-- 添加或修改模型审批对话框 -->
+    <!-- 审批对话框 -->
     <el-dialog :title="title" v-model="open" width="800px" :append-to="$refs['app-container']" draggable>
       <template #header="{ close, titleId, titleClass }">
         <span role="heading" aria-level="2" class="el-dialog__title">
@@ -153,75 +153,50 @@
       <el-form ref="auditRef" :model="form" :rules="rules" label-width="80px" @submit.prevent>
         <el-row :gutter="20">
           <el-col :span="12">
-            <el-form-item label="模型id" prop="modelId">
-              <el-input v-model="form.modelId" placeholder="请输入模型id"/>
+            <el-form-item label="编号" prop="id">
+              <el-input v-model="form.id" disabled placeholder="请输入编号"/>
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="申请人" prop="applyId">
-              <el-input v-model="form.applyId" placeholder="请输入申请人"/>
+            <el-form-item label="模型名称" prop="modelName">
+              <el-input v-model="form.modelName" disabled placeholder="请输入模型名称"/>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="模型编码" prop="modelCode">
+              <el-input v-model="form.modelCode" disabled placeholder="请输入模型编码"/>
             </el-form-item>
           </el-col>
         </el-row>
         <el-row :gutter="20">
+          <el-col :span="12">
+            <el-form-item label="申请人" prop="applyName">
+              <el-input v-model="form.applyName" disabled placeholder="请输入申请人"/>
+            </el-form-item>
+          </el-col>
           <el-col :span="12">
             <el-form-item label="申请时间" prop="applyTime">
-              <el-date-picker clearable
-                              style="width: 100%"
-                              v-model="form.applyTime"
-                              type="date"
-                              value-format="YYYY-MM-DD HH:mm:ss"
-                              placeholder="请选择申请时间">
-              </el-date-picker>
+              <el-input v-model="form.applyTime" disabled />
             </el-form-item>
           </el-col>
-          <el-col :span="12">
+          <el-col :span="24">
             <el-form-item label="申请理由" prop="applyReason">
-              <el-input v-model="form.applyReason" placeholder="请输入申请理由"/>
+              <el-input v-model="form.applyReason" type="textarea" disabled placeholder="请输入内容"/>
             </el-form-item>
           </el-col>
         </el-row>
         <el-row :gutter="20">
           <el-col :span="12">
-            <el-form-item label="审核状态" prop="auditStatus">
+            <el-form-item label="审批状态" prop="auditStatus">
               <el-radio-group v-model="form.auditStatus">
-                <el-radio
-                    v-for="dict in model_audit_status"
-                    :key="dict.value"
-                    :label="dict.value"
-                >{{ dict.label }}
-                </el-radio>
+                <el-radio value="1">通过</el-radio>
+                <el-radio value="2">拒绝</el-radio>
               </el-radio-group>
             </el-form-item>
           </el-col>
-          <el-col :span="12">
-            <el-form-item label="审核人" prop="auditorId">
-              <el-input v-model="form.auditorId" placeholder="请输入审核人"/>
-            </el-form-item>
-          </el-col>
-        </el-row>
-        <el-row :gutter="20">
-          <el-col :span="12">
-            <el-form-item label="审核时间" prop="auditTime">
-              <el-date-picker clearable
-                              style="width: 100%"
-                              v-model="form.auditTime"
-                              type="date"
-                              value-format="YYYY-MM-DD HH:mm:ss"
-                              placeholder="请选择审核时间">
-              </el-date-picker>
-            </el-form-item>
-          </el-col>
-          <el-col :span="12">
-            <el-form-item label="审核理由" prop="auditReason">
-              <el-input v-model="form.auditReason" placeholder="请输入审核理由"/>
-            </el-form-item>
-          </el-col>
-        </el-row>
-        <el-row :gutter="20">
-          <el-col :span="24">
-            <el-form-item label="备注" prop="remark">
-              <el-input v-model="form.remark" type="textarea" placeholder="请输入内容"/>
+          <el-col v-if="form.auditStatus === '2'" :span="24">
+            <el-form-item label="拒绝理由" prop="auditReason">
+              <el-input v-model="form.auditReason" type="textarea" maxlength="256 个字符" show-word-limit placeholder="请输入拒绝理由"/>
             </el-form-item>
           </el-col>
         </el-row>
@@ -234,7 +209,7 @@
       </template>
     </el-dialog>
 
-    <!-- 模型审批详情对话框 -->
+    <!-- 详情对话框 -->
     <el-dialog :title="title" v-model="openDetail" width="800px" :append-to="$refs['app-container']" draggable>
       <template #header="{ close, titleId, titleClass }">
         <span role="heading" aria-level="2" class="el-dialog__title">
@@ -244,75 +219,67 @@
       <el-form ref="auditRef" :model="form" label-width="80px">
         <el-row :gutter="20">
           <el-col :span="12">
-            <el-form-item label="模型id" prop="modelId">
-              <div>
-                {{ form.modelId }}
-              </div>
+            <el-form-item label="编号" prop="id">
+              <div class="form-readonly">{{ form.id || "-" }}</div>
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="申请人" prop="applyId">
-              <div>
-                {{ form.applyId }}
-              </div>
+            <el-form-item label="模型名称" prop="modelName">
+              <div class="form-readonly">{{ form.modelName || "-" }}</div>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="模型编码" prop="modelCode">
+              <div class="form-readonly">{{ form.modelCode || "-" }}</div>
             </el-form-item>
           </el-col>
         </el-row>
         <el-row :gutter="20">
+          <el-col :span="12">
+            <el-form-item label="申请人" prop="applyName">
+              <div class="form-readonly">{{ form.applyName || "-" }}</div>
+            </el-form-item>
+          </el-col>
           <el-col :span="12">
             <el-form-item label="申请时间" prop="applyTime">
-              <el-date-picker clearable
-                              style="width: 100%"
-                              v-model="form.applyTime"
-                              type="date"
-                              value-format="YYYY-MM-DD"
-                              placeholder="请选择申请时间">
-              </el-date-picker>
-            </el-form-item>
-          </el-col>
-          <el-col :span="12">
-            <el-form-item label="申请理由" prop="applyReason">
-              <div>
-                {{ form.applyReason }}
+              <div class="form-readonly">
+                {{ parseTime(form.applyTime, "{y}-{m}-{d} {h}:{i}:{s}") || "-" }}
               </div>
             </el-form-item>
           </el-col>
-        </el-row>
-        <el-row :gutter="20">
-          <el-col :span="12">
-            <el-form-item label="审核人" prop="auditorId">
-              <div>
-                {{ form.auditorId }}
-              </div>
-            </el-form-item>
-          </el-col>
-        </el-row>
-        <el-row :gutter="20">
-          <el-col :span="12">
-            <el-form-item label="审核时间" prop="auditTime">
-              <el-date-picker clearable
-                              style="width: 100%"
-                              v-model="form.auditTime"
-                              type="date"
-                              value-format="YYYY-MM-DD"
-                              placeholder="请选择审核时间">
-              </el-date-picker>
-            </el-form-item>
-          </el-col>
-          <el-col :span="12">
-            <el-form-item label="审核理由" prop="auditReason">
-              <div>
-                {{ form.auditReason }}
-              </div>
-            </el-form-item>
-          </el-col>
-        </el-row>
-        <el-row :gutter="20">
           <el-col :span="24">
-            <el-form-item label="备注" prop="remark">
-              <div>
-                {{ form.remark }}
+            <el-form-item label="申请理由" prop="applyReason">
+                <div class="form-readonly textarea">{{ form.applyReason || "-" }}</div>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row :gutter="20">
+          <el-col :span="12">
+            <el-form-item label="审批状态" prop="auditStatus">
+              <dict-tag
+                  :options="model_audit_status"
+                  :value="form.auditStatus"
+                  class="con-value access-tag"
+              />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="审批时间" prop="auditTime">
+              <div class="form-readonly">
+                {{ parseTime(form.auditTime, "{y}-{m}-{d} {h}:{i}:{s}") || "-" }}
               </div>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="审批人" prop="auditorName">
+              <div class="form-readonly">
+                {{ form.auditorName || "-" }}
+              </div>
+            </el-form-item>
+          </el-col>
+          <el-col :span="24">
+            <el-form-item label="拒绝理由" prop="auditReason">
+              <div class="form-readonly textarea">{{ form.auditReason || "-"}}</div>
             </el-form-item>
           </el-col>
         </el-row>
@@ -331,6 +298,7 @@
 import {listAudit, getAudit, updateAudit} from "@/api/model/audit";
 
 const {proxy} = getCurrentInstance();
+import { parseTime } from '@/utils/anivia.js'
 
 const auditList = ref([]);
 
@@ -342,9 +310,9 @@ const columns = ref([
   {key: 3, label: "申请人", visible: true},
   {key: 4, label: "申请时间", visible: true},
   {key: 5, label: "申请理由", visible: true},
-  {key: 6, label: "审核状态", visible: true},
-  {key: 7, label: "审核人", visible: true},
-  {key: 8, label: "审核时间", visible: true},
+  {key: 6, label: "审批状态", visible: true},
+  {key: 7, label: "审批人", visible: true},
+  {key: 8, label: "审批时间", visible: true},
   {key: 10, label: "操作", visible: true}
 ]);
 
@@ -385,13 +353,7 @@ const data = reactive({
     isAsc: "desc",
   },
   rules: {
-    modelId: [{required: true, message: "模型id不能为空", trigger: "blur"}],
-    applyId: [{required: true, message: "申请人不能为空", trigger: "blur"}],
-    applyTime: [{required: true, message: "申请时间不能为空", trigger: "blur"}],
-    validFlag: [{required: true, message: "是否有效不能为空", trigger: "blur"}],
-    delFlag: [{required: true, message: "删除标志不能为空", trigger: "blur"}],
-    createTime: [{required: true, message: "创建时间不能为空", trigger: "blur"}],
-    updateTime: [{required: true, message: "更新时间不能为空", trigger: "blur"}],
+    auditStatus: [{required: true, message: "审批状态不能为空", trigger: "blur"}]
   }
 });
 
@@ -422,7 +384,7 @@ function reset() {
     applyId: null,
     applyTime: null,
     applyReason: null,
-    auditStatus: null,
+    auditStatus: '1',
     auditorId: null,
     auditTime: null,
     auditReason: null,
@@ -458,7 +420,6 @@ function handleSelectionChange(selection) {
   multiple.value = !selection.length;
 }
 
-
 /** 排序触发事件 */
 function handleSortChange(column, prop, order) {
   queryParams.value.orderByColumn = column.prop;
@@ -476,12 +437,11 @@ function handleAdd() {
 /** 修改按钮操作 */
 function handleUpdate(row) {
   reset();
-  const _id = row.id || ids.value
-  getAudit(_id).then(response => {
-    form.value = response.data;
-    open.value = true;
-    title.value = "修改模型审批";
-  });
+  form.value = {...row};
+  form.value.applyTime = parseTime(row.applyTime, "{y}-{m}-{d} {h}:{i}:{s}")
+  form.value.auditStatus = '1';
+  open.value = true;
+  title.value = "模型审批";
 }
 
 /** 详情按钮操作 */
@@ -489,7 +449,8 @@ function handleDetail(row) {
   reset();
   const _id = row.id || ids.value
   getAudit(_id).then(response => {
-    form.value = response.data;
+    form.value = {...row};
+    form.value.auditReason = response.data.auditReason
     openDetail.value = true;
     title.value = "模型审批详情";
   });
@@ -501,7 +462,7 @@ function submitForm() {
     if (valid) {
       if (form.value.id != null) {
         updateAudit(form.value).then(response => {
-          proxy.$modal.msgSuccess("修改成功");
+          proxy.$modal.msgSuccess("审批成功");
           open.value = false;
           getList();
         }).catch(error => {
@@ -513,3 +474,32 @@ function submitForm() {
 
 getList();
 </script>
+
+<style lang="scss" scoped>
+.form-readonly {
+  width: 100%;
+  border: 1px solid #f1f1f1;
+  padding: 0px 10px;
+  min-height: 34px;
+  background-color: #fcfcfc;
+  border-radius: 2px;
+  color: #333;
+  display: flex;
+  align-items: center;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  word-break: break-all;
+}
+
+.form-readonly.textarea {
+  min-height: 80px;
+  align-items: flex-start;
+}
+
+.json-pre {
+  font-family: "Consolas", "Monaco", monospace;
+  font-size: 12px;
+  max-height: 200px;
+  overflow-y: auto;
+}
+</style>

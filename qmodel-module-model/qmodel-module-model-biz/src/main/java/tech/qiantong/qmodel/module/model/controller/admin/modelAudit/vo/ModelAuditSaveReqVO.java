@@ -46,11 +46,9 @@ public class ModelAuditSaveReqVO extends BaseEntity {
     private Long id;
 
     @Schema(description = "模型id", example = "")
-    @NotNull(message = "模型id不能为空")
     private Long modelId;
 
     @Schema(description = "申请人", example = "")
-    @NotNull(message = "申请人不能为空")
     private Long applyId;
 
     @Schema(description = "申请时间", example = "")
@@ -58,7 +56,6 @@ public class ModelAuditSaveReqVO extends BaseEntity {
     private Date applyTime;
 
     @Schema(description = "申请理由", example = "")
-    @NotBlank(message = "申请理由不能为空")
     @Size(max = 256, message = "申请理由长度不能超过256个字符")
     private String applyReason;
 
@@ -70,18 +67,14 @@ public class ModelAuditSaveReqVO extends BaseEntity {
     private Long auditorId;
 
     @Schema(description = "审核时间", example = "")
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date auditTime;
 
     @Schema(description = "审核理由", example = "")
-    @NotBlank(message = "审核理由不能为空")
     @Size(max = 256, message = "审核理由长度不能超过256个字符")
     private String auditReason;
 
     @Schema(description = "备注", example = "")
-    @NotBlank(message = "备注不能为空")
     @Size(max = 512, message = "备注长度不能超过512个字符")
     private String remark;
-
 
 }

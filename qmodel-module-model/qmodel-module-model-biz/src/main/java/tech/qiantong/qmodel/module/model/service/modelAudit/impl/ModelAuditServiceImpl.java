@@ -33,6 +33,8 @@ import tech.qiantong.qmodel.module.model.dal.dataobject.modelAudit.ModelAuditDO;
 import tech.qiantong.qmodel.module.model.dal.mapper.modelAudit.ModelAuditMapper;
 import tech.qiantong.qmodel.module.model.service.modelAudit.IModelAuditService;
 
+import java.util.Date;
+
 /**
  * 模型审批Service业务层处理
  *
@@ -69,6 +71,7 @@ public class ModelAuditServiceImpl extends ServiceImpl<ModelAuditMapper, ModelAu
         // 相关校验
 
         // 更新模型审批
+        updateReqVO.setAuditTime(new Date());
         ModelAuditDO updateObj = BeanUtils.toBean(updateReqVO, ModelAuditDO.class);
         return baseMapper.updateById(updateObj);
     }
