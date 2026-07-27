@@ -48,7 +48,6 @@ public class ModelCalcSaveReqVO extends BaseEntity {
     private Long companyId;
 
     @Schema(description = "计算编码", example = "")
-    @NotBlank(message = "计算编码不能为空")
     @Size(max = 32, message = "计算编码长度不能超过32个字符")
     private String code;
 
@@ -61,7 +60,6 @@ public class ModelCalcSaveReqVO extends BaseEntity {
     private Long classifyId;
 
     @Schema(description = "模型分类名称", example = "")
-    @NotBlank(message = "模型分类名称不能为空")
     @Size(max = 32, message = "模型分类名称长度不能超过32个字符")
     private String classifyName;
 
@@ -70,12 +68,10 @@ public class ModelCalcSaveReqVO extends BaseEntity {
     private Long modelId;
 
     @Schema(description = "模型名称", example = "")
-    @NotBlank(message = "模型名称不能为空")
     @Size(max = 32, message = "模型名称长度不能超过32个字符")
     private String modelName;
 
     @Schema(description = "模型版本号", example = "")
-    @NotBlank(message = "模型版本号不能为空")
     @Size(max = 32, message = "模型版本号长度不能超过32个字符")
     private String modelVersion;
 
@@ -83,15 +79,12 @@ public class ModelCalcSaveReqVO extends BaseEntity {
     private Long modelVersionId;
 
     @Schema(description = "描述", example = "")
-    @NotBlank(message = "描述不能为空")
     private String description;
 
     @Schema(description = "输入参数(JSON格式)", example = "")
-    @NotBlank(message = "输入参数(JSON格式)不能为空")
     private String inputParams;
 
     @Schema(description = "输出结果(JSON格式)", example = "")
-    @NotBlank(message = "输出结果(JSON格式)不能为空")
     private String outputResult;
 
     @Schema(description = "开始时间", example = "")
@@ -121,7 +114,6 @@ public class ModelCalcSaveReqVO extends BaseEntity {
     private Integer priority;
 
     @Schema(description = "错误信息", example = "")
-    @NotBlank(message = "错误信息不能为空")
     private String errorMessage;
 
     @Schema(description = "文件或接口资源ID", example = "")
@@ -131,7 +123,6 @@ public class ModelCalcSaveReqVO extends BaseEntity {
     private Integer calcType;
 
     @Schema(description = "备注", example = "")
-    @NotBlank(message = "备注不能为空")
     @Size(max = 512, message = "备注长度不能超过512个字符")
     private String remark;
 

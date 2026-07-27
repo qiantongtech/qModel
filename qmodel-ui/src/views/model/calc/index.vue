@@ -264,13 +264,18 @@
 
     <!-- 新增/编辑 对话框 -->
     <el-dialog
-      :title="title"
       v-model="open"
-      width="800px"
-      :append-to="$refs['app-container']"
       draggable
+      class="large-dialog"
+      destroy-on-close
+      width="860px"
       @open="handleDialogOpen"
     >
+      <template #header>
+        <span role="heading" aria-level="2" class="el-dialog__title">
+          {{ title }}
+        </span>
+      </template>
       <el-form ref="calcRef" :model="form" :rules="rules" label-width="100px" @submit.prevent>
         <!-- 基础信息 -->
         <div class="h2-title">基础信息</div>
@@ -406,7 +411,7 @@
             </template>
           </el-table-column>
         </el-table>
-        <el-empty v-if="form.inputParams.length === 0" description="请先选择模型，自动填充输入参数" :image-size="60" />
+<!--        <el-empty v-if="form.inputParams.length === 0" description="请先选择模型，自动填充输入参数" :image-size="60" />-->
 
         <!-- 运行策略 -->
         <div class="h2-title">运行策略</div>
@@ -446,12 +451,17 @@
 
     <!-- 详情对话框 -->
     <el-dialog
-      :title="detailTitle"
       v-model="openDetail"
-      width="800px"
-      :append-to="$refs['app-container']"
       draggable
+      class="large-dialog"
+      destroy-on-close
+      width="860px"
     >
+      <template #header>
+        <span role="heading" aria-level="2" class="el-dialog__title">
+          {{ detailTitle }}
+        </span>
+      </template>
       <el-form :model="form" label-width="100px">
         <div class="h2-title">基础信息</div>
         <el-row :gutter="20">
@@ -547,6 +557,7 @@ import { listCalc, getCalc, delCalc, addCalc, updateCalc } from '@/api/model/cal
 import { listModel } from '@/api/model/model'
 import { listClassify } from '@/api/modelReconstitution/classify'
 import { getModelConfigByModelId } from '@/api/model/config'
+import { listModelFileResource } from '@/api/model/modelFileResource'
 import FileUpload from '@/components/FileUpload2'
 
 const { proxy } = getCurrentInstance()
@@ -628,7 +639,7 @@ const data = reactive({
     name: [{ required: true, message: '任务名称不能为空', trigger: 'blur' }],
     classifyId: [{ required: true, message: '请选择模型分类', trigger: 'change' }],
     modelId: [{ required: true, message: '请选择模型', trigger: 'change' }],
-    description: [{ required: true, message: '描述不能为空', trigger: 'blur' }]
+    description: [{ required: false, message: '描述不能为空', trigger: 'blur' }]
   }
 })
 
@@ -825,6 +836,8 @@ function handleModelChange(modelId) {
   if (model) {
     form.value.modelName = model.name
     form.value.accessType = model.accessType
+    // 从模型本身获取版本号
+    form.value.modelVersion = model.version || ''
 
     // 2. 自动回填分类信息（如果分类为空或与模型分类不同）
     if (model.classifyId && model.classifyId !== form.value.classifyId) {
@@ -844,57 +857,77 @@ function handleModelChange(modelId) {
     }
   }
 
-  // 2. 加载模型配置，获取 inputSchema（与 testSaveStep.vue 的 inputSchemaObj 逻辑一致）
-  getModelConfigByModelId(modelId).then((res) => {
-    const config = res.data && res.data.rows ? res.data.rows[0] : (res.data || {})
-    form.value.modelVersion = config.modelVersion || config.version || ''
+  // 3. 根据 accessType 选择不同的 API 获取 inputSchema
+  // accessType: 'PYTHON' 或 'API'（大写）
+  const isPythonModel = form.value.accessType === 'PYTHON'
 
-    // 3. 解析 inputSchema（对应 testSaveStep.vue 的 inputSchemaObj computed）
-    const inputSchema = config.inputSchema
-    if (!inputSchema) {
-      form.value.inputParams = []
-      return
-    }
-
-    let schemaObj
-    try {
-      schemaObj = typeof inputSchema === 'string' ? JSON.parse(inputSchema) : inputSchema
-    } catch {
-      form.value.inputParams = []
-      return
-    }
-
-    // 4. 校验 schema 结构
-    if (!schemaObj || schemaObj.type !== 'object' || !schemaObj.properties) {
-      form.value.inputParams = []
-      return
-    }
-
-    // 5. 生成参数表格行（对应 testSaveStep.vue 的 fieldList computed）
-    const props = schemaObj.properties
-    const required = schemaObj.required || []
-
-    form.value.inputParams = Object.keys(props).map((key) => {
-      const p = props[key] || {}
-      const rawType = p.type || 'string'
-      // format: 'binary' 对应文件上传类型
-      const isFile = p.format === 'binary'
-      const displayType = isFile ? 'file' : rawType
-
-      return {
-        key: key,
-        name: key,
-        title: p.title || key,                      // 参数显示名称
-        value: '',                                  // 参数值（用户填写）
-        type: displayType,                          // 展示类型
-        rawType: rawType,                           // 原始类型
-        format: p.format || '',                     // 格式
-        description: p.description || p.title || '', // 说明
-        required: required.includes(key)            // 是否必填
+  if (isPythonModel) {
+    // Python 模型：使用 listModelFileResource 获取 inputSchema
+    listModelFileResource({ modelId }).then((res) => {
+      const rows = res.data?.rows || []
+      if (rows.length > 0) {
+        const fileResource = rows[0]
+        parseInputSchema(fileResource.inputSchema)
+      } else {
+        form.value.inputParams = []
       }
+    }).catch(() => {
+      form.value.inputParams = []
     })
-  }).catch(() => {
+  } else {
+    // API 模型：使用 getModelConfigByModelId 获取 inputSchema
+    getModelConfigByModelId(modelId).then((res) => {
+      const config = res.data && res.data.rows ? res.data.rows[0] : (res.data || {})
+      parseInputSchema(config.inputSchema)
+    }).catch(() => {
+      form.value.inputParams = []
+    })
+  }
+}
+
+/** 解析 inputSchema 生成参数表格行 */
+function parseInputSchema(inputSchema) {
+  if (!inputSchema) {
     form.value.inputParams = []
+    return
+  }
+
+  let schemaObj
+  try {
+    schemaObj = typeof inputSchema === 'string' ? JSON.parse(inputSchema) : inputSchema
+  } catch {
+    form.value.inputParams = []
+    return
+  }
+
+  // 校验 schema 结构
+  if (!schemaObj || schemaObj.type !== 'object' || !schemaObj.properties) {
+    form.value.inputParams = []
+    return
+  }
+
+  // 生成参数表格行（参考 onlineTest.vue 的 fieldList computed）
+  const props = schemaObj.properties
+  const required = schemaObj.required || []
+
+  form.value.inputParams = Object.keys(props).map((key) => {
+    const p = props[key] || {}
+    const rawType = p.type || 'string'
+    // format: 'binary' 对应文件上传类型
+    const isFile = p.format === 'binary'
+    const displayType = isFile ? 'file' : rawType
+
+    return {
+      key: key,
+      name: key,
+      title: p.title || key,                      // 参数显示名称
+      value: '',                                  // 参数值（用户填写）
+      type: displayType,                          // 展示类型
+      rawType: rawType,                           // 原始类型
+      format: p.format || '',                     // 格式
+      description: p.description || p.title || '', // 说明
+      required: required.includes(key)            // 是否必填
+    }
   })
 }
 
@@ -1026,5 +1059,22 @@ getList()
 
 .dialog-footer {
   text-align: right;
+}
+
+.large-dialog {
+  min-height: 300px;
+  max-height: 85vh;
+  overflow-y: auto;
+}
+
+.large-dialog :deep(.el-dialog__body) {
+  padding: 15px 20px;
+  max-height: calc(85vh - 120px);
+  overflow-y: auto;
+}
+
+.large-dialog :deep(.el-dialog__footer) {
+  padding: 10px 20px;
+  border-top: 1px solid #eee;
 }
 </style>
