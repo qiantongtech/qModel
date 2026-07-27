@@ -1,0 +1,221 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+  Copyright © 2025-present Jiangsu Qiantong Technology Co., Ltd.
+
+  This file is part of qModel Module Platform (Open Source Edition).
+
+  qModel is licensed under Apache License 2.0 with additional qModel terms.
+  You may use qModel for commercial purposes, but you may not remove, hide,
+  modify, or replace the qModel logo, copyright notices, license notices,
+  or attribution information without a separate commercial license.
+
+  White-label use, OEM distribution, rebranding, or presenting qModel as
+  another product requires separate commercial authorization from
+  Jiangsu Qiantong Technology Co., Ltd.
+
+  Business License: `https://qmodel.tech/`
+  See the LICENSE file in the project root for full license information.
+-->
+
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="tech.qiantong.qmodel.module.model.dal.mapper.calc.ModelCalcMapper">
+
+    <resultMap type="ModelCalcDO" id="modelCalcResult">
+        <result property="id"    column="id"    />
+        <result property="companyId"    column="company_id"    />
+        <result property="code"    column="code"    />
+        <result property="name"    column="name"    />
+        <result property="classifyId"    column="classify_id"    />
+        <result property="classifyName"    column="classify_name"    />
+        <result property="modelId"    column="model_id"    />
+        <result property="modelName"    column="model_name"    />
+        <result property="modelVersion"    column="model_version"    />
+        <result property="modelVersionId"    column="model_version_id"    />
+        <result property="description"    column="description"    />
+        <result property="inputParams"    column="input_params"    />
+        <result property="outputResult"    column="output_result"    />
+        <result property="startTime"    column="start_time"    />
+        <result property="endTime"    column="end_time"    />
+        <result property="duration"    column="duration"    />
+        <result property="status"    column="status"    />
+        <result property="timeoutSeconds"    column="timeout_seconds"    />
+        <result property="retryCount"    column="retry_count"    />
+        <result property="maxRetryCount"    column="max_retry_count"    />
+        <result property="priority"    column="priority"    />
+        <result property="errorMessage"    column="error_message"    />
+        <result property="resourceId"    column="resource_id"    />
+        <result property="calcType"    column="calc_type"    />
+        <result property="validFlag"    column="valid_flag"    />
+        <result property="delFlag"    column="del_flag"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="creatorId"    column="creator_id"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updatorId"    column="updator_id"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="remark"    column="remark"    />
+    </resultMap>
+
+    <sql id="selectcalcVo">
+        select id, company_id, code, name, classify_id, classify_name, model_id, model_name, model_version, model_version_id, description, input_params, output_result, start_time, end_time, duration, status, timeout_seconds, retry_count, max_retry_count, priority, error_message, resource_id, calc_type, valid_flag, del_flag, create_by, creator_id, create_time, update_by, updator_id, update_time, remark from model_calc
+    </sql>
+
+    <select id="selectcalcList" parameterType="ModelCalcDO" resultMap="modelCalcResult">
+        <include refid="selectcalcVo"/>
+        <where>
+            <if test="companyId != null "> and company_id = #{companyId}</if>
+            <if test="code != null  and code != ''"> and code = #{code}</if>
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+            <if test="classifyId != null "> and classify_id = #{classifyId}</if>
+            <if test="classifyName != null  and classifyName != ''"> and classify_name like concat('%', #{classifyName}, '%')</if>
+            <if test="modelId != null "> and model_id = #{modelId}</if>
+            <if test="modelName != null  and modelName != ''"> and model_name like concat('%', #{modelName}, '%')</if>
+            <if test="modelVersion != null  and modelVersion != ''"> and model_version = #{modelVersion}</if>
+            <if test="modelVersionId != null "> and model_version_id = #{modelVersionId}</if>
+            <if test="description != null  and description != ''"> and description = #{description}</if>
+            <if test="inputParams != null  and inputParams != ''"> and input_params = #{inputParams}</if>
+            <if test="outputResult != null  and outputResult != ''"> and output_result = #{outputResult}</if>
+            <if test="startTime != null "> and start_time = #{startTime}</if>
+            <if test="endTime != null "> and end_time = #{endTime}</if>
+            <if test="duration != null "> and duration = #{duration}</if>
+            <if test="status != null "> and status = #{status}</if>
+            <if test="timeoutSeconds != null "> and timeout_seconds = #{timeoutSeconds}</if>
+            <if test="retryCount != null "> and retry_count = #{retryCount}</if>
+            <if test="maxRetryCount != null "> and max_retry_count = #{maxRetryCount}</if>
+            <if test="priority != null "> and priority = #{priority}</if>
+            <if test="errorMessage != null  and errorMessage != ''"> and error_message = #{errorMessage}</if>
+            <if test="resourceId != null "> and resource_id = #{resourceId}</if>
+            <if test="calcType != null "> and calc_type = #{calcType}</if>
+            <if test="createTime != null "> and create_time = #{createTime}</if>
+        </where>
+    </select>
+
+    <select id="selectcalcById" parameterType="Long" resultMap="modelCalcResult">
+        <include refid="selectcalcVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertcalc" parameterType="ModelCalcDO" useGeneratedKeys="true" keyProperty="id">
+        insert into model_calc
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="companyId != null">company_id,</if>
+            <if test="code != null">code,</if>
+            <if test="name != null">name,</if>
+            <if test="classifyId != null">classify_id,</if>
+            <if test="classifyName != null">classify_name,</if>
+            <if test="modelId != null">model_id,</if>
+            <if test="modelName != null">model_name,</if>
+            <if test="modelVersion != null">model_version,</if>
+            <if test="modelVersionId != null">model_version_id,</if>
+            <if test="description != null">description,</if>
+            <if test="inputParams != null">input_params,</if>
+            <if test="outputResult != null">output_result,</if>
+            <if test="startTime != null">start_time,</if>
+            <if test="endTime != null">end_time,</if>
+            <if test="duration != null">duration,</if>
+            <if test="status != null">status,</if>
+            <if test="timeoutSeconds != null">timeout_seconds,</if>
+            <if test="retryCount != null">retry_count,</if>
+            <if test="maxRetryCount != null">max_retry_count,</if>
+            <if test="priority != null">priority,</if>
+            <if test="errorMessage != null">error_message,</if>
+            <if test="resourceId != null">resource_id,</if>
+            <if test="calcType != null">calc_type,</if>
+            <if test="validFlag != null">valid_flag,</if>
+            <if test="delFlag != null">del_flag,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="creatorId != null">creator_id,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updatorId != null">updator_id,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="remark != null">remark,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="companyId != null">#{companyId},</if>
+            <if test="code != null">#{code},</if>
+            <if test="name != null">#{name},</if>
+            <if test="classifyId != null">#{classifyId},</if>
+            <if test="classifyName != null">#{classifyName},</if>
+            <if test="modelId != null">#{modelId},</if>
+            <if test="modelName != null">#{modelName},</if>
+            <if test="modelVersion != null">#{modelVersion},</if>
+            <if test="modelVersionId != null">#{modelVersionId},</if>
+            <if test="description != null">#{description},</if>
+            <if test="inputParams != null">#{inputParams},</if>
+            <if test="outputResult != null">#{outputResult},</if>
+            <if test="startTime != null">#{startTime},</if>
+            <if test="endTime != null">#{endTime},</if>
+            <if test="duration != null">#{duration},</if>
+            <if test="status != null">#{status},</if>
+            <if test="timeoutSeconds != null">#{timeoutSeconds},</if>
+            <if test="retryCount != null">#{retryCount},</if>
+            <if test="maxRetryCount != null">#{maxRetryCount},</if>
+            <if test="priority != null">#{priority},</if>
+            <if test="errorMessage != null">#{errorMessage},</if>
+            <if test="resourceId != null">#{resourceId},</if>
+            <if test="calcType != null">#{calcType},</if>
+            <if test="validFlag != null">#{validFlag},</if>
+            <if test="delFlag != null">#{delFlag},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="creatorId != null">#{creatorId},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updatorId != null">#{updatorId},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null">#{remark},</if>
+         </trim>
+    </insert>
+
+    <update id="updatecalc" parameterType="ModelCalcDO">
+        update model_calc
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="companyId != null">company_id = #{companyId},</if>
+            <if test="code != null">code = #{code},</if>
+            <if test="name != null">name = #{name},</if>
+            <if test="classifyId != null">classify_id = #{classifyId},</if>
+            <if test="classifyName != null">classify_name = #{classifyName},</if>
+            <if test="modelId != null">model_id = #{modelId},</if>
+            <if test="modelName != null">model_name = #{modelName},</if>
+            <if test="modelVersion != null">model_version = #{modelVersion},</if>
+            <if test="modelVersionId != null">model_version_id = #{modelVersionId},</if>
+            <if test="description != null">description = #{description},</if>
+            <if test="inputParams != null">input_params = #{inputParams},</if>
+            <if test="outputResult != null">output_result = #{outputResult},</if>
+            <if test="startTime != null">start_time = #{startTime},</if>
+            <if test="endTime != null">end_time = #{endTime},</if>
+            <if test="duration != null">duration = #{duration},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="timeoutSeconds != null">timeout_seconds = #{timeoutSeconds},</if>
+            <if test="retryCount != null">retry_count = #{retryCount},</if>
+            <if test="maxRetryCount != null">max_retry_count = #{maxRetryCount},</if>
+            <if test="priority != null">priority = #{priority},</if>
+            <if test="errorMessage != null">error_message = #{errorMessage},</if>
+            <if test="resourceId != null">resource_id = #{resourceId},</if>
+            <if test="calcType != null">calc_type = #{calcType},</if>
+            <if test="validFlag != null">valid_flag = #{validFlag},</if>
+            <if test="delFlag != null">del_flag = #{delFlag},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="creatorId != null">creator_id = #{creatorId},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updatorId != null">updator_id = #{updatorId},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deletecalcById" parameterType="Long">
+        delete from model_calc where id = #{id}
+    </delete>
+
+    <delete id="deletecalcByIds" parameterType="String">
+        delete from model_calc where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>
