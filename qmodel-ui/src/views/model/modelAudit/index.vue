@@ -71,13 +71,13 @@
                 :default-sort="defaultSort" @sort-change="handleSortChange">
         <el-table-column v-if="getColumnVisibility(0)" label="编号" align="center" width="80" prop="id" sortable="custom"
                          :sort-orders="['descending', 'ascending']"/>
-        <el-table-column v-if="getColumnVisibility(1)" label="模型名称" align="left" prop="modelName"
+        <el-table-column v-if="getColumnVisibility(1)" label="模型名称" align="left" prop="modelName" width="220"
                          :show-overflow-tooltip="{ effect: 'light' }">
           <template #default="scope">
             {{ scope.row.modelName || '-' }}
           </template>
         </el-table-column>
-        <el-table-column v-if="getColumnVisibility(2)" label="模型编码" align="left" prop="modelCode"
+        <el-table-column v-if="getColumnVisibility(2)" label="模型编码" align="left" prop="modelCode"  width="220"
                          :show-overflow-tooltip="{ effect: 'light' }">
           <template #default="scope">
             {{ scope.row.modelCode || '-' }}
@@ -105,23 +105,19 @@
             <dict-tag :options="model_audit_status" :value="scope.row.auditStatus"/>
           </template>
         </el-table-column>
-        <el-table-column v-if="getColumnVisibility(7)" label="审批人" align="center" prop="auditorName" width="80">
+        <el-table-column v-if="getColumnVisibility(7)" label="审批意见" align="left" prop="auditReason"
+                         :show-overflow-tooltip="{ effect: 'light' }">
           <template #default="scope">
-            {{ scope.row.auditorName || '-' }}
+            {{ scope.row.auditReason || "-" }}
           </template>
         </el-table-column>
-        <el-table-column v-if="getColumnVisibility(8)" label="审批时间" align="center" prop="auditTime" width="140">
+        <el-table-column v-if="getColumnVisibility(8)" label="操作" align="center" class-name="small-padding fixed-width" fixed="right" width="180">
           <template #default="scope">
-            <span>{{ parseTime(scope.row.auditTime, "{y}-{m}-{d} {h}:{i}") || "-" }}</span>
-          </template>
-        </el-table-column>
-        <el-table-column v-if="getColumnVisibility(10)" label="操作" align="center" class-name="small-padding fixed-width" fixed="right" width="180">
-          <template #default="scope">
+            <el-button link type="primary" :disabled="scope.row.auditStatus !== '0'" icon="Stamp" @click="handleAudit(scope.row)"
+                       v-hasPermi="['model:modelAudit:audit:edit']">审批
+            </el-button>
             <el-button link type="primary" icon="view" @click="handleDetail(scope.row)"
                        v-hasPermi="['model:modelAudit:audit:query']">详情
-            </el-button>
-            <el-button link type="primary" :disabled="scope.row.auditStatus !== '0'" icon="Finished" @click="handleAudit(scope.row)"
-                       v-hasPermi="['model:modelAudit:audit:edit']">审批
             </el-button>
           </template>
         </el-table-column>
@@ -194,9 +190,9 @@
               </el-radio-group>
             </el-form-item>
           </el-col>
-          <el-col v-if="form.auditStatus === '2'" :span="24">
-            <el-form-item label="拒绝理由" prop="auditReason">
-              <el-input v-model="form.auditReason" type="textarea" maxlength="256 个字符" show-word-limit placeholder="请输入拒绝理由"/>
+          <el-col :span="24">
+            <el-form-item label="审批意见" prop="auditReason">
+              <el-input v-model="form.auditReason" type="textarea" maxlength="256 个字符" show-word-limit placeholder="请输入审批意见"/>
             </el-form-item>
           </el-col>
         </el-row>
@@ -278,7 +274,7 @@
             </el-form-item>
           </el-col>
           <el-col :span="24">
-            <el-form-item label="拒绝理由" prop="auditReason">
+            <el-form-item label="审批意见" prop="auditReason">
               <div class="form-readonly textarea">{{ form.auditReason || "-"}}</div>
             </el-form-item>
           </el-col>
@@ -295,7 +291,7 @@
 </template>
 
 <script setup name="Audit">
-import {listAudit, getAudit, updateAudit} from "@/api/model/audit";
+import { listAudit, getAudit, updateAudit } from "@/api/model/audit";
 import { parseTime } from '@/utils/anivia.js'
 
 const {proxy} = getCurrentInstance();
@@ -351,9 +347,8 @@ const columns = ref([
   {key: 4, label: "申请时间", visible: true},
   {key: 5, label: "申请理由", visible: true},
   {key: 6, label: "审批状态", visible: true},
-  {key: 7, label: "审批人", visible: true},
-  {key: 8, label: "审批时间", visible: true},
-  {key: 10, label: "操作", visible: true}
+  {key: 7, label: "审批意见", visible: true},
+  {key: 8, label: "操作", visible: true}
 ]);
 
 const {queryParams, form, rules} = toRefs(data);

@@ -345,7 +345,6 @@
     import {listModel, delModel, updateModelStatus, publishModel} from '@/api/model/model';
     import { listClassify } from '@/api/model/classify';
     import DeptTree from '@/components/DeptTree';
-    import { ElMessage, ElMessageBox } from 'element-plus';
     import DictTag from '@/components/DictTag';
     import defaultCover from '@/assets/system/images/model/version/card-title.svg';
 
@@ -547,12 +546,12 @@
       publishModel(publishForm.value.id, publishForm.value.applyReason).then(() => {
         openPublish.value = false;
         getList();
-        ElMessage.success('申请发布成功');
+        proxy.$modal.success('申请发布成功');
       })
     };
 
     const handleOffline = (row) => {
-      ElMessageBox.confirm('是否确认下线模型名称为【' + row.name + '】的模型数据吗？', '警告', {
+      proxy.$modal.confirm('是否确认下线模型名称为【' + row.name + '】的模型数据吗？', '警告', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
@@ -562,7 +561,7 @@
           })
           .then(() => {
             getList();
-            ElMessage.success('下线成功');
+            proxy.$modal.msgSuccess('下线成功');
           })
           .catch(() => {
           });
@@ -571,7 +570,7 @@
     const handleToggleStatus = (row) => {
         const newStatus = String(row.status) === '1' ? '0' : '1';
         const text = newStatus === '1' ? '启用' : '停用';
-        ElMessageBox.confirm('是否确认' + text + '名称为【' + row.name + '】的模型？', '警告', {
+        proxy.$modal.confirm('是否确认' + text + '名称为【' + row.name + '】的模型？', {
             confirmButtonText: '确定',
             cancelButtonText: '取消',
             type: 'warning'
@@ -579,7 +578,7 @@
             .then(() => updateModelStatus(row.id, newStatus))
             .then(() => {
                 getList();
-                ElMessage.success(text + '成功');
+                proxy.$modal.msgSuccess(text + '成功');
             })
             .catch(() => {});
     };
@@ -595,13 +594,13 @@
         const id = row.id;
         const name = row.name;
         if (row.status == 1) {
-            ElMessageBox.confirm('【' + name + '】模型已启用，请先停用！', '警告', {
+          proxy.$modal.confirm('【' + name + '】模型已启用，请先停用！', {
                 confirmButtonText: '确定',
                 cancelButtonText: '取消',
                 type: 'warning'
             }).catch(() => {});
         } else {
-            ElMessageBox.confirm('是否确认删除模型名称为【' + name + '】的模型数据吗？', '警告', {
+          proxy.$modal.confirm('是否确认删除模型名称为【' + name + '】的模型数据吗？', {
                 confirmButtonText: '确定',
                 cancelButtonText: '取消',
                 type: 'warning'
@@ -611,7 +610,7 @@
                 })
                 .then(() => {
                     getList();
-                    ElMessage.success('删除成功');
+                    proxy.$modal.msgSuccess('删除成功');
                 })
                 .catch(() => {});
         }
