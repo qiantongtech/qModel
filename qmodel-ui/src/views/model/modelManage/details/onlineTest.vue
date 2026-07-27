@@ -19,21 +19,19 @@
 <template>
   <div class="online-test">
     <div class="test-card">
-      <div class="test-card-header">
-        <div class="h2-titles">调用请求</div>
-        <el-button
-          type="primary"
-          size="default"
-          :loading="testing"
-          :icon="VideoPlay"
-          @click="handleTest"
-        >
-          调用测试
-        </el-button>
-      </div>
-
       <div class="version-section">
-        <div class="h2-titles">调试版本</div>
+        <div class="test-card-header">
+          <div class="h2-titles">调用版本</div>
+          <el-button
+            type="primary"
+            size="default"
+            :loading="testing"
+            :icon="VideoPlay"
+            @click="handleTest"
+          >
+            调用测试
+          </el-button>
+        </div>
         <div class="version-select-row">
           <span class="version-label">版本号</span>
           <el-select
@@ -124,7 +122,7 @@
           </el-table-column>
           <el-table-column label="说明" min-width="260">
             <template #default="{ row }">
-              <el-input :model-value="row.description || row.title"  disabled/>
+              <el-input :model-value="row.description || row.title" disabled />
             </template>
           </el-table-column>
         </el-table>

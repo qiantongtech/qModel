@@ -19,39 +19,55 @@
 <template>
   <div class="app-container" ref="app-container">
     <div class="pagecont-top" v-show="showSearch">
-      <el-form class="btn-style" :model="queryParams" ref="queryRef" :inline="true" label-width="75px"
-               v-show="showSearch" @submit.prevent>
+      <el-form
+        class="btn-style"
+        :model="queryParams"
+        ref="queryRef"
+        :inline="true"
+        label-width="75px"
+        v-show="showSearch"
+        @submit.prevent
+      >
         <el-form-item label="模型名称" prop="modelName">
           <el-input
-              class="el-form-input-width"
-              v-model="queryParams.modelName"
-              placeholder="请输入模型名称"
-              clearable
-              @keyup.enter="handleQuery"
+            class="el-form-input-width"
+            v-model="queryParams.modelName"
+            placeholder="请输入模型名称"
+            clearable
+            @keyup.enter="handleQuery"
           />
         </el-form-item>
         <el-form-item label="模型编码" prop="modelCode">
           <el-input
-              class="el-form-input-width"
-              v-model="queryParams.modelCode"
-              placeholder="请输入模型编码"
-              clearable
-              @keyup.enter="handleQuery"
+            class="el-form-input-width"
+            v-model="queryParams.modelCode"
+            placeholder="请输入模型编码"
+            clearable
+            @keyup.enter="handleQuery"
           />
         </el-form-item>
         <el-form-item label="审批状态" prop="auditStatus">
-          <el-select class="el-form-input-width" v-model="queryParams.auditStatus" placeholder="请选择审批状态"
-                     clearable>
+          <el-select
+            class="el-form-input-width"
+            v-model="queryParams.auditStatus"
+            placeholder="请选择审批状态"
+            clearable
+          >
             <el-option
-                v-for="dict in model_audit_status"
-                :key="dict.value"
-                :label="dict.label"
-                :value="dict.value"
+              v-for="dict in model_audit_status"
+              :key="dict.value"
+              :label="dict.label"
+              :value="dict.value"
             />
           </el-select>
         </el-form-item>
         <el-form-item>
-          <el-button plain type="primary" @click="handleQuery" @mousedown="(e) => e.preventDefault()">
+          <el-button
+            plain
+            type="primary"
+            @click="handleQuery"
+            @mousedown="(e) => e.preventDefault()"
+          >
             <i class="iconfont-mini icon-a-zu22377 mr5"></i>查询
           </el-button>
           <el-button @click="resetQuery" @mousedown="(e) => e.preventDefault()">
@@ -64,110 +80,218 @@
     <div class="pagecont-bottom">
       <div class="justify-between mb15">
         <div class="justify-end top-right-btn">
-          <right-toolbar v-model:showSearch="showSearch" @queryTable="getList" :columns="columns"></right-toolbar>
+          <right-toolbar
+            v-model:showSearch="showSearch"
+            @queryTable="getList"
+            :columns="columns"
+          ></right-toolbar>
         </div>
       </div>
-      <el-table stripe height="58vh" v-loading="loading" :data="auditList" @selection-change="handleSelectionChange"
-                :default-sort="defaultSort" @sort-change="handleSortChange">
-        <el-table-column v-if="getColumnVisibility(0)" label="编号" align="center" width="80" prop="id" sortable="custom"
-                         :sort-orders="['descending', 'ascending']"/>
-        <el-table-column v-if="getColumnVisibility(1)" label="模型名称" align="left" prop="modelName" width="220"
-                         :show-overflow-tooltip="{ effect: 'light' }">
+      <el-table
+        stripe
+        height="58vh"
+        v-loading="loading"
+        :data="auditList"
+        @selection-change="handleSelectionChange"
+        :default-sort="defaultSort"
+        @sort-change="handleSortChange"
+      >
+        <el-table-column
+          v-if="getColumnVisibility(0)"
+          label="编号"
+          align="center"
+          width="80"
+          prop="id"
+          sortable="custom"
+          :sort-orders="['descending', 'ascending']"
+        />
+        <el-table-column
+          v-if="getColumnVisibility(1)"
+          label="模型名称"
+          align="left"
+          prop="modelName"
+          width="250"
+          :show-overflow-tooltip="{ effect: 'light' }"
+        >
           <template #default="scope">
-            {{ scope.row.modelName || '-' }}
+            {{ scope.row.modelName || "-" }}
           </template>
         </el-table-column>
-        <el-table-column v-if="getColumnVisibility(2)" label="模型编码" align="left" prop="modelCode"  width="220"
-                         :show-overflow-tooltip="{ effect: 'light' }">
+        <el-table-column
+          v-if="getColumnVisibility(2)"
+          label="模型编码"
+          align="left"
+          prop="modelCode"
+          width="250"
+          :show-overflow-tooltip="{ effect: 'light' }"
+        >
           <template #default="scope">
-            {{ scope.row.modelCode || '-' }}
+            {{ scope.row.modelCode || "-" }}
           </template>
         </el-table-column>
-        <el-table-column v-if="getColumnVisibility(3)" label="申请人" align="center" prop="applyName" width="80">
+        <el-table-column
+          v-if="getColumnVisibility(3)"
+          label="申请人"
+          align="center"
+          prop="applyName"
+          width="100"
+        >
           <template #default="scope">
-            {{ scope.row.applyName || '-' }}
+            {{ scope.row.applyName || "-" }}
           </template>
         </el-table-column>
-        <el-table-column v-if="getColumnVisibility(4)" label="申请时间" align="center" prop="applyTime" width="140"
-                         sortable="custom" :sort-orders="['descending', 'ascending']">
+        <el-table-column
+          v-if="getColumnVisibility(4)"
+          label="申请时间"
+          align="center"
+          prop="applyTime"
+          width="140"
+          sortable="custom"
+          :sort-orders="['descending', 'ascending']"
+        >
           <template #default="scope">
-            <span>{{ parseTime(scope.row.applyTime, '{y}-{m}-{d}  {h}:{i}') }}</span>
+            <span>{{
+              parseTime(scope.row.applyTime, "{y}-{m}-{d}  {h}:{i}")
+            }}</span>
           </template>
         </el-table-column>
-        <el-table-column v-if="getColumnVisibility(5)" label="申请理由" align="left" prop="applyReason"
-                         :show-overflow-tooltip="{ effect: 'light' }">
+        <el-table-column
+          v-if="getColumnVisibility(5)"
+          label="申请理由"
+          align="left"
+          prop="applyReason"
+          width="200"
+          :show-overflow-tooltip="{ effect: 'light' }"
+        >
           <template #default="scope">
             {{ scope.row.applyReason || "-" }}
           </template>
         </el-table-column>
-        <el-table-column v-if="getColumnVisibility(6)" label="审批状态" align="center" prop="auditStatus" width="90">
-          <template #default="scope">
-            <dict-tag :options="model_audit_status" :value="scope.row.auditStatus"/>
-          </template>
-        </el-table-column>
-        <el-table-column v-if="getColumnVisibility(7)" label="审批意见" align="left" prop="auditReason"
-                         :show-overflow-tooltip="{ effect: 'light' }">
+        <el-table-column
+          v-if="getColumnVisibility(7)"
+          label="审批意见"
+          align="left"
+          prop="auditReason"
+          width="200"
+          :show-overflow-tooltip="{ effect: 'light' }"
+        >
           <template #default="scope">
             {{ scope.row.auditReason || "-" }}
           </template>
         </el-table-column>
-        <el-table-column v-if="getColumnVisibility(8)" label="操作" align="center" class-name="small-padding fixed-width" fixed="right" width="180">
+        <el-table-column
+          v-if="getColumnVisibility(6)"
+          label="审批状态"
+          align="center"
+          prop="auditStatus"
+        >
           <template #default="scope">
-            <el-button link type="primary" :disabled="scope.row.auditStatus !== '0'" icon="Stamp" @click="handleAudit(scope.row)"
-                       v-hasPermi="['model:modelAudit:audit:edit']">审批
+            <dict-tag
+              :options="model_audit_status"
+              :value="scope.row.auditStatus"
+            />
+          </template>
+        </el-table-column>
+
+        <el-table-column
+          v-if="getColumnVisibility(8)"
+          label="操作"
+          align="center"
+          class-name="small-padding fixed-width"
+          fixed="right"
+          width="180"
+        >
+          <template #default="scope">
+            <el-button
+              link
+              type="primary"
+              :disabled="scope.row.auditStatus !== '0'"
+              icon="Stamp"
+              @click="handleAudit(scope.row)"
+              v-hasPermi="['model:modelAudit:audit:edit']"
+              >审批
             </el-button>
-            <el-button link type="primary" icon="view" @click="handleDetail(scope.row)"
-                       v-hasPermi="['model:modelAudit:audit:query']">详情
+            <el-button
+              link
+              type="primary"
+              icon="view"
+              @click="handleDetail(scope.row)"
+              v-hasPermi="['model:modelAudit:audit:query']"
+              >详情
             </el-button>
           </template>
         </el-table-column>
 
         <template #empty>
           <div class="emptyBg">
-            <img src="@/assets/system/images/no_data/noData.png" alt=""/>
+            <img src="@/assets/system/images/no_data/noData.png" alt="" />
             <p>暂无记录</p>
           </div>
         </template>
       </el-table>
 
       <pagination
-          v-show="total>0"
-          :total="total"
-          v-model:page="queryParams.pageNum"
-          v-model:limit="queryParams.pageSize"
-          @pagination="getList"
+        v-show="total > 0"
+        :total="total"
+        v-model:page="queryParams.pageNum"
+        v-model:limit="queryParams.pageSize"
+        @pagination="getList"
       />
     </div>
 
     <!-- 审批对话框 -->
-    <el-dialog :title="title" v-model="open" width="800px" :append-to="$refs['app-container']" draggable>
+    <el-dialog
+      :title="title"
+      v-model="open"
+      width="800px"
+      :append-to="$refs['app-container']"
+      draggable
+    >
       <template #header="{ close, titleId, titleClass }">
         <span role="heading" aria-level="2" class="el-dialog__title">
           {{ title }}
         </span>
       </template>
-      <el-form ref="auditRef" :model="form" :rules="rules" label-width="80px" @submit.prevent>
+      <el-form
+        ref="auditRef"
+        :model="form"
+        :rules="rules"
+        label-width="80px"
+        @submit.prevent
+      >
         <el-row :gutter="20">
           <el-col :span="24">
             <el-form-item label="编号" prop="id">
-              <el-input v-model="form.id" disabled placeholder="请输入编号"/>
+              <el-input v-model="form.id" disabled placeholder="请输入编号" />
             </el-form-item>
           </el-col>
           <el-col :span="24">
             <el-form-item label="模型名称" prop="modelName">
-              <el-input v-model="form.modelName" disabled placeholder="请输入模型名称"/>
+              <el-input
+                v-model="form.modelName"
+                disabled
+                placeholder="请输入模型名称"
+              />
             </el-form-item>
           </el-col>
           <el-col :span="24">
             <el-form-item label="模型编码" prop="modelCode">
-              <el-input v-model="form.modelCode" disabled placeholder="请输入模型编码"/>
+              <el-input
+                v-model="form.modelCode"
+                disabled
+                placeholder="请输入模型编码"
+              />
             </el-form-item>
           </el-col>
         </el-row>
         <el-row :gutter="20">
           <el-col :span="24">
             <el-form-item label="申请人" prop="applyName">
-              <el-input v-model="form.applyName" disabled placeholder="请输入申请人"/>
+              <el-input
+                v-model="form.applyName"
+                disabled
+                placeholder="请输入申请人"
+              />
             </el-form-item>
           </el-col>
           <el-col :span="24">
@@ -177,7 +301,12 @@
           </el-col>
           <el-col :span="24">
             <el-form-item label="申请理由" prop="applyReason">
-              <el-input v-model="form.applyReason" type="textarea" disabled placeholder="请输入申请理由"/>
+              <el-input
+                v-model="form.applyReason"
+                type="textarea"
+                disabled
+                placeholder="请输入申请理由"
+              />
             </el-form-item>
           </el-col>
         </el-row>
@@ -190,9 +319,15 @@
               </el-radio-group>
             </el-form-item>
           </el-col>
-          <el-col :span="24">
-            <el-form-item label="审批意见" prop="auditReason">
-              <el-input v-model="form.auditReason" type="textarea" maxlength="256 个字符" show-word-limit placeholder="请输入审批意见"/>
+          <el-col :span="24" v-if="form.auditStatus === '2'">
+            <el-form-item label="拒绝原因" prop="auditReason">
+              <el-input
+                v-model="form.auditReason"
+                type="textarea"
+                maxlength="256 个字符"
+                show-word-limit
+                placeholder="请输入拒绝原因"
+              />
             </el-form-item>
           </el-col>
         </el-row>
@@ -200,13 +335,21 @@
       <template #footer>
         <div class="dialog-footer">
           <el-button size="mini" @click="cancel">取 消</el-button>
-          <el-button type="primary" size="mini" @click="submitForm">确 定</el-button>
+          <el-button type="primary" size="mini" @click="submitForm"
+            >确 定</el-button
+          >
         </div>
       </template>
     </el-dialog>
 
     <!-- 详情对话框 -->
-    <el-dialog :title="title" v-model="openDetail" width="800px" :append-to="$refs['app-container']" draggable>
+    <el-dialog
+      :title="title"
+      v-model="openDetail"
+      width="800px"
+      :append-to="$refs['app-container']"
+      draggable
+    >
       <template #header="{ close, titleId, titleClass }">
         <span role="heading" aria-level="2" class="el-dialog__title">
           {{ title }}
@@ -232,9 +375,9 @@
           <el-col :span="12">
             <el-form-item label="审批状态" prop="auditStatus">
               <dict-tag
-                  :options="model_audit_status"
-                  :value="form.auditStatus"
-                  class="con-value access-tag"
+                :options="model_audit_status"
+                :value="form.auditStatus"
+                class="con-value access-tag"
               />
             </el-form-item>
           </el-col>
@@ -248,13 +391,17 @@
           <el-col :span="12">
             <el-form-item label="申请时间" prop="applyTime">
               <div class="form-readonly">
-                {{ parseTime(form.applyTime, "{y}-{m}-{d} {h}:{i}:{s}") || "-" }}
+                {{
+                  parseTime(form.applyTime, "{y}-{m}-{d} {h}:{i}:{s}") || "-"
+                }}
               </div>
             </el-form-item>
           </el-col>
           <el-col :span="24">
             <el-form-item label="申请理由" prop="applyReason">
-                <div class="form-readonly textarea">{{ form.applyReason || "-" }}</div>
+              <div class="form-readonly textarea">
+                {{ form.applyReason || "-" }}
+              </div>
             </el-form-item>
           </el-col>
         </el-row>
@@ -262,7 +409,9 @@
           <el-col :span="12">
             <el-form-item label="审批时间" prop="auditTime">
               <div class="form-readonly">
-                {{ parseTime(form.auditTime, "{y}-{m}-{d} {h}:{i}:{s}") || "-" }}
+                {{
+                  parseTime(form.auditTime, "{y}-{m}-{d} {h}:{i}:{s}") || "-"
+                }}
               </div>
             </el-form-item>
           </el-col>
@@ -275,7 +424,9 @@
           </el-col>
           <el-col :span="24">
             <el-form-item label="审批意见" prop="auditReason">
-              <div class="form-readonly textarea">{{ form.auditReason || "-"}}</div>
+              <div class="form-readonly textarea">
+                {{ form.auditReason || "-" }}
+              </div>
             </el-form-item>
           </el-col>
         </el-row>
@@ -286,15 +437,14 @@
         </div>
       </template>
     </el-dialog>
-
   </div>
 </template>
 
 <script setup name="Audit">
 import { listAudit, getAudit, updateAudit } from "@/api/model/audit";
-import { parseTime } from '@/utils/anivia.js'
+import { parseTime } from "@/utils/anivia.js";
 
-const {proxy} = getCurrentInstance();
+const { proxy } = getCurrentInstance();
 const auditList = ref([]);
 const open = ref(false);
 const openDetail = ref(false);
@@ -305,8 +455,8 @@ const single = ref(true);
 const multiple = ref(true);
 const total = ref(0);
 const title = ref("");
-const defaultSort = ref({prop: "applyTime", order: "descending"});
-const {model_audit_status} = proxy.useDict("model_audit_status");
+const defaultSort = ref({ prop: "applyTime", order: "descending" });
+const { model_audit_status } = proxy.useDict("model_audit_status");
 
 const router = useRouter();
 
@@ -325,36 +475,40 @@ const data = reactive({
     isAsc: "desc",
   },
   rules: {
-    auditStatus: [{required: true, message: "审批状态不能为空", trigger: "blur"},
+    auditStatus: [
+      { required: true, message: "审批状态不能为空", trigger: "blur" },
       {
         validator: (rule, value, callback) => {
           if (value !== "1" && value !== "2") {
-            return callback(new Error('审批状态不能为空'))
+            return callback(new Error("审批状态不能为空"));
           }
-          callback()
+          callback();
         },
-        trigger: ['blur' ]
-      }
-    ]
-  }
+        trigger: ["blur"],
+      },
+    ],
+    auditReason: [
+      { required: true, message: "拒绝原因不能为空", trigger: "blur" },
+    ],
+  },
 });
 // 列显隐信息
 const columns = ref([
-  {key: 0, label: "编号", visible: true},
-  {key: 1, label: "模型名称", visible: true},
-  {key: 2, label: "模型编码", visible: true},
-  {key: 3, label: "申请人", visible: true},
-  {key: 4, label: "申请时间", visible: true},
-  {key: 5, label: "申请理由", visible: true},
-  {key: 6, label: "审批状态", visible: true},
-  {key: 7, label: "审批意见", visible: true},
-  {key: 8, label: "操作", visible: true}
+  { key: 0, label: "编号", visible: true },
+  { key: 1, label: "模型名称", visible: true },
+  { key: 2, label: "模型编码", visible: true },
+  { key: 3, label: "申请人", visible: true },
+  { key: 4, label: "申请时间", visible: true },
+  { key: 5, label: "申请理由", visible: true },
+  { key: 6, label: "审批状态", visible: true },
+  { key: 7, label: "审批意见", visible: true },
+  { key: 8, label: "操作", visible: true },
 ]);
 
-const {queryParams, form, rules} = toRefs(data);
+const { queryParams, form, rules } = toRefs(data);
 
 const getColumnVisibility = (key) => {
-  const column = columns.value.find(col => col.key === key);
+  const column = columns.value.find((col) => col.key === key);
   // 如果没有找到对应列配置，默认显示
   if (!column) return true;
   // 如果找到对应列配置，根据visible属性来控制显示
@@ -363,7 +517,7 @@ const getColumnVisibility = (key) => {
 /** 查询模型审批列表 */
 function getList() {
   loading.value = true;
-  listAudit(queryParams.value).then(response => {
+  listAudit(queryParams.value).then((response) => {
     auditList.value = response.data.rows;
     total.value = response.data.total;
     loading.value = false;
@@ -385,7 +539,7 @@ function reset() {
     applyId: null,
     applyTime: null,
     applyReason: null,
-    auditStatus: '1',
+    auditStatus: "1",
     auditorId: null,
     auditTime: null,
     auditReason: null,
@@ -397,7 +551,7 @@ function reset() {
     updateBy: null,
     updatorId: null,
     updateTime: null,
-    remark: null
+    remark: null,
   };
   proxy.resetForm("auditRef");
 }
@@ -416,7 +570,7 @@ function resetQuery() {
 
 // 多选框选中数据
 function handleSelectionChange(selection) {
-  ids.value = selection.map(item => item.id);
+  ids.value = selection.map((item) => item.id);
   single.value = selection.length != 1;
   multiple.value = !selection.length;
 }
@@ -438,8 +592,8 @@ function handleAdd() {
 /** 修改按钮操作 */
 function handleAudit(row) {
   reset();
-  form.value = {...row};
-  form.value.applyTime = parseTime(row.applyTime, "{y}-{m}-{d} {h}:{i}:{s}")
+  form.value = { ...row };
+  form.value.applyTime = parseTime(row.applyTime, "{y}-{m}-{d} {h}:{i}:{s}");
   // form.value.auditStatus = '1';
   open.value = true;
   title.value = "模型审批";
@@ -448,10 +602,10 @@ function handleAudit(row) {
 /** 详情按钮操作 */
 function handleDetail(row) {
   reset();
-  const _id = row.id || ids.value
-  getAudit(_id).then(response => {
-    form.value = {...row};
-    form.value.auditReason = response.data.auditReason
+  const _id = row.id || ids.value;
+  getAudit(_id).then((response) => {
+    form.value = { ...row };
+    form.value.auditReason = response.data.auditReason;
     openDetail.value = true;
     title.value = "模型审批详情";
   });
@@ -459,15 +613,16 @@ function handleDetail(row) {
 
 /** 提交按钮 */
 function submitForm() {
-  proxy.$refs["auditRef"].validate(valid => {
+  proxy.$refs["auditRef"].validate((valid) => {
     if (valid) {
       if (form.value.id != null) {
-        updateAudit(form.value).then(response => {
-          proxy.$modal.msgSuccess("审批成功");
-          open.value = false;
-          getList();
-        }).catch(error => {
-        });
+        updateAudit(form.value)
+          .then((response) => {
+            proxy.$modal.msgSuccess("审批成功");
+            open.value = false;
+            getList();
+          })
+          .catch((error) => {});
       }
     }
   });
