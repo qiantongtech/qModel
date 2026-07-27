@@ -268,7 +268,7 @@
                                             <el-button
                                                 link
                                                 type="primary"
-                                                icon="Upload"
+                                                icon="Position"
                                                 v-if="['3','4','6','7'].includes(String(item.status))"
                                                 :disabled="['4'].includes(String(item.status))"
                                                 @click.stop="handlePublish(item)"
