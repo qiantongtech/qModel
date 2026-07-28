@@ -122,7 +122,7 @@
           label="模型编码"
           align="left"
           prop="modelCode"
-          width="250"
+          width="200"
           :show-overflow-tooltip="{ effect: 'light' }"
         >
           <template #default="scope">
@@ -160,7 +160,7 @@
           label="申请理由"
           align="left"
           prop="applyReason"
-          width="200"
+          width="220"
           :show-overflow-tooltip="{ effect: 'light' }"
         >
           <template #default="scope">
@@ -172,7 +172,7 @@
           label="审批意见"
           align="left"
           prop="auditReason"
-          width="200"
+          width="220"
           :show-overflow-tooltip="{ effect: 'light' }"
         >
           <template #default="scope">

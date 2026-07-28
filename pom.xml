@@ -27,7 +27,7 @@
 
     <name>qModel</name>
     <url>https://qiantong.tech</url>
-    <description>qModel开源算法平台</description>
+    <description>qModel开源算法模型平台</description>
 
     <properties>
         <anivia.version>1.3.0</anivia.version>

@@ -43,7 +43,7 @@ public class QModelApplication {
     {
         // System.setProperty("spring.devtools.restart.enabled", "false");
         SpringApplication.run(QModelApplication.class, args);
-        System.out.println("(♥◠‿◠)ﾉﾞ  qModel开源算法平台启动成功   ლ(´ڡ`ლ)ﾞ  \n" +
+        System.out.println("(♥◠‿◠)ﾉﾞ  qModel开源算法模型平台启动成功   ლ(´ڡ`ლ)ﾞ  \n" +
                 "        __  __           _      _ \n" +
                 "       |  \\/  |         | |    | |\n" +
                 "   __ _| \\  / | ___   __| | ___| |\n" +
