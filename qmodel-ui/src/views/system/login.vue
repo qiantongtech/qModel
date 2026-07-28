@@ -337,7 +337,7 @@ const defaltImglist = ref([
   {id: 1, image: new URL('@/assets/system/images/login/banner.jpg', import.meta.url).href},
   // { id: 2, image: new URL('@/assets/system/images/login/banner2.png', import.meta.url).href },
   // { id: 3, image: new URL('@/assets/system/images/login/banner-gy.jpg', import.meta.url).href },
-  {id: 4, image: new URL('@/assets/system/images/login/banner-sl.jpg', import.meta.url).href}
+  {id: 4, image: new URL('@/assets/system/images/login/banner-gy.jpg', import.meta.url).href}
 ])
 const loginimglist = ref([]);
 
