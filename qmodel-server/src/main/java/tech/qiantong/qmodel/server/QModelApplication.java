@@ -1,17 +1,17 @@
 /*
  * Copyright © 2025-present Jiangsu Qiantong Technology Co., Ltd.
- *  
+ *
  * This file is part of qModel Module Platform (Open Source Edition).
- *  
+ *
  * qModel is licensed under Apache License 2.0 with additional qModel terms.
  * You may use qModel for commercial purposes, but you may not remove, hide,
  * modify, or replace the qModel logo, copyright notices, license notices,
  * or attribution information without a separate commercial license.
- *  
+ *
  * White-label use, OEM distribution, rebranding, or presenting qModel as
  * another product requires separate commercial authorization from
  * Jiangsu Qiantong Technology Co., Ltd.
- *  
+ *
  * Business License: `https://qmodel.tech/`
  * See the LICENSE file in the project root for full license information.
  */
@@ -43,7 +43,7 @@ public class QModelApplication {
     {
         // System.setProperty("spring.devtools.restart.enabled", "false");
         SpringApplication.run(QModelApplication.class, args);
-        System.out.println("(♥◠‿◠)ﾉﾞ  qModel模型平台启动成功   ლ(´ڡ`ლ)ﾞ  \n" +
+        System.out.println("(♥◠‿◠)ﾉﾞ  qModel开源算法平台启动成功   ლ(´ڡ`ლ)ﾞ  \n" +
                 "        __  __           _      _ \n" +
                 "       |  \\/  |         | |    | |\n" +
                 "   __ _| \\  / | ___   __| | ___| |\n" +
