@@ -27,6 +27,9 @@ import tech.qiantong.qmodel.module.model.controller.admin.calc.vo.ModelCalcSaveR
 import tech.qiantong.qmodel.module.model.controller.admin.calc.vo.ModelCalcPageReqVO;
 import tech.qiantong.qmodel.module.model.controller.admin.calc.vo.ModelCalcRespVO;
 import tech.qiantong.qmodel.module.model.dal.dataobject.calc.ModelCalcDO;
+import tech.qiantong.qmodel.module.model.service.calc.dto.CalcExecuteResultDTO;
+import tech.qiantong.qmodel.module.model.service.calc.dto.CalcQueueStatusDTO;
+import tech.qiantong.qmodel.module.model.service.calc.dto.QueueTask;
 /**
  * 模型计算任务Service接口
  *
@@ -97,5 +100,35 @@ public interface IModelCalcService extends IService<ModelCalcDO> {
      * @return 结果
      */
     String importModelCalc(List<ModelCalcRespVO> importExcelList, boolean isUpdateSupport, String operName);
+
+    /**
+     * 提交计算任务（加入优先级队列）
+     *
+     * @param id 计算任务ID
+     * @return 执行结果
+     */
+    CalcExecuteResultDTO executeCalc(Long id);
+
+    /**
+     * 取消排队中的任务
+     *
+     * @param executionNo 执行批次号
+     * @return 是否取消成功
+     */
+    boolean cancelCalc(String executionNo);
+
+    /**
+     * 获取队列状态（等待中、运行中、死信数量）
+     *
+     * @return 队列状态
+     */
+    CalcQueueStatusDTO getQueueStatus();
+
+    /**
+     * 获取等待中的任务列表
+     *
+     * @return 任务列表
+     */
+    List<QueueTask> listWaitingTasks();
 
 }

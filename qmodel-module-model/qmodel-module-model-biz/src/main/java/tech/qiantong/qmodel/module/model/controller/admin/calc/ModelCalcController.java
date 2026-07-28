@@ -38,13 +38,15 @@ import tech.qiantong.qmodel.common.core.page.PageResult;
 import tech.qiantong.qmodel.common.enums.BusinessType;
 import tech.qiantong.qmodel.common.utils.object.BeanUtils;
 import tech.qiantong.qmodel.common.utils.poi.ExcelUtil;
-import tech.qiantong.qmodel.common.exception.enums.GlobalErrorCodeConstants;
 import tech.qiantong.qmodel.module.model.controller.admin.calc.vo.ModelCalcPageReqVO;
 import tech.qiantong.qmodel.module.model.controller.admin.calc.vo.ModelCalcRespVO;
 import tech.qiantong.qmodel.module.model.controller.admin.calc.vo.ModelCalcSaveReqVO;
 import tech.qiantong.qmodel.module.model.convert.calc.ModelCalcConvert;
 import tech.qiantong.qmodel.module.model.dal.dataobject.calc.ModelCalcDO;
 import tech.qiantong.qmodel.module.model.service.calc.IModelCalcService;
+import tech.qiantong.qmodel.module.model.service.calc.dto.CalcExecuteResultDTO;
+import tech.qiantong.qmodel.module.model.service.calc.dto.CalcQueueStatusDTO;
+import tech.qiantong.qmodel.module.model.service.calc.dto.QueueTask;
 
 /**
  * 模型计算任务Controller
@@ -121,6 +123,36 @@ public class ModelCalcController extends BaseController {
     @DeleteMapping("/{ids}")
     public CommonResult<Integer> remove(@PathVariable Long[] ids) {
         return CommonResult.toAjax(modelCalcService.removeModelCalc(Arrays.asList(ids)));
+    }
+
+    @Operation(summary = "提交计算任务", description = "将计算任务加入优先级队列，异步执行")
+    @PreAuthorize("@ss.hasPermi('model:calc:calc:execute')")
+    @Log(title = "提交计算任务", businessType = BusinessType.OTHER)
+    @PostMapping("/execute")
+    public CommonResult<CalcExecuteResultDTO> execute(@RequestParam Long id) {
+        return CommonResult.success(modelCalcService.executeCalc(id));
+    }
+
+    @Operation(summary = "取消排队任务", description = "取消排队中的任务")
+    @PreAuthorize("@ss.hasPermi('model:calc:calc:cancel')")
+    @Log(title = "取消计算任务", businessType = BusinessType.OTHER)
+    @PostMapping("/queue/cancel")
+    public CommonResult<Boolean> cancelQueueTask(@RequestParam String executionNo) {
+        return CommonResult.success(modelCalcService.cancelCalc(executionNo));
+    }
+
+    @Operation(summary = "获取队列大小", description = "获取等待中、运行中、死信队列的任务数量")
+    @PreAuthorize("@ss.hasPermi('model:calc:calc:query')")
+    @GetMapping("/queue/size")
+    public CommonResult<CalcQueueStatusDTO> getQueueSize() {
+        return CommonResult.success(modelCalcService.getQueueStatus());
+    }
+
+    @Operation(summary = "获取队列任务列表", description = "获取等待执行的任务列表")
+    @PreAuthorize("@ss.hasPermi('model:calc:calc:query')")
+    @GetMapping("/queue/list")
+    public CommonResult<List<QueueTask>> listQueueTasks() {
+        return CommonResult.success(modelCalcService.listWaitingTasks());
     }
 
 }

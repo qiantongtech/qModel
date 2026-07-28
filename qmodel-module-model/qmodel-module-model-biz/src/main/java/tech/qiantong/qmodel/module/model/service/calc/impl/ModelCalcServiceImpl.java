@@ -38,8 +38,14 @@ import tech.qiantong.qmodel.module.model.controller.admin.calc.vo.ModelCalcPageR
 import tech.qiantong.qmodel.module.model.controller.admin.calc.vo.ModelCalcRespVO;
 import tech.qiantong.qmodel.module.model.controller.admin.calc.vo.ModelCalcSaveReqVO;
 import tech.qiantong.qmodel.module.model.dal.dataobject.calc.ModelCalcDO;
+import tech.qiantong.qmodel.module.model.dal.dataobject.calcExecution.ModelCalcExecutionDO;
 import tech.qiantong.qmodel.module.model.dal.mapper.calc.ModelCalcMapper;
+import tech.qiantong.qmodel.module.model.service.calc.ICalcQueueService;
 import tech.qiantong.qmodel.module.model.service.calc.IModelCalcService;
+import tech.qiantong.qmodel.module.model.service.calc.dto.CalcExecuteResultDTO;
+import tech.qiantong.qmodel.module.model.service.calc.dto.CalcQueueStatusDTO;
+import tech.qiantong.qmodel.module.model.service.calc.dto.QueueTask;
+import tech.qiantong.qmodel.module.model.service.calcExecution.IModelCalcExecutionService;
 /**
  * 模型计算任务Service业务层处理
  *
@@ -52,6 +58,12 @@ import tech.qiantong.qmodel.module.model.service.calc.IModelCalcService;
 public class ModelCalcServiceImpl  extends ServiceImpl<ModelCalcMapper,ModelCalcDO> implements IModelCalcService {
     @Resource
     private ModelCalcMapper modelCalcMapper;
+
+    @Resource
+    private ICalcQueueService calcQueueService;
+
+    @Resource
+    private IModelCalcExecutionService executionService;
 
     @Override
     public PageResult<ModelCalcDO> getModelCalcPage(ModelCalcPageReqVO pageReqVO) {
@@ -170,4 +182,62 @@ public class ModelCalcServiceImpl  extends ServiceImpl<ModelCalcMapper,ModelCalc
             }
             return resultMsg.toString();
         }
+
+    @Override
+    public CalcExecuteResultDTO executeCalc(Long id) {
+        ModelCalcDO calc = getModelCalcById(id);
+        if (calc == null) {
+            throw new ServiceException("计算任务不存在");
+        }
+
+        String executionNo = generateExecutionNo();
+
+        ModelCalcExecutionDO execution = new ModelCalcExecutionDO();
+        execution.setCalcId(id);
+        execution.setModelId(calc.getModelId());
+        execution.setExecutionNo(executionNo);
+        execution.setExecutionMode(1);
+        execution.setStatus(5);
+        execution.setInputParams(calc.getInputParams());
+        execution.setRetryCount(0L);
+        executionService.save(execution);
+
+        calcQueueService.enqueue(id, calc.getPriority(), executionNo);
+
+        CalcExecuteResultDTO result = new CalcExecuteResultDTO();
+        result.setExecutionNo(executionNo);
+        result.setStatus("QUEUED");
+        result.setPriority(calc.getPriority());
+
+        log.info("提交计算任务: id={}, executionNo={}", id, executionNo);
+        return result;
+    }
+
+    @Override
+    public boolean cancelCalc(String executionNo) {
+        boolean success = calcQueueService.cancel(executionNo);
+        if (success) {
+            executionService.updateStatusByExecutionNo(executionNo, 4);
+        }
+        return success;
+    }
+
+    @Override
+    public CalcQueueStatusDTO getQueueStatus() {
+        CalcQueueStatusDTO status = new CalcQueueStatusDTO();
+        status.setWaiting(calcQueueService.getQueueSize());
+        status.setRunning(executionService.countByStatus(1));
+        status.setDead(calcQueueService.getDeadQueueSize());
+        return status;
+    }
+
+    @Override
+    public List<QueueTask> listWaitingTasks() {
+        return calcQueueService.listWaitingTasks();
+    }
+
+    private String generateExecutionNo() {
+        return "EXEC_" + java.time.LocalDateTime.now()
+                .format(java.time.format.DateTimeFormatter.ofPattern("yyyyMMddHHmmss"));
+    }
 }

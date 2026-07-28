@@ -553,6 +553,7 @@
 </template>
 
 <script setup name="Calc">
+import { useRouter } from 'vue-router';
 import { listCalc, getCalc, delCalc, addCalc, updateCalc } from '@/api/model/calc/calc'
 import { listModel } from '@/api/model/model'
 import { listClassify } from '@/api/modelReconstitution/classify'
@@ -561,6 +562,7 @@ import { listModelFileResource } from '@/api/model/modelFileResource'
 import FileUpload from '@/components/FileUpload2'
 
 const { proxy } = getCurrentInstance()
+const router = useRouter()
 
 const { model_calc_status } = proxy.useDict('model_calc_status')
 
@@ -938,24 +940,9 @@ function handleAdd() {
   title.value = '新增计算任务'
 }
 
-/** 详情 */
+/** 详情 - 跳转到详情页 */
 function handleDetail(row) {
-  reset()
-  getCalc(row.id).then((response) => {
-    const d = response.data
-    if (typeof d.inputParams === 'string') {
-      try { d.inputParams = JSON.parse(d.inputParams) } catch {}
-    }
-    if (typeof d.outputResult === 'string') {
-      try { d.outputResult = JSON.parse(d.outputResult) } catch {}
-    }
-    if (d.inputParams && d.inputParams.params) {
-      d.inputParams = d.inputParams.params
-    }
-    form.value = d
-    openDetail.value = true
-    detailTitle.value = (d.name || '计算任务') + ' - 详情'
-  })
+  router.push({ path: '/model/calc/detail', query: { id: row.id } })
 }
 
 /** 提交 */

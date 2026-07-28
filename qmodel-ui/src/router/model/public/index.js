@@ -59,6 +59,12 @@ export default [
                 component: () => import('@/views/model/modelManage/add/index.vue'),
                 name: 'ModelManageEdit',
                 meta: { title: '修改模型', noCache: true, activeMenu: '/model/version' }
+            },
+            {
+                path: 'calc/detail',
+                component: () => import('@/views/model/calc/detail/index.vue'),
+                name: 'CalcDetail',
+                meta: { title: '模型计算详情', noCache: true, activeMenu: '/model/calc' }
             }
         ]
     }

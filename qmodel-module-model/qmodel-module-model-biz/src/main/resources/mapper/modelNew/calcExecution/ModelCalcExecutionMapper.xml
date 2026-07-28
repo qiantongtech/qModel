@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+  Copyright © 2025-present Jiangsu Qiantong Technology Co., Ltd.
+
+  This file is part of qModel Module Platform (Open Source Edition).
+
+  qModel is licensed under Apache License 2.0 with additional qModel terms.
+  You may use qModel for commercial purposes, but you may not remove, hide,
+  modify, or replace the qModel logo, copyright notices, license notices,
+  or attribution information without a separate commercial license.
+
+  White-label use, OEM distribution, rebranding, or presenting qModel as
+  another product requires separate commercial authorization from
+  Jiangsu Qiantong Technology Co., Ltd.
+
+  Business License: `https://qmodel.tech/`
+  See the LICENSE file in the project root for full license information.
+-->
+
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="tech.qiantong.qmodel.module.model.dal.mapper.calcExecution.ModelCalcExecutionMapper">
+
+    <resultMap type="ModelCalcExecutionDO" id="ModelCalcExecutionResult">
+        <result property="id"    column="id"    />
+        <result property="calcId"    column="calc_id"    />
+        <result property="modelId"    column="model_id"    />
+        <result property="executionNo"    column="execution_no"    />
+        <result property="executionMode"    column="execution_mode"    />
+        <result property="status"    column="status"    />
+        <result property="startTime"    column="start_time"    />
+        <result property="endTime"    column="end_time"    />
+        <result property="duration"    column="duration"    />
+        <result property="inputParams"    column="input_params"    />
+        <result property="outputResult"    column="output_result"    />
+        <result property="executionLog"    column="execution_log"    />
+        <result property="errorMessage"    column="error_message"    />
+        <result property="retryCount"    column="retry_count"    />
+        <result property="resourceUsage"    column="resource_usage"    />
+        <result property="validFlag"    column="valid_flag"    />
+        <result property="delFlag"    column="del_flag"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="creatorId"    column="creator_id"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updatorId"    column="updator_id"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="remark"    column="remark"    />
+    </resultMap>
+
+    <sql id="selectModelCalcExecutionVo">
+        select id, calc_id, model_id, execution_no, execution_mode, status, start_time, end_time, duration, input_params, output_result, execution_log, error_message, retry_count, resource_usage, valid_flag, del_flag, create_by, creator_id, create_time, update_by, updator_id, update_time, remark from model_calc_execution
+    </sql>
+
+    <select id="selectModelCalcExecutionList" parameterType="ModelCalcExecutionDO" resultMap="ModelCalcExecutionResult">
+        <include refid="selectModelCalcExecutionVo"/>
+        <where>
+            <if test="calcId != null "> and calc_id = #{calcId}</if>
+            <if test="modelId != null "> and model_id = #{modelId}</if>
+            <if test="executionNo != null  and executionNo != ''"> and execution_no = #{executionNo}</if>
+            <if test="executionMode != null "> and execution_mode = #{executionMode}</if>
+            <if test="status != null "> and status = #{status}</if>
+            <if test="startTime != null "> and start_time = #{startTime}</if>
+            <if test="endTime != null "> and end_time = #{endTime}</if>
+            <if test="duration != null "> and duration = #{duration}</if>
+            <if test="inputParams != null  and inputParams != ''"> and input_params = #{inputParams}</if>
+            <if test="outputResult != null  and outputResult != ''"> and output_result = #{outputResult}</if>
+            <if test="executionLog != null  and executionLog != ''"> and execution_log = #{executionLog}</if>
+            <if test="errorMessage != null  and errorMessage != ''"> and error_message = #{errorMessage}</if>
+            <if test="retryCount != null "> and retry_count = #{retryCount}</if>
+            <if test="resourceUsage != null  and resourceUsage != ''"> and resource_usage = #{resourceUsage}</if>
+            <if test="createTime != null "> and create_time = #{createTime}</if>
+        </where>
+    </select>
+
+    <select id="selectModelCalcExecutionById" parameterType="Long" resultMap="ModelCalcExecutionResult">
+        <include refid="selectModelCalcExecutionVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertModelCalcExecution" parameterType="ModelCalcExecutionDO" useGeneratedKeys="true" keyProperty="id">
+        insert into model_calc_execution
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="calcId != null">calc_id,</if>
+            <if test="modelId != null">model_id,</if>
+            <if test="executionNo != null">execution_no,</if>
+            <if test="executionMode != null">execution_mode,</if>
+            <if test="status != null">status,</if>
+            <if test="startTime != null">start_time,</if>
+            <if test="endTime != null">end_time,</if>
+            <if test="duration != null">duration,</if>
+            <if test="inputParams != null">input_params,</if>
+            <if test="outputResult != null">output_result,</if>
+            <if test="executionLog != null">execution_log,</if>
+            <if test="errorMessage != null">error_message,</if>
+            <if test="retryCount != null">retry_count,</if>
+            <if test="resourceUsage != null">resource_usage,</if>
+            <if test="validFlag != null">valid_flag,</if>
+            <if test="delFlag != null">del_flag,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="creatorId != null">creator_id,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updatorId != null">updator_id,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="remark != null">remark,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="calcId != null">#{calcId},</if>
+            <if test="modelId != null">#{modelId},</if>
+            <if test="executionNo != null">#{executionNo},</if>
+            <if test="executionMode != null">#{executionMode},</if>
+            <if test="status != null">#{status},</if>
+            <if test="startTime != null">#{startTime},</if>
+            <if test="endTime != null">#{endTime},</if>
+            <if test="duration != null">#{duration},</if>
+            <if test="inputParams != null">#{inputParams},</if>
+            <if test="outputResult != null">#{outputResult},</if>
+            <if test="executionLog != null">#{executionLog},</if>
+            <if test="errorMessage != null">#{errorMessage},</if>
+            <if test="retryCount != null">#{retryCount},</if>
+            <if test="resourceUsage != null">#{resourceUsage},</if>
+            <if test="validFlag != null">#{validFlag},</if>
+            <if test="delFlag != null">#{delFlag},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="creatorId != null">#{creatorId},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updatorId != null">#{updatorId},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null">#{remark},</if>
+         </trim>
+    </insert>
+
+    <update id="updateModelCalcExecution" parameterType="ModelCalcExecutionDO">
+        update model_calc_execution
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="calcId != null">calc_id = #{calcId},</if>
+            <if test="modelId != null">model_id = #{modelId},</if>
+            <if test="executionNo != null">execution_no = #{executionNo},</if>
+            <if test="executionMode != null">execution_mode = #{executionMode},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="startTime != null">start_time = #{startTime},</if>
+            <if test="endTime != null">end_time = #{endTime},</if>
+            <if test="duration != null">duration = #{duration},</if>
+            <if test="inputParams != null">input_params = #{inputParams},</if>
+            <if test="outputResult != null">output_result = #{outputResult},</if>
+            <if test="executionLog != null">execution_log = #{executionLog},</if>
+            <if test="errorMessage != null">error_message = #{errorMessage},</if>
+            <if test="retryCount != null">retry_count = #{retryCount},</if>
+            <if test="resourceUsage != null">resource_usage = #{resourceUsage},</if>
+            <if test="validFlag != null">valid_flag = #{validFlag},</if>
+            <if test="delFlag != null">del_flag = #{delFlag},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="creatorId != null">creator_id = #{creatorId},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updatorId != null">updator_id = #{updatorId},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteModelCalcExecutionById" parameterType="Long">
+        delete from model_calc_execution where id = #{id}
+    </delete>
+
+    <delete id="deleteModelCalcExecutionByIds" parameterType="String">
+        delete from model_calc_execution where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>
