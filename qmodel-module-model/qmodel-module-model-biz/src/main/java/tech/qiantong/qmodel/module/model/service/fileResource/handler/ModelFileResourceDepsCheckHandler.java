@@ -662,7 +662,6 @@ public class ModelFileResourceDepsCheckHandler {
         try {
             QueryWrapper<ModelFileResourceDO> wrapper = new QueryWrapper<>();
             wrapper.eq("del_flag", 0);
-            wrapper.eq("image_build_status", ImageBuildStatusEnum.SUCCESS.getStatus());
             wrapper.isNotNull("deps_file_path");
             wrapper.ne("deps_file_path", "");
             List<ModelFileResourceDO> list = modelFileResourceMapper.selectList(wrapper);
