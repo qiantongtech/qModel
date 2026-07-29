@@ -336,11 +336,14 @@ public class ModelFileResourceDepsCheckHandler {
         if (absolutePath == null) {
             return null;
         }
-        // 移除 STORAGE_PATH 前缀，得到相对路径
-        if (absolutePath.startsWith(STORAGE_PATH)) {
-            return absolutePath.substring(STORAGE_PATH.length());
+        // 先统一为正斜杠再比较，避免 Windows/Linux 分隔符差异导致 startsWith 匹配失败
+        String normalizedPath = absolutePath.replace("\\", "/");
+        String normalizedStorage = STORAGE_PATH.replace("\\", "/");
+
+        if (normalizedPath.startsWith(normalizedStorage)) {
+            return normalizedPath.substring(normalizedStorage.length());
         }
-        return absolutePath;
+        return normalizedPath;
     }
 
     private List<String> parseRequirements(String requirementsPath) {
@@ -541,13 +544,23 @@ public class ModelFileResourceDepsCheckHandler {
                 .set("update_time", new java.util.Date());
 
         if (scriptPath != null) {
-            wrapper.set("docker_file_path", scriptPath);
+            wrapper.set("docker_file_path", toSlashRelativePath(getRelativePath(scriptPath)));
         }
         if (depsPath != null) {
-            wrapper.set("deps_file_path", depsPath);
+            wrapper.set("deps_file_path", toSlashRelativePath(getRelativePath(depsPath)));
         }
 
         modelFileResourceMapper.update(null, wrapper);
+    }
+
+    /**
+     * 统一路径分隔符为正斜杠，保证跨 Windows/Linux 一致
+     */
+    private String toSlashRelativePath(String path) {
+        if (path == null) {
+            return null;
+        }
+        return path.replace("\\", "/");
     }
 
     private void updateModelStatus(Long modelId, String status) {

@@ -1,17 +1,17 @@
 /*
  * Copyright © 2025-present Jiangsu Qiantong Technology Co., Ltd.
- *  
+ *
  * This file is part of qModel Module Platform (Open Source Edition).
- *  
+ *
  * qModel is licensed under Apache License 2.0 with additional qModel terms.
  * You may use qModel for commercial purposes, but you may not remove, hide,
  * modify, or replace the qModel logo, copyright notices, license notices,
  * or attribution information without a separate commercial license.
- *  
+ *
  * White-label use, OEM distribution, rebranding, or presenting qModel as
  * another product requires separate commercial authorization from
  * Jiangsu Qiantong Technology Co., Ltd.
- *  
+ *
  * Business License: `https://qmodel.tech/`
  * See the LICENSE file in the project root for full license information.
  */
@@ -20,6 +20,7 @@ package tech.qiantong.qmodel.module.model.service.fileResource.impl;
 
 import java.io.*;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -491,8 +492,8 @@ public class ModelFileResourceServiceImpl extends ServiceImpl<ModelFileResourceM
             throw new ServiceException("模型文件资源不存在，modelId: " + modelId);
         }
 
-        String scriptPath = fileResourceDO.getDockerFilePath();
-        if (scriptPath == null || scriptPath.isEmpty()) {
+        String scriptRelativePath = fileResourceDO.getDockerFilePath();
+        if (scriptRelativePath == null || scriptRelativePath.isEmpty()) {
             throw new ServiceException("脚本路径为空，modelId: " + modelId);
         }
 
@@ -501,7 +502,10 @@ public class ModelFileResourceServiceImpl extends ServiceImpl<ModelFileResourceM
             throw new ServiceException("模型构建状态异常，当前状态: " + buildStatus + "，请等待构建完成后再执行");
         }
 
-        File scriptFile = new File(scriptPath);
+        // 相对路径 + storagePath 拼接成绝对路径，跨平台兼容
+        Path scriptPathObj = Paths.get(storagePath, scriptRelativePath).normalize();
+        String scriptPath = scriptPathObj.toString();
+        File scriptFile = scriptPathObj.toFile();
         if (!scriptFile.exists()) {
             throw new ServiceException("脚本文件不存在: " + scriptPath);
         }
