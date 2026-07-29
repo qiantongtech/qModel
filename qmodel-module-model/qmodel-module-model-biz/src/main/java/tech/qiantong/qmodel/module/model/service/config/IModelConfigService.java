@@ -109,4 +109,12 @@ public interface IModelConfigService extends IService<ModelConfigDO> {
      */
     String importModelConfig(List<ModelConfigRespVO> importExcelList, boolean isUpdateSupport, String operName);
 
+    /**
+     * 根据模型ID查询模型配置详情
+     *
+     * @param modelId 模型ID
+     * @return 模型配置详情
+     */
+    ModelConfigDO getByModelId(Long modelId);
+
 }

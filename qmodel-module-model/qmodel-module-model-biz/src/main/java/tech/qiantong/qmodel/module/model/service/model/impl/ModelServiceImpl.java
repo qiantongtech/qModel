@@ -143,7 +143,7 @@ public class ModelServiceImpl extends ServiceImpl<ModelMapper, ModelDO> implemen
     }
 
     @Override
-    public ModelDO getModelById(Long id) {
+    public ModelRespVO getModelById(Long id) {
         ModelDO modelDO = modelMapper.selectById(id);
         if(ObjectUtil.isNotNull(modelDO)){
             if(AccessTypeEnum.PYTHON.getType().equals(modelDO.getAccessType())){
@@ -158,7 +158,10 @@ public class ModelServiceImpl extends ServiceImpl<ModelMapper, ModelDO> implemen
                 }
             }
         }
-        return modelDO;
+
+        ModelRespVO modelRespVO = BeanUtils.toBean(modelDO, ModelRespVO.class);
+        modelRespVO.setModelConfig(modelConfigService.getByModelId(id));
+        return modelRespVO;
     }
 
     @Override

@@ -198,6 +198,16 @@
             style="margin: 0; padding: 0"
           />
         </el-tab-pane>
+
+        <el-tab-pane name="modelApi">
+          <template #label>API 接口</template>
+          <ModelApi
+              v-if="activeName === 'modelApi'"
+              :model="viewInfo"
+              style="margin: 0; padding: 0"
+          />
+        </el-tab-pane>
+
       </el-tabs>
     </div>
 
@@ -347,6 +357,7 @@ import VersionManage from "./modelVersion.vue";
 import OnlineTest from "./onlineTest.vue";
 import InvokeHistory from "./invokeHistory.vue";
 import BuildLog from "./buildLog.vue";
+import ModelApi from "./modelApi.vue";
 
 const { proxy } = getCurrentInstance();
 const router = useRouter();
@@ -502,7 +513,6 @@ const closeIconPreview = () => {
 
 const getTreeSelect = () => {
   listClassify().then((res) => {
-    console.log(res);
     for (let i = 0; i < res.data.length; i++) {
       let arrTemp = [];
       for (let j = 0; j < res.data.length; j++) {

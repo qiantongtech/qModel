@@ -23,7 +23,9 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 import io.swagger.v3.oas.annotations.media.Schema;
 import tech.qiantong.qmodel.common.annotation.Excel;
+import tech.qiantong.qmodel.module.model.controller.admin.config.vo.ModelConfigRespVO;
 import tech.qiantong.qmodel.module.model.controller.admin.fileResource.vo.ModelFileResourceRespVO;
+import tech.qiantong.qmodel.module.model.dal.dataobject.config.ModelConfigDO;
 import tech.qiantong.qmodel.module.model.dal.dataobject.fileResource.ModelFileResourceDO;
 
 import java.io.Serializable;
@@ -135,4 +137,7 @@ public class ModelRespVO implements Serializable {
     @Schema(description = "模型文件资源信息 Response VO", example = "")
     @TableField(exist = false)
     private ModelFileResourceDO modelFileResourceRespVO;
+
+    @Schema(description = "模型配置详情信息 Response VO", example = "")
+    private ModelConfigDO modelConfig;
 }

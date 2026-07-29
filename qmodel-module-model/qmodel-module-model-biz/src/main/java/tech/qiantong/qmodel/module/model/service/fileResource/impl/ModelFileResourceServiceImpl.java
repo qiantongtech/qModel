@@ -50,6 +50,7 @@ import tech.qiantong.qmodel.config.ServerConfig;
 import tech.qiantong.qmodel.module.model.controller.admin.fileResource.vo.ModelFileResourcePageReqVO;
 import tech.qiantong.qmodel.module.model.controller.admin.fileResource.vo.ModelFileResourceRespVO;
 import tech.qiantong.qmodel.module.model.controller.admin.fileResource.vo.ModelFileResourceSaveReqVO;
+import tech.qiantong.qmodel.module.model.controller.admin.model.vo.ModelRespVO;
 import tech.qiantong.qmodel.module.model.controller.admin.model.vo.ModelSaveReqVO;
 import tech.qiantong.qmodel.module.model.dal.dataobject.fileResource.ModelFileResourceDO;
 import tech.qiantong.qmodel.module.model.dal.dataobject.model.ModelDO;
@@ -481,7 +482,7 @@ public class ModelFileResourceServiceImpl extends ServiceImpl<ModelFileResourceM
                         .last("LIMIT 1")
         );
 
-        ModelDO modelInfo = modelService.getModelById(modelId);
+        ModelRespVO modelInfo = modelService.getModelById(modelId);
 
         if (modelInfo == null) {
             throw new ServiceException("模型不存在，modelId: " + modelId);

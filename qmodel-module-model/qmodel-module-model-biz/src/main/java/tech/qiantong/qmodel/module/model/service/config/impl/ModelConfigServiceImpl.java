@@ -20,7 +20,10 @@ package tech.qiantong.qmodel.module.model.service.config.impl;
 
 import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.JSONObject;
+import com.baomidou.mybatisplus.core.conditions.Wrapper;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -167,6 +170,19 @@ public class ModelConfigServiceImpl  extends ServiceImpl<ModelConfigMapper,Model
                         // 保留已存在的值
                         (existing, replacement) -> existing
                 ));
+    }
+
+    /**
+     * 根据模型ID查询模型配置详情
+     *
+     * @param modelId 模型ID
+     * @return 模型配置详情
+     */
+    @Override
+    public ModelConfigDO getByModelId(Long modelId) {
+        LambdaQueryWrapper<ModelConfigDO> queryWrapper = Wrappers.lambdaQuery(ModelConfigDO.class)
+                .eq(ModelConfigDO::getModelId, modelId);
+        return super.getOne(queryWrapper);
     }
 
 

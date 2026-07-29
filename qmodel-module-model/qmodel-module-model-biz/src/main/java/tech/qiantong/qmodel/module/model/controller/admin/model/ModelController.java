@@ -96,8 +96,8 @@ public class ModelController extends BaseController {
     @PreAuthorize("@ss.hasPermi('model:model:query')")
     @GetMapping(value = "/{id}")
     public CommonResult<ModelRespVO> getInfo(@PathVariable("id") Long id) {
-        ModelDO modelDO = modelService.getModelById(id);
-        return CommonResult.success(BeanUtils.toBean(modelDO, ModelRespVO.class));
+        ModelRespVO modelDO = modelService.getModelById(id);
+        return CommonResult.success(modelDO);
     }
 
     @Operation(summary = "新增模型基础信息")
