@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import com.alibaba.fastjson2.JSON;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import javax.annotation.Resource;
@@ -202,7 +203,7 @@ public class ModelCalcServiceImpl  extends ServiceImpl<ModelCalcMapper,ModelCalc
         execution.setExecutionNo(executionNo);
         execution.setExecutionMode(1);
         execution.setStatus(5);
-        execution.setInputParams(calc.getInputParams());
+        execution.setInputParams(toJsonString(calc.getInputParams()));
         execution.setRetryCount(0L);
         executionService.save(execution);
 
@@ -243,5 +244,24 @@ public class ModelCalcServiceImpl  extends ServiceImpl<ModelCalcMapper,ModelCalc
     private String generateExecutionNo() {
         return "EXEC_" + java.time.LocalDateTime.now()
                 .format(java.time.format.DateTimeFormatter.ofPattern("yyyyMMddHHmmss"));
+    }
+
+    /**
+     * 任意对象转 JSON 字符串（null → null，String 原样返回，Map/List/数组统一序列化）
+     * 防止因为泛型/反射拿到非 String 值传入，导致 MyBatis 按对象字节存进数据库引发字符集错误
+     */
+    private String toJsonString(Object obj) {
+        if (obj == null) {
+            return null;
+        }
+        if (obj instanceof String) {
+            return (String) obj;
+        }
+        try {
+            return JSON.toJSONString(obj);
+        } catch (Exception e) {
+            log.warn("inputParams 序列化失败，使用 toString 兜底", e);
+            return obj.toString();
+        }
     }
 }

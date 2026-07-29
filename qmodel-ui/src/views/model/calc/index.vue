@@ -215,9 +215,16 @@
           align="center"
           class-name="small-padding fixed-width"
           fixed="right"
-          width="220"
+          width="280"
         >
           <template #default="scope">
+
+            <el-button
+              link
+              type="success"
+              @click="handleUpdate(scope.row)"
+              v-hasPermi="['model:Calc:calc:edit']"
+            >修改</el-button>
             <el-button
               link
               type="primary"
@@ -938,6 +945,59 @@ function handleAdd() {
   reset()
   open.value = true
   title.value = '新增计算任务'
+}
+
+/** 修改 */
+function handleUpdate(row) {
+  reset()
+  const id = row.id
+  getCalc(id).then((res) => {
+    const data = res.data || {}
+    form.value = {
+      ...form.value,
+      id: data.id,
+      code: data.code,
+      name: data.name,
+      classifyId: data.classifyId,
+      classifyName: data.classifyName || '',
+      modelId: data.modelId,
+      modelName: data.modelName || '',
+      modelVersion: data.modelVersion || '',
+      accessType: data.accessType || '',
+      description: data.description || '',
+      remark: data.remark || '',
+      timeoutSeconds: data.timeoutSeconds ?? 60,
+      retryCount: data.retryCount ?? 0,
+      maxRetryCount: data.maxRetryCount ?? 3,
+      priority: data.priority ?? 2,
+      errorMessage: data.errorMessage || '',
+      outputResult: data.outputResult || null,
+      // inputParams 解析：字符串的 JSON 格式统一转 params 数组
+      inputParams: parseInputParams(data.inputParams)
+    }
+    title.value = '修改计算任务'
+    open.value = true
+  })
+}
+
+/** 解析 inputParams：兼容字符串 JSON / 对象两种格式 */
+function parseInputParams(raw) {
+  if (!raw) return []
+  if (Array.isArray(raw)) return raw
+  try {
+    if (typeof raw === 'string') {
+      const obj = JSON.parse(raw)
+      if (Array.isArray(obj)) return obj
+      if (obj && Array.isArray(obj.params)) return obj.params
+      return []
+    }
+    if (raw && typeof raw === 'object' && Array.isArray(raw.params)) {
+      return raw.params
+    }
+  } catch (e) {
+    console.warn('parse inputParams failed', raw, e)
+  }
+  return []
 }
 
 /** 详情 - 跳转到详情页 */
