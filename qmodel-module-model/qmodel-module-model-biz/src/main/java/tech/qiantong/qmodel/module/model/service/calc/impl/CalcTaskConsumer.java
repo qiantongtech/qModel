@@ -19,6 +19,9 @@
 package tech.qiantong.qmodel.module.model.service.calc.impl;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.boot.ApplicationArguments;
+import org.springframework.boot.ApplicationRunner;
+import org.springframework.core.annotation.Order;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
@@ -32,7 +35,6 @@ import tech.qiantong.qmodel.module.model.service.calc.engine.ExecutionEngineFact
 import tech.qiantong.qmodel.module.model.service.calc.engine.IExecutionEngine;
 import tech.qiantong.qmodel.module.model.service.calcExecution.IModelCalcExecutionService;
 
-import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 import java.util.Date;
 import java.util.HashMap;
@@ -46,7 +48,8 @@ import java.util.Map;
  */
 @Slf4j
 @Component
-public class CalcTaskConsumer {
+@Order(1)
+public class CalcTaskConsumer implements ApplicationRunner {
 
     @Resource
     private ICalcQueueService calcQueueService;
@@ -65,18 +68,14 @@ public class CalcTaskConsumer {
 
     private volatile boolean running = false;
 
-    /**
-     * 启动消费者
-     */
-    @PostConstruct
-    public void init() {
+    @Override
+    public void run(ApplicationArguments args) {
         startConsuming();
     }
 
     /**
-     * 异步启动任务消费
+     * 启动任务消费线程
      */
-    @Async("calcExecutor")
     public void startConsuming() {
         if (running) {
             log.warn("任务消费者已在运行中");
@@ -85,34 +84,38 @@ public class CalcTaskConsumer {
         running = true;
         log.info("计算任务消费者启动");
 
-        while (running && !Thread.currentThread().isInterrupted()) {
-            try {
-                QueueTask task = calcQueueService.dequeue();
-
-                if (task == null) {
-                    Thread.sleep(1000);
-                    continue;
-                }
-
-                executeTask(task);
-
-            } catch (InterruptedException e) {
-                log.info("任务消费者被中断");
-                Thread.currentThread().interrupt();
-                break;
-            } catch (Exception e) {
-                log.error("任务消费异常", e);
+        Thread consumerThread = new Thread(() -> {
+            while (running && !Thread.currentThread().isInterrupted()) {
                 try {
-                    Thread.sleep(1000);
-                } catch (InterruptedException ie) {
+                    QueueTask task = calcQueueService.dequeue();
+
+                    if (task == null) {
+                        Thread.sleep(1000);
+                        continue;
+                    }
+
+                    executeTask(task);
+
+                } catch (InterruptedException e) {
+                    log.info("任务消费者被中断");
                     Thread.currentThread().interrupt();
                     break;
+                } catch (Exception e) {
+                    log.error("任务消费异常", e);
+                    try {
+                        Thread.sleep(1000);
+                    } catch (InterruptedException ie) {
+                        Thread.currentThread().interrupt();
+                        break;
+                    }
                 }
             }
-        }
 
-        running = false;
-        log.info("计算任务消费者停止");
+            running = false;
+            log.info("计算任务消费者停止");
+        }, "calc-task-consumer");
+        consumerThread.setDaemon(true);
+        consumerThread.start();
     }
 
     /**

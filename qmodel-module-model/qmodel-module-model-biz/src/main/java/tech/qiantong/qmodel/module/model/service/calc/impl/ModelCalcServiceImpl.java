@@ -74,16 +74,20 @@ public class ModelCalcServiceImpl  extends ServiceImpl<ModelCalcMapper,ModelCalc
     public Long createModelCalc(ModelCalcSaveReqVO createReqVO) {
         ModelCalcDO dictType = BeanUtils.toBean(createReqVO, ModelCalcDO.class);
         modelCalcMapper.insert(dictType);
+
+        executeCalc(dictType.getId());
+
         return dictType.getId();
     }
 
     @Override
     public int updateModelCalc(ModelCalcSaveReqVO updateReqVO) {
-        // 相关校验
-
-        // 更新模型计算任务
         ModelCalcDO updateObj = BeanUtils.toBean(updateReqVO, ModelCalcDO.class);
-        return modelCalcMapper.updateById(updateObj);
+        int result = modelCalcMapper.updateById(updateObj);
+
+        executeCalc(updateReqVO.getId());
+
+        return result;
     }
     @Override
     public int removeModelCalc(Collection<Long> idList) {
