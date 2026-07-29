@@ -1,23 +1,25 @@
 /*
  * Copyright © 2025-present Jiangsu Qiantong Technology Co., Ltd.
- *  
+ *
  * This file is part of qModel Module Platform (Open Source Edition).
- *  
+ *
  * qModel is licensed under Apache License 2.0 with additional qModel terms.
  * You may use qModel for commercial purposes, but you may not remove, hide,
  * modify, or replace the qModel logo, copyright notices, license notices,
  * or attribution information without a separate commercial license.
- *  
+ *
  * White-label use, OEM distribution, rebranding, or presenting qModel as
  * another product requires separate commercial authorization from
  * Jiangsu Qiantong Technology Co., Ltd.
- *  
+ *
  * Business License: `https://qmodel.tech/`
  * See the LICENSE file in the project root for full license information.
  */
 
 package tech.qiantong.qmodel.module.model.service.fileResource.handler;
 
+import cn.hutool.core.collection.CollUtil;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Async;
@@ -37,6 +39,7 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
 import tech.qiantong.qmodel.common.utils.DateUtils;
+import tech.qiantong.qmodel.common.utils.StringUtils;
 import tech.qiantong.qmodel.module.model.dal.dataobject.fileResource.ModelFileResourceDO;
 import tech.qiantong.qmodel.module.model.dal.dataobject.model.ModelDO;
 import tech.qiantong.qmodel.module.model.dal.mapper.fileResource.ModelFileResourceMapper;
@@ -70,7 +73,6 @@ public class ModelFileResourceDepsCheckHandler {
     @Async("threadPoolTaskExecutor")
     public void checkDependencies(Long fileResourceId) {
         log.info("开始异步检测依赖，fileResourceId: {}", fileResourceId);
-
         Long buildLogId = null;
         StringBuilder buildLogBuilder = new StringBuilder();
         String requirementsContent = "";
@@ -563,6 +565,32 @@ public class ModelFileResourceDepsCheckHandler {
         return path.replace("\\", "/");
     }
 
+    /**
+     * - 相对路径：前缀拼接 STORAGE_PATH
+     */
+    private String resolveAbsolutePath(String storedPath) {
+        if (storedPath == null) {
+            return null;
+        }
+        String normalized = storedPath.replace("\\", "/");
+        // Windows 绝对路径（形如 C:/... 或 D:/...）
+        if (normalized.length() >= 3
+                && Character.isLetter(normalized.charAt(0))
+                && normalized.charAt(1) == ':') {
+            return normalized;
+        }
+        // Linux/Mac 绝对路径（/ 开头）
+        if (normalized.startsWith("/")) {
+            return normalized;
+        }
+        // 相对路径：拼接 STORAGE_PATH
+        String storage = STORAGE_PATH.replace("\\", "/");
+        if (!storage.endsWith("/")) {
+            storage = storage + "/";
+        }
+        return storage + normalized;
+    }
+
     private void updateModelStatus(Long modelId, String status) {
         UpdateWrapper<ModelDO> wrapper = new UpdateWrapper<>();
         wrapper.eq("id", modelId)
@@ -571,6 +599,88 @@ public class ModelFileResourceDepsCheckHandler {
                 .set("updator_id", 1L)
                 .set("update_time", new Date());
         modelMapper.update(null, wrapper);
+    }
+
+    /**
+     * 用于项目启动后，对已构建成功的文件资源进行兜底依赖检查安装
+     *
+     * @param fileResource  文件资源记录
+     */
+    public void ensureDependenciesInstalled(ModelFileResourceDO fileResource) {
+        if (fileResource == null) {
+            return;
+        }
+        Long fileResourceId = fileResource.getId();
+
+        try {
+            String depsPath = fileResource.getDepsFilePath();
+            if (StringUtils.isBlank(depsPath)) {
+                log.debug("文件资源无 requirements.txt 记录，跳过依赖检查，fileResourceId: {}", fileResourceId);
+                return;
+            }
+
+            Path depsPathObj = Paths.get(resolveAbsolutePath(depsPath)).normalize();
+            if (!Files.exists(depsPathObj)) {
+                log.warn("requirements.txt 不存在，跳过自动安装，fileResourceId: {}, path: {}",
+                        fileResourceId, depsPathObj);
+                return;
+            }
+
+            List<String> requirements = parseRequirements(depsPathObj.toString());
+            if (requirements.isEmpty()) {
+                log.debug("requirements.txt 为空，无需安装依赖，fileResourceId: {}", fileResourceId);
+                return;
+            }
+
+            Set<String> installedPackages = getInstalledPackages();
+            boolean allInstalled = checkAllDependenciesInstalled(requirements, installedPackages);
+
+            if (allInstalled) {
+                log.info("依赖已全部安装，fileResourceId: {}, count: {}", fileResourceId, requirements.size());
+                return;
+            }
+
+            log.info("检测到缺失依赖，开始自动安装，fileResourceId: {}, requirements: {}", fileResourceId, requirements);
+            boolean success = installMissingDependencies(requirements, installedPackages);
+            if (success) {
+                log.info("自动安装依赖成功，fileResourceId: {}", fileResourceId);
+            } else {
+                log.warn("自动安装依赖失败，fileResourceId: {}", fileResourceId);
+            }
+        } catch (Exception e) {
+            log.error("启动时自动检查安装依赖异常，fileResourceId: {}", fileResourceId, e);
+        }
+    }
+
+    /**
+     * 扫描所有构建成功的 Python 模型文件资源，并兜底安装缺失依赖
+     * 由 ServiceImpl 在项目启动后异步调用
+     */
+    public void ensureAllSuccessFileDependenciesInstalled() {
+        log.info("========== 启动兜底依赖检查开始 ==========");
+        long startMs = System.currentTimeMillis();
+        try {
+            QueryWrapper<ModelFileResourceDO> wrapper = new QueryWrapper<>();
+            wrapper.eq("del_flag", 0);
+            wrapper.eq("image_build_status", ImageBuildStatusEnum.SUCCESS.getStatus());
+            wrapper.isNotNull("deps_file_path");
+            wrapper.ne("deps_file_path", "");
+            List<ModelFileResourceDO> list = modelFileResourceMapper.selectList(wrapper);
+            if (CollUtil.isEmpty(list)) {
+                log.info("未找到构建成功且有依赖文件的记录，跳过");
+                return;
+            }
+
+            log.info("共找到 {} 条构建成功的记录，开始逐个检查依赖", list.size());
+            for (ModelFileResourceDO item : list) {
+                ensureDependenciesInstalled(item);
+            }
+        } catch (Exception e) {
+            log.error("启动兜底依赖检查异常", e);
+        } finally {
+            long cost = System.currentTimeMillis() - startMs;
+            log.info("========== 启动兜底依赖检查结束，耗时: {}ms ==========", cost);
+        }
     }
 
 }

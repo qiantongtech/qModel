@@ -32,6 +32,9 @@ import java.util.concurrent.TimeUnit;
 import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.TypeReference;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.ApplicationArguments;
+import org.springframework.boot.ApplicationRunner;
+import org.springframework.core.annotation.Order;
 import org.springframework.transaction.support.TransactionSynchronizationManager;
 import org.springframework.transaction.support.TransactionSynchronization;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -72,8 +75,9 @@ import tech.qiantong.qmodel.module.model.service.model.IModelService;
  */
 @Slf4j
 @Service
+@Order(2)
 @Transactional(rollbackFor = Exception.class)
-public class ModelFileResourceServiceImpl extends ServiceImpl<ModelFileResourceMapper, ModelFileResourceDO> implements IModelFileResourceService {
+public class ModelFileResourceServiceImpl extends ServiceImpl<ModelFileResourceMapper, ModelFileResourceDO> implements IModelFileResourceService, ApplicationRunner {
     @Resource
     private ModelFileResourceMapper modelFileResourceMapper;
 
@@ -358,8 +362,8 @@ public class ModelFileResourceServiceImpl extends ServiceImpl<ModelFileResourceM
         Map<String, Object> result = new HashMap<>();
         List<String> requirements = new ArrayList<>();
 
-        String storagePath = System.getProperty("user.dir") + "/upload/";
-        String fullPath = storagePath + filePath;
+        // 使用注入的 storagePath，并兼容 filePath 已是绝对路径的情况
+        String fullPath = resolveAbsolutePath(this.storagePath, filePath);
 
         try (InputStream is = Files.newInputStream(Paths.get(fullPath));
              ZipInputStream zis = new ZipInputStream(is, StandardCharsets.UTF_8)) {
@@ -492,8 +496,8 @@ public class ModelFileResourceServiceImpl extends ServiceImpl<ModelFileResourceM
             throw new ServiceException("模型文件资源不存在，modelId: " + modelId);
         }
 
-        String scriptRelativePath = fileResourceDO.getDockerFilePath();
-        if (scriptRelativePath == null || scriptRelativePath.isEmpty()) {
+        String storedScriptPath = fileResourceDO.getDockerFilePath();
+        if (storedScriptPath == null || storedScriptPath.isEmpty()) {
             throw new ServiceException("脚本路径为空，modelId: " + modelId);
         }
 
@@ -502,8 +506,8 @@ public class ModelFileResourceServiceImpl extends ServiceImpl<ModelFileResourceM
             throw new ServiceException("模型构建状态异常，当前状态: " + buildStatus + "，请等待构建完成后再执行");
         }
 
-        // 相对路径 + storagePath 拼接成绝对路径，跨平台兼容
-        Path scriptPathObj = Paths.get(storagePath, scriptRelativePath).normalize();
+        // 兼容老数据：绝对路径（Windows 盘符: / Linux / 开头）直接用；否则拼 storagePath
+        Path scriptPathObj = Paths.get(resolveAbsolutePath(storagePath, storedScriptPath)).normalize();
         String scriptPath = scriptPathObj.toString();
         File scriptFile = scriptPathObj.toFile();
         if (!scriptFile.exists()) {
@@ -684,4 +688,55 @@ public class ModelFileResourceServiceImpl extends ServiceImpl<ModelFileResourceM
         log.info("模型参数文件上传成功，modelId: {}, relativePath: {}", modelId, relativePath);
         return result;
     }
+
+    /**
+     * Spring Boot 启动完成后自动执行：检查所有已构建成功的 Python 模型依赖，缺失则自动安装
+     * 放在独立线程异步执行，不阻塞容器启动
+     */
+    @Override
+    public void run(ApplicationArguments args) {
+        Thread t = new Thread(() -> {
+            try {
+                // 等待 10 秒，确保其他 Bean 和数据库连接池完全就绪
+                Thread.sleep(10_000L);
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+                return;
+            }
+            log.info("启动后依赖检查...");
+            depsCheckHandler.ensureAllSuccessFileDependenciesInstalled();
+        }, "model-deps-bootstrap-checker");
+        t.setDaemon(true);
+        t.start();
+    }
+
+    /**
+     * 数据库读取的路径 → 绝对路径
+     * 兼容老数据：
+     * - 绝对路径（Windows 盘符: 开头 或 Linux / 开头）：直接返回
+     * - 相对路径：前缀拼接 storagePath
+     */
+    private String resolveAbsolutePath(String storageBase, String storedPath) {
+        if (storedPath == null) {
+            return null;
+        }
+        String normalized = storedPath.replace("\\", "/");
+        // Windows 绝对路径（形如 C:/... 或 D:/...）
+        if (normalized.length() >= 3
+                && Character.isLetter(normalized.charAt(0))
+                && normalized.charAt(1) == ':') {
+            return normalized;
+        }
+        // Linux/Mac 绝对路径（/ 开头）
+        if (normalized.startsWith("/")) {
+            return normalized;
+        }
+        // 相对路径：拼接 storagePath
+        String storage = (storageBase == null ? "" : storageBase).replace("\\", "/");
+        if (!storage.isEmpty() && !storage.endsWith("/")) {
+            storage = storage + "/";
+        }
+        return storage + normalized;
+    }
+
 }
