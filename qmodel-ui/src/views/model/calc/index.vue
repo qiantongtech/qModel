@@ -111,7 +111,6 @@
         :default-sort="defaultSort"
         @sort-change="handleSortChange"
       >
-        <el-table-column type="selection" width="55" align="center" />
         <el-table-column
           v-if="getColumnVisibility(0)"
           label="编号"
@@ -125,9 +124,9 @@
         <el-table-column
           v-if="getColumnVisibility(1)"
           label="任务名称"
-          align="center"
+          align="left"
           prop="name"
-          min-width="180"
+          min-width="200"
           :show-overflow-tooltip="{ effect: 'light' }"
         >
           <template #default="scope">
@@ -137,7 +136,7 @@
         <el-table-column
           v-if="getColumnVisibility(2)"
           label="模型名称"
-          align="center"
+          align="left"
           prop="modelName"
           min-width="220"
           :show-overflow-tooltip="{ effect: 'light' }"
@@ -215,6 +214,18 @@
           </template>
         </el-table-column>
         <el-table-column
+          v-if="getColumnVisibility(8)"
+          label="备注"
+          align="left"
+          prop="remark"
+          min-width="220"
+          :show-overflow-tooltip="{ effect: 'light' }"
+        >
+          <template #default="scope">
+            {{ scope.row.remark || scope.row.description || '-' }}
+          </template>
+        </el-table-column>
+        <el-table-column
           label="操作"
           align="center"
           class-name="small-padding fixed-width"
@@ -281,17 +292,17 @@
     <el-dialog
       v-model="open"
       draggable
-      class="large-dialog"
       destroy-on-close
-      width="860px"
+      width="800px"
+      :append-to="$refs['app-container']"
       @open="handleDialogOpen"
     >
-      <template #header>
+      <template #header="{ close, titleId, titleClass }">
         <span role="heading" aria-level="2" class="el-dialog__title">
           {{ title }}
         </span>
       </template>
-      <el-form ref="calcRef" :model="form" :rules="rules" label-width="100px" @submit.prevent>
+      <el-form ref="calcRef" :model="form" :rules="rules" label-width="80px" @submit.prevent>
         <!-- 基础信息 -->
         <div class="h2-title">基础信息</div>
         <el-row :gutter="20">
@@ -470,16 +481,16 @@
     <el-dialog
       v-model="openDetail"
       draggable
-      class="large-dialog"
       destroy-on-close
-      width="860px"
+      width="800px"
+      :append-to="$refs['app-container']"
     >
-      <template #header>
+      <template #header="{ close, titleId, titleClass }">
         <span role="heading" aria-level="2" class="el-dialog__title">
           {{ detailTitle }}
         </span>
       </template>
-      <el-form :model="form" label-width="100px">
+      <el-form :model="form" label-width="80px">
         <div class="h2-title">基础信息</div>
         <el-row :gutter="20">
           <el-col :span="12">
@@ -1110,7 +1121,294 @@ function handleExport() {
 getList()
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
+.app-container {
+  width: 100%;
+  background-color: #f0f2f5;
+  height: 100%;
+  padding: 15px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden auto;
+  --el-text-color-regular: #333;
+  --el-text-color-primary: #333;
+
+  .pagecont-top {
+    padding: 15px 15px 1px 15px;
+    background-color: #ffffff;
+    border-radius: 2px;
+  }
+
+  .pagecont-bottom {
+    flex: 1;
+    margin-top: 15px;
+    padding: 13px 15px;
+    background-color: #ffffff;
+    border-radius: 2px;
+  }
+
+  .el-form-input-width {
+    width: 210px;
+  }
+
+  .el-input {
+    --el-input-border-radius: var(--el-border-radius-small) !important;
+    ::-webkit-input-placeholder {
+      font-size: 14px !important;
+    }
+  }
+
+  .el-input__wrapper {
+    box-shadow: 0 0 0 1px #dcdfe6 inset;
+    border-radius: 2px !important;
+  }
+
+  .el-input__inner {
+    &::placeholder {
+      font-size: 14px !important;
+    }
+  }
+
+  .btn-style {
+    .el-input__inner {
+      font-size: 14px;
+      color: #000000;
+      font-family: PingFangSC-Regular, PingFangSC-Regular;
+    }
+
+    .el-button {
+      height: 28px;
+      padding: 8px 11px;
+      font-size: 12px;
+    }
+  }
+
+  .el-button {
+    border-radius: 2px !important;
+  }
+
+  :deep(.el-form-item__label) {
+    font-family: PingFang SC;
+    font-weight: 400 !important;
+    margin-right: 20px;
+  }
+
+  .el-input__inner {
+    font-size: 14px;
+    color: #000000;
+    font-family: PingFangSC-Regular, PingFangSC-Regular;
+  }
+
+  :deep(.el-textarea__inner) {
+    border-radius: 2px 2px 2px 2px !important;
+    height: 98px;
+    color: #606266 !important;
+    font-family: PingFangSC-Regular, PingFangSC-Regular;
+  }
+
+  :deep(.el-form-item) {
+    margin-bottom: 14px;
+  }
+
+  :deep(.el-dialog .el-form-item) {
+    margin-bottom: 16px;
+  }
+
+  :deep(.el-select__wrapper) {
+    border-radius: 2px !important;
+  }
+
+  :deep(.el-select) {
+    :deep(.el-input__inner) {
+      height: 32px;
+      line-height: 32px;
+      font-size: 13px;
+    }
+  }
+
+  .el-table {
+    thead {
+      height: 36px;
+      .el-table__cell.is-leaf {
+        background-color: #f1f1f5 !important;
+      }
+    }
+
+    :deep(.el-table__header-wrapper th) {
+      word-break: break-word;
+      background-color: #f1f1f5 !important;
+      height: 36px;
+    }
+
+    :deep(.el-table__header .el-table__cell) {
+      padding: 6px 0 !important;
+    }
+
+    thead .cell {
+      font-size: 14px;
+      font-weight: 600;
+      color: #666666;
+    }
+
+    :deep(.el-table__row) {
+      height: 42px;
+    }
+
+    :deep(.el-table__body-wrapper tbody tr:hover > td) {
+      background-color: #e9f0ff !important;
+    }
+
+    &--striped :deep(.el-table__body tr.current-row td) {
+      background: #d8e0f7 !important;
+    }
+
+    &::before {
+      height: 0px !important;
+    }
+
+    :deep(.el-table__fixed-right::before),
+    :deep(.el-table__fixed::before) {
+      height: 0px !important;
+    }
+
+    :deep(.el-popper.is-light) {
+      box-shadow: 0px 2px 8px 1px rgba(0, 0, 0, 0.15);
+      max-width: 800px;
+      font-size: 14px;
+      padding: 16px;
+      line-height: 22px;
+    }
+
+    :deep(.el-icon) {
+      font-size: 12px;
+    }
+
+    .el-button > span {
+      font-size: 14px;
+    }
+  }
+
+  :deep(.el-tooltip__popper.is-dark) {
+    font-size: 14px;
+  }
+
+  .small-padding {
+    :deep(.el-button + .el-button) {
+      margin-left: 5px !important;
+      .icont-mini {
+        width: 25px;
+        border-left: 2px solid #eeeeee;
+        text-align: right;
+      }
+    }
+  }
+
+  :deep(.el-tag) {
+    border-radius: 2px 2px 2px 2px !important;
+    font-size: 12px !important;
+    margin-right: 7px;
+  }
+
+  :deep(.el-tag.el-tag--default .el-tag__content) {
+    font-size: 14px !important;
+  }
+
+  :deep(.el-tag.el-tag--primary) {
+    border: 0px solid !important;
+  }
+
+  :deep(.el-tag.el-tag--success) {
+    background: rgba(0, 158, 33, 0.1) !important;
+    border: 0px solid #7ecb7e !important;
+    color: #009e21 !important;
+  }
+
+  :deep(.el-tag.el-tag--danger) {
+    background: rgba(236, 84, 77, 0.1) !important;
+    border: 0px solid #6ba7ff !important;
+    color: rgb(236, 84, 77) !important;
+  }
+
+  :deep(.el-tag.el-tag--warning) {
+    background: rgba(255, 184, 0, 0.1) !important;
+    border: 0px solid #ffbd72 !important;
+    color: rgb(255, 184, 0) !important;
+  }
+
+  :deep(.el-tag.el-tag--info) {
+    background: #f0eef9 !important;
+    border: 0px solid #a597e6 !important;
+    color: #8737a3 !important;
+  }
+
+  .el-dialog {
+    padding: 0 !important;
+
+    :deep(.el-dialog__header) {
+      padding: 9px 20px !important;
+      background: #f8f8f8;
+      .el-dialog__title {
+        font-weight: 600;
+        font-size: 16px;
+        color: #3f3f3f;
+        line-height: 1.5;
+        font-family: Microsoft YaHei, Microsoft YaHei;
+        display: flex;
+        align-items: center;
+        .el-icon {
+          margin-left: 10px;
+        }
+      }
+      :deep(.el-dialog__headerbtn) {
+        top: 0 !important;
+        height: 42px;
+      }
+    }
+
+    :deep(.el-dialog__body) {
+      overflow: auto;
+      min-height: auto !important;
+      max-height: 80vh;
+      padding: 20px 40px !important;
+    }
+
+    :deep(.el-dialog__footer) {
+      padding: 10px 20px 20px;
+      border-top: 1px solid #efefef;
+    }
+  }
+
+  .dialog-footer {
+    display: flex;
+    justify-content: flex-end;
+  }
+
+  :deep(.el-button--mini) {
+    font-size: 12px;
+    border-radius: 3px;
+    padding: 7px 15px;
+    span {
+      line-height: 1;
+    }
+  }
+
+  :deep(.el-pager li) {
+    min-width: 30px;
+    border-radius: 2px;
+    margin: 0 5px;
+    height: 28px;
+    line-height: 28px;
+    background-color: #f4f4f5 !important;
+    color: #606266 !important;
+    font-weight: 700;
+
+    &.is-active {
+      color: #fff !important;
+      background-color: var(--el-color-primary) !important;
+    }
+  }
+}
+
 .h2-title {
   font-size: 15px;
   color: rgba(0, 0, 0, 0.85);
@@ -1128,26 +1426,5 @@ getList()
   border-radius: 3px;
   background: var(--el-color-primary);
   margin-right: 8px;
-}
-
-.dialog-footer {
-  text-align: right;
-}
-
-.large-dialog {
-  min-height: 300px;
-  max-height: 85vh;
-  overflow-y: auto;
-}
-
-.large-dialog :deep(.el-dialog__body) {
-  padding: 15px 20px;
-  max-height: calc(85vh - 120px);
-  overflow-y: auto;
-}
-
-.large-dialog :deep(.el-dialog__footer) {
-  padding: 10px 20px;
-  border-top: 1px solid #eee;
 }
 </style>

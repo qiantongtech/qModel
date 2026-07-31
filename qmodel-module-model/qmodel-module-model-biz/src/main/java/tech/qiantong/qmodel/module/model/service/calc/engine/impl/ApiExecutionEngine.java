@@ -71,8 +71,8 @@ public class ApiExecutionEngine implements IExecutionEngine {
         // 3. 构造测试请求 VO（字段和原来调用 testModelConfig 的参数完全对齐）
         ModelConfigTestReqVO testReqVO = BeanUtils.toBean(modelConfig, ModelConfigTestReqVO.class);
         testReqVO.setModelId(ctx.getModelId());
-        testReqVO.setTimeoutSeconds((Long) firstNonNull(
-                ctx.getTimeoutSeconds() != null ? ctx.getTimeoutSeconds().intValue() : null,
+        testReqVO.setTimeoutSeconds(firstNonNull(
+                ctx.getTimeoutSeconds(),
                 modelConfig.getTimeoutSeconds()));
         testReqVO.setTestBody(testBody);
 
