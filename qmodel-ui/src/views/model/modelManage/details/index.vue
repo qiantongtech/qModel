@@ -199,7 +199,7 @@
           />
         </el-tab-pane>
 
-        <el-tab-pane name="modelApi">
+        <el-tab-pane name="modelApi" v-if="viewInfo.status === '5'">
           <template #label>API 接口</template>
           <ModelApi
               v-if="activeName === 'modelApi'"
@@ -566,13 +566,13 @@ const submitForm = () => {
         const formData = { ...form.value };
         if (formData.id != null) {
           updateModel(formData).then((response) => {
-            ElMessage.success("修改成功");
+            proxy.$modal.msgSuccess("修改成功");
             open.value = false;
             getList();
           });
         } else {
           addModel(formData).then((response) => {
-            ElMessage.success("新增成功");
+            proxy.$modal.msgSuccess("新增成功");
             open.value = false;
             getList();
           });

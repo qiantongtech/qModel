@@ -55,4 +55,11 @@ public interface IModelKeyService extends IService<ModelKeyDO> {
      */
     int removeModelKey(Collection<Long> idList);
 
+    /**
+     * 根据apiKey查询模型访问 key
+     *
+     * @param apiKey apiKey
+     */
+    ModelKeyDO getByApiKey(String apiKey);
+
 }

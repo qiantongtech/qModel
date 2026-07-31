@@ -18,22 +18,29 @@
 
 package tech.qiantong.qmodel.module.model.controller.admin.model;
 
+import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson2.JSON;
 import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import tech.qiantong.qmodel.common.core.domain.CommonResult;
+import tech.qiantong.qmodel.common.exception.ServiceException;
 import tech.qiantong.qmodel.module.model.controller.admin.config.vo.ModelConfigTestReqVO;
 import tech.qiantong.qmodel.module.model.controller.admin.config.vo.ModelConfigTestRespVO;
 import tech.qiantong.qmodel.module.model.controller.admin.model.vo.ModelRespVO;
 import tech.qiantong.qmodel.module.model.dal.dataobject.config.ModelConfigDO;
+import tech.qiantong.qmodel.module.model.dal.dataobject.modelKey.ModelKeyDO;
 import tech.qiantong.qmodel.module.model.enums.AccessTypeEnum;
+import tech.qiantong.qmodel.module.model.enums.ModelStatusEnum;
 import tech.qiantong.qmodel.module.model.service.config.IModelConfigService;
 import tech.qiantong.qmodel.module.model.service.fileResource.IModelFileResourceService;
 import tech.qiantong.qmodel.module.model.service.model.IModelService;
+import tech.qiantong.qmodel.module.model.service.modelKey.IModelKeyService;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import java.util.Map;
+import java.util.Objects;
 
 @RestController
 @RequestMapping("/v1/models")
@@ -45,14 +52,28 @@ public class ModelExecuteController {
     private IModelConfigService modelConfigService;
     @Resource
     private IModelService modelService;
+    @Resource
+    private IModelKeyService modelKeyService;
 
     @Operation(summary = "执行模型脚本")
     @PostMapping("/predict")
-    public CommonResult<Object> predict(@RequestBody(required = false) Map<String, Object> inputParam) {
-        Long modelId = 9L;
+    public CommonResult<Object> predict(HttpServletRequest request, @RequestBody(required = false) Map<String, Object> inputParam) {
+        String authorization = request.getHeader("Authorization");
+        if (StrUtil.isBlank(authorization) || authorization.length() <= 7) {
+            throw new ServiceException("apiKey 异常");
+        }
+        String token = authorization.substring(7);
+        ModelKeyDO modelKeyDO = modelKeyService.getByApiKey(token);
+        Long modelId = modelKeyDO.getModelId();
         ModelRespVO modelRespVO = modelService.getModelById(modelId);
+        if (Objects.isNull(modelRespVO)) {
+            throw new ServiceException("模型不存在");
+        }
+        if (!Objects.equals(ModelStatusEnum.PUBLISHED.getStatus(), modelRespVO.getStatus())) {
+            throw new ServiceException("模型状态异常");
+        }
         ModelConfigDO modelConfig = modelRespVO.getModelConfig();
-        if (AccessTypeEnum.API.getType().equals(modelRespVO.getAccessType())){
+        if (AccessTypeEnum.API.getType().equals(modelRespVO.getAccessType())) {
             ModelConfigTestReqVO testReqVO = new ModelConfigTestReqVO();
             testReqVO.setModelId(modelId);
             testReqVO.setModelName(modelRespVO.getName());
@@ -74,7 +95,7 @@ public class ModelExecuteController {
             testReqVO.setAuthExtractPath(modelConfig.getAuthExtractPath());
             testReqVO.setTestBody(JSON.toJSONString(inputParam));
             return CommonResult.success(modelConfigService.testModelConfig(testReqVO));
-        }else {
+        } else {
             return CommonResult.success(modelFileResourceService.runModelScript(modelId, inputParam));
         }
     }

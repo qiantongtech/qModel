@@ -18,12 +18,15 @@
 
 package tech.qiantong.qmodel.module.model.service.modelKey.impl;
 
+import cn.hutool.core.collection.CollUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import tech.qiantong.qmodel.common.exception.ServiceException;
 import tech.qiantong.qmodel.common.utils.uuid.UUID;
 import tech.qiantong.qmodel.module.model.controller.admin.modelKey.vo.ModelKeyPageVO;
 import tech.qiantong.qmodel.module.model.dal.dataobject.modelKey.ModelKeyDO;
@@ -60,7 +63,8 @@ public class ModelKeyServiceImpl  extends ServiceImpl<ModelKeyMapper,ModelKeyDO>
     public Long createModelKey(Long modelId) {
         ModelKeyDO dictType = new ModelKeyDO();
         dictType.setModelId(modelId);
-        dictType.setApiKey(UUID.fastUUID().toString());
+        String uuid = UUID.fastUUID().toString().replace("-", "");
+        dictType.setApiKey("model-"+uuid);
         baseMapper.insert(dictType);
         return dictType.getId();
     }
@@ -74,5 +78,21 @@ public class ModelKeyServiceImpl  extends ServiceImpl<ModelKeyMapper,ModelKeyDO>
     public int removeModelKey(Collection<Long> idList) {
         // 批量删除模型访问 key
         return baseMapper.deleteBatchIds(idList);
+    }
+
+    /**
+     * 根据apiKey查询模型访问 key
+     *
+     * @param apiKey apiKey
+     */
+    @Override
+    public ModelKeyDO getByApiKey(String apiKey) {
+        LambdaQueryWrapper<ModelKeyDO> queryWrapper = Wrappers.lambdaQuery(ModelKeyDO.class)
+                .eq(ModelKeyDO::getApiKey, apiKey);
+        List<ModelKeyDO> list = super.list(queryWrapper);
+        if (CollUtil.isEmpty(list)){
+            throw new ServiceException("apiKey 异常");
+        }
+        return list.get(0);
     }
 }

@@ -319,14 +319,14 @@
               </el-radio-group>
             </el-form-item>
           </el-col>
-          <el-col :span="24" v-if="form.auditStatus === '2'">
-            <el-form-item label="拒绝原因" prop="auditReason">
+          <el-col :span="24">
+            <el-form-item label="审批意见" prop="auditReason">
               <el-input
                 v-model="form.auditReason"
                 type="textarea"
                 maxlength="256 个字符"
                 show-word-limit
-                placeholder="请输入拒绝原因"
+                placeholder="请输入审批意见"
               />
             </el-form-item>
           </el-col>
@@ -486,9 +486,6 @@ const data = reactive({
         },
         trigger: ["blur"],
       },
-    ],
-    auditReason: [
-      { required: true, message: "拒绝原因不能为空", trigger: "blur" },
     ],
   },
 });

@@ -18,114 +18,131 @@
 
 <template>
   <div>
-    <div>
+    <div class="infotop" >
+      <div class="h2-titles">服务信息</div>
       <div>
-        <div class="h2-titles">服务信息</div>
-        <div>
-          <el-row :gutter="20" class="api-panel">
-            <el-col :span="12">
-              <span class="info-label">Base URL: </span>
-              <span class="info-label" style="margin-right: 5px">{{ baseUrl }} </span>
-              <el-button
-                  link
-                  type="primary"
-                  icon="CopyDocument"
-                  @click.stop="copyUrl">复制
-              </el-button>
-            </el-col>
-
-            <el-col :span="12">
-              <div>
-                <span class="info-label">鉴权方式(API Key): </span>
-                <el-tag type="info" style="margin-right: 8px;margin-left: 8px">header</el-tag>
-                <span class="info-label">Authorization: Bearer &lt;YOUR_TOKEN&gt;</span>
-                <el-button
-                    link
-                    type="primary"
-                    @click.stop="getToken"> 查看获取 token
-                </el-button>
+        <el-row :gutter="3" style="margin-bottom: 3px">
+          <el-col :span="8">
+            <div class="infotop-row border-top">
+              <div class="infotop-row-lable">Base URL</div>
+              <div class="infotop-row-value">
+                <el-tooltip :content="baseUrl || '-'" placement="top" effect="light">
+                  <span class="ellipsis-text">{{ baseUrl || "-" }}</span>
+                </el-tooltip>
               </div>
-            </el-col>
-          </el-row>
-        </div>
+            </div>
+          </el-col>
+          <el-col :span="8">
+            <div class="infotop-row border-top">
+              <div class="infotop-row-lable">鉴权方式(API Key)</div>
+              <div class="infotop-row-value">
+                <span class="ellipsis-text">Authorization: Bearer &lt;YOUR_API_KEY&gt;</span>
+              </div>
+            </div>
+          </el-col>
+
+          <el-col :span="8">
+            <div class="infotop-row border-top">
+              <div class="infotop-row-lable">鉴权位置</div>
+              <div class="infotop-row-value">
+                <span>header(请求头)</span>
+              </div>
+            </div>
+          </el-col>
+        </el-row>
+
+        <el-row :gutter="3" style="margin-bottom: 3px">
+          <el-col :span="8">
+            <div class="infotop-row border-top">
+              <div class="infotop-row-lable">Base URL</div>
+              <div class="infotop-row-value">
+                <el-tooltip :content="baseUrl || '-'" placement="top" effect="light">
+                  <span class="ellipsis-text">{{ baseUrl || "-" }}</span>
+                </el-tooltip>
+              </div>
+            </div>
+          </el-col>
+
+        </el-row>
+
       </div>
+    </div>
+    <div>
+      <div class="h2-titles">接口定义</div>
       <div>
-        <div class="h2-titles">接口定义</div>
-        <div>
-          <el-collapse accordion v-model="activeNames">
-            <el-collapse-item name="1" :class="['collapse-item-wrap', 'post']">
+        <el-collapse accordion v-model="activeNames">
+          <el-collapse-item name="1" :class="['collapse-item-wrap', 'post']">
 
-              <template #title>
-                <div class="api-title">
-                  <el-tag type="success" size="small" style="margin-left: 10px">POST</el-tag>
-                  <span class="path">/predict</span>
-                  <span>执行模型推理预测</span>
+            <template #title>
+              <div class="api-title" style="color: #009e21">
+                <el-tag type="success" effect="dark" size="small" style="margin-left: 10px;background: #009e21!important;color: #ffffff!important;" >POST</el-tag>
+                <span class="path">/predict</span>
+                <span>执行模型推理预测</span>
+              </div>
+            </template>
+
+            <el-row :gutter="20" class="api-panel">
+              <!-- 请求参数 -->
+              <el-col :span="12">
+                <div class="sub-title under-line">请求参数 (Request Body)</div>
+                <pre class="code-block dark fixed-height">{{ getInputSchema() }}</pre>
+                <div class="code-hint">格式: application/json</div>
+                <!--                  <el-link type="primary">查看 Schema 详情</el-link>-->
+              </el-col>
+              <!-- 响应结果 -->
+              <el-col :span="12">
+                <div class="sub-title under-line">响应结果 (Responses)</div>
+                <pre class="code-block dark fixed-height">{{ getOutputSchema() }}</pre>
+                <div class="resp-status">
+                  <el-tag type="success" size="small" style="margin-right:10px">200</el-tag>
+                  <span>成功返回预测结果</span>
                 </div>
-              </template>
 
-              <el-row :gutter="20" class="api-panel">
-                <!-- 请求参数 -->
-                <el-col :span="12">
-                  <div class="sub-title under-line">请求参数 (Request Body)</div>
-                  <pre class="code-block dark fixed-height">{{ getInputSchema() }}</pre>
-                  <div class="code-hint">格式: application/json
-                    <el-link type="primary">查看 Schema 详情</el-link>
-                  </div>
-                </el-col>
-                <!-- 响应结果 -->
-                <el-col :span="12">
-                  <div class="sub-title under-line">响应结果 (Responses)</div>
-                  <pre class="code-block dark fixed-height">{{ getOutputSchema() }}</pre>
-                  <div class="resp-status">
-                    <el-tag type="success" size="small" style="margin-right:10px">200</el-tag>
-                    <span>成功返回预测结果</span>
-                  </div>
-
-                </el-col>
-              </el-row>
-              <!-- 调用示例 -->
-              <el-row :gutter="20" class="api-panel">
-                <el-col :span="24">
-                  <div class="demo-section">
-                    <div class="sub-title">调用示例 (Code Snippets)</div>
-                    <el-tabs v-model="demoTab" type="border-card">
-                      <el-tab-pane label="CURL" name="curl">
-                        <pre class="code-block dark">{{ genCURLExampleCode("post", "/predict") }}</pre>
-                      </el-tab-pane>
-                      <el-tab-pane label="Python (requests)" name="python">
-                        <pre class="code-block dark">{{ genPythonExampleCode("post", "/predict") }}</pre>
-                      </el-tab-pane>
-                      <el-tab-pane label="Node.js (axios)" name="node">
-                        <pre class="code-block dark">{{ genNodeExampleCode("post", "/predict") }}</pre>
-                      </el-tab-pane>
-                    </el-tabs>
-                  </div>
-                </el-col>
-              </el-row>
-            </el-collapse-item>
-            <el-collapse-item name="2" disabled :class="['collapse-item-wrap', 'get']">
-
-              <template #title>
-                <div class="api-title">
-                  <el-tag type="info" size="small" effect="dark" disabled style="margin-left: 10px">GET</el-tag>
-                  <span class="path">/predict</span>
-                  <span>执行模型推理预测</span>
+              </el-col>
+            </el-row>
+            <!-- 调用示例 -->
+            <el-row :gutter="20" class="api-panel">
+              <el-col :span="24">
+                <div class="demo-section">
+                  <div class="sub-title">调用示例 (Code Snippets)</div>
+                  <el-tabs v-model="demoTab" type="border-card">
+                    <el-tab-pane label="CURL" name="curl">
+                      <pre class="code-block dark">{{ genCURLExampleCode("post", "/predict") }}</pre>
+                    </el-tab-pane>
+                    <el-tab-pane label="Python (requests)" name="python">
+                      <pre class="code-block dark">{{ genPythonExampleCode("post", "/predict") }}</pre>
+                    </el-tab-pane>
+                    <el-tab-pane label="Node.js (axios)" name="node">
+                      <pre class="code-block dark">{{ genNodeExampleCode("post", "/predict") }}</pre>
+                    </el-tab-pane>
+                  </el-tabs>
                 </div>
-              </template>
+              </el-col>
+            </el-row>
+          </el-collapse-item>
+          <el-collapse-item name="2" :class="['collapse-item-wrap', 'get']">
 
-              <el-row :gutter="20" class="api-panel">
-                <!-- 请求参数 -->
-                <el-col :span="12">
-                  <div class="sub-title under-line">请求参数 (Request Body)</div>
-                  <pre class="code-block dark fixed-height">{{ getInputSchema() }}</pre>
-                  <div class="code-hint">格式: application/json
-                    <el-link type="primary">查看 Schema 详情</el-link>
-                  </div>
-                </el-col>
-                <!-- 响应结果 -->
-                <el-col :span="12">
-                  <div class="sub-title under-line">响应结果 (Responses)</div>
-                  <pre class="code-block dark fixed-height">
+            <template #title>
+              <div class="api-title" style="color: #2666fb">
+                <el-tag type="primary" size="small" effect="dark" style="margin-left: 10px">GET</el-tag>
+                <span class="path">/status</span>
+                <span>获取模型当前运行状态</span>
+              </div>
+            </template>
+
+            <el-row :gutter="20" class="api-panel">
+              <!-- 请求参数 -->
+              <el-col :span="12">
+                <div class="sub-title under-line">请求参数 (Request Body)</div>
+                <pre class="code-block dark fixed-height">{{ getInputSchema() }}</pre>
+                <div class="code-hint">格式: application/json
+                  <el-link type="primary">查看 Schema 详情</el-link>
+                </div>
+              </el-col>
+              <!-- 响应结果 -->
+              <el-col :span="12">
+                <div class="sub-title under-line">响应结果 (Responses)</div>
+                <pre class="code-block dark fixed-height">
                                   {
                                     "predictions": [
                                       {
@@ -136,103 +153,100 @@
                                     "model_version": "V1.0"
                                   }
                   </pre>
-                  <div class="resp-status">
-                    <el-tag type="success" size="small">200</el-tag>
-                    <span>成功返回预测结果</span>
-                  </div>
+                <div class="resp-status">
+                  <el-tag type="success" size="small">200</el-tag>
+                  <span>成功返回预测结果</span>
+                </div>
 
-                </el-col>
-              </el-row>
-              <!-- 调用示例 -->
-              <el-row :gutter="20" class="api-panel">
-                <el-col :span="24">
-                  <div class="demo-section">
-                    <div class="sub-title">调用示例 (Code Snippets)</div>
-                    <el-tabs v-model="demoTab" type="border-card">
-                      <el-tab-pane label="CURL" name="curl">
-                        <pre class="code-block dark">{{ genCURLExampleCode("post", "/predict") }}</pre>
-                      </el-tab-pane>
-                      <el-tab-pane label="Python (requests)" name="python">
-                        <pre class="code-block dark">{{ genPythonExampleCode("post", "/predict") }}</pre>
-                      </el-tab-pane>
-                      <el-tab-pane label="Node.js (axios)" name="node">
-                        <pre class="code-block dark">{{ genNodeExampleCode("post", "/predict") }}</pre>
-                      </el-tab-pane>
-                    </el-tabs>
-                  </div>
-                </el-col>
-              </el-row>
-            </el-collapse-item>
-          </el-collapse>
-        </div>
+              </el-col>
+            </el-row>
+            <!-- 调用示例 -->
+            <el-row :gutter="20" class="api-panel">
+              <el-col :span="24">
+                <div class="demo-section">
+                  <div class="sub-title">调用示例 (Code Snippets)</div>
+                  <el-tabs v-model="demoTab" type="border-card">
+                    <el-tab-pane label="CURL" name="curl">
+                      <pre class="code-block dark">{{ genCURLExampleCode("post", "/predict") }}</pre>
+                    </el-tab-pane>
+                    <el-tab-pane label="Python (requests)" name="python">
+                      <pre class="code-block dark">{{ genPythonExampleCode("post", "/predict") }}</pre>
+                    </el-tab-pane>
+                    <el-tab-pane label="Node.js (axios)" name="node">
+                      <pre class="code-block dark">{{ genNodeExampleCode("post", "/predict") }}</pre>
+                    </el-tab-pane>
+                  </el-tabs>
+                </div>
+              </el-col>
+            </el-row>
+          </el-collapse-item>
+        </el-collapse>
       </div>
     </div>
-
-    <!-- 添加或修改版本管理对话框 -->
-    <el-dialog
-        title="API Key"
-        v-model="openKey"
-        width="750px"
-        :close-on-click-modal="false"
-        append-to-body
-    >
-      <div class="content-panel">
-        <div class="toolbar-row">
-          <div class="btn-style">
-            <el-button
-                type="primary"
-                plain
-                @click="handleAddToken"
-            >
-              <i class="iconfont-mini icon-xinzeng"></i>新增
-            </el-button>
-          </div>
-        </div>
-
-        <el-table
-            stripe
-            v-loading="loading"
-            :default-sort="{ prop: 'createTime', order: 'descending' }"
-            :data="apiKeyList"
-        >
-          <el-table-column label="密钥" align="center" prop="apiKey">
-            <template #default="scope">
-              {{ maskData(scope.row.apiKey)  }}
-            </template>
-          </el-table-column>
-          <el-table-column label="创建人" align="center" prop="updateBy" width="120"
-                           :show-overflow-tooltip="{ effect: 'light' }"
-          >
-            <template #default="scope">
-              <span>{{ scope.row.createBy }}</span>
-            </template>
-          </el-table-column>
-          <el-table-column label="创建时间" align="center" width="140" prop="createTime" sortable>
-            <template #default="scope">
-              {{ parseTime(scope.row.createTime, "{y}-{m}-{d} {h}:{i}") }}
-            </template>
-          </el-table-column>
-          <el-table-column label="操作" width="180" align="center">
-            <template #default="scope">
-              <el-button link type="primary" icon="CopyDocument" @click="copyToken(scope.row)">
-                复制
-              </el-button>
-              <el-button link type="danger" icon="Delete" @click="deleteToken(scope.row)">
-                删除
-              </el-button>
-            </template>
-          </el-table-column>
-        </el-table>
-      </div>
-
-      <template #footer>
-        <div class="dialog-footer">
-          <el-button @click="cancel">关 闭</el-button>
-        </div>
-      </template
-      >
-    </el-dialog>
   </div>
+
+  <!-- 添加或修改版本管理对话框 -->
+  <el-dialog
+      title="API Key"
+      v-model="openKey"
+      width="750px"
+      :close-on-click-modal="false"
+  >
+    <el-row style="margin-bottom: 10px" class="btn-style">
+      <el-col :span="1.5">
+        <el-button
+            type="primary"
+            plain
+            @click="handleAddToken"
+        >
+          <i class="iconfont-mini icon-xinzeng"></i>新增
+        </el-button>
+      </el-col>
+    </el-row>
+
+    <el-table
+        stripe
+        v-loading="loading"
+        :default-sort="{ prop: 'createTime', order: 'descending' }"
+        :data="apiKeyList"
+    >
+      <el-table-column label="密钥" align="center" prop="apiKey">
+        <template #default="scope">
+          {{ maskData(scope.row.apiKey) }}
+        </template>
+      </el-table-column>
+      <el-table-column label="创建人" align="center" prop="updateBy" width="120"
+                       :show-overflow-tooltip="{ effect: 'light' }"
+      >
+        <template #default="scope">
+          <span>{{ scope.row.createBy }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="创建时间" align="center" width="140" prop="createTime" sortable>
+        <template #default="scope">
+          {{ parseTime(scope.row.createTime, "{y}-{m}-{d} {h}:{i}") }}
+        </template>
+      </el-table-column>
+      <el-table-column label="操作" width="180" align="center">
+        <template #default="scope">
+          <el-button link type="primary" icon="CopyDocument" @click="copyToken(scope.row)">
+            复制
+          </el-button>
+          <el-button link type="danger" icon="Delete" @click="deleteToken(scope.row)">
+            删除
+          </el-button>
+        </template>
+      </el-table-column>
+    </el-table>
+
+    <template #footer>
+      <div class="dialog-footer">
+        <el-button @click="cancel">关 闭</el-button>
+      </div>
+    </template
+    >
+  </el-dialog>
+
 </template>
 
 <script setup name="modelApi">
@@ -305,7 +319,7 @@ function genCURLExampleCode(method, path) {
 
   let arr = [];
   arr.push(`curl -X ${method} "${baseUrl}${path}"`);
-  arr.push(`-H "Authorization: Bearer <YOUR_TOKEN>"`);
+  arr.push(`-H "Authorization: Bearer <YOUR_API_KEY>"`);
   arr.push(`-H "Content-Type: application/json"`);
   arr.push(`-d '${paramExampleStr}'`);
   return arr.join("\n");
@@ -321,7 +335,7 @@ function genPythonExampleCode(method, path) {
   arr.push(`import requests`);
   arr.push(`url = "${baseUrl}${path}"`);
   arr.push(`headers = {`);
-  arr.push(`  "Authorization": "Bearer <YOUR_TOKEN>"`);
+  arr.push(`  "Authorization": "Bearer <YOUR_API_KEY>"`);
   arr.push(`  "Content-Type": "application/json"`);
   arr.push(`  }`);
   arr.push(`payload = {`);
@@ -350,7 +364,7 @@ function genNodeExampleCode(method, path) {
   arr.push(`    },`);
   arr.push(`    {`);
   arr.push(`      headers: {`);
-  arr.push(`            "Authorization": "Bearer Bearer <YOUR_TOKEN>",`);
+  arr.push(`            "Authorization": "Bearer Bearer <YOUR_API_KEY>",`);
   arr.push(`            "Content-Type": "application/json"`);
   arr.push(`      }`);
   arr.push(`    }`);
@@ -401,7 +415,6 @@ function buildEmptyDataBySchema(schema) {
 function getToken() {
   getTokenList();
   openKey.value = true;
-  // proxy.$modal.msgWarning("功能开发中");
 }
 
 // 关闭 Token 窗口
@@ -415,7 +428,7 @@ function handleAddToken() {
     modelId: props.model.id
   }
   addModelKey(param).then(res => {
-    proxy.$modal.msgSuccess("添加成功");
+    proxy.$modal.msgSuccess("新增成功");
     getTokenList();
   });
 }
@@ -442,10 +455,10 @@ async function copyToken(row) {
 // 删除 Token
 function deleteToken(row) {
   proxy.$modal.confirm("是否确认删除该 API Key 吗？", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning",
-      })
+    confirmButtonText: "确定",
+    cancelButtonText: "取消",
+    type: "warning",
+  })
       .then(() => {
         return delModelKey(row.id);
       })
@@ -458,8 +471,8 @@ function deleteToken(row) {
 
 // 数据脱敏
 function maskData(data) {
-  if (!data || data.length < 11) return data
-  return data.slice(0, 3) + '****' + data.slice(-10)
+  if (!data || data.length < 16) return data
+  return data.slice(0, 6) + '****' + data.slice(-10)
 }
 
 </script>
@@ -473,6 +486,7 @@ function maskData(data) {
   font-weight: 500;
   margin: 8px 0;
 }
+
 .toolbar-row {
   flex-shrink: 0;
   display: flex;
@@ -489,12 +503,6 @@ function maskData(data) {
   border-radius: 3px;
   background: var(--el-color-primary);
   margin-right: 8px;
-}
-
-.info-label {
-  font-size: 14px;
-  color: #606266;
-  font-weight: 500;
 }
 
 .api-panel {
