@@ -50,15 +50,15 @@ public class PythonExecutionEngine implements IExecutionEngine {
         log.info("Python执行引擎开始执行: calcId={}, modelId={}, executionNo={}",
                 ctx.getCalcId(), ctx.getModelId(), ctx.getExecutionNo());
 
-        // 1. 解析 ctx.inputParamsJson → Map{paramCode: value}（复用 ApiExecutionEngine 里的兼容解析逻辑）
+        //  解析 ctx.inputParamsJson → Map{paramCode: value}（复用 ApiExecutionEngine 里的兼容解析逻辑）
         Map<String, Object> inputParam = ApiExecutionEngine.parseInputParamsToMap(ctx.getInputParamsJson());
         logBuffer.add("输入参数解析完成，共 " + inputParam.size() + " 个字段：" + JSON.toJSONString(inputParam));
 
-        // 2. 调用 runModelScript —— 内部已包含：脚本路径检查、构建状态校验、
+        // 调用 runModelScript —— 内部已包含：脚本路径检查、构建状态校验、
         //    文件参数路径 resolve、超时控制、子进程执行、stdout 读取、调用历史记录落库
         Object scriptResult = modelFileResourceService.runModelScript(ctx.getModelId(), inputParam);
 
-        // 3. 结果规整：null→"", String→原样, 其他→JSON 序列化
+        // 结果规整：null→"", String→原样, 其他→JSON 序列化
         String outputStr;
         if (scriptResult == null) {
             outputStr = "";
