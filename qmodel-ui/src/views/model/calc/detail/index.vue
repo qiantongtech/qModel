@@ -30,14 +30,12 @@
                 <span class="ellipsis-text">{{ calcDetail.name || "" }}</span>
               </el-tooltip>
             </div>
-            <el-tag
+            <dict-tag
               v-if="calcDetail.status !== undefined"
-              :type="getStatusTagType(calcDetail.status)"
-              size="small"
+              :options="model_calc_status"
+              :value="calcDetail.status"
               style="margin-left: 10px"
-            >
-              {{ getStatusLabel(calcDetail.status) }}
-            </el-tag>
+            />
           </div>
           <el-row :gutter="15" class="btn-style" style="margin-left: auto">
             <el-col :span="1.5">
@@ -273,6 +271,7 @@
                 label="执行批次号"
                 align="center"
                 prop="executionNo"
+                
               >
                 <template #default="scope">
                   {{ scope.row.executionNo || "-" }}
@@ -283,7 +282,6 @@
                 label="执行模式"
                 align="center"
                 prop="executionMode"
-                width="110"
               >
                 <template #default="scope">
                   {{ getExecutionModeLabel(scope.row.executionMode) }}
@@ -294,7 +292,6 @@
                 label="耗时"
                 align="center"
                 prop="duration"
-                width="100"
               >
                 <template #default="scope">
                   {{ formatDuration(scope.row.duration) }}
@@ -305,12 +302,9 @@
                 label="执行状态"
                 align="center"
                 prop="status"
-                width="100"
               >
                 <template #default="scope">
-                  <el-tag :type="getExecStatusTagType(scope.row.status)" size="small">
-                    {{ getExecStatusLabel(scope.row.status) }}
-                  </el-tag>
+                  <dict-tag :options="model_calc_status" :value="scope.row.status" />
                 </template>
               </el-table-column>
               <el-table-column
@@ -319,6 +313,8 @@
                 align="center"
                 prop="startTime"
                 width="180"
+                sortable="custom"
+                :sort-orders="['descending', 'ascending']"
               >
                 <template #default="scope">
                   <span>{{
@@ -332,6 +328,8 @@
                 align="center"
                 prop="endTime"
                 width="180"
+                sortable="custom"
+                :sort-orders="['descending', 'ascending']"
               >
                 <template #default="scope">
                   <span>{{
@@ -339,21 +337,7 @@
                   }}</span>
                 </template>
               </el-table-column>
-              <el-table-column
-                v-if="getExecRecordColumnVisibility(7)"
-                label="创建时间"
-                align="center"
-                prop="createTime"
-                width="180"
-                sortable="custom"
-                :sort-orders="['descending', 'ascending']"
-              >
-                <template #default="scope">
-                  <span>{{
-                    parseTime(scope.row.createTime, "{y}-{m}-{d} {h}:{i}:{s}")
-                  }}</span>
-                </template>
-              </el-table-column>
+              
               <el-table-column
                 v-if="getExecRecordColumnVisibility(8)"
                 label="操作"
@@ -412,10 +396,6 @@
           <template #label>输出结果</template>
           <div v-if="activeName === 'outputResult'" class="tab-content">
             <div v-if="calcDetail.status === 2" class="output-success">
-              <div class="output-section-title mb10">
-                <el-icon style="color: #67c23a"><SuccessFilled /></el-icon>
-                计算成功
-              </div>
               <el-table
                 v-if="outputResultList.length > 0"
                 :data="outputResultList"
@@ -473,9 +453,7 @@
         <el-row :gutter="20">
           <el-col :span="12">
             <el-form-item label="执行状态" prop="status">
-              <el-tag :type="getExecStatusTagType(execRecordForm.status)" size="small">
-                {{ getExecStatusLabel(execRecordForm.status) }}
-              </el-tag>
+              <dict-tag :options="model_calc_status" :value="execRecordForm.status" />
             </el-form-item>
           </el-col>
           <el-col :span="12">
@@ -571,6 +549,8 @@ const { proxy } = getCurrentInstance();
 const router = useRouter();
 const route = useRoute();
 
+const { model_calc_status } = proxy.useDict("model_calc_status");
+
 const showSearch = ref(true);
 const activeName = ref("inputParams");
 
@@ -611,7 +591,6 @@ const execRecordColumns = ref([
   { key: 4, label: "执行状态", visible: true },
   { key: 5, label: "开始时间", visible: true },
   { key: 6, label: "结束时间", visible: true },
-  { key: 7, label: "创建时间", visible: true },
   { key: 8, label: "操作", visible: true },
 ]);
 
@@ -732,32 +711,6 @@ function getExecutionModeLabel(mode) {
   return map[mode] || "-";
 }
 
-/** 获取执行状态标签类型 */
-function getExecStatusTagType(status) {
-  const map = {
-    0: "info",     // 待执行
-    1: "primary",  // 运行中
-    2: "success",  // 成功
-    3: "danger",   // 失败
-    4: "warning",  // 终止
-    5: "",         // 排队中
-  };
-  return map[status] || "info";
-}
-
-/** 获取执行状态文本 */
-function getExecStatusLabel(status) {
-  const map = {
-    0: "待执行",
-    1: "运行中",
-    2: "成功",
-    3: "失败",
-    4: "已终止",
-    5: "排队中",
-  };
-  return map[status] || "-";
-}
-
 /** 输入参数列表 */
 const inputParamList = computed(() => {
   const params = calcDetail.value.inputParams;
@@ -842,32 +795,6 @@ function formatTime(timeStr) {
     .padStart(2, "0")}:${d.getSeconds().toString().padStart(2, "0")}`;
 }
 
-/** 获取状态标签类型 */
-function getStatusTagType(status) {
-  const map = {
-    0: "info",     // 待执行
-    1: "primary",  // 运行中
-    2: "success",  // 计算成功
-    3: "danger",   // 计算失败
-    4: "warning",  // 已终止
-    5: "",         // 排队中
-  };
-  return map[status] || "info";
-}
-
-/** 获取状态文本 */
-function getStatusLabel(status) {
-  const map = {
-    0: "待执行",
-    1: "运行中",
-    2: "计算成功",
-    3: "计算失败",
-    4: "已终止",
-    5: "排队中",
-  };
-  return map[status] || "-";
-}
-
 /** 格式化耗时 */
 function formatDuration(duration) {
   if (!duration && duration !== 0) return "-";
@@ -879,12 +806,6 @@ function formatDuration(duration) {
   const m = Math.floor(s / 60);
   const remainS = s % 60;
   return remainS > 0 ? m + "min " + remainS + "s" : m + "min";
-}
-
-/** 获取优先级文本 */
-function getPriorityLabel(priority) {
-  const map = { 1: "高", 2: "中", 3: "低" };
-  return map[priority] || "-";
 }
 
 /** 获取类型标签颜色 */

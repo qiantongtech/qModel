@@ -161,17 +161,23 @@
           :show-overflow-tooltip="{ effect: 'light' }"
         >
           <template #default="scope">
-            <el-tag
-              :type="getStatusTagType(scope.row.status)"
-              size="small"
-              effect="plain"
-            >
-              {{ getStatusLabel(scope.row.status) }}
-            </el-tag>
+            <dict-tag :options="model_calc_status" :value="scope.row.status" />
           </template>
         </el-table-column>
         <el-table-column
           v-if="getColumnVisibility(4)"
+          label="优先级"
+          align="center"
+          prop="priority"
+          width="100"
+          :show-overflow-tooltip="{ effect: 'light' }"
+        >
+          <template #default="scope">
+            <dict-tag :options="model_calc_priority" :value="scope.row.priority" />
+          </template>
+        </el-table-column>
+        <el-table-column
+          v-if="getColumnVisibility(5)"
           label="创建人"
           align="center"
           prop="createBy"
@@ -183,7 +189,7 @@
           </template>
         </el-table-column>
         <el-table-column
-          v-if="getColumnVisibility(5)"
+          v-if="getColumnVisibility(6)"
           label="创建时间"
           align="center"
           prop="createTime"
@@ -197,7 +203,7 @@
           </template>
         </el-table-column>
         <el-table-column
-          v-if="getColumnVisibility(6)"
+          v-if="getColumnVisibility(7)"
           label="耗时"
           align="center"
           prop="duration"
@@ -239,12 +245,11 @@
               @click="handleStop(scope.row)"
             >终止</el-button>
             <el-button
-              v-if="scope.row.status === 3 || scope.row.status === 4"
               link
               type="primary"
               icon="RefreshRight"
               @click="handleRecalc(scope.row)"
-            >重新计算</el-button>
+            >重新运行</el-button>
             <el-button
               link
               type="danger"
@@ -443,9 +448,11 @@
           <el-col :span="24">
             <el-form-item label="优先级" prop="priority">
               <el-radio-group v-model="form.priority">
-                <el-radio :label="1">高</el-radio>
-                <el-radio :label="2">中</el-radio>
-                <el-radio :label="3">低</el-radio>
+                <el-radio
+                  v-for="dict in model_calc_priority"
+                  :key="dict.value"
+                  :label="Number(dict.value)"
+                >{{ dict.label }}</el-radio>
               </el-radio-group>
             </el-form-item>
           </el-col>
@@ -548,7 +555,9 @@
           </el-col>
           <el-col :span="8">
             <el-form-item label="优先级">
-              <div>{{ getPriorityLabel(form.priority) }}</div>
+              <div>
+                <dict-tag :options="model_calc_priority" :value="form.priority" />
+              </div>
             </el-form-item>
           </el-col>
         </el-row>
@@ -574,7 +583,7 @@ import FileUpload from '@/components/FileUpload2'
 const { proxy } = getCurrentInstance()
 const router = useRouter()
 
-const { model_calc_status, model_access_type } = proxy.useDict('model_calc_status', 'model_access_type')
+const { model_calc_status, model_calc_priority, model_access_type } = proxy.useDict('model_calc_status', 'model_calc_priority', 'model_access_type')
 
 // ========== 数据 ==========
 const calcList = ref([])
@@ -594,10 +603,11 @@ const columns = ref([
   { key: 1, label: '任务名称', visible: true },
   { key: 2, label: '模型名称', visible: true },
   { key: 3, label: '状态', visible: true },
-  { key: 4, label: '创建人', visible: true },
-  { key: 5, label: '创建时间', visible: true },
-  { key: 6, label: '耗时', visible: true },
-  { key: 7, label: '备注', visible: true }
+  { key: 4, label: '优先级', visible: true },
+  { key: 5, label: '创建人', visible: true },
+  { key: 6, label: '创建时间', visible: true },
+  { key: 7, label: '耗时', visible: true },
+  { key: 8, label: '备注', visible: true }
 ])
 
 const getColumnVisibility = (key) => {
@@ -659,26 +669,10 @@ const { queryParams, form, rules } = toRefs(data)
 
 // ========== 方法 ==========
 
-/** 状态标签类型 */
-function getStatusTagType(status) {
-  const map = { 0: 'info', 1: '', 2: 'success', 3: 'danger', 4: 'warning', 5: 'info' }
-  return map[status] || 'info'
-}
-
-/** 状态标签文本 */
-function getStatusLabel(status) {
-  const map = { 0: '待执行', 1: '运行中', 2: '计算成功', 3: '计算失败', 4: '已终止', 5: '排队中' }
-  return map[status] ?? status
-}
 function getAccessTypeByCalcType(calcType) {
   if (calcType === 0 || calcType === '0') return 'API'
   if (calcType === 1 || calcType === '1') return 'PYTHON'
   return calcType
-}
-/** 优先级标签 */
-function getPriorityLabel(p) {
-  const map = { 1: '高', 2: '中', 3: '低' }
-  return map[p] ?? '-'
 }
 
 /** 格式化耗时 */
@@ -1084,11 +1078,11 @@ function handleStop(row) {
 
 /** 重新计算 */
 function handleRecalc(row) {
-  proxy.$modal.confirm(`确认重新计算"${row.name}"？`).then(() => {
+  proxy.$modal.confirm(`确认重新运行"${row.name}"？`).then(() => {
     executeCalc(row.id).then((res) => {
       const data = res?.data || res
       const executionNo = data?.executionNo ? `，执行批次号：${data.executionNo}` : ''
-      proxy.$modal.msgSuccess('已提交重新计算' + executionNo)
+      proxy.$modal.msgSuccess('已提交重新运行' + executionNo)
       getList()
     })
   })
