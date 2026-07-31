@@ -158,20 +158,36 @@
         <el-tab-pane name="inputParams">
           <template #label>输入参数</template>
           <div v-if="activeName === 'inputParams'" class="tab-content">
+
+
             <el-table
-              v-if="inputParamList.length > 0"
+              stripe
+              v-loading="inputParamLoading"
               :data="inputParamList"
-              border
-              size="small"
               style="width: 100%"
             >
-              <el-table-column label="参数名" prop="name" width="160" />
-              <el-table-column label="是否必填" width="90" align="center">
+              <el-table-column
+                v-if="getInputParamColumnVisibility(0)"
+                label="参数名"
+                align="center"
+                prop="name"
+                min-width="160"
+              />
+              <el-table-column
+                v-if="getInputParamColumnVisibility(1)"
+                label="是否必填"
+                align="center"
+                width="100"
+              >
                 <template #default="{ row }">
                   <span>{{ row.required ? '是' : '否' }}</span>
                 </template>
               </el-table-column>
-              <el-table-column label="参数值">
+              <el-table-column
+                v-if="getInputParamColumnVisibility(2)"
+                label="参数值"
+                align="center"
+              >
                 <template #default="{ row }">
                   <span v-if="row.type === 'file'">
                     <el-link v-if="row.value" type="primary" :href="row.value" target="_blank">
@@ -179,17 +195,46 @@
                     </el-link>
                     <span v-else>-</span>
                   </span>
+                  <el-tooltip
+                    v-else-if="typeof row.value === 'string' && row.value.length > 60"
+                    effect="light"
+                    :content="row.value"
+                    placement="top"
+                  >
+                    <span>{{ row.value || '-' }}</span>
+                  </el-tooltip>
                   <span v-else>{{ row.value || '-' }}</span>
                 </template>
               </el-table-column>
-              <el-table-column label="类型" width="120">
+              <el-table-column
+                v-if="getInputParamColumnVisibility(3)"
+                label="类型"
+                align="center"
+                width="120"
+              >
                 <template #default="{ row }">
-                  <el-tag size="small" :type="getTypeTagType(row.type)">{{ row.type }}</el-tag>
+                  <el-tag size="small" :type="getTypeTagType(row.type)">{{ row.type || '-' }}</el-tag>
                 </template>
               </el-table-column>
-              <el-table-column label="说明" prop="description" />
+              <el-table-column
+                v-if="getInputParamColumnVisibility(4)"
+                label="说明"
+                align="center"
+                prop="description"
+                min-width="180"
+              >
+                <template #default="scope">
+                  <span>{{ scope.row.description || '-' }}</span>
+                </template>
+              </el-table-column>
+
+              <template #empty>
+                <div class="emptyBg">
+                  <img src="@/assets/system/images/no_data/noData.png" alt="" />
+                  <p>暂无输入参数</p>
+                </div>
+              </template>
             </el-table>
-            <el-empty v-else description="暂无输入参数" :image-size="60" />
           </div>
         </el-tab-pane>
 
@@ -530,6 +575,25 @@ const showSearch = ref(true);
 const activeName = ref("inputParams");
 
 const calcDetail = ref({});
+
+// 输入参数列表相关
+const inputParamLoading = ref(false);
+const inputParamColumns = ref([
+  { key: 0, label: "参数名", visible: true },
+  { key: 1, label: "是否必填", visible: true },
+  { key: 2, label: "参数值", visible: true },
+  { key: 3, label: "类型", visible: true },
+  { key: 4, label: "说明", visible: true },
+]);
+
+function getInputParamColumnVisibility(key) {
+  const column = inputParamColumns.value.find((col) => col.key === key);
+  if (!column) return true;
+  return column.visible;
+}
+
+/** 输入参数「刷新」按钮：其实是给 right-toolbar 用的，输入参数是本地 computed，不需要真正刷新，留空即可 */
+function refreshInputParams() {}
 
 // 执行记录列表相关
 const execRecordList = ref([]);

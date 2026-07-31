@@ -139,19 +139,17 @@
           label="模型名称"
           align="center"
           prop="modelName"
-          min-width="180"
+          min-width="220"
           :show-overflow-tooltip="{ effect: 'light' }"
         >
           <template #default="scope">
-            <span>{{ scope.row.modelName || '-' }}</span>
-            <el-tag
-              v-if="scope.row.accessType"
-              :type="scope.row.accessType === 'Python' ? 'success' : 'primary'"
-              size="small"
-              style="margin-left: 6px"
-            >
-              {{ scope.row.accessType }}
-            </el-tag>
+            <div class="model-name-cell" style="display: inline-flex; align-items: center; white-space: nowrap; gap: 6px; vertical-align: middle;">
+              <span>{{ scope.row.modelName || '-' }}</span>
+              <dict-tag
+                :options="model_access_type"
+                :value="getAccessTypeByCalcType(scope.row.calcType)"
+              />
+            </div>
           </template>
         </el-table-column>
         <el-table-column
@@ -215,37 +213,42 @@
           align="center"
           class-name="small-padding fixed-width"
           fixed="right"
-          width="280"
+          width="320"
         >
           <template #default="scope">
 
             <el-button
               link
-              type="success"
+              type="primary"
+              icon="Edit"
               @click="handleUpdate(scope.row)"
               v-hasPermi="['model:Calc:calc:edit']"
             >修改</el-button>
             <el-button
               link
               type="primary"
+              icon="View"
               @click="handleDetail(scope.row)"
               v-hasPermi="['model:Calc:calc:query']"
             >详情</el-button>
             <el-button
               v-if="scope.row.status === 1"
               link
-              type="warning"
+              type="primary"
+              icon="CircleClose"
               @click="handleStop(scope.row)"
             >终止</el-button>
             <el-button
               v-if="scope.row.status === 3 || scope.row.status === 4"
               link
               type="primary"
+              icon="RefreshRight"
               @click="handleRecalc(scope.row)"
             >重新计算</el-button>
             <el-button
               link
               type="danger"
+              icon="Delete"
               @click="handleDelete(scope.row)"
               v-hasPermi="['model:Calc:calc:remove']"
             >删除</el-button>
@@ -561,7 +564,7 @@
 
 <script setup name="Calc">
 import { useRouter } from 'vue-router';
-import { listCalc, getCalc, delCalc, addCalc, updateCalc } from '@/api/model/calc/calc'
+import { listCalc, getCalc, delCalc, addCalc, updateCalc, executeCalc, cancelCalc } from '@/api/model/calc/calc'
 import { listModel } from '@/api/model/model'
 import { listClassify } from '@/api/modelReconstitution/classify'
 import { getModelConfigByModelId } from '@/api/model/config'
@@ -571,7 +574,7 @@ import FileUpload from '@/components/FileUpload2'
 const { proxy } = getCurrentInstance()
 const router = useRouter()
 
-const { model_calc_status } = proxy.useDict('model_calc_status')
+const { model_calc_status, model_access_type } = proxy.useDict('model_calc_status', 'model_access_type')
 
 // ========== 数据 ==========
 const calcList = ref([])
@@ -667,7 +670,11 @@ function getStatusLabel(status) {
   const map = { 0: '待执行', 1: '运行中', 2: '计算成功', 3: '计算失败', 4: '已终止', 5: '排队中' }
   return map[status] ?? status
 }
-
+function getAccessTypeByCalcType(calcType) {
+  if (calcType === 0 || calcType === '0') return 'API'
+  if (calcType === 1 || calcType === '1') return 'PYTHON'
+  return calcType
+}
 /** 优先级标签 */
 function getPriorityLabel(p) {
   const map = { 1: '高', 2: '中', 3: '低' }
@@ -766,6 +773,7 @@ function reset() {
     modelName: '',
     modelVersion: '',
     accessType: '',
+    calcType: null,
     description: '',
     remark: '',
     inputParams: [],
@@ -825,6 +833,7 @@ function handleClassifyChange(classifyId) {
       form.value.modelName = ''
       form.value.modelVersion = ''
       form.value.accessType = ''
+      form.value.calcType = null
       form.value.inputParams = []
     }
   }
@@ -836,6 +845,7 @@ function handleModelChange(modelId) {
     form.value.modelName = ''
     form.value.modelVersion = ''
     form.value.accessType = ''
+    form.value.calcType = null
     form.value.inputParams = []
     return
   }
@@ -845,6 +855,8 @@ function handleModelChange(modelId) {
   if (model) {
     form.value.modelName = model.name
     form.value.accessType = model.accessType
+    // 接入类型映射：API 字符串 -> 0，PYTHON 字符串 -> 1
+    form.value.calcType = accessTypeToCalcType(model.accessType)
     // 从模型本身获取版本号
     form.value.modelVersion = model.version || ''
 
@@ -964,6 +976,10 @@ function handleUpdate(row) {
       modelName: data.modelName || '',
       modelVersion: data.modelVersion || '',
       accessType: data.accessType || '',
+      // 优先用后端已经存的 calcType，没有的话再按 accessType 推断一次（兼容历史数据）
+      calcType: (data.calcType != null && data.calcType !== '')
+        ? data.calcType
+        : accessTypeToCalcType(data.accessType),
       description: data.description || '',
       remark: data.remark || '',
       timeoutSeconds: data.timeoutSeconds ?? 60,
@@ -978,6 +994,15 @@ function handleUpdate(row) {
     title.value = '修改计算任务'
     open.value = true
   })
+}
+
+/** 接入方式(字符串) -> 计算类型(Integer)映射 */
+function accessTypeToCalcType(accessType) {
+  if (accessType == null) return null
+  const s = String(accessType).toUpperCase()
+  if (s === 'API') return 0
+  if (s === 'PYTHON') return 1
+  return null
 }
 
 /** 解析 inputParams：兼容字符串 JSON / 对象两种格式 */
@@ -1045,8 +1070,13 @@ function submitForm() {
 /** 终止 */
 function handleStop(row) {
   proxy.$modal.confirm(`确认终止任务"${row.name}"？`).then(() => {
-    updateCalc({ id: row.id, status: 4 }).then(() => {
-      proxy.$modal.msgSuccess('已终止')
+    cancelCalc(row.id).then((res) => {
+      const ok = res === true || res?.data === true || res?.code === 200
+      if (ok || ok === undefined) {
+        proxy.$modal.msgSuccess('已终止')
+      } else {
+        proxy.$modal.msgError(res?.msg || '终止失败，请稍后重试')
+      }
       getList()
     })
   })
@@ -1055,8 +1085,10 @@ function handleStop(row) {
 /** 重新计算 */
 function handleRecalc(row) {
   proxy.$modal.confirm(`确认重新计算"${row.name}"？`).then(() => {
-    updateCalc({ id: row.id, status: 0, errorMessage: null }).then(() => {
-      proxy.$modal.msgSuccess('已提交重新计算')
+    executeCalc(row.id).then((res) => {
+      const data = res?.data || res
+      const executionNo = data?.executionNo ? `，执行批次号：${data.executionNo}` : ''
+      proxy.$modal.msgSuccess('已提交重新计算' + executionNo)
       getList()
     })
   })

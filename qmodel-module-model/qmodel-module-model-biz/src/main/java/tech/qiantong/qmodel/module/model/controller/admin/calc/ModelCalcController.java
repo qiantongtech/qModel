@@ -133,7 +133,15 @@ public class ModelCalcController extends BaseController {
         return CommonResult.success(modelCalcService.executeCalc(id));
     }
 
-    @Operation(summary = "取消排队任务", description = "取消排队中的任务")
+    @Operation(summary = "终止计算任务", description = "按任务ID终止当前排队中或运行中的任务")
+    @PreAuthorize("@ss.hasPermi('model:calc:calc:cancel')")
+    @Log(title = "终止计算任务", businessType = BusinessType.OTHER)
+    @PostMapping("/cancel")
+    public CommonResult<Boolean> cancel(@RequestParam Long id) {
+        return CommonResult.success(modelCalcService.cancelCalcByCalcId(id));
+    }
+
+    @Operation(summary = "取消排队任务", description = "取消排队中的任务（按执行批次号）")
     @PreAuthorize("@ss.hasPermi('model:calc:calc:cancel')")
     @Log(title = "取消计算任务", businessType = BusinessType.OTHER)
     @PostMapping("/queue/cancel")
