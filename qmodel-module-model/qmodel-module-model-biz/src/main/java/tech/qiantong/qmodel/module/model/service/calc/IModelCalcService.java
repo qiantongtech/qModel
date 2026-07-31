@@ -30,6 +30,7 @@ import tech.qiantong.qmodel.module.model.dal.dataobject.calc.ModelCalcDO;
 import tech.qiantong.qmodel.module.model.service.calc.dto.CalcExecuteResultDTO;
 import tech.qiantong.qmodel.module.model.service.calc.dto.CalcQueueStatusDTO;
 import tech.qiantong.qmodel.module.model.service.calc.dto.QueueTask;
+
 /**
  * 模型计算任务Service接口
  *
@@ -90,7 +91,6 @@ public interface IModelCalcService extends IService<ModelCalcDO> {
      */
     Map<Long, ModelCalcDO> getModelCalcMap();
 
-
     /**
      * 导入模型计算任务数据
      *
@@ -102,7 +102,7 @@ public interface IModelCalcService extends IService<ModelCalcDO> {
     String importModelCalc(List<ModelCalcRespVO> importExcelList, boolean isUpdateSupport, String operName);
 
     /**
-     * 提交计算任务（加入优先级队列）
+     * 提交计算任务（加入优先级队列），并同步主表 input_params / 清旧 output_result 等字段
      *
      * @param id 计算任务ID
      * @return 执行结果
@@ -110,12 +110,20 @@ public interface IModelCalcService extends IService<ModelCalcDO> {
     CalcExecuteResultDTO executeCalc(Long id);
 
     /**
-     * 取消排队中的任务
+     * 取消排队中的任务（按 executionNo）
      *
      * @param executionNo 执行批次号
      * @return 是否取消成功
      */
     boolean cancelCalc(String executionNo);
+
+    /**
+     * 按 calcId 终止当前「未完成」的执行批次（若找不到则直接标记主任务为终止）。
+     *
+     * @param calcId 模型计算任务ID
+     * @return 是否终止成功
+     */
+    boolean cancelCalcByCalcId(Long calcId);
 
     /**
      * 获取队列状态（等待中、运行中、死信数量）
@@ -131,4 +139,22 @@ public interface IModelCalcService extends IService<ModelCalcDO> {
      */
     List<QueueTask> listWaitingTasks();
 
+    /**
+     * 仅更新主表 status 字段（保留给只需要改状态的轻量场景用）。
+     *
+     * @param id     任务ID
+     * @param status 新状态
+     */
+    void updateCalcStatus(Long id, Integer status);
+
+    /**
+     * 更新主表执行信息快照（使用 {@link ModelCalcSaveReqVO} 对象传参，字段为 null 代表本次不更新）。
+     * <p>
+     * 可更新字段：status / inputParams / outputResult / startTime / endTime / duration / errorMessage。
+     * 要求 reqVO.id 必填，其他字段均 nullable。
+     * </p>
+     *
+     * @param reqVO 承载待更新字段的 VO（直接复用保存请求 VO，不额外建 DTO）
+     */
+    void updateCalcExecutionInfo(ModelCalcSaveReqVO reqVO);
 }

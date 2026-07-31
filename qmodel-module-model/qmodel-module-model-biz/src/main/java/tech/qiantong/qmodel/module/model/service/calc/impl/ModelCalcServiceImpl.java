@@ -21,6 +21,7 @@ package tech.qiantong.qmodel.module.model.service.calc.impl;
 import java.util.Collection;
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -74,6 +75,10 @@ public class ModelCalcServiceImpl  extends ServiceImpl<ModelCalcMapper,ModelCalc
     @Override
     public Long createModelCalc(ModelCalcSaveReqVO createReqVO) {
         ModelCalcDO dictType = BeanUtils.toBean(createReqVO, ModelCalcDO.class);
+        // 新建后默认入队：status=5（排队中）
+        if (dictType.getStatus() == null) {
+            dictType.setStatus(5);
+        }
         modelCalcMapper.insert(dictType);
 
         executeCalc(dictType.getId());
@@ -84,6 +89,8 @@ public class ModelCalcServiceImpl  extends ServiceImpl<ModelCalcMapper,ModelCalc
     @Override
     public int updateModelCalc(ModelCalcSaveReqVO updateReqVO) {
         ModelCalcDO updateObj = BeanUtils.toBean(updateReqVO, ModelCalcDO.class);
+        // 修改后重新入队：强制 status=5（排队中）
+        updateObj.setStatus(5);
         int result = modelCalcMapper.updateById(updateObj);
 
         executeCalc(updateReqVO.getId());
@@ -207,6 +214,19 @@ public class ModelCalcServiceImpl  extends ServiceImpl<ModelCalcMapper,ModelCalc
         execution.setRetryCount(0L);
         executionService.save(execution);
 
+        // ============ 入队时同步主表：status=排队中 + inputParams 落库 + 旧结果/耗时归零 ============
+        ModelCalcSaveReqVO infoVO = new ModelCalcSaveReqVO();
+        infoVO.setId(id);
+        infoVO.setStatus(5);
+        infoVO.setInputParams(toJsonString(calc.getInputParams()));
+        infoVO.setOutputResult("");
+        infoVO.setStartTime(null);
+        infoVO.setEndTime(null);
+        infoVO.setDuration(0L);
+        infoVO.setErrorMessage("");
+        updateCalcExecutionInfo(infoVO);
+        // =======================================================================================
+
         calcQueueService.enqueue(id, calc.getPriority(), executionNo);
 
         CalcExecuteResultDTO result = new CalcExecuteResultDTO();
@@ -223,6 +243,25 @@ public class ModelCalcServiceImpl  extends ServiceImpl<ModelCalcMapper,ModelCalc
         boolean success = calcQueueService.cancel(executionNo);
         if (success) {
             executionService.updateStatusByExecutionNo(executionNo, 4);
+            // ============ 终止时同步主表：status=已终止 + 计算已用时/结束时间 ============
+            ModelCalcExecutionDO execution = executionService.getByExecutionNo(executionNo);
+            if (execution != null && execution.getCalcId() != null) {
+                Date endTimeObj = new Date();
+                Long duration = null;
+                if (execution.getStartTime() != null) {
+                    duration = Math.max(0L, endTimeObj.getTime() - execution.getStartTime().getTime());
+                } else if (execution.getDuration() != null) {
+                    duration = execution.getDuration();
+                }
+                ModelCalcSaveReqVO infoVO = new ModelCalcSaveReqVO();
+                infoVO.setId(execution.getCalcId());
+                infoVO.setStatus(4);
+                infoVO.setEndTime(endTimeObj);
+                if (duration != null) {
+                    infoVO.setDuration(duration);
+                }
+                updateCalcExecutionInfo(infoVO);
+            }
         }
         return success;
     }
@@ -239,6 +278,86 @@ public class ModelCalcServiceImpl  extends ServiceImpl<ModelCalcMapper,ModelCalc
     @Override
     public List<QueueTask> listWaitingTasks() {
         return calcQueueService.listWaitingTasks();
+    }
+
+    @Override
+    public void updateCalcStatus(Long id, Integer status) {
+        if (id == null || status == null) {
+            return;
+        }
+        try {
+            ModelCalcDO update = new ModelCalcDO();
+            update.setId(id);
+            update.setStatus(status);
+            modelCalcMapper.updateById(update);
+        } catch (Exception e) {
+            log.error("更新模型计算任务状态失败, id={}, status={}", id, status, e);
+        }
+    }
+
+    @Override
+    public boolean cancelCalcByCalcId(Long calcId) {
+        if (calcId == null) {
+            return false;
+        }
+        try {
+            // 找到该 calc 最新一条「未完成」的执行批次：status in (0,1,5)，按创建时间倒序取第一条
+            ModelCalcExecutionDO latest = executionService.lambdaQuery()
+                    .eq(ModelCalcExecutionDO::getCalcId, calcId)
+                    .in(ModelCalcExecutionDO::getStatus, 0, 1, 5)
+                    .orderByDesc(ModelCalcExecutionDO::getCreateTime)
+                    .last("limit 1")
+                    .one();
+            if (latest == null || StringUtils.isBlank(latest.getExecutionNo())) {
+                // 没有可取消的执行批次，直接把主任务标记终止（防止用户反复点终止无效果）
+                Date endTimeObj = new Date();
+                ModelCalcSaveReqVO infoVO = new ModelCalcSaveReqVO();
+                infoVO.setId(calcId);
+                infoVO.setStatus(4);
+                infoVO.setEndTime(endTimeObj);
+                updateCalcExecutionInfo(infoVO);
+                return true;
+            }
+            return cancelCalc(latest.getExecutionNo());
+        } catch (Exception e) {
+            log.error("按 calcId 终止任务失败, calcId={}", calcId, e);
+            return false;
+        }
+    }
+
+    @Override
+    public void updateCalcExecutionInfo(ModelCalcSaveReqVO reqVO) {
+        if (reqVO == null || reqVO.getId() == null) {
+            return;
+        }
+        try {
+            ModelCalcDO update = BeanUtils.toBean(reqVO, ModelCalcDO.class);
+            // 只更新 7 个执行信息相关字段 + id；其他字段（name/modelId 等）若在 VO 里为 null 则 MyBatis-Plus 默认 NOT_NULL 策略不会进 SQL，
+            // 但为了防御 VO 将来加默认值影响，这里只保留「主表执行信息快照」相关字段
+            ModelCalcDO safe = new ModelCalcDO();
+            safe.setId(update.getId());
+            safe.setStatus(update.getStatus());
+            safe.setInputParams(update.getInputParams());
+            safe.setOutputResult(update.getOutputResult());
+            safe.setStartTime(update.getStartTime());
+            safe.setEndTime(update.getEndTime());
+            safe.setDuration(update.getDuration());
+            safe.setErrorMessage(update.getErrorMessage());
+            // hasAny：一个字段都没设置就别发 SQL 了
+            boolean hasAny = safe.getStatus() != null
+                    || safe.getInputParams() != null
+                    || safe.getOutputResult() != null
+                    || safe.getStartTime() != null
+                    || safe.getEndTime() != null
+                    || safe.getDuration() != null
+                    || safe.getErrorMessage() != null;
+            if (!hasAny) {
+                return;
+            }
+            modelCalcMapper.updateById(safe);
+        } catch (Exception e) {
+            log.error("更新模型计算任务执行信息失败, calcId={}", reqVO.getId(), e);
+        }
     }
 
     private String generateExecutionNo() {

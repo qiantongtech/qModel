@@ -25,6 +25,7 @@ import org.springframework.core.annotation.Order;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
+import tech.qiantong.qmodel.module.model.controller.admin.calc.vo.ModelCalcSaveReqVO;
 import tech.qiantong.qmodel.module.model.dal.dataobject.calc.ModelCalcDO;
 import tech.qiantong.qmodel.module.model.dal.dataobject.calcExecution.ModelCalcExecutionDO;
 import tech.qiantong.qmodel.module.model.service.calc.ICalcQueueService;
@@ -128,12 +129,20 @@ public class CalcTaskConsumer implements ApplicationRunner {
         executionService.updateStatusByExecutionNo(task.getExecutionNo(), 1);
 
         ModelCalcExecutionDO execution = executionService.getByExecutionNo(task.getExecutionNo());
+        Date startTimeObj = new Date();
         if (execution != null) {
             ModelCalcExecutionDO updateObj = new ModelCalcExecutionDO();
             updateObj.setId(execution.getId());
-            updateObj.setStartTime(new Date());
+            updateObj.setStartTime(startTimeObj);
             executionService.updateById(updateObj);
         }
+        // ============ 同步主表：开始执行 → status=1 + startTime ============
+        ModelCalcSaveReqVO infoVO = new ModelCalcSaveReqVO();
+        infoVO.setId(task.getCalcId());
+        infoVO.setStatus(1);
+        infoVO.setStartTime(startTimeObj);
+        modelCalcService.updateCalcExecutionInfo(infoVO);
+        // ===============================================================
 
         long startTime = System.currentTimeMillis();
 
@@ -149,9 +158,10 @@ public class CalcTaskConsumer implements ApplicationRunner {
             long duration = System.currentTimeMillis() - startTime;
             result.setDuration(duration);
 
+            int execStatus = result.getSuccess() ? 2 : 3;
             executionService.updateExecutionResult(
                     task.getExecutionNo(),
-                    result.getSuccess() ? 2 : 3,
+                    execStatus,
                     result.getOutput(),
                     result.getErrorMessage(),
                     duration
@@ -160,6 +170,19 @@ public class CalcTaskConsumer implements ApplicationRunner {
             if (result.getExecutionLog() != null) {
                 executionService.updateExecutionLog(task.getExecutionNo(), result.getExecutionLog());
             }
+
+            // ============ 同步主表：结束 → status / outputResult / endTime / duration / errorMessage ============
+            Date endTimeObj = new Date();
+            ModelCalcSaveReqVO endVO = new ModelCalcSaveReqVO();
+            endVO.setId(task.getCalcId());
+            endVO.setStatus(execStatus);
+            endVO.setOutputResult(result.getOutput() != null ? result.getOutput() : "");
+            endVO.setEndTime(endTimeObj);
+            endVO.setDuration(duration);
+            endVO.setErrorMessage(result.getSuccess() ? ""
+                    : (result.getErrorMessage() != null ? result.getErrorMessage() : ""));
+            modelCalcService.updateCalcExecutionInfo(endVO);
+            // ===========================================================================================
 
             log.info("任务执行完成: taskId={}, success={}, duration={}ms",
                     task.getTaskId(), result.getSuccess(), duration);
@@ -176,6 +199,17 @@ public class CalcTaskConsumer implements ApplicationRunner {
                     duration
             );
 
+            Date endTimeObj = new Date();
+            String errorMsg = e.getMessage() != null ? e.getMessage() : e.getClass().getSimpleName();
+            // ============ 先把失败信息写到主表（先不改 status，handleRetry 内部再决定 5 / 3） ============
+            ModelCalcSaveReqVO failVO = new ModelCalcSaveReqVO();
+            failVO.setId(task.getCalcId());
+            failVO.setEndTime(endTimeObj);
+            failVO.setDuration(duration);
+            failVO.setErrorMessage(errorMsg);
+            modelCalcService.updateCalcExecutionInfo(failVO);
+            // =======================================================================================
+
             handleRetry(task);
         }
     }
@@ -187,6 +221,14 @@ public class CalcTaskConsumer implements ApplicationRunner {
         try {
             ModelCalcExecutionDO execution = executionService.getByExecutionNo(task.getExecutionNo());
             if (execution == null) {
+                // 至少保证主任务状态不悬空：失败
+                Date endTimeObj = new Date();
+                ModelCalcSaveReqVO infoVO = new ModelCalcSaveReqVO();
+                infoVO.setId(task.getCalcId());
+                infoVO.setStatus(3);
+                infoVO.setEndTime(endTimeObj);
+                infoVO.setErrorMessage("执行记录不存在");
+                modelCalcService.updateCalcExecutionInfo(infoVO);
                 return;
             }
 
@@ -219,16 +261,47 @@ public class CalcTaskConsumer implements ApplicationRunner {
                 executionService.updateById(updateMode);
 
                 executionService.updateStatusByExecutionNo(task.getExecutionNo(), 5);
+                // ============ 同步主表：重新排队 → status=5，错误信息保留（方便追溯上一次失败原因） ============
+                ModelCalcSaveReqVO infoVO = new ModelCalcSaveReqVO();
+                infoVO.setId(task.getCalcId());
+                infoVO.setStatus(5);
+                modelCalcService.updateCalcExecutionInfo(infoVO);
+                // =======================================================================================
 
                 log.info("任务重试入队: taskId={}, retryCount={}, delay={}ms",
                         retryTaskId, retryCount + 1, delayMs);
             } else {
                 calcQueueService.moveToDeadQueue(task);
                 executionService.updateStatusByExecutionNo(task.getExecutionNo(), 3);
+                // ============ 所有重试都失败：主任务置失败 + endTime/duration ============
+                Date endTimeObj = new Date();
+                Long duration = null;
+                if (execution.getStartTime() != null) {
+                    duration = Math.max(0L, endTimeObj.getTime() - execution.getStartTime().getTime());
+                } else if (execution.getDuration() != null) {
+                    duration = execution.getDuration();
+                }
+                ModelCalcSaveReqVO infoVO = new ModelCalcSaveReqVO();
+                infoVO.setId(task.getCalcId());
+                infoVO.setStatus(3);
+                infoVO.setEndTime(endTimeObj);
+                if (duration != null) {
+                    infoVO.setDuration(duration);
+                }
+                modelCalcService.updateCalcExecutionInfo(infoVO);
+                // =========================================================================
                 log.warn("任务移入死信队列: taskId={}, retryCount={}", task.getTaskId(), retryCount);
             }
         } catch (Exception e) {
             log.error("重试处理失败: executionNo={}", task.getExecutionNo(), e);
+            // 兜底：失败
+            Date endTimeObj = new Date();
+            ModelCalcSaveReqVO infoVO = new ModelCalcSaveReqVO();
+            infoVO.setId(task.getCalcId());
+            infoVO.setStatus(3);
+            infoVO.setEndTime(endTimeObj);
+            infoVO.setErrorMessage(e.getMessage() != null ? e.getMessage() : e.getClass().getSimpleName());
+            modelCalcService.updateCalcExecutionInfo(infoVO);
         }
     }
 

@@ -60,3 +60,21 @@ export function delCalc(id) {
     method: 'delete'
   })
 }
+
+// 提交计算任务（加入优先级队列，异步执行）
+export function executeCalc(id) {
+  return request({
+    url: '/model/calc/execute',
+    method: 'post',
+    params: { id: id }
+  })
+}
+
+// 终止计算任务（取消当前排队中或运行中的任务）
+export function cancelCalc(id) {
+  return request({
+    url: '/model/calc/cancel',
+    method: 'post',
+    params: { id: id }
+  })
+}

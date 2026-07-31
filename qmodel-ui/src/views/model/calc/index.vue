@@ -111,7 +111,6 @@
         :default-sort="defaultSort"
         @sort-change="handleSortChange"
       >
-        <el-table-column type="selection" width="55" align="center" />
         <el-table-column
           v-if="getColumnVisibility(0)"
           label="编号"
@@ -125,9 +124,9 @@
         <el-table-column
           v-if="getColumnVisibility(1)"
           label="任务名称"
-          align="center"
+          align="left"
           prop="name"
-          min-width="180"
+          min-width="200"
           :show-overflow-tooltip="{ effect: 'light' }"
         >
           <template #default="scope">
@@ -137,21 +136,19 @@
         <el-table-column
           v-if="getColumnVisibility(2)"
           label="模型名称"
-          align="center"
+          align="left"
           prop="modelName"
-          min-width="180"
+          min-width="220"
           :show-overflow-tooltip="{ effect: 'light' }"
         >
           <template #default="scope">
-            <span>{{ scope.row.modelName || '-' }}</span>
-            <el-tag
-              v-if="scope.row.accessType"
-              :type="scope.row.accessType === 'Python' ? 'success' : 'primary'"
-              size="small"
-              style="margin-left: 6px"
-            >
-              {{ scope.row.accessType }}
-            </el-tag>
+            <div class="model-name-cell" style="display: inline-flex; align-items: center; white-space: nowrap; gap: 6px; vertical-align: middle;">
+              <span>{{ scope.row.modelName || '-' }}</span>
+              <dict-tag
+                :options="model_access_type"
+                :value="getAccessTypeByCalcType(scope.row.calcType)"
+              />
+            </div>
           </template>
         </el-table-column>
         <el-table-column
@@ -163,17 +160,23 @@
           :show-overflow-tooltip="{ effect: 'light' }"
         >
           <template #default="scope">
-            <el-tag
-              :type="getStatusTagType(scope.row.status)"
-              size="small"
-              effect="plain"
-            >
-              {{ getStatusLabel(scope.row.status) }}
-            </el-tag>
+            <dict-tag :options="model_calc_status" :value="scope.row.status" />
           </template>
         </el-table-column>
         <el-table-column
           v-if="getColumnVisibility(4)"
+          label="优先级"
+          align="center"
+          prop="priority"
+          width="100"
+          :show-overflow-tooltip="{ effect: 'light' }"
+        >
+          <template #default="scope">
+            <dict-tag :options="model_calc_priority" :value="scope.row.priority" />
+          </template>
+        </el-table-column>
+        <el-table-column
+          v-if="getColumnVisibility(5)"
           label="创建人"
           align="center"
           prop="createBy"
@@ -185,7 +188,7 @@
           </template>
         </el-table-column>
         <el-table-column
-          v-if="getColumnVisibility(5)"
+          v-if="getColumnVisibility(6)"
           label="创建时间"
           align="center"
           prop="createTime"
@@ -199,7 +202,7 @@
           </template>
         </el-table-column>
         <el-table-column
-          v-if="getColumnVisibility(6)"
+          v-if="getColumnVisibility(7)"
           label="耗时"
           align="center"
           prop="duration"
@@ -211,41 +214,57 @@
           </template>
         </el-table-column>
         <el-table-column
+          v-if="getColumnVisibility(8)"
+          label="备注"
+          align="left"
+          prop="remark"
+          min-width="220"
+          :show-overflow-tooltip="{ effect: 'light' }"
+        >
+          <template #default="scope">
+            {{ scope.row.remark || scope.row.description || '-' }}
+          </template>
+        </el-table-column>
+        <el-table-column
           label="操作"
           align="center"
           class-name="small-padding fixed-width"
           fixed="right"
-          width="280"
+          width="320"
         >
           <template #default="scope">
 
             <el-button
               link
-              type="success"
+              type="primary"
+              icon="Edit"
               @click="handleUpdate(scope.row)"
               v-hasPermi="['model:Calc:calc:edit']"
             >修改</el-button>
             <el-button
               link
               type="primary"
+              icon="View"
               @click="handleDetail(scope.row)"
               v-hasPermi="['model:Calc:calc:query']"
             >详情</el-button>
             <el-button
               v-if="scope.row.status === 1"
               link
-              type="warning"
+              type="primary"
+              icon="CircleClose"
               @click="handleStop(scope.row)"
             >终止</el-button>
             <el-button
-              v-if="scope.row.status === 3 || scope.row.status === 4"
               link
               type="primary"
+              icon="RefreshRight"
               @click="handleRecalc(scope.row)"
-            >重新计算</el-button>
+            >重新运行</el-button>
             <el-button
               link
               type="danger"
+              icon="Delete"
               @click="handleDelete(scope.row)"
               v-hasPermi="['model:Calc:calc:remove']"
             >删除</el-button>
@@ -273,17 +292,17 @@
     <el-dialog
       v-model="open"
       draggable
-      class="large-dialog"
       destroy-on-close
-      width="860px"
+      width="800px"
+      :append-to="$refs['app-container']"
       @open="handleDialogOpen"
     >
-      <template #header>
+      <template #header="{ close, titleId, titleClass }">
         <span role="heading" aria-level="2" class="el-dialog__title">
           {{ title }}
         </span>
       </template>
-      <el-form ref="calcRef" :model="form" :rules="rules" label-width="100px" @submit.prevent>
+      <el-form ref="calcRef" :model="form" :rules="rules" label-width="80px" @submit.prevent>
         <!-- 基础信息 -->
         <div class="h2-title">基础信息</div>
         <el-row :gutter="20">
@@ -440,9 +459,11 @@
           <el-col :span="24">
             <el-form-item label="优先级" prop="priority">
               <el-radio-group v-model="form.priority">
-                <el-radio :label="1">高</el-radio>
-                <el-radio :label="2">中</el-radio>
-                <el-radio :label="3">低</el-radio>
+                <el-radio
+                  v-for="dict in model_calc_priority"
+                  :key="dict.value"
+                  :label="Number(dict.value)"
+                >{{ dict.label }}</el-radio>
               </el-radio-group>
             </el-form-item>
           </el-col>
@@ -460,16 +481,16 @@
     <el-dialog
       v-model="openDetail"
       draggable
-      class="large-dialog"
       destroy-on-close
-      width="860px"
+      width="800px"
+      :append-to="$refs['app-container']"
     >
-      <template #header>
+      <template #header="{ close, titleId, titleClass }">
         <span role="heading" aria-level="2" class="el-dialog__title">
           {{ detailTitle }}
         </span>
       </template>
-      <el-form :model="form" label-width="100px">
+      <el-form :model="form" label-width="80px">
         <div class="h2-title">基础信息</div>
         <el-row :gutter="20">
           <el-col :span="12">
@@ -545,7 +566,9 @@
           </el-col>
           <el-col :span="8">
             <el-form-item label="优先级">
-              <div>{{ getPriorityLabel(form.priority) }}</div>
+              <div>
+                <dict-tag :options="model_calc_priority" :value="form.priority" />
+              </div>
             </el-form-item>
           </el-col>
         </el-row>
@@ -561,7 +584,7 @@
 
 <script setup name="Calc">
 import { useRouter } from 'vue-router';
-import { listCalc, getCalc, delCalc, addCalc, updateCalc } from '@/api/model/calc/calc'
+import { listCalc, getCalc, delCalc, addCalc, updateCalc, executeCalc, cancelCalc } from '@/api/model/calc/calc'
 import { listModel } from '@/api/model/model'
 import { listClassify } from '@/api/modelReconstitution/classify'
 import { getModelConfigByModelId } from '@/api/model/config'
@@ -571,7 +594,7 @@ import FileUpload from '@/components/FileUpload2'
 const { proxy } = getCurrentInstance()
 const router = useRouter()
 
-const { model_calc_status } = proxy.useDict('model_calc_status')
+const { model_calc_status, model_calc_priority, model_access_type } = proxy.useDict('model_calc_status', 'model_calc_priority', 'model_access_type')
 
 // ========== 数据 ==========
 const calcList = ref([])
@@ -591,10 +614,11 @@ const columns = ref([
   { key: 1, label: '任务名称', visible: true },
   { key: 2, label: '模型名称', visible: true },
   { key: 3, label: '状态', visible: true },
-  { key: 4, label: '创建人', visible: true },
-  { key: 5, label: '创建时间', visible: true },
-  { key: 6, label: '耗时', visible: true },
-  { key: 7, label: '备注', visible: true }
+  { key: 4, label: '优先级', visible: true },
+  { key: 5, label: '创建人', visible: true },
+  { key: 6, label: '创建时间', visible: true },
+  { key: 7, label: '耗时', visible: true },
+  { key: 8, label: '备注', visible: true }
 ])
 
 const getColumnVisibility = (key) => {
@@ -656,22 +680,10 @@ const { queryParams, form, rules } = toRefs(data)
 
 // ========== 方法 ==========
 
-/** 状态标签类型 */
-function getStatusTagType(status) {
-  const map = { 0: 'info', 1: '', 2: 'success', 3: 'danger', 4: 'warning', 5: 'info' }
-  return map[status] || 'info'
-}
-
-/** 状态标签文本 */
-function getStatusLabel(status) {
-  const map = { 0: '待执行', 1: '运行中', 2: '计算成功', 3: '计算失败', 4: '已终止', 5: '排队中' }
-  return map[status] ?? status
-}
-
-/** 优先级标签 */
-function getPriorityLabel(p) {
-  const map = { 1: '高', 2: '中', 3: '低' }
-  return map[p] ?? '-'
+function getAccessTypeByCalcType(calcType) {
+  if (calcType === 0 || calcType === '0') return 'API'
+  if (calcType === 1 || calcType === '1') return 'PYTHON'
+  return calcType
 }
 
 /** 格式化耗时 */
@@ -766,6 +778,7 @@ function reset() {
     modelName: '',
     modelVersion: '',
     accessType: '',
+    calcType: null,
     description: '',
     remark: '',
     inputParams: [],
@@ -825,6 +838,7 @@ function handleClassifyChange(classifyId) {
       form.value.modelName = ''
       form.value.modelVersion = ''
       form.value.accessType = ''
+      form.value.calcType = null
       form.value.inputParams = []
     }
   }
@@ -836,6 +850,7 @@ function handleModelChange(modelId) {
     form.value.modelName = ''
     form.value.modelVersion = ''
     form.value.accessType = ''
+    form.value.calcType = null
     form.value.inputParams = []
     return
   }
@@ -845,6 +860,8 @@ function handleModelChange(modelId) {
   if (model) {
     form.value.modelName = model.name
     form.value.accessType = model.accessType
+    // 接入类型映射：API 字符串 -> 0，PYTHON 字符串 -> 1
+    form.value.calcType = accessTypeToCalcType(model.accessType)
     // 从模型本身获取版本号
     form.value.modelVersion = model.version || ''
 
@@ -964,6 +981,10 @@ function handleUpdate(row) {
       modelName: data.modelName || '',
       modelVersion: data.modelVersion || '',
       accessType: data.accessType || '',
+      // 优先用后端已经存的 calcType，没有的话再按 accessType 推断一次（兼容历史数据）
+      calcType: (data.calcType != null && data.calcType !== '')
+        ? data.calcType
+        : accessTypeToCalcType(data.accessType),
       description: data.description || '',
       remark: data.remark || '',
       timeoutSeconds: data.timeoutSeconds ?? 60,
@@ -978,6 +999,15 @@ function handleUpdate(row) {
     title.value = '修改计算任务'
     open.value = true
   })
+}
+
+/** 接入方式(字符串) -> 计算类型(Integer)映射 */
+function accessTypeToCalcType(accessType) {
+  if (accessType == null) return null
+  const s = String(accessType).toUpperCase()
+  if (s === 'API') return 0
+  if (s === 'PYTHON') return 1
+  return null
 }
 
 /** 解析 inputParams：兼容字符串 JSON / 对象两种格式 */
@@ -1045,8 +1075,13 @@ function submitForm() {
 /** 终止 */
 function handleStop(row) {
   proxy.$modal.confirm(`确认终止任务"${row.name}"？`).then(() => {
-    updateCalc({ id: row.id, status: 4 }).then(() => {
-      proxy.$modal.msgSuccess('已终止')
+    cancelCalc(row.id).then((res) => {
+      const ok = res === true || res?.data === true || res?.code === 200
+      if (ok || ok === undefined) {
+        proxy.$modal.msgSuccess('已终止')
+      } else {
+        proxy.$modal.msgError(res?.msg || '终止失败，请稍后重试')
+      }
       getList()
     })
   })
@@ -1054,9 +1089,11 @@ function handleStop(row) {
 
 /** 重新计算 */
 function handleRecalc(row) {
-  proxy.$modal.confirm(`确认重新计算"${row.name}"？`).then(() => {
-    updateCalc({ id: row.id, status: 0, errorMessage: null }).then(() => {
-      proxy.$modal.msgSuccess('已提交重新计算')
+  proxy.$modal.confirm(`确认重新运行"${row.name}"？`).then(() => {
+    executeCalc(row.id).then((res) => {
+      const data = res?.data || res
+      const executionNo = data?.executionNo ? `，执行批次号：${data.executionNo}` : ''
+      proxy.$modal.msgSuccess('已提交重新运行' + executionNo)
       getList()
     })
   })
@@ -1084,7 +1121,294 @@ function handleExport() {
 getList()
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
+.app-container {
+  width: 100%;
+  background-color: #f0f2f5;
+  height: 100%;
+  padding: 15px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden auto;
+  --el-text-color-regular: #333;
+  --el-text-color-primary: #333;
+
+  .pagecont-top {
+    padding: 15px 15px 1px 15px;
+    background-color: #ffffff;
+    border-radius: 2px;
+  }
+
+  .pagecont-bottom {
+    flex: 1;
+    margin-top: 15px;
+    padding: 13px 15px;
+    background-color: #ffffff;
+    border-radius: 2px;
+  }
+
+  .el-form-input-width {
+    width: 210px;
+  }
+
+  .el-input {
+    --el-input-border-radius: var(--el-border-radius-small) !important;
+    ::-webkit-input-placeholder {
+      font-size: 14px !important;
+    }
+  }
+
+  .el-input__wrapper {
+    box-shadow: 0 0 0 1px #dcdfe6 inset;
+    border-radius: 2px !important;
+  }
+
+  .el-input__inner {
+    &::placeholder {
+      font-size: 14px !important;
+    }
+  }
+
+  .btn-style {
+    .el-input__inner {
+      font-size: 14px;
+      color: #000000;
+      font-family: PingFangSC-Regular, PingFangSC-Regular;
+    }
+
+    .el-button {
+      height: 28px;
+      padding: 8px 11px;
+      font-size: 12px;
+    }
+  }
+
+  .el-button {
+    border-radius: 2px !important;
+  }
+
+  :deep(.el-form-item__label) {
+    font-family: PingFang SC;
+    font-weight: 400 !important;
+    margin-right: 20px;
+  }
+
+  .el-input__inner {
+    font-size: 14px;
+    color: #000000;
+    font-family: PingFangSC-Regular, PingFangSC-Regular;
+  }
+
+  :deep(.el-textarea__inner) {
+    border-radius: 2px 2px 2px 2px !important;
+    height: 98px;
+    color: #606266 !important;
+    font-family: PingFangSC-Regular, PingFangSC-Regular;
+  }
+
+  :deep(.el-form-item) {
+    margin-bottom: 14px;
+  }
+
+  :deep(.el-dialog .el-form-item) {
+    margin-bottom: 16px;
+  }
+
+  :deep(.el-select__wrapper) {
+    border-radius: 2px !important;
+  }
+
+  :deep(.el-select) {
+    :deep(.el-input__inner) {
+      height: 32px;
+      line-height: 32px;
+      font-size: 13px;
+    }
+  }
+
+  .el-table {
+    thead {
+      height: 36px;
+      .el-table__cell.is-leaf {
+        background-color: #f1f1f5 !important;
+      }
+    }
+
+    :deep(.el-table__header-wrapper th) {
+      word-break: break-word;
+      background-color: #f1f1f5 !important;
+      height: 36px;
+    }
+
+    :deep(.el-table__header .el-table__cell) {
+      padding: 6px 0 !important;
+    }
+
+    thead .cell {
+      font-size: 14px;
+      font-weight: 600;
+      color: #666666;
+    }
+
+    :deep(.el-table__row) {
+      height: 42px;
+    }
+
+    :deep(.el-table__body-wrapper tbody tr:hover > td) {
+      background-color: #e9f0ff !important;
+    }
+
+    &--striped :deep(.el-table__body tr.current-row td) {
+      background: #d8e0f7 !important;
+    }
+
+    &::before {
+      height: 0px !important;
+    }
+
+    :deep(.el-table__fixed-right::before),
+    :deep(.el-table__fixed::before) {
+      height: 0px !important;
+    }
+
+    :deep(.el-popper.is-light) {
+      box-shadow: 0px 2px 8px 1px rgba(0, 0, 0, 0.15);
+      max-width: 800px;
+      font-size: 14px;
+      padding: 16px;
+      line-height: 22px;
+    }
+
+    :deep(.el-icon) {
+      font-size: 12px;
+    }
+
+    .el-button > span {
+      font-size: 14px;
+    }
+  }
+
+  :deep(.el-tooltip__popper.is-dark) {
+    font-size: 14px;
+  }
+
+  .small-padding {
+    :deep(.el-button + .el-button) {
+      margin-left: 5px !important;
+      .icont-mini {
+        width: 25px;
+        border-left: 2px solid #eeeeee;
+        text-align: right;
+      }
+    }
+  }
+
+  :deep(.el-tag) {
+    border-radius: 2px 2px 2px 2px !important;
+    font-size: 12px !important;
+    margin-right: 7px;
+  }
+
+  :deep(.el-tag.el-tag--default .el-tag__content) {
+    font-size: 14px !important;
+  }
+
+  :deep(.el-tag.el-tag--primary) {
+    border: 0px solid !important;
+  }
+
+  :deep(.el-tag.el-tag--success) {
+    background: rgba(0, 158, 33, 0.1) !important;
+    border: 0px solid #7ecb7e !important;
+    color: #009e21 !important;
+  }
+
+  :deep(.el-tag.el-tag--danger) {
+    background: rgba(236, 84, 77, 0.1) !important;
+    border: 0px solid #6ba7ff !important;
+    color: rgb(236, 84, 77) !important;
+  }
+
+  :deep(.el-tag.el-tag--warning) {
+    background: rgba(255, 184, 0, 0.1) !important;
+    border: 0px solid #ffbd72 !important;
+    color: rgb(255, 184, 0) !important;
+  }
+
+  :deep(.el-tag.el-tag--info) {
+    background: #f0eef9 !important;
+    border: 0px solid #a597e6 !important;
+    color: #8737a3 !important;
+  }
+
+  .el-dialog {
+    padding: 0 !important;
+
+    :deep(.el-dialog__header) {
+      padding: 9px 20px !important;
+      background: #f8f8f8;
+      .el-dialog__title {
+        font-weight: 600;
+        font-size: 16px;
+        color: #3f3f3f;
+        line-height: 1.5;
+        font-family: Microsoft YaHei, Microsoft YaHei;
+        display: flex;
+        align-items: center;
+        .el-icon {
+          margin-left: 10px;
+        }
+      }
+      :deep(.el-dialog__headerbtn) {
+        top: 0 !important;
+        height: 42px;
+      }
+    }
+
+    :deep(.el-dialog__body) {
+      overflow: auto;
+      min-height: auto !important;
+      max-height: 80vh;
+      padding: 20px 40px !important;
+    }
+
+    :deep(.el-dialog__footer) {
+      padding: 10px 20px 20px;
+      border-top: 1px solid #efefef;
+    }
+  }
+
+  .dialog-footer {
+    display: flex;
+    justify-content: flex-end;
+  }
+
+  :deep(.el-button--mini) {
+    font-size: 12px;
+    border-radius: 3px;
+    padding: 7px 15px;
+    span {
+      line-height: 1;
+    }
+  }
+
+  :deep(.el-pager li) {
+    min-width: 30px;
+    border-radius: 2px;
+    margin: 0 5px;
+    height: 28px;
+    line-height: 28px;
+    background-color: #f4f4f5 !important;
+    color: #606266 !important;
+    font-weight: 700;
+
+    &.is-active {
+      color: #fff !important;
+      background-color: var(--el-color-primary) !important;
+    }
+  }
+}
+
 .h2-title {
   font-size: 15px;
   color: rgba(0, 0, 0, 0.85);
@@ -1102,26 +1426,5 @@ getList()
   border-radius: 3px;
   background: var(--el-color-primary);
   margin-right: 8px;
-}
-
-.dialog-footer {
-  text-align: right;
-}
-
-.large-dialog {
-  min-height: 300px;
-  max-height: 85vh;
-  overflow-y: auto;
-}
-
-.large-dialog :deep(.el-dialog__body) {
-  padding: 15px 20px;
-  max-height: calc(85vh - 120px);
-  overflow-y: auto;
-}
-
-.large-dialog :deep(.el-dialog__footer) {
-  padding: 10px 20px;
-  border-top: 1px solid #eee;
 }
 </style>
