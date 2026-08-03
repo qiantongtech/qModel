@@ -191,12 +191,13 @@ public class ModelCalcExecutionServiceImpl extends ServiceImpl<ModelCalcExecutio
     }
 
     @Override
-    public int updateExecutionResult(String executionNo, Integer status, String outputResult, String errorMessage, Long duration) {
+    public int updateExecutionResult(String executionNo, Integer status, String outputResult, String errorMessage, Long duration, String resourceUsage) {
         ModelCalcExecutionDO updateObj = new ModelCalcExecutionDO();
         updateObj.setStatus(status);
         updateObj.setOutputResult(outputResult);
         updateObj.setErrorMessage(errorMessage);
         updateObj.setDuration(duration);
+        updateObj.setResourceUsage(resourceUsage);
         updateObj.setEndTime(new java.util.Date());
         QueryWrapper<ModelCalcExecutionDO> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("execution_no", executionNo);
@@ -232,4 +233,8 @@ public class ModelCalcExecutionServiceImpl extends ServiceImpl<ModelCalcExecutio
         queryWrapper.eq("status", status);
         return (long) modelCalcExecutionMapper.selectCount(queryWrapper);
     }
+
+
+
+    
 }

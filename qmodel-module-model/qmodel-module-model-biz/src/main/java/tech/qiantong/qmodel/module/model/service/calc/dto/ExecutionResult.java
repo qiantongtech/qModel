@@ -54,4 +54,39 @@ public class ExecutionResult {
      */
     private String executionLog;
 
+    /**
+     * 进程 PID（Python子进程）
+     */
+    private Long processPid;
+
+    /**
+     * 平均 CPU 占用率（%，0-100，单进程视角）
+     */
+    private Double avgCpuUsagePercent;
+
+    /**
+     * 峰值 CPU 占用率（%）
+     */
+    private Double maxCpuUsagePercent;
+
+    /**
+     * 平均物理内存使用（KB）
+     */
+    private Long avgMemoryKb;
+
+    /**
+     * 峰值物理内存使用（KB）
+     */
+    private Long maxMemoryKb;
+
+    /**
+     * 资源采样次数
+     */
+    private Integer resourceSampleCount;
+
+    /**
+     * 资源统计详情（完整 JSON，含 ProcessStats 全量字段）
+     */
+    private String resourceStatsJson;
+
 }

@@ -164,7 +164,8 @@ public class CalcTaskConsumer implements ApplicationRunner {
                     execStatus,
                     result.getOutput(),
                     result.getErrorMessage(),
-                    duration
+                    duration,
+                    result.getResourceStatsJson()
             );
 
             if (result.getExecutionLog() != null) {
@@ -196,7 +197,8 @@ public class CalcTaskConsumer implements ApplicationRunner {
                     3,
                     null,
                     e.getMessage(),
-                    duration
+                    duration,
+                    null
             );
 
             Date endTimeObj = new Date();

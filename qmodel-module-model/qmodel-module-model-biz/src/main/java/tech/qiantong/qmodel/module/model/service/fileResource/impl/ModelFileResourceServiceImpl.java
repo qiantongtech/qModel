@@ -62,6 +62,8 @@ import org.dromara.x.file.storage.core.FileInfo;
 import tech.qiantong.qmodel.module.model.service.fileResource.handler.ModelFileResourceDepsCheckHandler;
 import tech.qiantong.qmodel.module.model.service.invokeHistory.IModelInvokeHistoryService;
 import tech.qiantong.qmodel.module.model.service.model.IModelService;
+import tech.qiantong.qmodel.module.model.service.calc.monitor.ProcessResourceMonitor;
+import tech.qiantong.qmodel.module.model.service.calc.monitor.ProcessResourceStatsContext;
 
 
 /**
@@ -470,10 +472,13 @@ public class ModelFileResourceServiceImpl extends ServiceImpl<ModelFileResourceM
     @Override
     public Object runModelScript(Long modelId, Map<String, Object> inputParam) {
         Date startTime = new Date();
-        String clientIp = IpUtils.getIpAddr();
+        String clientIp = getSafeClientIp();
         if (inputParam == null) {
             inputParam = new HashMap<>();
         }
+
+        // 先清掉线程里上次残留的监控数据（防止线程池复用污染）
+        ProcessResourceStatsContext.clear();
 
         ModelFileResourceDO fileResourceDO = modelFileResourceMapper.selectOne(
                 new QueryWrapper<ModelFileResourceDO>()
@@ -529,6 +534,11 @@ public class ModelFileResourceServiceImpl extends ServiceImpl<ModelFileResourceM
 
         log.debug("开始执行模型脚本，modelId: {}, scriptPath: {}, workDir: {}", modelId, scriptPath, workDir.getAbsolutePath());
 
+        // ========== 新增：进程资源监控 ==========
+        ProcessResourceMonitor monitor = null;
+        // 用于 finally 中判断是否正常完成（在 return/throw 前更新）
+        boolean completedNormally = false;
+
         try {
             ProcessBuilder pb = new ProcessBuilder(pythonCmd, scriptName);
             pb.directory(workDir);
@@ -542,6 +552,11 @@ public class ModelFileResourceServiceImpl extends ServiceImpl<ModelFileResourceM
             }
 
             Process process = pb.start();
+
+            // ========== 新增：启动资源监控 ==========
+            monitor = new ProcessResourceMonitor(1000);
+            monitor.startMonitoring(process);
+            log.debug("已启动进程资源监控，PID={}", monitor.getPid());
 
             try (OutputStream os = process.getOutputStream()) {
                 os.write(paramJson.getBytes(StandardCharsets.UTF_8));
@@ -562,8 +577,9 @@ public class ModelFileResourceServiceImpl extends ServiceImpl<ModelFileResourceM
                 timeout = 300L;
             }
 
-            boolean completed = process.waitFor(timeout, TimeUnit.SECONDS);
-            if (!completed) {
+            boolean waitCompleted = process.waitFor(timeout, TimeUnit.SECONDS);
+
+            if (!waitCompleted) {
                 process.destroyForcibly();
                 throw new ServiceException("脚本执行超时，超时时间: " + timeout + "秒");
             }
@@ -581,6 +597,21 @@ public class ModelFileResourceServiceImpl extends ServiceImpl<ModelFileResourceM
                 result = output.toString().trim();
             }
 
+            // ========== 新增：获取监控统计结果（成功分支） ==========
+            completedNormally = true;
+            if (monitor != null) {
+                ProcessResourceMonitor.ProcessStats stats = monitor.getStats(true);
+                log.info("进程资源统计: PID={}, 耗时={}ms, 平均CPU={}%, 峰值CPU={}%, 平均内存={}KB, 峰值内存={}KB",
+                        stats.getPid(),
+                        stats.getDurationMs(),
+                        String.format("%.2f", stats.getAvgCpuUsagePercent()),
+                        String.format("%.2f", stats.getMaxCpuUsagePercent()),
+                        stats.getAvgMemoryKb(),
+                        stats.getMaxMemoryKb());
+                // 通过 ThreadLocal 透传到外层（PythonExecutionEngine）
+                ProcessResourceStatsContext.set(stats);
+            }
+
             Date endTime = new Date();
             modelInvokeHistoryService.saveInvokeLogAsync(modelId, modelInfo.getName(), InvokeTypeEnum.PYTHON.getType(),
                     paramJson, JSON.toJSONString(result), InvokeStatusEnum.SUCCESS.getStatus(), null,
@@ -588,18 +619,67 @@ public class ModelFileResourceServiceImpl extends ServiceImpl<ModelFileResourceM
 
             return result;
         } catch (ServiceException e) {
+            // ========== 修正：先停止监控，再取数据 ==========
+            if (monitor != null) {
+                try {
+                    monitor.stopMonitoring();
+                } catch (Exception ex) {
+                    log.warn("停止进程监控失败: {}", ex.getMessage());
+                }
+                ProcessResourceMonitor.ProcessStats stats = monitor.getStats(false);
+                log.warn("进程异常退出（ServiceException），资源统计: 耗时={}ms, 峰值内存={}KB",
+                        stats.getDurationMs(), stats.getMaxMemoryKb());
+                ProcessResourceStatsContext.set(stats);
+            }
+
             Date endTime = new Date();
             modelInvokeHistoryService.saveInvokeLogAsync(modelId, modelInfo.getName(), InvokeTypeEnum.PYTHON.getType(),
                     paramJson, null, InvokeStatusEnum.FAILED.getStatus(), e.getMessage(),
                     endTime.getTime() - startTime.getTime(), startTime, endTime, clientIp);
             throw e;
         } catch (Exception e) {
+            // ========== 修正：先停止监控，再取数据 ==========
+            if (monitor != null) {
+                try {
+                    monitor.stopMonitoring();
+                } catch (Exception ex) {
+                    log.warn("停止进程监控失败: {}", ex.getMessage());
+                }
+                ProcessResourceMonitor.ProcessStats stats = monitor.getStats(false);
+                log.warn("进程执行异常（Exception），资源统计: 耗时={}ms, 峰值内存={}KB",
+                        stats.getDurationMs(), stats.getMaxMemoryKb());
+                ProcessResourceStatsContext.set(stats);
+            }
+
             Date endTime = new Date();
             modelInvokeHistoryService.saveInvokeLogAsync(modelId, modelInfo.getName(), InvokeTypeEnum.PYTHON.getType(),
                     paramJson, null, InvokeStatusEnum.FAILED.getStatus(), e.getMessage(),
                     endTime.getTime() - startTime.getTime(), startTime, endTime, clientIp);
             log.error("执行模型脚本失败，modelId: {}", modelId, e);
             throw new ServiceException("执行模型脚本失败：" + e.getMessage());
+        } finally {
+            // 确保在所有路径（正常、异常、超时）的最后停止监控
+            if (monitor != null) {
+                try {
+                    monitor.stopMonitoring();
+                    // 获取最终统计数据并存入 ThreadLocal
+                    ProcessResourceMonitor.ProcessStats stats = monitor.getStats(completedNormally);
+                    ProcessResourceStatsContext.set(stats);
+
+                    if (completedNormally) {
+                        log.info("进程资源统计: PID={}, 耗时={}ms, 平均CPU={}%, 峰值CPU={}%, 平均内存={}KB, 峰值内存={}KB",
+                                stats.getPid(), stats.getDurationMs(),
+                                String.format("%.2f", stats.getAvgCpuUsagePercent()),
+                                String.format("%.2f", stats.getMaxCpuUsagePercent()),
+                                stats.getAvgMemoryKb(), stats.getMaxMemoryKb());
+                    } else {
+                        log.warn("进程异常退出，资源统计: 耗时={}ms, 峰值内存={}KB",
+                                stats.getDurationMs(), stats.getMaxMemoryKb());
+                    }
+                } catch (Exception ex) {
+                    log.warn("停止进程监控或获取最终统计数据失败: {}", ex.getMessage());
+                }
+            }
         }
     }
 
@@ -609,6 +689,17 @@ public class ModelFileResourceServiceImpl extends ServiceImpl<ModelFileResourceM
             return "python";
         } else {
             return "python3";
+        }
+    }
+
+    /**
+     * 安全获取客户端 IP（异步线程兼容：异步消费者线程中 IpUtils 取不到 Request，fallback 到 system）
+     */
+    private String getSafeClientIp() {
+        try {
+            return IpUtils.getIpAddr();
+        } catch (Exception e) {
+            return "system";
         }
     }
 

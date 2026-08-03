@@ -36,7 +36,6 @@ import tech.qiantong.qmodel.module.model.service.config.IModelConfigService;
 
 import javax.annotation.Resource;
 import java.util.*;
-import java.util.stream.Collectors;
 
 /**
  * API接口类型执行引擎
@@ -92,9 +91,13 @@ public class ApiExecutionEngine implements IExecutionEngine {
         } else {
             result.setSuccess(false);
             StringBuilder sb = new StringBuilder();
-            if (resp.getErrorMsg() != null) sb.append(resp.getErrorMsg());
+            if (resp.getErrorMsg() != null) {
+                sb.append(resp.getErrorMsg());
+            }
             if (resp.getResponseBody() != null) {
-                if (sb.length() > 0) sb.append(" | ");
+                if (sb.length() > 0) {
+                    sb.append(" | ");
+                }
                 sb.append("响应体: ").append(resp.getResponseBody());
             }
             result.setErrorMessage(sb.length() > 0 ? sb.toString() : "API 调用失败");
@@ -109,7 +112,6 @@ public class ApiExecutionEngine implements IExecutionEngine {
         return "0";
     }
 
-    // ==================== 静态工具方法：inputParams JSON → Map{paramCode: value}（两个引擎共用） ====================
 
     /**
      * 解析 calc.inputParams（多种格式兼容）：
@@ -138,13 +140,17 @@ public class ApiExecutionEngine implements IExecutionEngine {
         if (obj instanceof JSONObject) {
             JSONObject jo = (JSONObject) obj;
             Object params = jo.get("params");
-            if (params instanceof JSONArray || params instanceof Collection) {
+            if (params instanceof Collection) {
                 fillFromParamList(result, params instanceof JSONArray ? (JSONArray) params : new JSONArray((Collection<?>) params));
-                if (!result.isEmpty()) return result;
+                if (!result.isEmpty()) {
+                    return result;
+                }
             }
             // 2. 纯 Map{key:value}
             for (Map.Entry<String, Object> e : jo.entrySet()) {
-                if ("params".equals(e.getKey())) continue;
+                if ("params".equals(e.getKey())) {
+                    continue;
+                }
                 result.put(e.getKey(), unwrapValue(e.getValue()));
             }
             return result;
@@ -163,33 +169,42 @@ public class ApiExecutionEngine implements IExecutionEngine {
     }
 
     private static void fillFromParamList(Map<String, Object> result, JSONArray arr) {
-        if (arr == null || arr.isEmpty()) return;
+        if (arr == null || arr.isEmpty()) {
+            return;
+        }
         for (Object item : arr) {
-            if (!(item instanceof JSONObject)) continue;
+            if (!(item instanceof JSONObject)) {
+                continue;
+            }
             JSONObject row = (JSONObject) item;
             Object codeObj = row.get("paramCode") != null ? row.get("paramCode") : row.get("code");
             Object valObj = row.get("value") != null ? row.get("value")
                     : (row.get("defaultValue") != null ? row.get("defaultValue") : row.get("default"));
-            if (codeObj == null) continue;
+            if (codeObj == null) {
+                continue;
+            }
             String code = String.valueOf(codeObj);
-            if (code.isEmpty()) continue;
+            if (code.isEmpty()) {
+                continue;
+            }
             result.put(code, unwrapValue(valObj));
         }
     }
 
     private static Object unwrapValue(Object v) {
         if (v == null) return null;
-        if (v instanceof JSONObject || v instanceof JSONArray) {
-            return v;
-        }
         return v;
     }
 
     @SafeVarargs
     private static <T> T firstNonNull(T... values) {
-        if (values == null) return null;
+        if (values == null) {
+            return null;
+        }
         for (T v : values) {
-            if (v != null) return v;
+            if (v != null) {
+                return v;
+            }
         }
         return null;
     }

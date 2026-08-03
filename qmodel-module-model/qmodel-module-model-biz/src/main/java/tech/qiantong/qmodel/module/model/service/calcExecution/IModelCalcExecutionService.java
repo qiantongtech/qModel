@@ -119,13 +119,14 @@ public interface IModelCalcExecutionService extends IService<ModelCalcExecutionD
      * 更新执行结果
      *
      * @param executionNo  执行批次号
-     * @param status       状态
+     * @param status       执行状态
      * @param outputResult 输出结果
      * @param errorMessage 错误信息
-     * @param duration     耗时(毫秒)
-     * @return 更新行数
+     * @param duration     耗时
+     * @param resourceUsage 资源使用情况
+     * @return 影响行数
      */
-    int updateExecutionResult(String executionNo, Integer status, String outputResult, String errorMessage, Long duration);
+    int updateExecutionResult(String executionNo, Integer status, String outputResult, String errorMessage, Long duration, String resourceUsage);
 
     /**
      * 更新执行日志
