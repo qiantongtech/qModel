@@ -19,11 +19,13 @@
 <template>
   <!-- 页面内容 -->
   <el-watermark
-    style="position: ''"
+    class="watermark"
     v-if="watermarkText"
     :font="config.font"
     :content="watermarkText"
     :gap="[200, 200]"
+    :width="120"
+    :height="80"
   >
     <router-view />
   </el-watermark>
@@ -63,3 +65,12 @@ const config = reactive({
   },
 });
 </script>
+
+<style scoped lang="scss">
+.watermark {
+  position: relative;
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+}
+</style>

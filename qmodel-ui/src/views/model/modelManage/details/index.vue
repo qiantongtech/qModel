@@ -29,9 +29,22 @@
 
             <!-- 名称 -->
             <div class="task-name">
-              <el-tooltip :content="viewInfo.name || ''" placement="top" effect="light">
-                <span class="ellipsis-text">{{ viewInfo.name || "" }}</span>
+              <el-tooltip
+                :content="viewInfo.name || ''"
+                placement="top"
+                effect="light"
+                :disabled="!textOverflowMap.name"
+              >
+                <span
+                  class="ellipsis-text"
+                  @mouseenter="(event) => checkTextOverflow(event, 'name')"
+                >
+                  {{ viewInfo.name || "" }}
+                </span>
               </el-tooltip>
+            </div>
+            <div>
+              <dict-tag :options="model_status" :value="viewInfo.status" />
             </div>
           </div>
           <el-row :gutter="15" class="btn-style" style="margin-left: auto">
@@ -59,8 +72,18 @@
             <div class="infotop-row border-top">
               <div class="infotop-row-lable">模型编号</div>
               <div class="infotop-row-value">
-                <el-tooltip :content="viewInfo.code || '-'" placement="top" effect="light">
-                  <span class="ellipsis-text">{{ viewInfo.code || "-" }}</span>
+                <el-tooltip
+                  :content="viewInfo.code || '-'"
+                  placement="top"
+                  effect="light"
+                  :disabled="!textOverflowMap.code"
+                >
+                  <span
+                    class="ellipsis-text"
+                    @mouseenter="(event) => checkTextOverflow(event, 'code')"
+                  >
+                    {{ viewInfo.code || "-" }}
+                  </span>
                 </el-tooltip>
               </div>
             </div>
@@ -69,8 +92,20 @@
             <div class="infotop-row border-top">
               <div class="infotop-row-lable">模型分类</div>
               <div class="infotop-row-value">
-                <el-tooltip :content="viewInfo.classifyName || '-'" placement="top" effect="light">
-                  <span class="ellipsis-text">{{ viewInfo.classifyName || "-" }}</span>
+                <el-tooltip
+                  :content="viewInfo.classifyName || '-'"
+                  placement="top"
+                  effect="light"
+                  :disabled="!textOverflowMap.classifyName"
+                >
+                  <span
+                    class="ellipsis-text"
+                    @mouseenter="
+                      (event) => checkTextOverflow(event, 'classifyName')
+                    "
+                  >
+                    {{ viewInfo.classifyName || "-" }}
+                  </span>
                 </el-tooltip>
               </div>
             </div>
@@ -98,8 +133,18 @@
             <div class="infotop-row border-top">
               <div class="infotop-row-lable">版本号</div>
               <div class="infotop-row-value">
-                <el-tooltip :content="viewInfo.version || '-'" placement="top" effect="light">
-                  <span class="ellipsis-text">{{ viewInfo.version || "-" }}</span>
+                <el-tooltip
+                  :content="viewInfo.version || '-'"
+                  placement="top"
+                  effect="light"
+                  :disabled="!textOverflowMap.version"
+                >
+                  <span
+                    class="ellipsis-text"
+                    @mouseenter="(event) => checkTextOverflow(event, 'version')"
+                  >
+                    {{ viewInfo.version || "-" }}
+                  </span>
                 </el-tooltip>
               </div>
             </div>
@@ -108,8 +153,18 @@
             <div class="infotop-row border-top">
               <div class="infotop-row-lable">作者</div>
               <div class="infotop-row-value">
-                <el-tooltip :content="viewInfo.author || '-'" placement="top" effect="light">
-                  <span class="ellipsis-text">{{ viewInfo.author || "-" }}</span>
+                <el-tooltip
+                  :content="viewInfo.author || '-'"
+                  placement="top"
+                  effect="light"
+                  :disabled="!textOverflowMap.author"
+                >
+                  <span
+                    class="ellipsis-text"
+                    @mouseenter="(event) => checkTextOverflow(event, 'author')"
+                  >
+                    {{ viewInfo.author || "-" }}
+                  </span>
                 </el-tooltip>
               </div>
             </div>
@@ -136,8 +191,20 @@
             <div class="infotop-row border-top">
               <div class="infotop-row-lable">描述</div>
               <div class="infotop-row-value">
-                <el-tooltip :content="viewInfo.description || '-'" placement="top" effect="light">
-                  <span class="ellipsis-text">{{ viewInfo.description || "-" }}</span>
+                <el-tooltip
+                  :content="viewInfo.description || '-'"
+                  placement="top"
+                  effect="light"
+                  :disabled="!textOverflowMap.description"
+                >
+                  <span
+                    class="ellipsis-text"
+                    @mouseenter="
+                      (event) => checkTextOverflow(event, 'description')
+                    "
+                  >
+                    {{ viewInfo.description || "-" }}
+                  </span>
                 </el-tooltip>
               </div>
             </div>
@@ -148,8 +215,18 @@
             <div class="infotop-row border-top">
               <div class="infotop-row-lable">备注</div>
               <div class="infotop-row-value">
-                <el-tooltip :content="viewInfo.remark || '-'" placement="top" effect="light">
-                  <span class="ellipsis-text">{{ viewInfo.remark || "-" }}</span>
+                <el-tooltip
+                  :content="viewInfo.remark || '-'"
+                  placement="top"
+                  effect="light"
+                  :disabled="!textOverflowMap.remark"
+                >
+                  <span
+                    class="ellipsis-text"
+                    @mouseenter="(event) => checkTextOverflow(event, 'remark')"
+                  >
+                    {{ viewInfo.remark || "-" }}
+                  </span>
                 </el-tooltip>
               </div>
             </div>
@@ -340,9 +417,7 @@ import { useRouter, useRoute } from "vue-router";
 import { ElMessage, ElMessageBox, ElImageViewer } from "element-plus";
 import { getModel, updateModel, addModel } from "@/api/model/model";
 import { listClassify } from "@/api/modelReconstitution/classify";
-import { listInterfaceAddress } from "@/api/modelReconstitution/interfaceAddress";
 import { useDict } from "@/utils/dict.js";
-import { Edit } from "@element-plus/icons-vue";
 import VersionManage from "./modelVersion.vue";
 import OnlineTest from "./onlineTest.vue";
 import InvokeHistory from "./invokeHistory.vue";
@@ -360,9 +435,12 @@ const classifyOptions = ref([]);
 const interfaceAddressList = ref([]);
 const activeName = ref("version");
 const showSearch = ref(true);
+const textOverflowMap = reactive({});
 
 const iconPreviewVisible = ref(false);
 const iconPreviewUrl = ref("");
+
+const { model_status } = proxy.useDict("model_status");
 
 const parsedTags = computed(() => {
   const tags = viewInfo.value.tags;
@@ -418,6 +496,13 @@ const modelId = computed(() => route.query.modelId);
 
 const formRef = ref(null);
 const actionHistoryRef = ref(null);
+
+const checkTextOverflow = (event, field) => {
+  const element = event.currentTarget;
+  if (element) {
+    textOverflowMap[field] = element.scrollWidth > element.clientWidth;
+  }
+};
 
 const getModelById = (params) => {
   getModel(params).then((res) => {
