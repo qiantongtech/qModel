@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+  Copyright © 2025-present Jiangsu Qiantong Technology Co., Ltd.
+   *
+  This file is part of qModel Module Platform (Open Source Edition).
+   *
+  qModel is licensed under Apache License 2.0 with additional qModel terms.
+  You may use qModel for commercial purposes, but you may not remove, hide,
+  modify, or replace the qModel logo, copyright notices, license notices,
+  or attribution information without a separate commercial license.
+   *
+  White-label use, OEM distribution, rebranding, or presenting qModel as
+  another product requires separate commercial authorization from
+  Jiangsu Qiantong Technology Co., Ltd.
+   *
+  Business License: `https://qmodel.tech/`
+  See the LICENSE file in the project root for full license information.
+-->
+
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="tech.qiantong.qmodel.module.model.dal.mapper.modelKey.ModelKeyMapper">
+
+
+    <select id="selectUserList" resultType="tech.qiantong.qmodel.common.core.domain.entity.SysUser">
+        SELECT su.*
+        FROM system_user su
+        WHERE su.del_flag = 0
+        and su.user_id in (
+            SELECT mk.user_id from model_key mk
+            WHERE mk.del_flag = 0
+              and mk.valid_flag = 1
+              and mk.api_key = #{apiKey}
+        )
+    </select>
+</mapper>

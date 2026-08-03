@@ -79,4 +79,11 @@ public class ModelKeyController extends BaseController {
         return CommonResult.toAjax(modelKeyService.removeModelKey(Arrays.asList(ids)));
     }
 
+    @Operation(summary = "查询模型访问 key列表")
+    @PreAuthorize("@ss.hasPermi('model:modelKey:key:copy')")
+    @GetMapping("/getKey")
+    public CommonResult<String> getKey(Long modelId) {
+        return CommonResult.success(modelKeyService.getKey(modelId));
+    }
+
 }

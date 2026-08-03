@@ -21,8 +21,11 @@ package tech.qiantong.qmodel.module.model.service.model.impl;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.ObjectUtil;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import javax.annotation.Resource;
@@ -161,6 +164,40 @@ public class ModelServiceImpl extends ServiceImpl<ModelMapper, ModelDO> implemen
 
         ModelRespVO modelRespVO = BeanUtils.toBean(modelDO, ModelRespVO.class);
         modelRespVO.setModelConfig(modelConfigService.getByModelId(id));
+        return modelRespVO;
+    }
+
+    /**
+     * 获得模型基础信息详情
+     *
+     * @param modelCode 模型基础编码
+     * @return 模型基础信息
+     */
+    @Override
+    public ModelRespVO getModelByCode(String modelCode) {
+        LambdaQueryWrapper<ModelDO> queryWrapper = Wrappers.lambdaQuery(ModelDO.class)
+                .eq(ModelDO::getCode, modelCode);
+        List<ModelDO> entityList = super.list(queryWrapper);
+        if (CollUtil.isEmpty(entityList)){
+            throw new ServiceException("模型不存在");
+        }
+        ModelDO modelDO = entityList.get(0);
+        if(ObjectUtil.isNotNull(modelDO)){
+            if(AccessTypeEnum.PYTHON.getType().equals(modelDO.getAccessType())){
+                ModelFileResourceDO one = modelFileResourceService.getOne(new QueryWrapper<ModelFileResourceDO>()
+                        .eq("model_id",modelDO.getId()));
+                modelDO.setModelFileResourceRespVO(one);
+            }
+            if(modelDO.getClassifyId() != null){
+                ModelClassifyDO classifyDO = modelClassifyService.getModelClassifyById(modelDO.getClassifyId());
+                if(classifyDO != null){
+                    modelDO.setClassifyName(classifyDO.getName());
+                }
+            }
+        }
+
+        ModelRespVO modelRespVO = BeanUtils.toBean(modelDO, ModelRespVO.class);
+        modelRespVO.setModelConfig(modelConfigService.getByModelId(modelDO.getId()));
         return modelRespVO;
     }
 

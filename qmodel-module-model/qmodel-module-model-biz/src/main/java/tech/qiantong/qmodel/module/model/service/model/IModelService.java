@@ -78,6 +78,14 @@ public interface IModelService extends IService<ModelDO> {
     ModelRespVO getModelById(Long id);
 
     /**
+     * 获得模型基础信息详情
+     *
+     * @param modelCode 模型基础编码
+     * @return 模型基础信息
+     */
+    ModelRespVO getModelByCode(String modelCode);
+
+    /**
      * 获得全部模型基础信息列表
      *
      * @return 模型基础信息列表

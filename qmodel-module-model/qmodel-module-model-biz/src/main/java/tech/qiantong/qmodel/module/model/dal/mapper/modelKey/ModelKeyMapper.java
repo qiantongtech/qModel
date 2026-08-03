@@ -18,16 +18,18 @@
 
 package tech.qiantong.qmodel.module.model.dal.mapper.modelKey;
 
+import org.apache.ibatis.annotations.Param;
+import tech.qiantong.qmodel.common.core.domain.entity.SysUser;
 import tech.qiantong.qmodel.common.core.page.PageResult;
-import tech.qiantong.qmodel.module.model.controller.admin.invokeHistory.vo.ModelInvokeHistoryPageReqVO;
+import tech.qiantong.qmodel.module.example.dal.dataobject.user.UserTypeDO;
 import tech.qiantong.qmodel.module.model.controller.admin.modelKey.vo.ModelKeyPageVO;
-import tech.qiantong.qmodel.module.model.dal.dataobject.invokeHistory.ModelInvokeHistoryDO;
 import tech.qiantong.qmodel.module.model.dal.dataobject.modelKey.ModelKeyDO;
 import tech.qiantong.qmodel.mybatis.core.mapper.BaseMapperX;
 import tech.qiantong.qmodel.mybatis.core.query.LambdaQueryWrapperX;
 
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -50,5 +52,13 @@ public interface ModelKeyMapper extends BaseMapperX<ModelKeyDO> {
                 // 按照 createTime 字段降序排序
                 .orderBy(reqVO.getOrderByColumn(), reqVO.getIsAsc(), allowedColumns));
     }
+
+    /**
+     * 根据 apiKey 查询用户列表
+     *
+     * @param apiKey apiKey
+     * @return 用户列表
+     */
+    List<SysUser> selectUserList(@Param("apiKey") String apiKey);
 
 }

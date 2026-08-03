@@ -16,38 +16,29 @@
  * See the LICENSE file in the project root for full license information.
  */
 
-import request from '@/utils/request'
+package tech.qiantong.qmodel.module.model.controller.admin.model.vo;
 
-// 查询模型访问 key列表
-export function listModelKey(query) {
-  return request({
-    url: '/model/modelKey/list',
-    method: 'get',
-    params: query
-  })
-}
+import lombok.Data;
 
-// 新增模型访问 key
-export function addModelKey(data) {
-  return request({
-    url: '/model/modelKey',
-    method: 'post',
-    data: data
-  })
-}
+import javax.validation.constraints.NotBlank;
+import java.util.Map;
 
-// 删除模型访问 key
-export function delModelKey(id) {
-  return request({
-    url: '/model/modelKey/' + id,
-    method: 'delete'
-  })
-}
+/**
+ * 模型执行参数
+ *
+ * @author anivia
+ * @date 2026-07-30
+ */
+@Data
+public class ModelExecuteVO {
+    /**
+     * 模型编号
+     */
+    @NotBlank(message = "模型编码不能为空")
+    String modelCode;
 
-// 删除模型访问 key
-export function getKey(id) {
-  return request({
-    url: '/model/modelKey/getKey?modelId=' + id,
-    method: 'get'
-  })
+    /**
+     * 模型执行参数
+     */
+    Map<String,Object> param;
 }

@@ -19,13 +19,17 @@
 package tech.qiantong.qmodel.module.model.service.modelKey.impl;
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.userdetails.UserCache;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import tech.qiantong.qmodel.common.core.domain.entity.SysUser;
 import tech.qiantong.qmodel.common.core.domain.model.LoginUser;
 import tech.qiantong.qmodel.common.core.page.PageResult;
 import tech.qiantong.qmodel.common.exception.ServiceException;
@@ -37,6 +41,7 @@ import tech.qiantong.qmodel.module.model.dal.mapper.modelKey.ModelKeyMapper;
 import tech.qiantong.qmodel.module.model.service.modelKey.IModelKeyService;
 
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -58,13 +63,15 @@ public class ModelKeyServiceImpl extends ServiceImpl<ModelKeyMapper, ModelKeyDO>
      */
     @Override
     public PageResult<ModelKeyDO> listByModel(ModelKeyPageVO pageReqVO) {
-        return baseMapper.selectPage(pageReqVO);
+        PageResult<ModelKeyDO> pageResult = baseMapper.selectPage(pageReqVO);
+        pageResult.getList().forEach(this::maskKey);
+        return pageResult;
     }
 
     /**
      * 创建模型访问 key
      *
-     * @param saveVO 模型访问 key
+     * @param saveVO      模型访问 key
      * @param currentUser 当前用户
      * @return 模型访问 key编号
      */
@@ -91,19 +98,41 @@ public class ModelKeyServiceImpl extends ServiceImpl<ModelKeyMapper, ModelKeyDO>
     }
 
     /**
-     * 根据apiKey查询模型访问 key
+     * 根据apiKey查询用户信息
      *
      * @param apiKey apiKey
      */
     @Override
-    public ModelKeyDO getByApiKey(String apiKey) {
-        LambdaQueryWrapper<ModelKeyDO> queryWrapper = Wrappers.lambdaQuery(ModelKeyDO.class)
-                .eq(ModelKeyDO::getApiKey, apiKey);
-        List<ModelKeyDO> list = super.list(queryWrapper);
-        if (CollUtil.isEmpty(list)) {
+    public SysUser getUserByApiKey(String apiKey) {
+        List<SysUser> sysUserList = baseMapper.selectUserList(apiKey);
+        if (CollUtil.isEmpty(sysUserList)) {
             throw new ServiceException("apiKey 异常");
         }
-        return list.get(0);
+        return sysUserList.get(0);
+    }
+
+    /**
+     * 根据模型编号获取模型访问 key
+     *
+     * @param modelId 模型编号
+     */
+    @Override
+    public String getKey(Long modelId) {
+        ModelKeyDO modelKeyDO = super.getById(modelId);
+        return modelKeyDO.getApiKey();
+    }
+
+    /**
+     * 更新模型访问 key使用时间
+     *
+     * @param apiKey apiKey
+     */
+    @Override
+    public void updateUseTime(String apiKey) {
+        LambdaUpdateWrapper<ModelKeyDO> updateWrapper = Wrappers.lambdaUpdate(ModelKeyDO.class)
+                .eq(ModelKeyDO::getApiKey, apiKey)
+                .set(ModelKeyDO::getLastUseTime, new Date());
+        super.update(updateWrapper);
     }
 
     /**
@@ -114,5 +143,21 @@ public class ModelKeyServiceImpl extends ServiceImpl<ModelKeyMapper, ModelKeyDO>
     private String generateApiKey() {
         String uuid = UUID.fastUUID().toString().replace("-", "");
         return "model-" + uuid;
+    }
+
+    /**
+     * 模型访问 key脱敏
+     *
+     * @param modelKeyDO 模型访问 key
+     */
+    private void maskKey(ModelKeyDO modelKeyDO) {
+        String data = modelKeyDO.getApiKey();
+        if (StrUtil.isBlank(data) || data.length() < 18) {
+            return;
+        }
+        String maskData = data.substring(0, 8) +
+                "********************" +
+                data.substring(data.length() - 10);
+        modelKeyDO.setApiKey(maskData);
     }
 }

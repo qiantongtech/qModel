@@ -36,7 +36,8 @@
             <div class="infotop-row border-top">
               <div class="infotop-row-lable">鉴权方式(API Key)</div>
               <div class="infotop-row-value">
-                <span class="ellipsis-text">Authorization: Bearer &lt;YOUR_API_KEY&gt;</span>
+                <span class="ellipsis-text">Authorization: Bearer &lt;YOUR_API_KEY&gt; </span>
+<!--                <el-icon><InfoFilled/></el-icon>-->
               </div>
             </div>
           </el-col>
@@ -50,21 +51,6 @@
             </div>
           </el-col>
         </el-row>
-
-        <el-row :gutter="3" style="margin-bottom: 3px">
-          <el-col :span="8">
-            <div class="infotop-row border-top">
-              <div class="infotop-row-lable">Base URL</div>
-              <div class="infotop-row-value">
-                <el-tooltip :content="baseUrl || '-'" placement="top" effect="light">
-                  <span class="ellipsis-text">{{ baseUrl || "-" }}</span>
-                </el-tooltip>
-              </div>
-            </div>
-          </el-col>
-
-        </el-row>
-
       </div>
     </div>
     <div>
@@ -120,7 +106,7 @@
               </el-col>
             </el-row>
           </el-collapse-item>
-          <el-collapse-item name="2" :class="['collapse-item-wrap', 'get']">
+          <el-collapse-item name="2" disabled :class="['collapse-item-wrap', 'get']">
 
             <template #title>
               <div class="api-title" style="color: #2666fb">
@@ -270,12 +256,6 @@ const props = defineProps({
   },
 });
 
-// 复制BaseURL
-async function copyUrl() {
-  await navigator.clipboard.writeText(baseUrl)
-  proxy.$modal.msgSuccess("链接已复制");
-}
-
 // 获取输入参数Schema
 function getInputSchema() {
   if (props.model.accessType === "API") {
@@ -316,12 +296,13 @@ function genCURLExampleCode(method, path) {
   const inputSchema = JSON.parse(getInputSchema());
   let paramExample = buildEmptyDataBySchema(inputSchema)
   let paramExampleStr = JSON.stringify(paramExample)
+  let modelCode = props.model.code;
 
   let arr = [];
   arr.push(`curl -X ${method} "${baseUrl}${path}"`);
   arr.push(`-H "Authorization: Bearer <YOUR_API_KEY>"`);
   arr.push(`-H "Content-Type: application/json"`);
-  arr.push(`-d '${paramExampleStr}'`);
+  arr.push(`-d '{"modelCode":"${modelCode}","param":${paramExampleStr}}'`);
   return arr.join("\n");
 }
 
@@ -330,6 +311,7 @@ function genPythonExampleCode(method, path) {
   const inputSchema = JSON.parse(getInputSchema());
   let paramExample = buildEmptyDataBySchema(inputSchema)
   let paramExampleStr = JSON.stringify(paramExample)
+  let modelCode = props.model.code;
 
   let arr = [];
   arr.push(`import requests`);
@@ -340,7 +322,7 @@ function genPythonExampleCode(method, path) {
   arr.push(`  }`);
   arr.push(`payload = {`);
   arr.push(`  "instances": [`);
-  arr.push(`    ${paramExampleStr}`);
+  arr.push(`    {"modelCode":"${modelCode}","param":${paramExampleStr}}`);
   arr.push(`  ]`);
   arr.push(`}`);
   arr.push(`resp = requests.post(url, json=payload, headers=headers)`);
@@ -353,6 +335,7 @@ function genNodeExampleCode(method, path) {
   const inputSchema = JSON.parse(getInputSchema());
   let paramExample = buildEmptyDataBySchema(inputSchema)
   let paramExampleStr = JSON.stringify(paramExample)
+  let modelCode = props.model.code;
 
   let arr = [];
   arr.push(`const axios = require('axios');`);
@@ -360,7 +343,7 @@ function genNodeExampleCode(method, path) {
   arr.push(`  const res = await axios.post(`);
   arr.push(`    "${baseUrl}${path}",`);
   arr.push(`    {`);
-  arr.push(`      instances: [${paramExampleStr}]`);
+  arr.push(`      instances: [{"modelCode":"${modelCode}","param":${paramExampleStr}}]`);
   arr.push(`    },`);
   arr.push(`    {`);
   arr.push(`      headers: {`);

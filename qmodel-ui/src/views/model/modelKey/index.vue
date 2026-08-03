@@ -58,6 +58,12 @@
               <i class="iconfont-mini icon-shanchu-huise mr5"></i>删除
             </el-button>
           </el-col>
+          <el-col :span="1.5">
+            <div class="tip-content">
+              <el-icon><InfoFilled/></el-icon>
+              <span>密钥是调用模型的重要凭证，密钥长期有效，请不要将密钥共享至公开环境，妥善保管</span>
+            </div>
+          </el-col>
         </el-row>
         <div class="justify-end top-right-btn">
           <right-toolbar v-model:showSearch="showSearch" @queryTable="getList" :columns="columns"></right-toolbar>
@@ -79,7 +85,8 @@
             <span>{{ scope.row.apiKey }}</span>
           </template>
         </el-table-column>
-        <el-table-column v-if="getColumnVisibility(3)" label="最后使用" align="center" prop="lastUseTime" width="180"
+        <el-table-column v-if="getColumnVisibility(3)" label="最后使用时间" align="center" prop="lastUseTime"
+                         width="180"
                          sortable="custom" :sort-orders="['descending', 'ascending']">
           <template #default="scope">
             <span>{{ parseTime(scope.row.lastUseTime, '{y}-{m}-{d}  {h}:{i}') }}</span>
@@ -102,11 +109,12 @@
             <span>{{ scope.row.modelId }}</span>
           </template>
         </el-table-column>
-        <el-table-column v-if="getColumnVisibility(7)" label="操作" align="center" class-name="small-padding fixed-width" fixed="right" width="180">
+        <el-table-column v-if="getColumnVisibility(7)" label="操作" align="center"
+                         class-name="small-padding fixed-width" fixed="right" width="180">
           <template #default="scope">
-<!--            <el-button link type="primary" icon="Edit" @click="handleUpdate(scope.row)"-->
-<!--                       v-hasPermi="['model:modelKey:key:edit']">复制密钥-->
-<!--            </el-button>-->
+            <el-button link type="primary" icon="CopyDocument" @click="copyKey(scope.row)"
+                       v-hasPermi="['model:modelKey:key:copy']">复制密钥
+            </el-button>
             <el-button link type="danger" icon="Delete" @click="handleDelete(scope.row)"
                        v-hasPermi="['model:modelKey:key:remove']">删除
             </el-button>
@@ -148,7 +156,8 @@
         <el-row :gutter="20">
           <el-col :span="24">
             <el-form-item label="备注" prop="remark">
-              <el-input v-model="form.remark" type="textarea" placeholder="请输入备注" maxlength="500 个字符" show-word-limit/>
+              <el-input v-model="form.remark" type="textarea" placeholder="请输入备注" maxlength="500 个字符"
+                        show-word-limit/>
             </el-form-item>
           </el-col>
         </el-row>
@@ -206,8 +215,8 @@
 </template>
 
 <script setup name="ModelKey">
-import {addModelKey, delModelKey, listModelKey} from "@/api/model/modelKey.js";
-import { parseTime } from "@/utils/anivia.js";
+import {addModelKey, delModelKey, getKey, listModelKey} from "@/api/model/modelKey.js";
+import {parseTime} from "@/utils/anivia.js";
 
 const {proxy} = getCurrentInstance();
 
@@ -215,10 +224,10 @@ const modelKeyList = ref([]);
 
 // 列显隐信息
 const columns = ref([
-  {key:0, label: "编号", visible: true},
+  {key: 0, label: "编号", visible: true},
   {key: 1, label: "名称", visible: true},
   {key: 2, label: "密钥", visible: true},
-  {key: 3, label: "最后使用", visible: true},
+  {key: 3, label: "最后使用时间", visible: true},
   {key: 4, label: "创建人", visible: true},
   {key: 5, label: "创建时间", visible: true},
   {key: 6, label: "备注", visible: true},
@@ -254,8 +263,8 @@ const data = reactive({
     apiKey: null,
     createTime: null,
     name: null,
-    orderByColumn:defaultSort.value.prop,
-    isAsc:defaultSort.value.order
+    orderByColumn: defaultSort.value.prop,
+    isAsc: defaultSort.value.order
 
   },
   rules: {
@@ -348,7 +357,7 @@ function submitForm() {
         });
       } else {
         addModelKey(form.value).then(response => {
-          proxy.$modal.msgSuccess("新增成功");
+          proxy.$modal.prompt("新增成功");
           open.value = false;
           getList();
         }).catch(error => {
@@ -361,7 +370,7 @@ function submitForm() {
 /** 删除按钮操作 */
 function handleDelete(row) {
   const _ids = row.id || ids.value;
-  proxy.$modal.confirm('是否确认删除模型访问 key编号为"' + _ids + '"的数据项？').then(function () {
+  proxy.$modal.confirm('是否确认删除密钥编号为"' + _ids + '"的数据项？').then(function () {
     return delModelKey(_ids);
   }).then(() => {
     getList();
@@ -370,5 +379,39 @@ function handleDelete(row) {
   });
 }
 
+/** 复制密钥 */
+function copyKey(row) {
+  getKey(row.id).then(response => {
+    let text = response.data
+    const ta = document.createElement('textarea');
+    ta.value = text;
+    // ta.style.display = 'none';
+    ta.style.position = 'fixed';
+    ta.style.left = '-9999px';
+    document.body.appendChild(ta);
+    ta.select();
+    document.execCommand('copy'); // 旧API
+    ta.remove();
+    proxy.$modal.msgSuccess("密钥已复制");
+    // navigator.clipboard.writeText(response.data).then(() => {
+    //   proxy.$modal.msgSuccess("密钥已复制");
+    // })
+
+    response.data
+  })
+}
+
 getList();
 </script>
+
+<style scoped lang="scss">
+.tip-content {
+  display: flex;
+  gap: 2px;
+  color: #888;
+  font-size: 12px;
+  line-height: 1.5;
+  padding-top: 4px;
+  align-items: center;
+}
+</style>

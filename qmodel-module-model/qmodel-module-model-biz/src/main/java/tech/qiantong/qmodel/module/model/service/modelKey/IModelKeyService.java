@@ -19,6 +19,7 @@
 package tech.qiantong.qmodel.module.model.service.modelKey;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import tech.qiantong.qmodel.common.core.domain.entity.SysUser;
 import tech.qiantong.qmodel.common.core.domain.model.LoginUser;
 import tech.qiantong.qmodel.common.core.page.PageResult;
 import tech.qiantong.qmodel.module.model.controller.admin.modelKey.vo.ModelKeyPageVO;
@@ -46,7 +47,7 @@ public interface IModelKeyService extends IService<ModelKeyDO> {
     /**
      * 创建模型访问 key
      *
-     * @param modelKey 模型访问 key
+     * @param saveVO 模型访问 key
      * @param currentUser 当前用户
      * @return 模型访问 key编号
      */
@@ -60,10 +61,23 @@ public interface IModelKeyService extends IService<ModelKeyDO> {
     int removeModelKey(Collection<Long> idList);
 
     /**
-     * 根据apiKey查询模型访问 key
+     * 根据apiKey查询用户信息
      *
      * @param apiKey apiKey
      */
-    ModelKeyDO getByApiKey(String apiKey);
+    SysUser getUserByApiKey(String apiKey);
 
+    /**
+     * 根据模型编号获取模型访问 key
+     *
+     * @param modelId 模型编号
+     */
+    String getKey(Long modelId);
+
+    /**
+     * 更新模型访问 key使用时间
+     *
+     * @param apiKey apiKey
+     */
+    void updateUseTime(String apiKey);
 }
