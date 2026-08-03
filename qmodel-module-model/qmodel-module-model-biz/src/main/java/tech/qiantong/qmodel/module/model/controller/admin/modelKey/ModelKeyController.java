@@ -26,16 +26,17 @@ import org.springframework.web.bind.annotation.*;
 import tech.qiantong.qmodel.common.annotation.Log;
 import tech.qiantong.qmodel.common.core.controller.BaseController;
 import tech.qiantong.qmodel.common.core.domain.CommonResult;
+import tech.qiantong.qmodel.common.core.domain.model.LoginUser;
+import tech.qiantong.qmodel.common.core.page.PageResult;
 import tech.qiantong.qmodel.common.enums.BusinessType;
 import tech.qiantong.qmodel.common.utils.object.BeanUtils;
 import tech.qiantong.qmodel.module.model.controller.admin.modelKey.vo.ModelKeyPageVO;
+import tech.qiantong.qmodel.module.model.controller.admin.modelKey.vo.ModelKeySaveVO;
 import tech.qiantong.qmodel.module.model.dal.dataobject.modelKey.ModelKeyDO;
 import tech.qiantong.qmodel.module.model.service.modelKey.IModelKeyService;
 
 import javax.annotation.Resource;
-import javax.validation.Valid;
 import java.util.Arrays;
-import java.util.List;
 
 /**
  * 模型访问 keyController
@@ -52,23 +53,26 @@ public class ModelKeyController extends BaseController {
     private IModelKeyService modelKeyService;
 
     @Operation(summary = "查询模型访问 key列表")
-//    @PreAuthorize("@ss.hasPermi('model:modelKey:key:list')")
+    @PreAuthorize("@ss.hasPermi('model:modelKey:key:list')")
     @GetMapping("/list")
-    public CommonResult<List<ModelKeyPageVO>> list(ModelKeyPageVO modelKey) {
-        List<ModelKeyDO> page = modelKeyService.listByModel(modelKey);
+    public CommonResult<PageResult<ModelKeyPageVO>> list(ModelKeyPageVO modelKey) {
+        LoginUser currentUser = super.getLoginUser();
+        modelKey.setCreatorId(currentUser.getUserId());
+        PageResult<ModelKeyDO> page = modelKeyService.listByModel(modelKey);
         return CommonResult.success(BeanUtils.toBean(page, ModelKeyPageVO.class));
     }
 
     @Operation(summary = "新增模型访问 key")
-//    @PreAuthorize("@ss.hasPermi('model:modelKey:key:add')")
+    @PreAuthorize("@ss.hasPermi('model:modelKey:key:add')")
     @Log(title = "模型访问 key", businessType = BusinessType.INSERT)
     @PostMapping
-    public CommonResult<Long> add(@RequestBody ModelKeyPageVO modelKey) {
-        return CommonResult.toAjax(modelKeyService.createModelKey(modelKey.getModelId()));
+    public CommonResult<Long> add(@RequestBody ModelKeySaveVO modelKey) {
+        LoginUser currentUser = super.getLoginUser();
+        return CommonResult.toAjax(modelKeyService.createModelKey(modelKey, currentUser));
     }
 
     @Operation(summary = "删除模型访问 key")
-//    @PreAuthorize("@ss.hasPermi('model:modelKey:key:remove')")
+    @PreAuthorize("@ss.hasPermi('model:modelKey:key:remove')")
     @Log(title = "模型访问 key", businessType = BusinessType.DELETE)
     @DeleteMapping("/{ids}")
     public CommonResult<Integer> remove(@PathVariable Long[] ids) {

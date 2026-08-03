@@ -26,15 +26,19 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import tech.qiantong.qmodel.common.core.domain.model.LoginUser;
+import tech.qiantong.qmodel.common.core.page.PageResult;
 import tech.qiantong.qmodel.common.exception.ServiceException;
 import tech.qiantong.qmodel.common.utils.uuid.UUID;
 import tech.qiantong.qmodel.module.model.controller.admin.modelKey.vo.ModelKeyPageVO;
+import tech.qiantong.qmodel.module.model.controller.admin.modelKey.vo.ModelKeySaveVO;
 import tech.qiantong.qmodel.module.model.dal.dataobject.modelKey.ModelKeyDO;
 import tech.qiantong.qmodel.module.model.dal.mapper.modelKey.ModelKeyMapper;
 import tech.qiantong.qmodel.module.model.service.modelKey.IModelKeyService;
 
 import java.util.Collection;
 import java.util.List;
+
 /**
  * 模型访问 keyService业务层处理
  *
@@ -44,29 +48,35 @@ import java.util.List;
 @Slf4j
 @Service
 @Transactional(rollbackFor = Exception.class)
-public class ModelKeyServiceImpl  extends ServiceImpl<ModelKeyMapper,ModelKeyDO> implements IModelKeyService {
+public class ModelKeyServiceImpl extends ServiceImpl<ModelKeyMapper, ModelKeyDO> implements IModelKeyService {
 
+    /**
+     * 获得模型访问 key分页列表
+     *
+     * @param pageReqVO 分页请求
+     * @return 模型访问 key分页列表
+     */
     @Override
-    public List<ModelKeyDO> listByModel(ModelKeyPageVO pageReqVO) {
-        LambdaQueryWrapper<ModelKeyDO> queryWrapper = Wrappers.lambdaQuery(ModelKeyDO.class)
-                .eq(ModelKeyDO::getModelId, pageReqVO.getModelId());
-        return super.list(queryWrapper);
+    public PageResult<ModelKeyDO> listByModel(ModelKeyPageVO pageReqVO) {
+        return baseMapper.selectPage(pageReqVO);
     }
 
     /**
      * 创建模型访问 key
      *
-     * @param modelId 模型Id
+     * @param saveVO 模型访问 key
+     * @param currentUser 当前用户
      * @return 模型访问 key编号
      */
     @Override
-    public Long createModelKey(Long modelId) {
-        ModelKeyDO dictType = new ModelKeyDO();
-        dictType.setModelId(modelId);
-        String uuid = UUID.fastUUID().toString().replace("-", "");
-        dictType.setApiKey("model-"+uuid);
-        baseMapper.insert(dictType);
-        return dictType.getId();
+    public Long createModelKey(ModelKeySaveVO saveVO, LoginUser currentUser) {
+        ModelKeyDO entity = new ModelKeyDO();
+        entity.setName(saveVO.getName());
+        entity.setRemark(saveVO.getRemark());
+        entity.setUserId(currentUser.getUserId());
+        entity.setApiKey(generateApiKey());
+        baseMapper.insert(entity);
+        return entity.getId();
     }
 
     /**
@@ -90,9 +100,19 @@ public class ModelKeyServiceImpl  extends ServiceImpl<ModelKeyMapper,ModelKeyDO>
         LambdaQueryWrapper<ModelKeyDO> queryWrapper = Wrappers.lambdaQuery(ModelKeyDO.class)
                 .eq(ModelKeyDO::getApiKey, apiKey);
         List<ModelKeyDO> list = super.list(queryWrapper);
-        if (CollUtil.isEmpty(list)){
+        if (CollUtil.isEmpty(list)) {
             throw new ServiceException("apiKey 异常");
         }
         return list.get(0);
+    }
+
+    /**
+     * 生成模型访问 key
+     *
+     * @return 模型访问 key
+     */
+    private String generateApiKey() {
+        String uuid = UUID.fastUUID().toString().replace("-", "");
+        return "model-" + uuid;
     }
 }

@@ -19,13 +19,13 @@
 <template>
   <div class="app-container" ref="app-container">
     <div class="pagecont-top" v-show="showSearch">
-      <el-form class="btn-style" :model="queryParams" ref="queryRef" :inline="true" label-width="75px"
+      <el-form class="btn-style" :model="queryParams" ref="queryRef" :inline="true"
                v-show="showSearch" @submit.prevent>
-        <el-form-item label="模型id" prop="modelId">
+        <el-form-item label="名称" prop="name">
           <el-input
               class="el-form-input-width"
-              v-model="queryParams.modelId"
-              placeholder="请输入模型id"
+              v-model="queryParams.name"
+              placeholder="请输入名称"
               clearable
               @keyup.enter="handleQuery"
           />
@@ -66,38 +66,47 @@
       <el-table stripe height="58vh" v-loading="loading" :data="modelKeyList" @selection-change="handleSelectionChange"
                 :default-sort="defaultSort" @sort-change="handleSortChange">
         <el-table-column type="selection" width="55" align="center"/>
-        <el-table-column v-if="getColumnVisibility(0)" label="ID" align="center" prop="id"/>
-        <el-table-column v-if="getColumnVisibility(1)" label="模型id" align="center" prop="modelId">
+        <el-table-column v-if="getColumnVisibility(0)" label="编号" align="center" prop="id" width="80"
+                         sortable="custom" :sort-orders="['descending', 'ascending']"/>
+        <el-table-column v-if="getColumnVisibility(1)" label="名称" align="left" width="180" prop="name"
+                         :show-overflow-tooltip="{ effect: 'light' }">
           <template #default="scope">
-            <span>{{ scope.row.modelId }}</span>
+            <span>{{ scope.row.name }}</span>
           </template>
         </el-table-column>
-        <el-table-column v-if="getColumnVisibility(2)" label="key" align="center" prop="apiKey">
+        <el-table-column v-if="getColumnVisibility(2)" label="密钥" align="center" prop="apiKey">
           <template #default="scope">
-            <span>{{ scope.row.modelId }}</span>
+            <span>{{ scope.row.apiKey }}</span>
           </template>
         </el-table-column>
-        <el-table-column v-if="getColumnVisibility(5)" label="创建人" align="center" prop="createBy">
-          <template #default="scope">
-            <span>{{ scope.row.modelId }}</span>
-          </template>
-        </el-table-column>
-        <el-table-column v-if="getColumnVisibility(7)" label="创建时间" align="center" prop="createTime" width="180"
+        <el-table-column v-if="getColumnVisibility(3)" label="最后使用" align="center" prop="lastUseTime" width="180"
                          sortable="custom" :sort-orders="['descending', 'ascending']">
           <template #default="scope">
-            <span>{{ parseTime(scope.row.createTime, '{y}-{m}-{d}') }}</span>
+            <span>{{ parseTime(scope.row.lastUseTime, '{y}-{m}-{d}  {h}:{i}') }}</span>
           </template>
         </el-table-column>
-        <el-table-column v-if="getColumnVisibility(11)" label="备注" align="center" prop="remark">
+        <el-table-column v-if="getColumnVisibility(4)" label="创建人" align="center" width="120" prop="createBy">
+          <template #default="scope">
+            <span>{{ scope.row.createBy }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column v-if="getColumnVisibility(5)" label="创建时间" align="center" prop="createTime" width="180"
+                         sortable="custom" :sort-orders="['descending', 'ascending']">
+          <template #default="scope">
+            <span>{{ parseTime(scope.row.createTime, '{y}-{m}-{d}  {h}:{i}') }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column v-if="getColumnVisibility(6)" label="备注" align="center" prop="remark"
+                         :show-overflow-tooltip="{ effect: 'light' }">
           <template #default="scope">
             <span>{{ scope.row.modelId }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="操作" align="center" class-name="small-padding fixed-width" fixed="right" width="240">
+        <el-table-column v-if="getColumnVisibility(7)" label="操作" align="center" class-name="small-padding fixed-width" fixed="right" width="180">
           <template #default="scope">
-            <el-button link type="primary" icon="Edit" @click="handleUpdate(scope.row)"
-                       v-hasPermi="['model:modelKey:key:edit']">修改
-            </el-button>
+<!--            <el-button link type="primary" icon="Edit" @click="handleUpdate(scope.row)"-->
+<!--                       v-hasPermi="['model:modelKey:key:edit']">复制密钥-->
+<!--            </el-button>-->
             <el-button link type="danger" icon="Delete" @click="handleDelete(scope.row)"
                        v-hasPermi="['model:modelKey:key:remove']">删除
             </el-button>
@@ -130,21 +139,16 @@
       </template>
       <el-form ref="modelKeyRef" :model="form" :rules="rules" label-width="80px" @submit.prevent>
         <el-row :gutter="20">
-          <el-col :span="12">
-            <el-form-item label="模型id" prop="modelId">
-              <el-input v-model="form.modelId" placeholder="请输入模型id"/>
-            </el-form-item>
-          </el-col>
-          <el-col :span="12">
-            <el-form-item label="key" prop="apiKey">
-              <el-input v-model="form.apiKey" placeholder="请输入key"/>
+          <el-col :span="24">
+            <el-form-item label="名称" prop="name">
+              <el-input v-model="form.name" placeholder="请输入名称"/>
             </el-form-item>
           </el-col>
         </el-row>
         <el-row :gutter="20">
           <el-col :span="24">
             <el-form-item label="备注" prop="remark">
-              <el-input v-model="form.remark" type="textarea" placeholder="请输入内容"/>
+              <el-input v-model="form.remark" type="textarea" placeholder="请输入备注" maxlength="500 个字符" show-word-limit/>
             </el-form-item>
           </el-col>
         </el-row>
@@ -203,6 +207,7 @@
 
 <script setup name="ModelKey">
 import {addModelKey, delModelKey, listModelKey} from "@/api/model/modelKey.js";
+import { parseTime } from "@/utils/anivia.js";
 
 const {proxy} = getCurrentInstance();
 
@@ -210,11 +215,14 @@ const modelKeyList = ref([]);
 
 // 列显隐信息
 const columns = ref([
-  {key: 1, label: "模型id", visible: true},
-  {key: 2, label: "key", visible: true},
-  {key: 5, label: "创建人", visible: true},
-  {key: 7, label: "创建时间", visible: true},
-  {key: 11, label: "备注", visible: true}
+  {key:0, label: "编号", visible: true},
+  {key: 1, label: "名称", visible: true},
+  {key: 2, label: "密钥", visible: true},
+  {key: 3, label: "最后使用", visible: true},
+  {key: 4, label: "创建人", visible: true},
+  {key: 5, label: "创建时间", visible: true},
+  {key: 6, label: "备注", visible: true},
+  {key: 7, label: "操作", visible: true}
 ]);
 
 const getColumnVisibility = (key) => {
@@ -234,7 +242,7 @@ const single = ref(true);
 const multiple = ref(true);
 const total = ref(0);
 const title = ref("");
-const defaultSort = ref({prop: "createTime", order: "desc"});
+const defaultSort = ref({prop: "createTime", order: "descending"});
 const router = useRouter();
 
 const data = reactive({
@@ -245,14 +253,13 @@ const data = reactive({
     modelId: null,
     apiKey: null,
     createTime: null,
+    name: null,
+    orderByColumn:defaultSort.value.prop,
+    isAsc:defaultSort.value.order
+
   },
   rules: {
-    modelId: [{required: true, message: "模型id不能为空", trigger: "blur"}],
-    apiKey: [{required: true, message: "key不能为空", trigger: "blur"}],
-    validFlag: [{required: true, message: "是否有效不能为空", trigger: "blur"}],
-    delFlag: [{required: true, message: "删除标志不能为空", trigger: "blur"}],
-    createTime: [{required: true, message: "创建时间不能为空", trigger: "blur"}],
-    updateTime: [{required: true, message: "更新时间不能为空", trigger: "blur"}],
+    name: [{required: true, message: "名称不能为空", trigger: "blur"}]
   }
 });
 
@@ -325,30 +332,7 @@ function handleSortChange(column, prop, order) {
 function handleAdd() {
   reset();
   open.value = true;
-  title.value = "添加模型访问 key";
-}
-
-/** 修改按钮操作 */
-function handleUpdate(row) {
-  reset();
-  const _id = row.id || ids.value
-  getModelKey(_id).then(response => {
-    form.value = response.data;
-    open.value = true;
-    title.value = "修改模型访问 key";
-  });
-}
-
-
-/** 详情按钮操作 */
-function handleDetail(row) {
-  reset();
-  const _id = row.id || ids.value
-  getModelKey(_id).then(response => {
-    form.value = response.data;
-    openDetail.value = true;
-    title.value = "模型访问 key详情";
-  });
+  title.value = "新增密钥";
 }
 
 /** 提交按钮 */

@@ -4,7 +4,7 @@
   "avatar": "",
   "version": "4.9.4",
   "createdTime": "2024-8-30 21:54:48",
-  "updatedTime": "2026-7-30 11:53:32",
+  "updatedTime": "2026-8-3 10:22:27",
   "dbConns": [],
   "profile": {
     "default": {
@@ -17354,8 +17354,8 @@
           "id": "55E1AF0F-6D36-4FC5-B5C5-2A4041E605B3"
         },
         {
-          "defKey": "model_id",
-          "defName": "模型id",
+          "defKey": "user_id",
+          "defName": "用户id",
           "comment": "",
           "type": "",
           "len": "",
@@ -17370,6 +17370,24 @@
           "extProps": {},
           "domain": "D9CF4D8E-CD60-499C-B46E-2304C7ED36DE",
           "id": "366FB5D7-2B60-44AE-951E-55A6E95C3159"
+        },
+        {
+          "defKey": "name",
+          "defName": "名称",
+          "comment": "",
+          "type": "",
+          "len": "",
+          "scale": "",
+          "primaryKey": false,
+          "notNull": false,
+          "autoIncrement": false,
+          "defaultValue": "",
+          "hideInGraph": false,
+          "refDict": "",
+          "baseType": "FC9790A7-36B8-4A48-8F9A-BC1042BCFE64",
+          "extProps": {},
+          "domain": "118A9191-7E4C-4F66-96D0-EFE23833A5EA",
+          "id": "4566CCB8-396C-492D-988B-3F15E0685C48"
         },
         {
           "defKey": "api_key",
@@ -17388,6 +17406,24 @@
           "extProps": {},
           "domain": "D50BCA5E-B26F-40B7-B0ED-DAB2C1BF77A5",
           "id": "3A6149DC-98E7-49C9-B54E-EC17D6F91D07"
+        },
+        {
+          "defKey": "last_use_time",
+          "defName": "最后使用时间",
+          "comment": "",
+          "type": "",
+          "len": "",
+          "scale": "",
+          "primaryKey": false,
+          "notNull": false,
+          "autoIncrement": false,
+          "defaultValue": "",
+          "hideInGraph": false,
+          "refDict": "",
+          "baseType": "89D69E81-EA34-42EE-9FA2-93B8BD27E098",
+          "extProps": {},
+          "domain": "C49EBB99-CEE0-40B1-9146-6779D2CEC2FD",
+          "id": "E4219F78-E492-41B2-B64C-3CEC41074DED"
         },
         {
           "defKey": "valid_flag",

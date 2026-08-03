@@ -18,8 +18,17 @@
 
 package tech.qiantong.qmodel.module.model.dal.mapper.modelKey;
 
+import tech.qiantong.qmodel.common.core.page.PageResult;
+import tech.qiantong.qmodel.module.model.controller.admin.invokeHistory.vo.ModelInvokeHistoryPageReqVO;
+import tech.qiantong.qmodel.module.model.controller.admin.modelKey.vo.ModelKeyPageVO;
+import tech.qiantong.qmodel.module.model.dal.dataobject.invokeHistory.ModelInvokeHistoryDO;
 import tech.qiantong.qmodel.module.model.dal.dataobject.modelKey.ModelKeyDO;
 import tech.qiantong.qmodel.mybatis.core.mapper.BaseMapperX;
+import tech.qiantong.qmodel.mybatis.core.query.LambdaQueryWrapperX;
+
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * 模型访问 keyMapper接口
@@ -28,4 +37,18 @@ import tech.qiantong.qmodel.mybatis.core.mapper.BaseMapperX;
  * @date 2026-07-30
  */
 public interface ModelKeyMapper extends BaseMapperX<ModelKeyDO> {
+    default PageResult<ModelKeyDO> selectPage(ModelKeyPageVO reqVO) {
+        // 定义排序的字段（防止 SQL 注入，与数据库字段名称一致）
+        Set<String> allowedColumns = new HashSet<>(Arrays.asList("id", "create_time", "update_time"));
+
+        // 构造动态查询条件
+        return selectPage(reqVO, new LambdaQueryWrapperX<ModelKeyDO>()
+                .likeIfPresent(ModelKeyDO::getName, reqVO.getName())
+                .eqIfPresent(ModelKeyDO::getCreatorId, reqVO.getCreatorId())
+                // 如果 reqVO.getName() 不为空，则添加 name 的精确匹配条件（name = '<name>'）
+                // .likeIfPresent(ModelInvokeHistoryDO::getName, reqVO.getName())
+                // 按照 createTime 字段降序排序
+                .orderBy(reqVO.getOrderByColumn(), reqVO.getIsAsc(), allowedColumns));
+    }
+
 }

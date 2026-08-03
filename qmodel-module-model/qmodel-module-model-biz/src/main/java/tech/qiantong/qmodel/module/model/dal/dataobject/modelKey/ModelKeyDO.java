@@ -18,13 +18,13 @@
 
 package tech.qiantong.qmodel.module.model.dal.dataobject.modelKey;
 
+import com.baomidou.mybatisplus.annotation.*;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableLogic;
-import com.baomidou.mybatisplus.annotation.TableName;
 import tech.qiantong.qmodel.common.core.domain.BaseEntity;
+
+import java.util.Date;
 
 /**
  * 模型访问 key DO 对象 model_key
@@ -51,9 +51,14 @@ public class ModelKeyDO extends BaseEntity {
     private Long id;
 
     /**
-     * 模型id
+     * id
      */
-    private Long modelId;
+    private Long userId;
+
+    /**
+     * 模型名称
+     */
+    private String name;
 
     /**
      * key
@@ -71,5 +76,9 @@ public class ModelKeyDO extends BaseEntity {
     @TableLogic
     private Boolean delFlag;
 
+
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @Schema(description = "最后使用时间", example = "")
+    private Date lastUseTime;
 
 }

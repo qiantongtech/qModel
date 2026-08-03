@@ -19,7 +19,10 @@
 package tech.qiantong.qmodel.module.model.service.modelKey;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import tech.qiantong.qmodel.common.core.domain.model.LoginUser;
+import tech.qiantong.qmodel.common.core.page.PageResult;
 import tech.qiantong.qmodel.module.model.controller.admin.modelKey.vo.ModelKeyPageVO;
+import tech.qiantong.qmodel.module.model.controller.admin.modelKey.vo.ModelKeySaveVO;
 import tech.qiantong.qmodel.module.model.dal.dataobject.modelKey.ModelKeyDO;
 
 import java.util.Collection;
@@ -38,15 +41,16 @@ public interface IModelKeyService extends IService<ModelKeyDO> {
      * @param pageReqVO 分页请求
      * @return 模型访问 key分页列表
      */
-    List<ModelKeyDO> listByModel(ModelKeyPageVO pageReqVO);
+    PageResult<ModelKeyDO> listByModel(ModelKeyPageVO pageReqVO);
 
     /**
      * 创建模型访问 key
      *
-     * @param modelId 模型Id
+     * @param modelKey 模型访问 key
+     * @param currentUser 当前用户
      * @return 模型访问 key编号
      */
-    Long createModelKey(Long modelId);
+    Long createModelKey(ModelKeySaveVO saveVO, LoginUser currentUser);
 
     /**
      * 删除模型访问 key
