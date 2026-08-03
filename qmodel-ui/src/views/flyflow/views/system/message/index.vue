@@ -30,7 +30,7 @@ import {ref,onMounted ,reactive} from "vue";
 import {
 	queryMessageList, deleteMsg, readMsg, readAllMsg
 } from "../../../api/message";
-import {Check, Delete, Plus, Position, Refresh, CircleCheck} from "@element-plus/icons-vue";
+import {Check, Plus, Position, Refresh, CircleCheck} from "@element-plus/icons-vue";
 
 const queryFormRef = ref();
 
@@ -232,8 +232,7 @@ onMounted(() => {
               size="small"
               link
               @click="handleDelete(scope.row.id)"
-            >
-              <el-icon><Delete/></el-icon>
+             icon="Delete">
               删除
             </el-button>
           </template>

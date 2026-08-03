@@ -113,8 +113,7 @@
                             :disabled="multiple"
                             @click="handleDelete"
                             v-hasPermi="['monitor:job:remove']"
-                        >
-                            <i class="iconfont-mini icon-a-shanchuxianxing mr5"></i>
+                         icon="Delete">
                             删除</el-button
                         >
                     </el-col>
@@ -225,8 +224,7 @@
                             type="danger"
                             @click="handleDelete(scope.row)"
                             v-hasPermi="['monitor:job:remove']"
-                        >
-                            <i class="iconfont-mini icon-a-shanchuxianxing mr5"></i>
+                         icon="Delete">
                             删除</el-button
                         >
                         <el-popover placement="bottom" :width="150" trigger="click">

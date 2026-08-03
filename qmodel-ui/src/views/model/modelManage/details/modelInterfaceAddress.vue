@@ -148,7 +148,7 @@
             type="danger"
             @click="handleDelete(scope.row)"
             v-hasPermi="['modelReconstitution:interfaceAddress:remove']"
-            ><Delete class="icon-mini" />删除</el-button
+             icon="Delete">删除</el-button
           >
           <el-button link type="primary" @click="setTheParameters(scope.row)"
             ><Setting class="icon-mini" />设置参数</el-button

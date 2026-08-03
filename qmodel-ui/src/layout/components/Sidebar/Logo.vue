@@ -17,49 +17,95 @@
 -->
 
 <template>
-  <div class="sidebar-logo-container" :class="{ 'collapse': collapse }" :style="{ backgroundColor: sideTheme === 'theme-dark' ? variables.menuBackground : variables.menuLightBackground }">
+  <div
+    class="sidebar-logo-container"
+    :class="{ collapse: collapse }"
+    :style="{
+      backgroundColor:
+        sideTheme === 'theme-dark'
+          ? variables.menuBackground
+          : variables.menuLightBackground,
+    }"
+  >
     <transition name="sidebarLogoFade">
-      <router-link v-if="collapse" key="collapse" class="sidebar-logo-link" to="/">
-<!--        <img v-if="logo" :src="simpLogo" class="sidebar-logo" />-->
+      <router-link
+        v-if="collapse"
+        key="collapse"
+        class="sidebar-logo-link"
+        to="/"
+      >
+        <!--        <img v-if="logo" :src="simpLogo" class="sidebar-logo" />-->
         <img v-if="logo" :src="refSimpLogo" class="sidebar-logo" />
-        <h1 v-else class="sidebar-title" :style="{ color: sideTheme === 'theme-dark' ? variables.logoTitleColor : variables.logoLightTitleColor }">{{ title }}</h1>
+        <h1
+          v-else
+          class="sidebar-title"
+          :style="{
+            color:
+              sideTheme === 'theme-dark'
+                ? variables.logoTitleColor
+                : variables.logoLightTitleColor,
+          }"
+        >
+          {{ title }}
+        </h1>
       </router-link>
       <router-link v-else key="expand" class="sidebar-logo-link" to="/">
-<!--        <img v-if="logo" :src="logo" class="sidebar-logo" />-->
-        <img v-if="logo" :src="refLogo" class="sidebar-logo" />
+        <!--        <img v-if="logo" :src="logo" class="sidebar-logo" />-->
+        <span
+          v-if="useDefaultLogo"
+          class="sidebar-logo-motion"
+          :class="{ 'logo-intro': logoIntroActive }"
+        >
+          <img :src="simpLogo" class="sidebar-logo-mark" />
+          <img :src="logo" class="sidebar-logo-full" />
+        </span>
+        <img v-else-if="logo" :src="refLogo" class="sidebar-logo" />
       </router-link>
     </transition>
   </div>
 </template>
 
 <script setup>
-import variables from '@/assets/system/styles/variables.module.scss'
-import logo from '@/assets/system/logo/qmodel-logo.png'
-import  simpLogo from '@/assets/system/logo/simpleLogo.svg'
-import useSettingsStore from '@/store/system/settings'
+import variables from "@/assets/system/styles/variables.module.scss";
+import logo from "@/assets/system/logo/qmodel-logo.png";
+import simpLogo from "@/assets/system/logo/simpleLogo.svg";
+import useSettingsStore from "@/store/system/settings";
 import { getContent } from "@/api/system/system/content";
 
 // 使用 ref 来创建响应式的 logo
-const refLogo = ref(null); // 初始化 logo 为 simpLogo.png
-const refSimpLogo = ref(null); // 初始化 logo 为 simpLogo.png
+const refLogo = ref(logo);
+const refSimpLogo = ref(simpLogo);
+const logoIntroActive = ref(false);
+let logoIntroTimer;
+
+const useDefaultLogo = computed(() => !refLogo.value || refLogo.value === logo);
 
 defineProps({
   collapse: {
     type: Boolean,
-    required: true
-  }
-})
+    required: true,
+  },
+});
 onMounted(() => {
+  logoIntroActive.value = true;
+  logoIntroTimer = window.setTimeout(() => {
+    logoIntroActive.value = false;
+  }, 2200);
   fetchContent();
 });
+
+onBeforeUnmount(() => {
+  window.clearTimeout(logoIntroTimer);
+});
+
 // 使用 getContent 来获取数据，而不是重新定义一个 getContent 函数
 const fetchContent = async () => {
   try {
     // 调用你从 API 导入的 getContent 方法
-    const res = await getContent(1);  // 假设请求的是 id 为 1 的数据
-    if(res.code == 200){
-      const data = res.data
-      const sysLogo = data.logo
+    const res = await getContent(1); // 假设请求的是 id 为 1 的数据
+    if (res.code == 200) {
+      const data = res.data;
+      const sysLogo = data.logo;
       refLogo.value = sysLogo ? sysLogo : logo;
       refSimpLogo.value = sysLogo ? sysLogo : simpLogo;
     }
@@ -96,6 +142,7 @@ const sideTheme = computed(() => settingsStore.sideTheme);
   overflow: hidden;
 
   & .sidebar-logo-link {
+    display: block;
     height: 100%;
     width: 100%;
 
@@ -103,8 +150,48 @@ const sideTheme = computed(() => settingsStore.sideTheme);
       height: 48px;
       margin-top: 8px;
       vertical-align: middle;
-      transform: scale(.58);
+      transform: scale(0.58);
       margin-left: -32px;
+    }
+
+    & .sidebar-logo-motion {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 190px;
+      height: 100%;
+      vertical-align: middle;
+    }
+
+    & .sidebar-logo-mark {
+      position: absolute;
+      left: 17px;
+      width: 30px;
+      height: 30px;
+      object-fit: contain;
+      opacity: 0;
+      transform-origin: center;
+      pointer-events: none;
+    }
+
+    & .sidebar-logo-full {
+      display: block;
+      width: 168px;
+      height: auto;
+      object-fit: contain;
+    }
+
+    & .sidebar-logo-motion.logo-intro,
+    &:hover .sidebar-logo-motion {
+      .sidebar-logo-mark {
+        animation: sidebarLogoMarkRunIn 1.45s cubic-bezier(0.16, 0.88, 0.2, 1)
+          0.18s both;
+      }
+
+      .sidebar-logo-full {
+        animation: sidebarLogoFullSettle 0.55s ease-out 0.72s both;
+      }
     }
 
     & .sidebar-title {
@@ -125,6 +212,66 @@ const sideTheme = computed(() => settingsStore.sideTheme);
       margin-top: 0;
       margin-right: 0;
       margin-left: -4px;
+    }
+  }
+}
+
+@keyframes sidebarLogoMarkRunIn {
+  0% {
+    opacity: 0;
+    filter: drop-shadow(0 0 0 rgba(69, 145, 255, 0));
+    transform: translateX(-90px) scaleX(0.88) scaleY(1.04) rotate(-8deg);
+  }
+
+  38% {
+    opacity: 1;
+    filter: drop-shadow(12px 0 12px rgba(69, 145, 255, 0.48));
+    transform: translateX(18px) scaleX(1.08) scaleY(0.94) rotate(4deg);
+  }
+
+  54% {
+    transform: translateX(-7px) scaleX(0.98) scaleY(1.02) rotate(-2deg);
+  }
+
+  70% {
+    transform: translateX(4px) scaleX(1.02) scaleY(0.98) rotate(1deg);
+  }
+
+  84% {
+    opacity: 1;
+    filter: drop-shadow(3px 0 8px rgba(69, 145, 255, 0.28));
+    transform: translateX(-1px) scale(1) rotate(0deg);
+  }
+
+  100% {
+    opacity: 0;
+    filter: drop-shadow(0 0 0 rgba(69, 145, 255, 0));
+    transform: translateX(0) scale(1) rotate(0deg);
+  }
+}
+
+@keyframes sidebarLogoFullSettle {
+  0% {
+    opacity: 0;
+    transform: translateX(-10px);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sidebar-logo-link {
+    .sidebar-logo-mark {
+      display: none;
+    }
+
+    .sidebar-logo-full {
+      animation: none !important;
+      opacity: 1;
+      transform: none;
     }
   }
 }

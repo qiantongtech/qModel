@@ -19,7 +19,7 @@
 <template>
   <div class="top-right-btn" :style="style">
     <el-row>
-      <el-tooltip class="item" effect="dark" :content="showSearch ? '隐藏搜索' : '显示搜索'" placement="top" v-if="search">
+      <el-tooltip class="item" popper-class="right-toolbar-tooltip" effect="dark" :content="showSearch ? '隐藏搜索' : '显示搜索'" placement="top" v-if="search">
         <!-- <el-button class="zhankaishouqi" type="primary" :icon="showSearch ? 'ArrowDownBold' : 'ArrowUpBold'" @click="toggleSearch()">{{showSearch ? '收起' : '展开'}}</el-button> -->
         <el-button class="zhankaishouqi" type="primary"  @click="toggleSearch()">
           <span>{{showSearch ? '收起' : '展开'}}</span>

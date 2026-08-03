@@ -107,8 +107,7 @@
                             :disabled="multiple"
                             @click="handleDelete"
                             v-hasPermi="['system:post:remove']"
-                        >
-                            <i class="iconfont-mini icon-a-shanchuxianxing"></i>
+                         icon="Delete">
                             删除</el-button
                         >
                     </el-col>
@@ -184,8 +183,7 @@
                             type="danger"
                             @click="handleDelete(scope.row)"
                             v-hasPermi="['system:post:remove']"
-                        >
-                            <i class="iconfont-mini icon-a-shanchuxianxing"></i>
+                         icon="Delete">
                             删除</el-button
                         >
                     </template>

@@ -141,8 +141,8 @@
           </el-col>
           <el-col :span="1.5">
             <el-button type="danger" plain :disabled="multiple" @click="handleDelete" v-hasPermi="['user:userType:remove']"
-                       @mousedown="(e) => e.preventDefault()">
-              <i class="iconfont-mini icon-a-shanchuxianxing mr5"></i>删除
+                       @mousedown="(e) => e.preventDefault()" icon="Delete">
+              删除
             </el-button>
           </el-col>
           <el-col :span="1.5">
@@ -218,8 +218,7 @@
               <i class="iconfont-mini icon-a-xiugaixianxing mr5"></i>
               修改</el-button>
             <el-button link type="danger" @click="handleDelete(scope.row)"
-                       v-hasPermi="['user:userType:remove']">
-              <i class="iconfont-mini icon-a-shanchuxianxing mr5"></i>
+                       v-hasPermi="['user:userType:remove']" icon="Delete">
               删除</el-button>
           </template>
         </el-table-column>

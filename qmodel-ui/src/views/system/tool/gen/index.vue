@@ -125,8 +125,7 @@
                             :disabled="multiple"
                             @click="handleDelete"
                             v-hasPermi="['tool:gen:remove']"
-                        >
-                            <i class="iconfont-mini icon-a-shanchuxianxing mr5"></i>
+                         icon="Delete">
                             删除</el-button
                         >
                     </el-col>
@@ -206,8 +205,7 @@
                                 type="danger"
                                 @click="handleDelete(scope.row)"
                                 v-hasPermi="['tool:gen:remove']"
-                            >
-                                <i class="iconfont-mini icon-a-shanchuxianxing mr5"></i>
+                             icon="Delete">
                             </el-button>
                         </el-tooltip>
                         <!--          <el-tooltip content="同步" placement="top">-->

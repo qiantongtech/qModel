@@ -66,13 +66,7 @@
         :show-overflow-tooltip="{ effect: 'light' }"
       >
         <template #default="scope">
-          <el-tooltip
-            :content="scope.row.description || '-'"
-            placement="top"
-            effect="light"
-          >
-            {{ scope.row.description }}
-          </el-tooltip>
+          {{ scope.row.description || "-" }}
         </template>
       </el-table-column>
       <el-table-column
@@ -672,7 +666,7 @@ onMounted(() => {
   .icon-mini {
     width: 1em;
     height: 1em;
-    margin-right: 8px;
+    margin-right: 6px;
   }
 }
 

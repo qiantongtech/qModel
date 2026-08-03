@@ -179,8 +179,7 @@
                             type="danger"
                             @click="handleDelete(scope.row)"
                             v-hasPermi="['system:menu:remove']"
-                        >
-                            <i class="iconfont-mini icon-a-shanchuxianxing"></i>
+                         icon="Delete">
                             删除</el-button
                         >
                     </template>

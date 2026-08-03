@@ -29,18 +29,22 @@
           </template>
           <div>
             <div class="text-center">
-              <userAvatar/>
+              <userAvatar />
             </div>
             <ul class="list-group list-group-striped">
               <li class="list-group-item vertical-center">
                 <i class="iconfont icon-a-yonghuzhanghaoxianxing mr5"></i>
                 用户名称
-                <div class="pull-right label-text">{{ state.user.userName }}</div>
+                <div class="pull-right label-text">
+                  {{ state.user.userName }}
+                </div>
               </li>
               <li class="list-group-item vertical-center">
                 <i class="iconfont icon-a-shoujixianxing mr5"></i>
                 手机号码
-                <div class="pull-right label-text">{{ state.user.phonenumber }}</div>
+                <div class="pull-right label-text">
+                  {{ state.user.phonenumber }}
+                </div>
               </li>
               <li class="list-group-item vertical-center">
                 <i class="iconfont icon-a-yonghuyouxiangxianxing mr5"></i>
@@ -50,7 +54,8 @@
               <li class="list-group-item vertical-center">
                 <i class="iconfont icon-bumen margin-right-5 mr5"></i>
                 所属部门
-                <div class="pull-right label-text" v-if="state.user.dept">{{ state.user.dept.deptName }} /
+                <div class="pull-right label-text" v-if="state.user.dept">
+                  {{ state.user.dept.deptName }} /
                   {{ state.postGroup }}
                 </div>
               </li>
@@ -62,7 +67,9 @@
               <li class="list-group-item vertical-center">
                 <i class="iconfont icon-a-riqixianxing mr5"></i>
                 创建日期
-                <div class="pull-right label-text">{{ state.user.createTime }}</div>
+                <div class="pull-right label-text">
+                  {{ state.user.createTime }}
+                </div>
               </li>
             </ul>
           </div>
@@ -78,10 +85,10 @@
           </template>
           <el-tabs v-model="activeTab">
             <el-tab-pane label="基本资料" name="userinfo">
-              <userInfo :user="state.user"/>
+              <userInfo :user="state.user" />
             </el-tab-pane>
             <el-tab-pane label="修改密码" name="resetPwd">
-              <resetPwd/>
+              <resetPwd />
             </el-tab-pane>
           </el-tabs>
         </el-card>
@@ -94,22 +101,22 @@
 import userAvatar from "./userAvatar.vue";
 import userInfo from "./userInfo.vue";
 import resetPwd from "./resetPwd.vue";
-import {getUserProfile} from "@/api/system/system/user.js";
+import { getUserProfile } from "@/api/system/system/user.js";
 
 const activeTab = ref("userinfo");
 const state = reactive({
   user: {},
   roleGroup: {},
-  postGroup: {}
+  postGroup: {},
 });
 
 function getUser() {
-  getUserProfile().then(response => {
+  getUserProfile().then((response) => {
     state.user = response.data;
     state.roleGroup = response.roleGroup;
     state.postGroup = response.postGroup;
   });
-};
+}
 
 getUser();
 </script>
@@ -133,8 +140,11 @@ getUser();
   .el-tabs__active-bar {
     background-color: var(--el-color-primary);
   }
-  .el-card{
-    .el-card__header{
+  .el-card {
+    height: 100%;
+    border-radius: 2px !important;
+
+    .el-card__header {
       padding: 14px !important;
     }
   }

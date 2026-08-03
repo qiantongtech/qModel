@@ -119,8 +119,7 @@
                             :disabled="multiple"
                             @click="handleDelete"
                             v-hasPermi="['system:role:remove']"
-                        >
-                            <i class="iconfont-mini icon-a-shanchuxianxing"></i>
+                         icon="Delete">
                             删除</el-button
                         >
                     </el-col>
@@ -204,8 +203,7 @@
                             @click="handleDelete(scope.row)"
                             v-hasPermi="['system:role:remove']"
                             v-if="scope.row.roleId !== 1 && scope.row.roleId !== 3"
-                        >
-                            <i class="iconfont-mini icon-a-shanchuxianxing"></i>
+                         icon="Delete">
                             删除</el-button
                         >
                         <el-popover

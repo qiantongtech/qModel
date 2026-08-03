@@ -186,8 +186,7 @@
                         <Edit class="icon-mini" />
                         编辑</el-button
                       >
-                      <el-button type="danger" text @click="handleDelete(item)">
-                        <Delete class="icon-mini" />
+                      <el-button type="danger" text @click="handleDelete(item)" icon="Delete">
                         删除</el-button
                       >
                     </div>

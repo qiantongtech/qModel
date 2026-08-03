@@ -99,8 +99,7 @@
                             :disabled="multiple"
                             @click="handleDelete"
                             v-hasPermi="['monitor:logininfor:remove']"
-                        >
-                            <i class="iconfont-mini icon-a-shanchuxianxing"></i>
+                         icon="Delete">
                             删除</el-button
                         >
                     </el-col>

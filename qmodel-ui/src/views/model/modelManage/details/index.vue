@@ -719,7 +719,7 @@ onMounted(() => {
 .icon-mini {
   width: 1em;
   height: 1em;
-  margin-right: 8px;
+  margin-right: 6px;
 }
 
 .icon-preview {

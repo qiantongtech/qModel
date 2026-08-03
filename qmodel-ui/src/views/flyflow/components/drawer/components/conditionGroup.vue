@@ -36,7 +36,7 @@
 
 					<el-button text v-if="conditionConfig.conditionList.length>1"
 										 @click="deleteGroup(index)"
-										 :icon="$icon['Delete']"
+										 icon="Delete"
 
 					></el-button>
 				</div>
@@ -51,7 +51,7 @@
 						<el-button text
 											 @click="deleteCondition(index,index1)"
 											 v-if="item.conditionList.length>1"
-											 :icon="$icon['Delete']"
+											 icon="Delete"
 
 						></el-button>
 					</div>

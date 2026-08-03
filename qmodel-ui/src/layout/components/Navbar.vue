@@ -340,7 +340,7 @@
                       type="danger"
                       @click="deleteItem(scope.$index, scope.row)"
                       plain
-                      >删除
+                       icon="Delete">删除
                     </el-button>
                     <!--                                        <el-button type="danger" icon="el-icon-delete" @click="deleteItem(scope.$index, scope.row)" circle></el-button>-->
                   </template>
@@ -501,11 +501,15 @@ function resetFromWork() {
   form.value.reportExperience = null;
 }
 function clickViewMessage(msg) {
-  console.log("消息 " + JSON.stringify(msg));
-  openView.value = true;
-  viewData.value.title = msg.title;
-  viewData.value.content = msg.noticeContent;
-  viewData.value.createTime = msg.time;
+  proxy.$router.push({
+    path: "/sys/system/notice/detail",
+    query: { id: msg.noticeId },
+  });
+  // console.log("消息 " + JSON.stringify(msg));
+  // openView.value = true;
+  // viewData.value.title = msg.title;
+  // viewData.value.content = msg.noticeContent;
+  // viewData.value.createTime = msg.time;
 }
 //请假了
 function offFromWork() {

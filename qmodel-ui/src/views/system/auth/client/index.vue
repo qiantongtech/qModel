@@ -111,8 +111,7 @@
             <el-button link type="primary"  @click="handleUpdate(scope.row)" v-hasPermi="['auth:client:edit']">
               <i class="iconfont-mini icon-a-xiugaixianxing"></i>
               修改</el-button>
-            <el-button link type="danger"  @click="handleDelete(scope.row)" v-hasPermi="['auth:client:remove']">
-              <i class="iconfont-mini icon-a-shanchuxianxing"></i>
+            <el-button link type="danger"  @click="handleDelete(scope.row)" v-hasPermi="['auth:client:remove']" icon="Delete">
               删除</el-button>
           </template>
         </el-table-column>

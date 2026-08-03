@@ -100,8 +100,7 @@
                   :disabled="multiple"
                   @click="handleDelete"
                   v-hasPermi="['system:config:remove']"
-               >
-                 <i class="iconfont-mini icon-a-shanchuxianxing"></i>
+                icon="Delete">
                  删除</el-button>
             </el-col>
             <el-col :span="1.5">
@@ -171,8 +170,7 @@
                   <el-button link type="primary"  @click="handleUpdate(scope.row)" v-hasPermi="['system:config:edit']" >
                     <i class="iconfont-mini icon-a-xiugaixianxing"></i>
                     修改</el-button>
-                  <el-button link type="danger"  @click="handleDelete(scope.row)" v-hasPermi="['system:config:remove']">
-                    <i class="iconfont-mini icon-a-shanchuxianxing"></i>
+                  <el-button link type="danger"  @click="handleDelete(scope.row)" v-hasPermi="['system:config:remove']" icon="Delete">
                     删除</el-button>
                </template>
             </el-table-column>

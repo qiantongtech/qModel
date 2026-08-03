@@ -206,8 +206,7 @@
                                     :disabled="multiple"
                                     @click="handleDelete"
                                     v-hasPermi="['system:user:remove']"
-                                >
-                                    <i class="iconfont-mini icon-a-shanchuxianxing"></i>
+                                 icon="Delete">
                                     删除
                                 </el-button>
                             </el-col>

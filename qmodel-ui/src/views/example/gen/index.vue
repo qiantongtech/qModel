@@ -148,8 +148,7 @@
               <el-button link type="primary" @click="handleAdd(scope.row)" v-hasPermi="['gen:dept:add']">
                 <i class="iconfont-mini icon-xinzeng mr5"></i>
                 新增</el-button>
-              <el-button link type="danger" @click="handleDelete(scope.row)" v-hasPermi="['gen:dept:remove']">
-                <i class="iconfont-mini icon-a-shanchuxianxing mr5"></i>
+              <el-button link type="danger" @click="handleDelete(scope.row)" v-hasPermi="['gen:dept:remove']" icon="Delete">
                 删除</el-button>
             </template>
           </el-table-column>
