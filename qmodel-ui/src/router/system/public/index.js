@@ -115,7 +115,7 @@ export default [
         hidden: true
     },
     {
-        path: '/sys/system/notice/detail',
+        path: '/system/notice/detail',
         component: Layout,
         hidden: true,
         children: [

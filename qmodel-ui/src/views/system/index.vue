@@ -532,7 +532,7 @@ function goxinwen(row) {
     proxy.$router.push("/system/notice");
   } else {
     proxy.$router.push({
-      path: "/sys/system/notice/detail",
+      path: "/system/notice/detail",
       query: { id: row.noticeId },
     });
   }

@@ -340,7 +340,8 @@
                       type="danger"
                       @click="deleteItem(scope.$index, scope.row)"
                       plain
-                       icon="Delete">删除
+                      icon="Delete"
+                      >删除
                     </el-button>
                     <!--                                        <el-button type="danger" icon="el-icon-delete" @click="deleteItem(scope.$index, scope.row)" circle></el-button>-->
                   </template>
@@ -502,7 +503,7 @@ function resetFromWork() {
 }
 function clickViewMessage(msg) {
   proxy.$router.push({
-    path: "/sys/system/notice/detail",
+    path: "/system/notice/detail",
     query: { id: msg.noticeId },
   });
   // console.log("消息 " + JSON.stringify(msg));
