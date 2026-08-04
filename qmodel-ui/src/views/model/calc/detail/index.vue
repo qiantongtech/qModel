@@ -156,8 +156,6 @@
         <el-tab-pane name="inputParams">
           <template #label>输入参数</template>
           <div v-if="activeName === 'inputParams'" class="tab-content">
-
-
             <el-table
               stripe
               v-loading="inputParamLoading"
@@ -268,7 +266,6 @@
                 label="执行批次号"
                 align="left"
                 prop="executionNo"
-
               >
                 <template #default="scope">
                   {{ scope.row.executionNo || "-" }}
@@ -370,52 +367,29 @@
           </div>
         </el-tab-pane>
 
-        <el-tab-pane name="realTimeLog" v-if="false">
-          <template #label>实时日志</template>
-          <div v-if="activeName === 'realTimeLog'" class="tab-content">
-            <div class="log-body">
-              <div
-                v-for="(line, index) in logList"
-                :key="index"
-                :class="['log-line', line.type]"
-              >
-                <span class="log-time">{{ line.time }}</span>
-                <span class="log-content">{{ line.content }}</span>
-              </div>
-              <div v-if="logList.length === 0" class="log-empty">
-                > 暂无日志记录
-              </div>
-            </div>
-          </div>
-        </el-tab-pane>
+<!--        <el-tab-pane name="realTimeLog" v-if="false">-->
+<!--          <template #label>实时日志</template>-->
+<!--          <div v-if="activeName === 'realTimeLog'" class="tab-content">-->
+<!--            <div class="log-body">-->
+<!--              <div-->
+<!--                v-for="(line, index) in logList"-->
+<!--                :key="index"-->
+<!--                :class="['log-line', line.type]"-->
+<!--              >-->
+<!--                <span class="log-time">{{ line.time }}</span>-->
+<!--                <span class="log-content">{{ line.content }}</span>-->
+<!--              </div>-->
+<!--              <div v-if="logList.length === 0" class="log-empty">-->
+<!--                > 暂无日志记录-->
+<!--              </div>-->
+<!--            </div>-->
+<!--          </div>-->
+<!--        </el-tab-pane>-->
 
         <el-tab-pane name="outputResult">
           <template #label>输出结果</template>
-          <div v-if="activeName === 'outputResult'" class="tab-content">
-            <div v-if="calcDetail.status === 2" class="output-success">
-              <el-table
-                v-if="outputResultList.length > 0"
-                :data="outputResultList"
-                border
-                size="small"
-              >
-                <el-table-column label="字段" prop="key" width="200" />
-                <el-table-column label="值" prop="value" />
-              </el-table>
-              <el-empty v-else description="暂无输出结果" :image-size="60" />
-            </div>
-            <div v-else-if="calcDetail.status === 3" class="output-error">
-              <div class="output-section-title mb10">
-                <el-icon style="color: #f56c6c"><WarningFilled /></el-icon>
-                计算失败
-              </div>
-              <div class="error-box">
-                <pre>{{ calcDetail.errorMessage || '暂无错误信息' }}</pre>
-              </div>
-            </div>
-            <div v-else class="output-pending">
-              <el-empty description="暂无输出结果" :image-size="60" />
-            </div>
+          <div v-if="activeName === 'outputResult'" class="tab-content output-result-tab">
+            <OutputResult :calc-detail="calcDetail" />
           </div>
         </el-tab-pane>
       </el-tabs>
@@ -537,10 +511,10 @@
 <script setup name="CalcDetail">
 import { ref, computed, watch, getCurrentInstance, reactive } from "vue";
 import { useRouter, useRoute } from "vue-router";
-import { SuccessFilled, WarningFilled } from "@element-plus/icons-vue";
 import { getCalc } from "@/api/model/calc/calc";
 import { listCalcExecution, getCalcExecution } from "@/api/model/calcExecution/calcExecution";
 import RightToolbar from "@/components/RightToolbar/index.vue";
+import OutputResult from "./OutputResult.vue";
 
 const { proxy } = getCurrentInstance();
 const router = useRouter();
@@ -724,24 +698,6 @@ const inputParamList = computed(() => {
   }
 });
 
-/** 输出结果列表 */
-const outputResultList = computed(() => {
-  const result = calcDetail.value.outputResult;
-  if (!result) return [];
-  try {
-    const parsed = typeof result === "string" ? JSON.parse(result) : result;
-    if (typeof parsed === "object" && parsed !== null) {
-      return Object.keys(parsed).map((key) => ({
-        key,
-        value: typeof parsed[key] === "object" ? JSON.stringify(parsed[key], null, 2) : String(parsed[key]),
-      }));
-    }
-    return [{ key: "result", value: String(result) }];
-  } catch {
-    return [{ key: "result", value: result }];
-  }
-});
-
 /** 日志列表（模拟数据，实际应从后端获取） */
 const logList = computed(() => {
   const logs = [];
@@ -821,6 +777,10 @@ function getTypeTagType(type) {
 <style lang="scss" scoped>
 .tab-content {
   padding: 10px 0;
+}
+
+.output-result-tab {
+  padding-top: 0;
 }
 
 .output-section-title {
