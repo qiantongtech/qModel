@@ -194,7 +194,6 @@
           label="创建人"
           align="center"
           prop="createBy"
-          width="120"
           :show-overflow-tooltip="{ effect: 'light' }"
         >
           <template #default="scope">

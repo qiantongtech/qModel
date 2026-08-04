@@ -515,7 +515,7 @@ const getModelById = (params) => {
 
 const goBack = () => {
   router.push({
-    path: "/model/version",
+    path: "/model/manage",
     query: {
       pageNum: 1,
     },

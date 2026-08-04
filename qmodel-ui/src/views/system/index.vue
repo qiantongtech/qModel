@@ -404,7 +404,7 @@ function toPolicy() {
 const entranceList = [
   {
     name: "模型分类",
-    path: "Classify",
+    path: "model/classify",
     query: {},
     perm: ["model:classify:classify:list"],
     icon: "知识中心",
@@ -412,7 +412,7 @@ const entranceList = [
   },
   {
     name: "模型中心",
-    path: "version",
+    path: "model/manage",
     query: {},
     icon: "知识抽取",
     perm: ["model:model:list"],
@@ -420,7 +420,7 @@ const entranceList = [
   },
   {
     name: "模型计算",
-    path: "modelCompute",
+    path: "model/compute",
     query: {},
     icon: "知识推理",
     perm: ["model:modelCacl:cacl:list"],
@@ -428,7 +428,7 @@ const entranceList = [
   },
   {
     name: "历史记录",
-    path: "Operate",
+    path: "model/operate",
     query: {},
     icon: "知识应用",
     perm: ["model:operate:operate:list"],

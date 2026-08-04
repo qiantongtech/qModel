@@ -30,7 +30,7 @@ export default [
                 path: 'modelManageView',
                 component: () => import('@/views/model/modelManage/details/index.vue'),
                 name: 'modelManageView',
-                meta: { title: '模型详情', noCache: true, activeMenu: '/model/version' }
+                meta: { title: '模型详情', noCache: true, activeMenu: '/model/manage' }
             },
             {
                 path: 'modelComputeInputOrOutput',
@@ -52,13 +52,13 @@ export default [
                 path: 'modelManage/add',
                 component: () => import('@/views/model/modelManage/add/index.vue'),
                 name: 'ModelManageAdd',
-                meta: { title: '新增模型', noCache: true, activeMenu: '/model/version' }
+                meta: { title: '新增模型', noCache: true, activeMenu: '/model/manage' }
             },
             {
                 path: 'modelManage/edit',
                 component: () => import('@/views/model/modelManage/add/index.vue'),
                 name: 'ModelManageEdit',
-                meta: { title: '修改模型', noCache: true, activeMenu: '/model/version' }
+                meta: { title: '修改模型', noCache: true, activeMenu: '/model/manage' }
             }
         ]
     }
