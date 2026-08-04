@@ -293,7 +293,8 @@
       v-model="open"
       draggable
       destroy-on-close
-      width="800px"
+      width="60%"
+      class="dialog"
       :append-to="$refs['app-container']"
       @open="handleDialogOpen"
     >
@@ -302,7 +303,7 @@
           {{ title }}
         </span>
       </template>
-      <el-form ref="calcRef" :model="form" :rules="rules" label-width="80px" @submit.prevent>
+      <el-form ref="calcRef" :model="form" :rules="rules" label-width="146px" @submit.prevent>
         <!-- 基础信息 -->
         <div class="h2-title">基础信息</div>
         <el-row :gutter="20">
@@ -470,9 +471,9 @@
         </el-row>
       </el-form>
       <template #footer>
-        <div class="dialog-footer">
-          <el-button size="mini" @click="cancel">取 消</el-button>
-          <el-button type="primary" size="mini" @click="submitForm">提交计算</el-button>
+        <div style="text-align: right">
+          <el-button @click="cancel">取 消</el-button>
+          <el-button type="primary" @click="submitForm">提交计算</el-button>
         </div>
       </template>
     </el-dialog>
@@ -483,6 +484,7 @@
       draggable
       destroy-on-close
       width="800px"
+      class="dialog"
       :append-to="$refs['app-container']"
     >
       <template #header="{ close, titleId, titleClass }">
@@ -490,7 +492,7 @@
           {{ detailTitle }}
         </span>
       </template>
-      <el-form :model="form" label-width="80px">
+      <el-form :model="form" label-width="146px">
         <div class="h2-title">基础信息</div>
         <el-row :gutter="20">
           <el-col :span="12">
@@ -574,8 +576,8 @@
         </el-row>
       </el-form>
       <template #footer>
-        <div class="dialog-footer">
-          <el-button size="mini" @click="openDetail = false">关 闭</el-button>
+        <div style="text-align: right">
+          <el-button @click="openDetail = false">关 闭</el-button>
         </div>
       </template>
     </el-dialog>
@@ -1122,309 +1124,57 @@ getList()
 </script>
 
 <style lang="scss" scoped>
-.app-container {
-  width: 100%;
-  background-color: #f0f2f5;
-  height: 100%;
-  padding: 15px;
-  display: flex;
-  flex-direction: column;
-  overflow: hidden auto;
-  --el-text-color-regular: #333;
-  --el-text-color-primary: #333;
+/*
+ * Apply styles only within this component to avoid global pollution
+ */
 
-  .pagecont-top {
-    padding: 15px 15px 1px 15px;
-    background-color: #ffffff;
-    border-radius: 2px;
-  }
-
-  .pagecont-bottom {
-    flex: 1;
-    margin-top: 15px;
-    padding: 13px 15px;
-    background-color: #ffffff;
-    border-radius: 2px;
-  }
-
-  .el-form-input-width {
-    width: 210px;
-  }
-
-  .el-input {
-    --el-input-border-radius: var(--el-border-radius-small) !important;
-    ::-webkit-input-placeholder {
-      font-size: 14px !important;
-    }
-  }
-
-  .el-input__wrapper {
-    box-shadow: 0 0 0 1px #dcdfe6 inset;
-    border-radius: 2px !important;
-  }
-
-  .el-input__inner {
-    &::placeholder {
-      font-size: 14px !important;
-    }
-  }
-
-  .btn-style {
-    .el-input__inner {
-      font-size: 14px;
-      color: #000000;
-      font-family: PingFangSC-Regular, PingFangSC-Regular;
-    }
-
-    .el-button {
-      height: 28px;
-      padding: 8px 11px;
-      font-size: 12px;
-    }
-  }
-
-  .el-button {
-    border-radius: 2px !important;
-  }
-
-  :deep(.el-form-item__label) {
-    font-family: PingFang SC;
-    font-weight: 400 !important;
-    margin-right: 20px;
-  }
-
-  .el-input__inner {
-    font-size: 14px;
-    color: #000000;
-    font-family: PingFangSC-Regular, PingFangSC-Regular;
-  }
-
-  :deep(.el-textarea__inner) {
-    border-radius: 2px 2px 2px 2px !important;
-    height: 98px;
-    color: #606266 !important;
-    font-family: PingFangSC-Regular, PingFangSC-Regular;
-  }
-
-  :deep(.el-form-item) {
-    margin-bottom: 14px;
-  }
-
-  :deep(.el-dialog .el-form-item) {
-    margin-bottom: 16px;
-  }
-
-  :deep(.el-select__wrapper) {
-    border-radius: 2px !important;
-  }
-
-  :deep(.el-select) {
-    :deep(.el-input__inner) {
-      height: 32px;
-      line-height: 32px;
-      font-size: 13px;
-    }
-  }
-
-  .el-table {
-    thead {
-      height: 36px;
-      .el-table__cell.is-leaf {
-        background-color: #f1f1f5 !important;
-      }
-    }
-
-    :deep(.el-table__header-wrapper th) {
-      word-break: break-word;
-      background-color: #f1f1f5 !important;
-      height: 36px;
-    }
-
-    :deep(.el-table__header .el-table__cell) {
-      padding: 6px 0 !important;
-    }
-
-    thead .cell {
-      font-size: 14px;
-      font-weight: 600;
-      color: #666666;
-    }
-
-    :deep(.el-table__row) {
-      height: 42px;
-    }
-
-    :deep(.el-table__body-wrapper tbody tr:hover > td) {
-      background-color: #e9f0ff !important;
-    }
-
-    &--striped :deep(.el-table__body tr.current-row td) {
-      background: #d8e0f7 !important;
-    }
-
-    &::before {
-      height: 0px !important;
-    }
-
-    :deep(.el-table__fixed-right::before),
-    :deep(.el-table__fixed::before) {
-      height: 0px !important;
-    }
-
-    :deep(.el-popper.is-light) {
-      box-shadow: 0px 2px 8px 1px rgba(0, 0, 0, 0.15);
-      max-width: 800px;
-      font-size: 14px;
-      padding: 16px;
-      line-height: 22px;
-    }
-
-    :deep(.el-icon) {
-      font-size: 12px;
-    }
-
-    .el-button > span {
-      font-size: 14px;
-    }
-  }
-
-  :deep(.el-tooltip__popper.is-dark) {
-    font-size: 14px;
-  }
-
-  .small-padding {
-    :deep(.el-button + .el-button) {
-      margin-left: 5px !important;
-      .icont-mini {
-        width: 25px;
-        border-left: 2px solid #eeeeee;
-        text-align: right;
-      }
-    }
-  }
-
-  :deep(.el-tag) {
-    border-radius: 2px 2px 2px 2px !important;
-    font-size: 12px !important;
-    margin-right: 7px;
-  }
-
-  :deep(.el-tag.el-tag--default .el-tag__content) {
-    font-size: 14px !important;
-  }
-
-  :deep(.el-tag.el-tag--primary) {
-    border: 0px solid !important;
-  }
-
-  :deep(.el-tag.el-tag--success) {
-    background: rgba(0, 158, 33, 0.1) !important;
-    border: 0px solid #7ecb7e !important;
-    color: #009e21 !important;
-  }
-
-  :deep(.el-tag.el-tag--danger) {
-    background: rgba(236, 84, 77, 0.1) !important;
-    border: 0px solid #6ba7ff !important;
-    color: rgb(236, 84, 77) !important;
-  }
-
-  :deep(.el-tag.el-tag--warning) {
-    background: rgba(255, 184, 0, 0.1) !important;
-    border: 0px solid #ffbd72 !important;
-    color: rgb(255, 184, 0) !important;
-  }
-
-  :deep(.el-tag.el-tag--info) {
-    background: #f0eef9 !important;
-    border: 0px solid #a597e6 !important;
-    color: #8737a3 !important;
-  }
-
-  .el-dialog {
-    padding: 0 !important;
-
-    :deep(.el-dialog__header) {
-      padding: 9px 20px !important;
-      background: #f8f8f8;
-      .el-dialog__title {
-        font-weight: 600;
-        font-size: 16px;
-        color: #3f3f3f;
-        line-height: 1.5;
-        font-family: Microsoft YaHei, Microsoft YaHei;
-        display: flex;
-        align-items: center;
-        .el-icon {
-          margin-left: 10px;
-        }
-      }
-      :deep(.el-dialog__headerbtn) {
-        top: 0 !important;
-        height: 42px;
-      }
-    }
-
-    :deep(.el-dialog__body) {
-      overflow: auto;
-      min-height: auto !important;
-      max-height: 80vh;
-      padding: 20px 40px !important;
-    }
-
-    :deep(.el-dialog__footer) {
-      padding: 10px 20px 20px;
-      border-top: 1px solid #efefef;
-    }
-  }
-
-  .dialog-footer {
-    display: flex;
-    justify-content: flex-end;
-  }
-
-  :deep(.el-button--mini) {
-    font-size: 12px;
-    border-radius: 3px;
-    padding: 7px 15px;
-    span {
-      line-height: 1;
-    }
-  }
-
-  :deep(.el-pager li) {
-    min-width: 30px;
-    border-radius: 2px;
-    margin: 0 5px;
-    height: 28px;
-    line-height: 28px;
-    background-color: #f4f4f5 !important;
-    color: #606266 !important;
-    font-weight: 700;
-
-    &.is-active {
-      color: #fff !important;
-      background-color: var(--el-color-primary) !important;
-    }
-  }
-}
-
-.h2-title {
-  font-size: 15px;
-  color: rgba(0, 0, 0, 0.85);
+/* General title style, similar to qData */
+:deep(.dialog .h2-title) {
+  font-size: 16px;
+  color: #333;
+  margin: 8px 0;
+  line-height: 1;
   display: flex;
   align-items: center;
-  font-weight: 500;
-  margin: 12px 0 16px;
 }
 
-.h2-title::before {
+:deep(.dialog .h2-title)::before {
   display: inline-block;
-  content: '';
+  content: "";
   width: 6px;
   height: 16px;
   border-radius: 3px;
   background: var(--el-color-primary);
   margin-right: 8px;
 }
+
+/* Style for read-only fields in the detail dialog */
+:deep(.dialog .el-form[label-width="146px"] .el-form-item__content > div:not([class])) {
+  line-height: 32px;
+  background-color: #f5f7fa;
+  border: 1px solid #e4e7ed;
+  border-radius: 4px;
+  padding: 0 15px;
+  color: #606266;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Style for disabled select in edit/add dialog */
+:deep(.dialog .el-select) {
+  .el-select__wrapper.is-disabled {
+    cursor: default;
+    background-color: #fcfcfc;
+    --el-select-disabled-color: #333;
+
+    .el-select__suffix {
+      display: none;
+    }
+  }
+}
+
+
 </style>
+
+
