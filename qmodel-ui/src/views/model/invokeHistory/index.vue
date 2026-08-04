@@ -19,34 +19,46 @@
 <template>
   <div class="app-container" ref="app-container">
     <div class="pagecont-top" v-show="showSearch">
-      <el-form class="btn-style" :model="queryParams" ref="queryRef" :inline="true" label-width="75px"
-               v-show="showSearch" @submit.prevent>
+      <el-form
+        class="btn-style"
+        :model="queryParams"
+        ref="queryRef"
+        :inline="true"
+        label-width="75px"
+        v-show="showSearch"
+        @submit.prevent
+      >
         <el-form-item label="模型名称" prop="modelName">
           <el-input
-              class="el-form-input-width"
-              v-model="queryParams.modelName"
-              placeholder="请输入模型名称"
-              clearable
-              @keyup.enter="handleQuery"
+            class="el-form-input-width"
+            v-model="queryParams.modelName"
+            placeholder="请输入模型名称"
+            clearable
+            @keyup.enter="handleQuery"
           />
         </el-form-item>
         <el-form-item label="调用类型" prop="invokeType">
           <el-select
-              v-model="queryParams.invokeType"
-              placeholder="请选择调用类型"
-              clearable
-              style="width: 210px"
+            v-model="queryParams.invokeType"
+            placeholder="请选择调用类型"
+            clearable
+            style="width: 210px"
           >
             <el-option
-                v-for="dict in invoke_type"
-                :key="dict.value"
-                :label="dict.label"
-                :value="dict.value"
+              v-for="dict in invoke_type"
+              :key="dict.value"
+              :label="dict.label"
+              :value="dict.value"
             />
           </el-select>
         </el-form-item>
         <el-form-item>
-          <el-button plain type="primary" @click="handleQuery" @mousedown="(e) => e.preventDefault()">
+          <el-button
+            plain
+            type="primary"
+            @click="handleQuery"
+            @mousedown="(e) => e.preventDefault()"
+          >
             <i class="iconfont-mini icon-a-zu22377 mr5"></i>查询
           </el-button>
           <el-button @click="resetQuery" @mousedown="(e) => e.preventDefault()">
@@ -60,116 +72,207 @@
       <div class="justify-between mb15">
         <el-row :gutter="15" class="btn-style">
           <el-col :span="1.5">
-            <el-button type="danger" plain :disabled="multiple" @click="handleDelete"
-                       v-hasPermi="['model:invokeHistory:invokehistory:remove']" @mousedown="(e) => e.preventDefault()" icon="Delete">
+            <el-button
+              type="danger"
+              plain
+              :disabled="multiple"
+              @click="handleDelete"
+              v-hasPermi="['model:invokeHistory:invokehistory:remove']"
+              @mousedown="(e) => e.preventDefault()"
+              icon="Delete"
+            >
               删除
             </el-button>
           </el-col>
         </el-row>
         <div class="justify-end top-right-btn">
-          <right-toolbar v-model:showSearch="showSearch" @queryTable="getList" :columns="columns"></right-toolbar>
+          <right-toolbar
+            v-model:showSearch="showSearch"
+            @queryTable="getList"
+            :columns="columns"
+          ></right-toolbar>
         </div>
       </div>
-      <el-table stripe height="58vh" v-loading="loading" :data="modelInvokeHistoryList"
-                @selection-change="handleSelectionChange" :default-sort="defaultSort" @sort-change="handleSortChange">
-        <el-table-column type="selection" width="55" align="center"/>
-        <el-table-column v-if="getColumnVisibility(0)" label="编号" align="center" width="80" prop="id" sortable="custom"
-                         :sort-orders="['descending', 'ascending']"/>
-        <el-table-column v-if="getColumnVisibility(1)" label="模型名称" align="left" prop="modelName"
-                         :show-overflow-tooltip="{ effect: 'light' }">
+      <el-table
+        stripe
+        height="58vh"
+        v-loading="loading"
+        :data="modelInvokeHistoryList"
+        @selection-change="handleSelectionChange"
+        :default-sort="defaultSort"
+        @sort-change="handleSortChange"
+      >
+        <el-table-column type="selection" width="55" align="center" />
+        <el-table-column
+          v-if="getColumnVisibility(0)"
+          label="编号"
+          align="center"
+          width="80"
+          prop="id"
+          sortable="custom"
+          :sort-orders="['descending', 'ascending']"
+        />
+        <el-table-column
+          v-if="getColumnVisibility(1)"
+          label="模型名称"
+          align="left"
+          prop="modelName"
+          :show-overflow-tooltip="{ effect: 'light' }"
+        >
           <template #default="scope">
-            {{ scope.row.modelName || '-' }}
+            {{ scope.row.modelName || "-" }}
           </template>
         </el-table-column>
-        <el-table-column v-if="getColumnVisibility(2)" label="模型编码" align="left" prop="code"
-                         :show-overflow-tooltip="{ effect: 'light' }">
+        <el-table-column
+          v-if="getColumnVisibility(2)"
+          label="模型编码"
+          align="left"
+          prop="code"
+          :show-overflow-tooltip="{ effect: 'light' }"
+        >
           <template #default="scope">
-            {{ scope.row.code || '-' }}
+            {{ scope.row.code || "-" }}
           </template>
         </el-table-column>
-        <el-table-column v-if="getColumnVisibility(3)" label="模型版本" align="left" prop="version">
+        <el-table-column
+          v-if="getColumnVisibility(3)"
+          label="模型版本"
+          align="left"
+          prop="version"
+        >
           <template #default="scope">
-            {{ scope.row.version || '-' }}
+            {{ scope.row.version || "-" }}
           </template>
         </el-table-column>
-        <el-table-column v-if="getColumnVisibility(4)" label="调用类型" align="center" prop="invokeType" width="120">
+        <el-table-column
+          v-if="getColumnVisibility(4)"
+          label="调用类型"
+          align="center"
+          prop="invokeType"
+          width="120"
+        >
           <template #default="scope">
             <dict-tag
-                :options="invoke_type"
-                :value="scope.row.invokeType"
-                class="con-value access-tag"
+              :options="invoke_type"
+              :value="scope.row.invokeType"
+              class="con-value access-tag"
             />
           </template>
         </el-table-column>
-        <el-table-column v-if="getColumnVisibility(8)" label="客户端IP" align="center" prop="clientIp" width="120">
+        <el-table-column
+          v-if="getColumnVisibility(8)"
+          label="客户端IP"
+          align="center"
+          prop="clientIp"
+          width="120"
+        >
           <template #default="scope">
-            {{ scope.row.clientIp || '-' }}
+            {{ scope.row.clientIp || "-" }}
           </template>
         </el-table-column>
-        <el-table-column v-if="getColumnVisibility(6)" label="执行耗时" align="center" prop="duration" width="120">
+        <el-table-column
+          v-if="getColumnVisibility(6)"
+          label="执行耗时"
+          align="center"
+          prop="duration"
+          width="120"
+        >
           <template #default="scope">
-            {{ scope.row.duration ? scope.row.duration + ' ms' : '-' }}
+            {{ scope.row.duration ? scope.row.duration + " ms" : "-" }}
           </template>
         </el-table-column>
-        <el-table-column v-if="getColumnVisibility(7)" label="调用状态" align="center" prop="status" width="80">
+        <el-table-column
+          v-if="getColumnVisibility(7)"
+          label="调用状态"
+          align="center"
+          prop="status"
+          width="80"
+        >
           <template #default="scope">
             <dict-tag
-                :options="invoke_history_status"
-                :value="scope.row.status"
-                class="con-value access-tag"
+              :options="invoke_history_status"
+              :value="scope.row.status"
+              class="con-value access-tag"
             />
           </template>
         </el-table-column>
-        <el-table-column v-if="getColumnVisibility(9)" label="调用人" align="center" prop="createBy" width="120">
+        <el-table-column
+          v-if="getColumnVisibility(9)"
+          label="调用人"
+          align="center"
+          prop="createBy"
+          width="120"
+        >
           <template #default="scope">
-            {{ scope.row.createBy || '-' }}
+            {{ scope.row.createBy || "-" }}
           </template>
         </el-table-column>
-        <el-table-column v-if="getColumnVisibility(5)" label="调用时间" align="center" prop="createTime" width="180"
-                         sortable="custom" :sort-orders="['descending', 'ascending']">
+        <el-table-column
+          v-if="getColumnVisibility(5)"
+          label="调用时间"
+          align="center"
+          prop="createTime"
+          width="180"
+          sortable="custom"
+          :sort-orders="['descending', 'ascending']"
+        >
           <template #default="scope">
-            <span>{{ parseTime(scope.row.createTime, "{y}-{m}-{d} {h}:{i}") }}</span>
+            <span>{{
+              parseTime(scope.row.createTime, "{y}-{m}-{d} {h}:{i}")
+            }}</span>
           </template>
         </el-table-column>
-        <el-table-column v-if="getColumnVisibility(10)" label="操作" align="center" class-name="small-padding fixed-width" fixed="right" width="140">
+        <el-table-column
+          v-if="getColumnVisibility(10)"
+          label="操作"
+          align="center"
+          class-name="small-padding fixed-width"
+          fixed="right"
+          width="140"
+        >
           <template #default="scope">
-            <el-button link type="primary" icon="view" @click="handleDetail(scope.row)"
-                       v-hasPermi="['model:invokeHistory:invokehistory:query']">详情
+            <el-button
+              link
+              type="primary"
+              icon="view"
+              @click="handleDetail(scope.row)"
+              v-hasPermi="['model:invokeHistory:invokehistory:query']"
+              >详情
             </el-button>
           </template>
         </el-table-column>
 
         <template #empty>
           <div class="emptyBg">
-            <img src="@/assets/system/images/no_data/noData.png" alt=""/>
+            <img src="@/assets/system/images/no_data/noData.png" alt="" />
             <p>暂无记录</p>
           </div>
         </template>
       </el-table>
 
       <pagination
-          v-show="total>0"
-          :total="total"
-          v-model:page="queryParams.pageNum"
-          v-model:limit="queryParams.pageSize"
-          @pagination="getList"
+        v-show="total > 0"
+        :total="total"
+        v-model:page="queryParams.pageNum"
+        v-model:limit="queryParams.pageSize"
+        @pagination="getList"
       />
     </div>
 
     <!-- 模型调用历史记录详情对话框 -->
     <el-dialog
-        :title="title"
-        v-model="openDetail"
-        width="1000px"
-        :append-to="$refs['app-container']"
-        draggable
+      :title="title"
+      v-model="openDetail"
+      width="800px"
+      :append-to="$refs['app-container']"
+      draggable
     >
       <template #header="{ close, titleId, titleClass }">
-      <span role="heading" aria-level="2" class="el-dialog__title">
-        {{ title }}
-      </span>
+        <span role="heading" aria-level="2" class="el-dialog__title">
+          {{ title }}
+        </span>
       </template>
-      <el-form ref="modelInvokeHistoryRef" :model="form" label-width="110px">
+      <el-form ref="modelInvokeHistoryRef" :model="form" label-width="80px">
         <el-row :gutter="20">
           <el-col :span="12">
             <el-form-item label="编号" prop="modelId">
@@ -198,31 +301,35 @@
           </el-col>
           <el-col :span="12">
             <el-form-item label="执行耗时" prop="duration">
-              <div class="form-readonly">{{ form.duration+" ms" || "-" }}</div>
+              <div class="form-readonly">
+                {{ form.duration + " ms" || "-" }}
+              </div>
             </el-form-item>
           </el-col>
           <el-col :span="12">
             <el-form-item label="调用类型" prop="invokeType">
               <dict-tag
-                  :options="invoke_type"
-                  :value="form.invokeType"
-                  class="con-value access-tag"
+                :options="invoke_type"
+                :value="form.invokeType"
+                class="con-value access-tag"
               />
             </el-form-item>
           </el-col>
           <el-col :span="12">
             <el-form-item label="调用状态" prop="status">
               <dict-tag
-                  :options="invoke_history_status"
-                  :value="form.status"
-                  class="con-value access-tag"
+                :options="invoke_history_status"
+                :value="form.status"
+                class="con-value access-tag"
               />
             </el-form-item>
           </el-col>
           <el-col :span="12">
             <el-form-item label="开始时间" prop="startTime">
               <div class="form-readonly">
-                {{ parseTime(form.startTime, "{y}-{m}-{d} {h}:{i}:{s}") || "-" }}
+                {{
+                  parseTime(form.startTime, "{y}-{m}-{d} {h}:{i}:{s}") || "-"
+                }}
               </div>
             </el-form-item>
           </el-col>
@@ -237,21 +344,27 @@
         <el-row :gutter="20">
           <el-col :span="24">
             <el-form-item label="输入参数" prop="inputParams">
-              <pre class="form-readonly textarea json-pre">{{ form.inputParams || "-" }}</pre>
+              <pre class="form-readonly textarea json-pre">{{
+                form.inputParams || "-"
+              }}</pre>
             </el-form-item>
           </el-col>
         </el-row>
         <el-row :gutter="20">
           <el-col :span="24">
             <el-form-item label="输出结果" prop="outputResult">
-              <pre class="form-readonly textarea json-pre">{{ form.outputResult || "-" }}</pre>
+              <pre class="form-readonly textarea json-pre">{{
+                form.outputResult || "-"
+              }}</pre>
             </el-form-item>
           </el-col>
         </el-row>
         <el-row :gutter="20">
           <el-col :span="24">
             <el-form-item label="错误信息" prop="errorMessage">
-              <div class="form-readonly textarea">{{ form.errorMessage || "-" }}</div>
+              <div class="form-readonly textarea">
+                {{ form.errorMessage || "-" }}
+              </div>
             </el-form-item>
           </el-col>
         </el-row>
@@ -262,7 +375,6 @@
         </div>
       </template>
     </el-dialog>
-
   </div>
 </template>
 
@@ -272,31 +384,34 @@ import {
   getModelInvokeHistory,
   delModelInvokeHistory,
   addModelInvokeHistory,
-  updateModelInvokeHistory
+  updateModelInvokeHistory,
 } from "@/api/model/invokeHistory/modelInvokeHistory";
 
-import {getToken} from "@/utils/auth.js";
-import {ref} from "vue";
+import { getToken } from "@/utils/auth.js";
+import { ref } from "vue";
 
-const {proxy} = getCurrentInstance();
+const { proxy } = getCurrentInstance();
 
 const modelInvokeHistoryList = ref([]);
 
 // 列显隐信息
 const columns = ref([
-  {key: 0, label: "编号", visible: true},
-  {key: 1, label: "模型名称", visible: true},
-  {key: 2, label: "模型编码", visible: true},
-  {key: 3, label: "模型版本", visible: true},
-  {key: 4, label: "调用类型", visible: true},
-  {key: 8, label: "客户端IP", visible: true},
-  {key: 6, label: "执行耗时", visible: true},
-  {key: 7, label: "调用状态", visible: true},
-  {key: 9, label: "调用人", visible: true},
-  {key: 5, label: "调用时间", visible: true},
-  {key: 10, label: "操作", visible: true},
+  { key: 0, label: "编号", visible: true },
+  { key: 1, label: "模型名称", visible: true },
+  { key: 2, label: "模型编码", visible: true },
+  { key: 3, label: "模型版本", visible: true },
+  { key: 4, label: "调用类型", visible: true },
+  { key: 8, label: "客户端IP", visible: true },
+  { key: 6, label: "执行耗时", visible: true },
+  { key: 7, label: "调用状态", visible: true },
+  { key: 9, label: "调用人", visible: true },
+  { key: 5, label: "调用时间", visible: true },
+  { key: 10, label: "操作", visible: true },
 ]);
-const { invoke_history_status,invoke_type } = proxy.useDict("invoke_history_status","invoke_type");
+const { invoke_history_status, invoke_type } = proxy.useDict(
+  "invoke_history_status",
+  "invoke_type"
+);
 const open = ref(false);
 const openDetail = ref(false);
 const loading = ref(true);
@@ -331,18 +446,24 @@ const data = reactive({
     createTime: null,
   },
   rules: {
-    modelId: [{required: true, message: "模型id不能为空", trigger: "blur"}],
-    validFlag: [{required: true, message: "是否有效不能为空", trigger: "blur"}],
-    delFlag: [{required: true, message: "删除标志不能为空", trigger: "blur"}],
-    createTime: [{required: true, message: "创建时间不能为空", trigger: "blur"}],
-    updateTime: [{required: true, message: "更新时间不能为空", trigger: "blur"}],
-  }
+    modelId: [{ required: true, message: "模型id不能为空", trigger: "blur" }],
+    validFlag: [
+      { required: true, message: "是否有效不能为空", trigger: "blur" },
+    ],
+    delFlag: [{ required: true, message: "删除标志不能为空", trigger: "blur" }],
+    createTime: [
+      { required: true, message: "创建时间不能为空", trigger: "blur" },
+    ],
+    updateTime: [
+      { required: true, message: "更新时间不能为空", trigger: "blur" },
+    ],
+  },
 });
 
-const {queryParams, form, rules} = toRefs(data);
+const { queryParams, form, rules } = toRefs(data);
 
 const getColumnVisibility = (key) => {
-  const column = columns.value.find(col => col.key === key);
+  const column = columns.value.find((col) => col.key === key);
   // 如果没有找到对应列配置，默认显示
   if (!column) return true;
   // 如果找到对应列配置，根据visible属性来控制显示
@@ -352,7 +473,7 @@ const getColumnVisibility = (key) => {
 /** 查询模型调用历史记录列表 */
 function getList() {
   loading.value = true;
-  listModelInvokeHistory(queryParams.value).then(response => {
+  listModelInvokeHistory(queryParams.value).then((response) => {
     modelInvokeHistoryList.value = response.data.rows;
     total.value = response.data.total;
     loading.value = false;
@@ -392,7 +513,7 @@ function reset() {
     updateBy: null,
     updatorId: null,
     updateTime: null,
-    remark: null
+    remark: null,
   };
   proxy.resetForm("modelInvokeHistoryRef");
 }
@@ -411,7 +532,7 @@ function resetQuery() {
 
 // 多选框选中数据
 function handleSelectionChange(selection) {
-  ids.value = selection.map(item => item.id);
+  ids.value = selection.map((item) => item.id);
   single.value = selection.length != 1;
   multiple.value = !selection.length;
 }
@@ -433,8 +554,8 @@ function handleAdd() {
 /** 修改按钮操作 */
 function handleUpdate(row) {
   reset();
-  const _id = row.id || ids.value
-  getModelInvokeHistory(_id).then(response => {
+  const _id = row.id || ids.value;
+  getModelInvokeHistory(_id).then((response) => {
     form.value = response.data;
     open.value = true;
     title.value = "修改模型调用历史记录";
@@ -456,22 +577,24 @@ const handleDetail = (row) => {
 
 /** 提交按钮 */
 function submitForm() {
-  proxy.$refs["modelInvokeHistoryRef"].validate(valid => {
+  proxy.$refs["modelInvokeHistoryRef"].validate((valid) => {
     if (valid) {
       if (form.value.id != null) {
-        updateModelInvokeHistory(form.value).then(response => {
-          proxy.$modal.msgSuccess("修改成功");
-          open.value = false;
-          getList();
-        }).catch(error => {
-        });
+        updateModelInvokeHistory(form.value)
+          .then((response) => {
+            proxy.$modal.msgSuccess("修改成功");
+            open.value = false;
+            getList();
+          })
+          .catch((error) => {});
       } else {
-        addModelInvokeHistory(form.value).then(response => {
-          proxy.$modal.msgSuccess("新增成功");
-          open.value = false;
-          getList();
-        }).catch(error => {
-        });
+        addModelInvokeHistory(form.value)
+          .then((response) => {
+            proxy.$modal.msgSuccess("新增成功");
+            open.value = false;
+            getList();
+          })
+          .catch((error) => {});
       }
     }
   });
@@ -480,26 +603,33 @@ function submitForm() {
 /** 删除按钮操作 */
 function handleDelete(row) {
   const _ids = row.id || ids.value;
-  proxy.$modal.confirm('是否确认删除模型调用历史记录编号为"' + _ids + '"的数据项？').then(function () {
-    return delModelInvokeHistory(_ids);
-  }).then(() => {
-    getList();
-    proxy.$modal.msgSuccess("删除成功");
-  }).catch(() => {
-  });
+  proxy.$modal
+    .confirm('是否确认删除模型调用历史记录编号为"' + _ids + '"的数据项？')
+    .then(function () {
+      return delModelInvokeHistory(_ids);
+    })
+    .then(() => {
+      getList();
+      proxy.$modal.msgSuccess("删除成功");
+    })
+    .catch(() => {});
 }
 
 /** 导出按钮操作 */
 function handleExport() {
-  proxy.download('model/modelInvokeHistory/export', {
-    ...queryParams.value
-  }, `modelInvokeHistory_${new Date().getTime()}.xlsx`)
+  proxy.download(
+    "model/modelInvokeHistory/export",
+    {
+      ...queryParams.value,
+    },
+    `modelInvokeHistory_${new Date().getTime()}.xlsx`
+  );
 }
 
 function routeTo(link, row) {
   if (link !== "" && link.indexOf("http") !== -1) {
     window.location.href = link;
-    return
+    return;
   }
   if (link !== "") {
     if (link === router.currentRoute.value.path) {
@@ -508,8 +638,8 @@ function routeTo(link, row) {
       router.push({
         path: link,
         query: {
-          id: row.id
-        }
+          id: row.id,
+        },
       });
     }
   }

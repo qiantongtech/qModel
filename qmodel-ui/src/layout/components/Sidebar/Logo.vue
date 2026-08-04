@@ -34,8 +34,7 @@
         class="sidebar-logo-link"
         to="/"
       >
-        <!--        <img v-if="logo" :src="simpLogo" class="sidebar-logo" />-->
-        <img v-if="logo" :src="refSimpLogo" class="sidebar-logo" />
+        <img v-if="refSimpLogo" :src="refSimpLogo" class="sidebar-logo" />
         <h1
           v-else
           class="sidebar-title"
@@ -50,16 +49,15 @@
         </h1>
       </router-link>
       <router-link v-else key="expand" class="sidebar-logo-link" to="/">
-        <!--        <img v-if="logo" :src="logo" class="sidebar-logo" />-->
         <span
           v-if="useDefaultLogo"
-          class="sidebar-logo-motion"
+          class="sidebar-logo-split"
           :class="{ 'logo-intro': logoIntroActive }"
         >
-          <img :src="simpLogo" class="sidebar-logo-mark" />
-          <img :src="logo" class="sidebar-logo-full" />
+          <img :src="logoM" class="sidebar-logo-m" />
+          <img :src="logoQmodel" class="sidebar-logo-word" />
         </span>
-        <img v-else-if="logo" :src="refLogo" class="sidebar-logo" />
+        <img v-else-if="refLogo" :src="refLogo" class="sidebar-logo" />
       </router-link>
     </transition>
   </div>
@@ -67,18 +65,20 @@
 
 <script setup>
 import variables from "@/assets/system/styles/variables.module.scss";
-import logo from "@/assets/system/logo/qmodel-logo.png";
-import simpLogo from "@/assets/system/logo/simpleLogo.svg";
+import logoQmodel from "@/assets/system/logo/logo-qmodel.png";
+import logoM from "@/assets/system/logo/logo-m.png";
 import useSettingsStore from "@/store/system/settings";
 import { getContent } from "@/api/system/system/content";
 
 // 使用 ref 来创建响应式的 logo
-const refLogo = ref(logo);
-const refSimpLogo = ref(simpLogo);
+const refLogo = ref(logoQmodel);
+const refSimpLogo = ref(logoM);
 const logoIntroActive = ref(false);
 let logoIntroTimer;
 
-const useDefaultLogo = computed(() => !refLogo.value || refLogo.value === logo);
+const useDefaultLogo = computed(
+  () => !refLogo.value || refLogo.value === logoQmodel
+);
 
 defineProps({
   collapse: {
@@ -106,14 +106,14 @@ const fetchContent = async () => {
     if (res.code == 200) {
       const data = res.data;
       const sysLogo = data.logo;
-      refLogo.value = sysLogo ? sysLogo : logo;
-      refSimpLogo.value = sysLogo ? sysLogo : simpLogo;
+      refLogo.value = sysLogo || logoQmodel;
+      refSimpLogo.value = sysLogo || logoM;
     }
 
     // this.$message.success('内容加载成功');
-  } catch (error) {
-    refLogo.value = logo;
-    refSimpLogo.value = simpLogo;
+  } catch {
+    refLogo.value = logoQmodel;
+    refSimpLogo.value = logoM;
   }
 };
 
@@ -154,43 +154,38 @@ const sideTheme = computed(() => settingsStore.sideTheme);
       margin-left: -32px;
     }
 
-    & .sidebar-logo-motion {
-      position: relative;
+    & .sidebar-logo-split {
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      width: 190px;
       height: 100%;
+      gap: 2px;
+      transform: translateX(-4px);
       vertical-align: middle;
     }
 
-    & .sidebar-logo-mark {
-      position: absolute;
-      left: 17px;
-      width: 30px;
-      height: 30px;
-      object-fit: contain;
-      opacity: 0;
-      transform-origin: center;
-      pointer-events: none;
-    }
-
-    & .sidebar-logo-full {
+    & .sidebar-logo-m {
       display: block;
-      width: 168px;
-      height: auto;
+      height: 44px;
+      object-fit: contain;
+      transform-origin: center;
+    }
+
+    & .sidebar-logo-word {
+      display: block;
+      height: 28px;
       object-fit: contain;
     }
 
-    & .sidebar-logo-motion.logo-intro,
-    &:hover .sidebar-logo-motion {
-      .sidebar-logo-mark {
-        animation: sidebarLogoMarkRunIn 1.45s cubic-bezier(0.16, 0.88, 0.2, 1)
+    & .sidebar-logo-split.logo-intro,
+    &:hover .sidebar-logo-split {
+      .sidebar-logo-m {
+        animation: sidebarLogoMRunIn 1.45s cubic-bezier(0.16, 0.88, 0.2, 1)
           0.18s both;
       }
 
-      .sidebar-logo-full {
-        animation: sidebarLogoFullSettle 0.55s ease-out 0.72s both;
+      .sidebar-logo-word {
+        animation: sidebarLogoWordSettle 0.55s ease-out 0.72s both;
       }
     }
 
@@ -216,7 +211,7 @@ const sideTheme = computed(() => settingsStore.sideTheme);
   }
 }
 
-@keyframes sidebarLogoMarkRunIn {
+@keyframes sidebarLogoMRunIn {
   0% {
     opacity: 0;
     filter: drop-shadow(0 0 0 rgba(69, 145, 255, 0));
@@ -244,13 +239,13 @@ const sideTheme = computed(() => settingsStore.sideTheme);
   }
 
   100% {
-    opacity: 0;
+    opacity: 1;
     filter: drop-shadow(0 0 0 rgba(69, 145, 255, 0));
     transform: translateX(0) scale(1) rotate(0deg);
   }
 }
 
-@keyframes sidebarLogoFullSettle {
+@keyframes sidebarLogoWordSettle {
   0% {
     opacity: 0;
     transform: translateX(-10px);
@@ -264,11 +259,8 @@ const sideTheme = computed(() => settingsStore.sideTheme);
 
 @media (prefers-reduced-motion: reduce) {
   .sidebar-logo-link {
-    .sidebar-logo-mark {
-      display: none;
-    }
-
-    .sidebar-logo-full {
+    .sidebar-logo-m,
+    .sidebar-logo-word {
       animation: none !important;
       opacity: 1;
       transform: none;
