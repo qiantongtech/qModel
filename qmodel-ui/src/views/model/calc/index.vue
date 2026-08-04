@@ -373,6 +373,8 @@
                 type="textarea"
                 :rows="2"
                 placeholder="请输入描述"
+                maxlength="512"
+                show-word-limit
               />
             </el-form-item>
           </el-col>
@@ -385,6 +387,8 @@
                 type="textarea"
                 :rows="2"
                 placeholder="请输入备注"
+                maxlength="512"
+                show-word-limit
               />
             </el-form-item>
           </el-col>
@@ -1115,7 +1119,7 @@ function handleRecalc(row) {
 function handleDelete(row) {
   const _ids = row.id || ids.value
   const name = row.name || '选中的任务'
-  proxy.$modal.confirm('是否确认删除计算任务"' + name + '"的数据项？').then(() => {
+  proxy.$modal.confirm('是否确认删除计算任务编号为"' + _ids + '"的数据项？').then(() => {
     return delCalc(_ids)
   }).then(() => {
     getList()

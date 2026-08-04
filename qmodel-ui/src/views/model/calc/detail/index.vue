@@ -94,20 +94,28 @@
           <el-col :span="8">
             <div class="infotop-row border-top">
               <div class="infotop-row-lable">模型名称</div>
-              <div class="infotop-row-value">
+              <div class="infotop-row-value" style="display: inline-flex; align-items: center; gap: 8px;">
                 <el-tooltip :content="calcDetail.modelName || '-'" placement="top" effect="light">
                   <span class="ellipsis-text">{{ calcDetail.modelName || "-" }}</span>
                 </el-tooltip>
+                <dict-tag
+                  v-if="calcDetail.calcType !== undefined && calcDetail.calcType !== null"
+                  :options="model_access_type"
+                  :value="getAccessTypeByCalcType(calcDetail.calcType)"
+                />
               </div>
             </div>
           </el-col>
           <el-col :span="8">
             <div class="infotop-row border-top">
-              <div class="infotop-row-lable">创建人</div>
+              <div class="infotop-row-lable">优先级</div>
               <div class="infotop-row-value">
-                <el-tooltip :content="calcDetail.createBy || '-'" placement="top" effect="light">
-                  <span class="ellipsis-text">{{ calcDetail.createBy || "-" }}</span>
-                </el-tooltip>
+                <dict-tag
+                  v-if="calcDetail.priority !== undefined"
+                  :options="model_calc_priority"
+                  :value="calcDetail.priority"
+                />
+                <span v-else>-</span>
               </div>
             </div>
           </el-col>
@@ -129,7 +137,7 @@
               <div class="infotop-row-lable">任务描述</div>
               <div class="infotop-row-value">
                 <el-tooltip :content="calcDetail.description || '-'" placement="top" effect="light">
-                  <span class="ellipsis-text">{{ calcDetail.description || "-" }}</span>
+                  <div class="ellipsis-2">{{ calcDetail.description || "-" }}</div>
                 </el-tooltip>
               </div>
             </div>
@@ -142,7 +150,7 @@
               <div class="infotop-row-lable">备注</div>
               <div class="infotop-row-value">
                 <el-tooltip :content="calcDetail.remark || '-'" placement="top" effect="light">
-                  <span class="ellipsis-text">{{ calcDetail.remark || "-" }}</span>
+                  <div class="ellipsis-2">{{ calcDetail.remark || "-" }}</div>
                 </el-tooltip>
               </div>
             </div>
@@ -520,7 +528,7 @@ const { proxy } = getCurrentInstance();
 const router = useRouter();
 const route = useRoute();
 
-const { model_calc_status } = proxy.useDict("model_calc_status");
+const { model_calc_status, model_access_type, model_calc_priority } = proxy.useDict("model_calc_status", "model_access_type", "model_calc_priority");
 
 const showSearch = ref(true);
 const activeName = ref("inputParams");
@@ -680,6 +688,13 @@ function getExecutionModeLabel(mode) {
     3: "重试执行",
   };
   return map[mode] || "-";
+}
+
+/** 获取访问类型 */
+function getAccessTypeByCalcType(calcType) {
+  if (calcType === 0 || calcType === '0') return 'API'
+  if (calcType === 1 || calcType === '1') return 'PYTHON'
+  return calcType
 }
 
 /** 输入参数列表 */
