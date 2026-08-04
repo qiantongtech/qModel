@@ -167,15 +167,13 @@
               <el-table-column
                 v-if="getInputParamColumnVisibility(0)"
                 label="参数名"
-                align="center"
+                align="left"
                 prop="name"
-                min-width="160"
               />
               <el-table-column
                 v-if="getInputParamColumnVisibility(1)"
                 label="是否必填"
                 align="center"
-                width="100"
               >
                 <template #default="{ row }">
                   <span>{{ row.required ? '是' : '否' }}</span>
@@ -208,7 +206,6 @@
                 v-if="getInputParamColumnVisibility(3)"
                 label="类型"
                 align="center"
-                width="120"
               >
                 <template #default="{ row }">
                   <el-tag size="small" :type="getTypeTagType(row.type)">{{ row.type || '-' }}</el-tag>
@@ -217,9 +214,9 @@
               <el-table-column
                 v-if="getInputParamColumnVisibility(4)"
                 label="说明"
-                align="center"
+                align="left"
                 prop="description"
-                min-width="180"
+                :show-overflow-tooltip="{ effect: 'light' }"
               >
                 <template #default="scope">
                   <span>{{ scope.row.description || '-' }}</span>
@@ -269,9 +266,9 @@
               <el-table-column
                 v-if="getExecRecordColumnVisibility(1)"
                 label="执行批次号"
-                align="center"
+                align="left"
                 prop="executionNo"
-                
+
               >
                 <template #default="scope">
                   {{ scope.row.executionNo || "-" }}
@@ -337,7 +334,7 @@
                   }}</span>
                 </template>
               </el-table-column>
-              
+
               <el-table-column
                 v-if="getExecRecordColumnVisibility(8)"
                 label="操作"
@@ -373,7 +370,7 @@
           </div>
         </el-tab-pane>
 
-        <el-tab-pane name="realTimeLog">
+        <el-tab-pane name="realTimeLog" v-if="false">
           <template #label>实时日志</template>
           <div v-if="activeName === 'realTimeLog'" class="tab-content">
             <div class="log-body">

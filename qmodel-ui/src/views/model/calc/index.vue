@@ -230,17 +230,9 @@
           align="center"
           class-name="small-padding fixed-width"
           fixed="right"
-          width="320"
+          width="240"
         >
           <template #default="scope">
-
-            <el-button
-              link
-              type="primary"
-              icon="Edit"
-              @click="handleUpdate(scope.row)"
-              v-hasPermi="['model:Calc:calc:edit']"
-            >修改</el-button>
             <el-button
               link
               type="primary"
@@ -249,25 +241,43 @@
               v-hasPermi="['model:Calc:calc:query']"
             >详情</el-button>
             <el-button
-              v-if="scope.row.status === 1"
-              link
-              type="primary"
-              icon="CircleClose"
-              @click="handleStop(scope.row)"
-            >终止</el-button>
-            <el-button
               link
               type="primary"
               icon="RefreshRight"
               @click="handleRecalc(scope.row)"
             >重新运行</el-button>
-            <el-button
-              link
-              type="danger"
-              icon="Delete"
-              @click="handleDelete(scope.row)"
-              v-hasPermi="['model:Calc:calc:remove']"
-            >删除</el-button>
+
+            <el-popover placement="bottom" :width="120" trigger="click">
+              <template #reference>
+                <el-button link type="primary" icon="ArrowDown">更多</el-button>
+              </template>
+              <div style="display: flex; flex-direction: column; align-items: flex-start; gap: 8px; padding-left: 10px;">
+                <el-button
+                  v-if="scope.row.status === 1"
+                  link
+                  type="primary"
+                  icon="CircleClose"
+                  @click="handleStop(scope.row)"
+                  style="margin-left: 0;"
+                >终止</el-button>
+                <el-button
+                  link
+                  type="primary"
+                  icon="Edit"
+                  @click="handleUpdate(scope.row)"
+                  v-hasPermi="['model:Calc:calc:edit']"
+                  style="margin-left: 0;"
+                >修改</el-button>
+                <el-button
+                  link
+                  type="danger"
+                  icon="Delete"
+                  @click="handleDelete(scope.row)"
+                  v-hasPermi="['model:Calc:calc:remove']"
+                  style="margin-left: 0;"
+                >删除</el-button>
+              </div>
+            </el-popover>
           </template>
         </el-table-column>
 
@@ -331,7 +341,7 @@
         </el-row>
         <el-row :gutter="20">
           <el-col :span="12">
-            <el-form-item label="模型名称" prop="modelId">
+            <el-form-item label="模型" prop="modelId">
               <el-select
                 v-model="form.modelId"
                 placeholder="请选择模型"
@@ -1104,7 +1114,8 @@ function handleRecalc(row) {
 /** 删除 */
 function handleDelete(row) {
   const _ids = row.id || ids.value
-  proxy.$modal.confirm('是否确认删除所选任务？').then(() => {
+  const name = row.name || '选中的任务'
+  proxy.$modal.confirm('是否确认删除计算任务"' + name + '"的数据项？').then(() => {
     return delCalc(_ids)
   }).then(() => {
     getList()
@@ -1131,6 +1142,7 @@ getList()
 /* General title style, similar to qData */
 :deep(.dialog .h2-title) {
   font-size: 16px;
+  font-weight: 500;
   color: #333;
   margin: 8px 0;
   line-height: 1;
