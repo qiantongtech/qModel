@@ -59,7 +59,7 @@
               placement="top"
 
           >
-            <el-button text :icon="Delete" circle @click.stop="deleteAddGroup"/>
+            <el-button text icon="Delete" circle @click.stop="deleteAddGroup"/>
           </el-tooltip>
         </div>
       </div>
@@ -124,7 +124,7 @@
 						content="删除"
 						placement="top"
 				>
-			  <el-button v-if="item.items.length==0" text :icon="Delete" @click.stop="deleteGroup(item.id)" circle :disabled="item.items?.length>0"/>
+			  <el-button v-if="item.items.length==0" text icon="Delete" @click.stop="deleteGroup(item.id)" circle :disabled="item.items?.length>0"/>
 				</el-tooltip>
 						</span>
 
@@ -158,7 +158,6 @@
 <script lang="ts" setup>
 import {
 	Plus,
-	Delete,
 	Top, Bottom, CircleCloseFilled,
 	Edit,
 	DocumentCopy,

@@ -113,5 +113,18 @@ export default [
         path: '/TagPill',
         component: () => import('../../../components/TagPill/demo.vue'),
         hidden: true
-    }
+    },
+    {
+        path: '/system/notice/detail',
+        component: Layout,
+        hidden: true,
+        children: [
+            {
+                path: '',
+                component: () => import('@/views/system/system/notice/detail.vue'),
+                name: 'noticeDetail',
+                meta: { title: '公告详情', noCache: true, activeMenu: '/system/notice' }
+            }
+        ]
+    },
 ];

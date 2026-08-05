@@ -280,7 +280,7 @@
                 <el-button
                   type="danger"
                   @click="handleDeleteMultiple(scope.row)"
-                  >删除
+                   icon="Delete">删除
                 </el-button>
               </template>
             </el-table-column>

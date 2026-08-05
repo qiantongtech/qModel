@@ -61,8 +61,8 @@
         <el-row :gutter="15" class="btn-style">
           <el-col :span="1.5">
             <el-button type="danger" plain :disabled="multiple" @click="handleDelete" v-hasPermi="['model:buildLog:buildlog:remove']"
-                       @mousedown="(e) => e.preventDefault()">
-              <i class="iconfont-mini icon-shanchu-huise mr5"></i>删除
+                       @mousedown="(e) => e.preventDefault()" icon="Delete">
+              删除
             </el-button>
           </el-col>
         </el-row>

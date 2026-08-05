@@ -23,7 +23,7 @@
     <parent>
         <artifactId>qmodel-framework</artifactId>
         <groupId>tech.qiantong</groupId>
-        <version>1.2.0</version>
+        <version>1.3.0</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -62,7 +62,7 @@
         <dependency>
             <groupId>tech.qiantong</groupId>
             <artifactId>qmodel-redis</artifactId>
-            <version>1.2.0</version>
+            <version>1.3.0</version>
         </dependency>
 
         <dependency>
@@ -80,7 +80,7 @@
         <dependency>
             <groupId>tech.qiantong</groupId>
             <artifactId>qmodel-module-system-api</artifactId>
-            <version>1.2.0</version>
+            <version>1.3.0</version>
         </dependency>
     </dependencies>
 

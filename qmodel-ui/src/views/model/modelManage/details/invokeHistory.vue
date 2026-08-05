@@ -144,8 +144,8 @@
     <el-form ref="modelInvokeHistoryRef" :model="form" label-width="110px">
       <el-row :gutter="20">
         <el-col :span="12">
-          <el-form-item label="模型编号" prop="modelId">
-            <div class="form-readonly">{{ form.modelId || "-" }}</div>
+          <el-form-item label="编号" prop="id">
+            <div class="form-readonly">{{ form.id || "-" }}</div>
           </el-form-item>
         </el-col>
         <el-col :span="12">
@@ -196,21 +196,27 @@
       <el-row :gutter="20">
         <el-col :span="24">
           <el-form-item label="输入参数" prop="inputParams">
-            <pre class="form-readonly textarea json-pre">{{ form.inputParams || "-" }}</pre>
+            <pre class="form-readonly textarea json-pre">{{
+              form.inputParams || "-"
+            }}</pre>
           </el-form-item>
         </el-col>
       </el-row>
       <el-row :gutter="20">
         <el-col :span="24">
           <el-form-item label="输出结果" prop="outputResult">
-            <pre class="form-readonly textarea json-pre">{{ form.outputResult || "-" }}</pre>
+            <pre class="form-readonly textarea json-pre">{{
+              form.outputResult || "-"
+            }}</pre>
           </el-form-item>
         </el-col>
       </el-row>
       <el-row :gutter="20">
         <el-col :span="24">
           <el-form-item label="错误信息" prop="errorMessage">
-            <div class="form-readonly textarea">{{ form.errorMessage || "-" }}</div>
+            <div class="form-readonly textarea">
+              {{ form.errorMessage || "-" }}
+            </div>
           </el-form-item>
         </el-col>
       </el-row>

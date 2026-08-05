@@ -67,10 +67,15 @@
             </el-button>
           </el-col>
           <el-col :span="1.5">
-            <el-button class="toggle-expand-all" type="primary" plain @click="toggleExpandAll">
+            <el-button
+              class="toggle-expand-all"
+              type="primary"
+              plain
+              @click="toggleExpandAll"
+            >
               <svg-icon v-if="isExpandAll" icon-class="toggle" />
               <svg-icon v-else icon-class="expand" />
-              <span>{{ isExpandAll ? ' 折叠' : ' 展开' }}</span>
+              <span>{{ isExpandAll ? " 折叠" : " 展开" }}</span>
             </el-button>
           </el-col>
         </el-row>
@@ -89,6 +94,7 @@
         row-key="id"
         :tree-props="{ children: 'children', hasChildren: 'hasChildren' }"
         :default-expand-all="isExpandAll"
+        height="60vh"
       >
         <el-table-column
           v-if="getColumnVisibility(1)"
@@ -99,7 +105,7 @@
           :show-overflow-tooltip="{ effect: 'light' }"
         >
           <template #default="scope">
-            {{ scope.row.name || '-' }}
+            {{ scope.row.name || "-" }}
           </template>
         </el-table-column>
         <el-table-column
@@ -110,7 +116,7 @@
           width="100px"
         >
           <template #default="scope">
-            {{ scope.row.orderNum !== null ? scope.row.orderNum : '-' }}
+            {{ scope.row.orderNum !== null ? scope.row.orderNum : "-" }}
           </template>
         </el-table-column>
         <el-table-column
@@ -121,7 +127,7 @@
           :show-overflow-tooltip="{ effect: 'light' }"
         >
           <template #default="scope">
-            {{ scope.row.remark || '-' }}
+            {{ scope.row.remark || "-" }}
           </template>
         </el-table-column>
         <el-table-column
@@ -132,7 +138,7 @@
           width="100px"
         >
           <template #default="scope">
-            {{ scope.row.createBy || '-' }}
+            {{ scope.row.createBy || "-" }}
           </template>
         </el-table-column>
         <el-table-column
@@ -143,7 +149,9 @@
           width="180"
         >
           <template #default="scope">
-            <span>{{ parseTime(scope.row.createTime, '{y}-{m}-{d} {h}:{i}') }}</span>
+            <span>{{
+              parseTime(scope.row.createTime, "{y}-{m}-{d} {h}:{i}")
+            }}</span>
           </template>
         </el-table-column>
         <el-table-column
@@ -161,21 +169,24 @@
               icon="Plus"
               @click="handleAdd(scope.row)"
               v-hasPermi="['model:classify:classify:add']"
-            >新增</el-button>
+              >新增</el-button
+            >
             <el-button
               link
               type="primary"
               icon="Edit"
               @click="handleUpdate(scope.row)"
               v-hasPermi="['model:classify:classify:edit']"
-            >修改</el-button>
+              >修改</el-button
+            >
             <el-button
               link
               type="danger"
               icon="Delete"
               @click="handleDelete(scope.row)"
               v-hasPermi="['model:classify:classify:remove']"
-            >删除</el-button>
+              >删除</el-button
+            >
           </template>
         </el-table-column>
       </el-table>
@@ -251,7 +262,7 @@
                 v-model="form.remark"
                 type="textarea"
                 placeholder="请输入备注"
-                maxlength="256"
+                maxlength="256个字符"
                 show-word-limit
               />
             </el-form-item>
@@ -445,7 +456,7 @@ function handleDelete(row) {
 
   // 先检查是否存在子分类
   listClassify({ parentId: row.id }).then((res) => {
-    console.log(res,'res11111')
+    console.log(res, "res11111");
     if (res.data && res.data.length > 0) {
       ElMessage.warning("该分类下存有子分类，不可删除");
       return;
@@ -480,10 +491,10 @@ function toggleExpandAll() {
 getList();
 </script>
 <style lang="scss" scoped>
-  .toggle-expand-all {
-    .svg-icon {
-      font-size: 12px;
-      margin-right: 6px;
-    }
+.toggle-expand-all {
+  .svg-icon {
+    font-size: 12px;
+    margin-right: 6px;
   }
+}
 </style>

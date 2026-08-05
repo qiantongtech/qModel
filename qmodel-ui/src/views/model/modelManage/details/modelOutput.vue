@@ -107,7 +107,7 @@
             ><Edit class="icon-mini" /> 修改</el-button
           >
           <el-button type="danger" link @click="handleDelete(scope.row)"
-            ><Delete class="icon-mini" /> 删除</el-button
+             icon="Delete"> 删除</el-button
           >
         </template>
       </el-table-column>
@@ -287,7 +287,7 @@
                     <el-button
                       type="danger"
                       @click="handleDeleteMultiple(scope.row)"
-                      >删除
+                       icon="Delete">删除
                     </el-button>
                   </template>
                 </el-table-column>

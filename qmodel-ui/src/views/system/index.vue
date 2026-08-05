@@ -124,7 +124,7 @@
         <div class="border-item module-6 home-gutter">
           <div class="border-item-head">
             <span class="head-title">新闻公告 </span>
-            <el-link type="primary" :underline="false" @click="goxinwen"
+            <el-link type="primary" :underline="false" @click="goxinwen('list')"
               >查看更多
             </el-link>
           </div>
@@ -133,7 +133,7 @@
               class="module-item"
               v-for="(item, index) in module6"
               :key="index"
-              @click="goxinwen"
+              @click="goxinwen(item)"
             >
               <dict-tag :options="sys_notice_type" :value="item.noticeType" />
               <div class="value" :title="item.noticeTitle">
@@ -404,7 +404,7 @@ function toPolicy() {
 const entranceList = [
   {
     name: "模型分类",
-    path: "Classify",
+    path: "model/classify",
     query: {},
     perm: ["model:classify:classify:list"],
     icon: "知识中心",
@@ -412,7 +412,7 @@ const entranceList = [
   },
   {
     name: "模型中心",
-    path: "version",
+    path: "model/manage",
     query: {},
     icon: "知识抽取",
     perm: ["model:model:list"],
@@ -420,7 +420,7 @@ const entranceList = [
   },
   {
     name: "模型计算",
-    path: "modelCompute",
+    path: "model/compute",
     query: {},
     icon: "知识推理",
     perm: ["model:modelCacl:cacl:list"],
@@ -428,7 +428,7 @@ const entranceList = [
   },
   {
     name: "历史记录",
-    path: "Operate",
+    path: "model/operate",
     query: {},
     icon: "知识应用",
     perm: ["model:operate:operate:list"],
@@ -527,8 +527,15 @@ const module1 = ref([
 ]);
 
 //新闻跳转
-function goxinwen() {
-  proxy.$router.push("/system/notice"); // 内部页面路径
+function goxinwen(row) {
+  if (row == "list") {
+    proxy.$router.push("/system/notice");
+  } else {
+    proxy.$router.push({
+      path: "/system/notice/detail",
+      query: { id: row.noticeId },
+    });
+  }
 }
 
 function goprofile() {
@@ -576,76 +583,52 @@ function getxljtcont() {
 const module4ChartRef = ref(null);
 function initModule4() {
   const intance = echarts.init(module4ChartRef.value, "macarons");
-  let m2R2Data = [
-    // {
-    //     value: 335,
-    //     legendname: '种类06',
-    //     name: '种类06  335'
-    //     // itemStyle: { color: '#fca4bb' }
-    // },
-    // {
-    //     value: 335,
-    //     legendname: '种类07',
-    //     name: '种类07  335'
-    //     // itemStyle: { color: '#f59a8f' }
-    // },
+  const m2R2Data = [
     {
-      value: 130,
-      legendname: "水质",
-      name: "水质",
-      // itemStyle: { color: '#fdb301' }
+      value: 12,
+      legendname: "机器学习",
+      name: "机器学习",
     },
     {
-      value: 150,
-      legendname: "风速",
-      name: "风速",
-      // itemStyle: { color: '#57e7ec' }
+      value: 9,
+      legendname: "工业大模型",
+      name: "工业大模型",
     },
     {
-      value: 100,
-      legendname: "水位流量关系",
-      name: "水位流量关系",
-      // itemStyle: { color: '#cf9ef1' }
+      value: 7,
+      legendname: "深度学习",
+      name: "深度学习",
     },
     {
-      value: 190,
-      legendname: "洪水预测",
-      name: "洪水预测",
-      // itemStyle: { color: '#57e7ec' }
+      value: 5,
+      legendname: "数据智能",
+      name: "数据智能",
     },
     {
-      value: 200,
-      legendname: "来水预测",
-      name: "来水预测",
-      // itemStyle: { color: '#cf9ef1' }
+      value: 4,
+      legendname: "风险预测",
+      name: "风险预测",
     },
   ];
+  const modelTotal = m2R2Data.reduce((total, item) => total + item.value, 0);
 
-  let option = {
+  const option = {
     title: [
-      // {
-      //     text: '标题',
-      //     textStyle: {
-      //         fontSize: 16,
-      //         color: 'black'
-      //     },
-      //     left: '2%'
-      // },
       {
-        text: "100%",
-        // subtext: 12312 + '个',
+        text: `${modelTotal}`,
+        subtext: "模型总量",
         textStyle: {
           fontSize: 30,
           color: "rgba(0,0,0,0.65)",
           fontFamily: "Sharp",
         },
-        // subtextStyle: {
-        //     fontSize: 20,
-        //     color: 'black'
-        // },
+        subtextStyle: {
+          fontSize: 13,
+          color: "rgba(0,0,0,0.45)",
+        },
         textAlign: "center",
         x: "34.5%",
-        y: "43%",
+        y: "39%",
       },
     ],
     tooltip: {
@@ -685,12 +668,10 @@ function initModule4() {
 
       formatter: function (name) {
         // 找到对应的项并计算百分比
-        console.log(name, "============name");
-        let total = 770;
         let item = m2R2Data.find((item) => item.name === name);
         // eslint-disable-next-line no-unused-vars
         let percent = item
-          ? ((item.value / total) * 100).toFixed(2) + "%"
+          ? ((item.value / modelTotal) * 100).toFixed(2) + "%"
           : "0%";
         // return `${name} |  ${percent}  ${item.value}`; // 自定义图例显示
         // 使用 HTML 语法自定义颜色
@@ -727,7 +708,7 @@ function initModule4() {
     },
     series: [
       {
-        name: "标题",
+        name: "模型分类",
         type: "pie",
         center: ["35%", "50%"],
         radius: ["35%", "55%"],
@@ -798,6 +779,21 @@ function initModule4() {
 }
 
 const module5ChartRef = ref(null);
+function getRecentSevenDayLabels() {
+  const today = new Date();
+
+  return Array.from({ length: 7 }, (_, index) => {
+    const date = new Date(today);
+    date.setDate(today.getDate() - (6 - index));
+
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const day = String(date.getDate()).padStart(2, "0");
+    return `${month}-${day}`;
+  });
+}
+
+const recentSevenDayLabels = getRecentSevenDayLabels();
+
 function initModule5() {
   const intance = echarts.init(module5ChartRef.value, "macarons");
   intance.setOption({
@@ -823,11 +819,12 @@ function initModule5() {
     },
     xAxis: {
       type: "category",
-      data: ["12.10", "12.11", "12.12", "12.13", "12.14", "12.15", "12.16"],
+      data: recentSevenDayLabels,
     },
     yAxis: {
       type: "value",
-      max: 1000, // 设置 Y 轴最大值为 1000
+      max: 6,
+      minInterval: 1,
     },
     series: [
       {
@@ -855,7 +852,7 @@ function initModule5() {
             ),
           },
         },
-        data: [800, 550, 740, 450, 800, 730, 600],
+        data: [2, 1, 3, 2, 4, 3, 5],
       },
     ],
   });
@@ -961,11 +958,11 @@ function initModule8() {
     },
     xAxis: {
       type: "category",
-      data: ["12.10", "12.11", "12.12", "12.13", "12.14", "12.15", "12.16"],
+      data: recentSevenDayLabels,
     },
     yAxis: {
       type: "value",
-      max: 1000, // 设置 Y 轴最大值为 1000
+      max: 300,
     },
     series: [
       {
@@ -1011,7 +1008,7 @@ function initModule8() {
             // shadowBlur: 20
           },
         },
-        data: [250, 100, 780, 60, 760, 200, 260],
+        data: [126, 148, 173, 159, 204, 238, 221],
         type: "line",
       },
     ],
@@ -1021,28 +1018,28 @@ function initModule8() {
 
 const module9 = ref([
   {
-    zip: "90036",
-    name: "洪水预测模型_v1.2",
-    script: "flood_pred.py",
-    date: "2025-12-30",
+    zip: "TR20260803001",
+    name: "洪水过程预测模型_v1.2",
+    script: "flood_forecast_train.py",
+    date: "2026-08-03 09:24",
     status: "成功",
-    timeTaken: "38m",
+    timeTaken: "12分46秒",
   },
   {
-    zip: "90037",
-    name: "水质分类模型_v2.0",
-    script: "water_classify.py",
-    date: "2025-12-26",
+    zip: "TR20260803002",
+    name: "水质等级识别模型_v2.0",
+    script: "water_quality_train.py",
+    date: "2026-08-03 10:18",
     status: "运行中",
-    timeTaken: "58m",
+    timeTaken: "已运行3分18秒",
   },
   {
-    zip: "90038",
-    name: "风速预测模型_v1.0",
-    script: "wind_forecast.py",
-    date: "2025-12-23",
-    status: "已取消",
-    timeTaken: "1h 45m",
+    zip: "TR20260802006",
+    name: "来水流量预测模型_v1.0",
+    script: "inflow_forecast_train.py",
+    date: "2026-08-02 16:42",
+    status: "失败",
+    timeTaken: "1分07秒",
   },
 ]);
 
@@ -1499,7 +1496,7 @@ onMounted(() => {
 }
 
 .border-item .border-item-head {
-  height: 50px;
+  height: 40px;
   padding: 0 20px;
   display: flex;
   justify-content: space-between;
@@ -1509,10 +1506,11 @@ onMounted(() => {
 
 .border-item .border-item-head .head-title {
   font-size: 16px;
-  color: var(--el-color-primary);
-  font-weight: 700;
+  color: #000000d9;
   display: flex;
   align-items: center;
+  font-family: PingFang SC;
+  font-weight: 500;
 }
 .border-item .border-item-head .head-title-seach {
   cursor: pointer;
@@ -1527,9 +1525,9 @@ onMounted(() => {
   content: "";
   width: 6px;
   height: 16px;
-  border-radius: 2px 2px 2px 2px;
+  border-radius: 3px;
   background: var(--el-color-primary);
-  margin-right: 10px;
+  margin-right: 8px;
 }
 
 .border-item .border-item-body {

@@ -159,7 +159,7 @@ defineExpose({validate});
 					</el-form-item>
 				</el-col>
 				<el-col :span="1">
-					<el-button @click="delOneLine('header',index)" text :icon="$icon['Delete']"></el-button>
+					<el-button @click="delOneLine('header',index)" text icon="Delete"></el-button>
 				</el-col>
 			</el-row>
 			<el-button text type="primary" @click="addOneLine('header')" :icon="$icon['Plus']">添加一行
@@ -210,7 +210,7 @@ defineExpose({validate});
 					</el-form-item>
 				</el-col>
 				<el-col :span="1">
-					<el-button @click="delOneLine('body',index)" text :icon="$icon['Delete']"></el-button>
+					<el-button @click="delOneLine('body',index)" text icon="Delete"></el-button>
 				</el-col>
 			</el-row>
 			<el-button text type="primary" @click="addOneLine('body')" :icon="$icon['Plus']">添加一行

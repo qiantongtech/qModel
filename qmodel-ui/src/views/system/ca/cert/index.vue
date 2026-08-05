@@ -108,8 +108,7 @@
               style="color: red"
               @click="handleDelete(scope.row)"
               v-hasPermi="['ca:cert:remove']"
-            >
-              <i class="iconfont-mini icon-a-shanchuxianxing"></i>
+             icon="Delete">
               删除</el-button>
           </template>
         </el-table-column>

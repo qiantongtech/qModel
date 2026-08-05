@@ -62,13 +62,11 @@
         label="版本描述"
         align="left"
         prop="description"
-        width="250px"
+        width="300"
         :show-overflow-tooltip="{ effect: 'light' }"
       >
         <template #default="scope">
-          <el-tooltip :content="scope.row.description || '-'" placement="top" effect="light">
-            {{ scope.row.description }}
-          </el-tooltip>
+          {{ scope.row.description || "-" }}
         </template>
       </el-table-column>
       <el-table-column
@@ -87,6 +85,7 @@
         label="创建时间"
         align="center"
         prop="createTime"
+        width="150"
         sortable
       >
         <template #default="scope">
@@ -101,6 +100,8 @@
         label="操作"
         align="center"
         class-name="small-padding fixed-width"
+        fixed="right"
+        width="250"
       >
         <template #default="scope">
           <el-button link type="primary" @click="handleCompare(scope.row)">
@@ -363,7 +364,8 @@ const getList = () => {
         modelName: props.model.name,
         version: props.model.version,
         status: 1,
-        description: "调整初始值、预处理参数  调整初始值、预处理参数调整初始值、预处理参数调整初始值、预处理参数调整初始值、预处理参数调整初始值、预处理参数调整初始值、预处理参数调整初始值、预处理参数",
+        description:
+          "调整初始值、预处理参数  调整初始值、预处理参数调整初始值、预处理参数调整初始值、预处理参数调整初始值、预处理参数调整初始值、预处理参数调整初始值、预处理参数调整初始值、预处理参数",
         createBy: props.model.createBy || "张三",
         createTime: props.model.createTime || "2025-09-18 15:13",
       },
@@ -384,8 +386,8 @@ const cancel = () => {
 
 const handleCompare = (row) => {
   ElMessage({
-    message: '功能正在开发中',
-    type: 'warning'
+    message: "功能正在开发中",
+    type: "warning",
   });
 };
 
@@ -664,7 +666,7 @@ onMounted(() => {
   .icon-mini {
     width: 1em;
     height: 1em;
-    margin-right: 8px;
+    margin-right: 6px;
   }
 }
 
