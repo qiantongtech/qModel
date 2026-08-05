@@ -242,6 +242,7 @@ function genCURLExampleCode(method, path) {
   let paramExample = buildEmptyDataBySchema(inputSchema)
   let paramExampleStr = JSON.stringify(paramExample)
   let modelCode = props.model.code;
+  method = method.toUpperCase()
 
   let arr = [];
   arr.push(`curl -X ${method} "${baseUrl}${path}"`);
