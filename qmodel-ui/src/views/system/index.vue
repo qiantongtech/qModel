@@ -1,5 +1,5 @@
 <!--
-  Copyright © 2025-present Jiangsu Qiantong Technology Co., Ltd.
+  Copyright © 2026-present Jiangsu Qiantong Technology Co., Ltd.
 
   This file is part of qModel Module Platform (Open Source Edition).
 
@@ -341,7 +341,7 @@ const license = {
       linkText: "http://www.apache.org/licenses/LICENSE-2.0",
       after: "。",
     },
-    footer: ["本产品的交互设计受外观专利保护。", "© 2025 江苏千桐科技有限公司"],
+    footer: ["本产品的交互设计受外观专利保护。", "© 2026 江苏千桐科技有限公司"],
   },
 };
 
