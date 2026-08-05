@@ -704,7 +704,7 @@ INSERT INTO `system_menu` VALUES (2309, '模型历史管理导入', 2303, 6, '#'
 INSERT INTO `system_menu` VALUES (2317, '模型审批修改', 2253, 3, '#', '', NULL, 1, 0, NULL, 'F', '0', '0', 'model:modelAudit:audit:edit', '#', '	\r\n吴同', '2026-07-23 13:51:31', '', NULL, '');
 INSERT INTO `system_menu` VALUES (2318, '模型审批查询', 2253, 1, '#', '', NULL, 1, 0, NULL, 'F', '0', '0', 'model:modelAudit:audit:query', '#', '吴同', '2026-07-23 13:51:31', '', NULL, '');
 
-INSERT INTO `system_menu` VALUES (2319, '模型计算', 2310, 1, 'calc', 'model/calc/index', NULL, 1, 0, NULL, 'C', '0', '0', 'model:calc:calc:list', '#', 'admin', '2026-07-27 14:31:18', '', NULL, '模型计算任务菜单');
+INSERT INTO `system_menu` VALUES (2319, '模型计算', 0, 6, 'calc', 'model/calc/index', NULL, 1, 0, NULL, 'C', '0', '0', 'model:calc:calc:list', 'model-calculation', 'admin', '2026-07-27 14:31:18', '', NULL, '模型计算任务菜单');
 INSERT INTO `system_menu` VALUES (2320, '模型计算任务查询', 2319, 1, '#', '', NULL, 1, 0, NULL, 'F', '0', '0', 'model:calc:calc:query', '#', 'admin', '2026-07-27 14:31:18', '', NULL, '');
 INSERT INTO `system_menu` VALUES (2321, '模型计算任务新增', 2319, 2, '#', '', NULL, 1, 0, NULL, 'F', '0', '0', 'model:calc:calc:add', '#', 'admin', '2026-07-27 14:31:18', '', NULL, '');
 INSERT INTO `system_menu` VALUES (2322, '模型计算任务修改', 2319, 3, '#', '', NULL, 1, 0, NULL, 'F', '0', '0', 'model:calc:calc:edit', '#', 'admin', '2026-07-27 14:31:18', '', NULL, '');
@@ -1048,6 +1048,22 @@ INSERT INTO `system_role_menu` VALUES (4, 2315);
 INSERT INTO `system_role_menu` VALUES (4, 2316);
 INSERT INTO `system_role_menu` VALUES (4, 2317);
 INSERT INTO `system_role_menu` VALUES (4, 2318);
+
+
+INSERT INTO `system_role_menu`  VALUES (4, 2319);
+INSERT INTO `system_role_menu`  VALUES (4, 2320);
+INSERT INTO `system_role_menu`  VALUES (4, 2321);
+INSERT INTO `system_role_menu`  VALUES (4, 2322);
+INSERT INTO `system_role_menu`  VALUES (4, 2323);
+INSERT INTO `system_role_menu`  VALUES (4, 2324);
+INSERT INTO `system_role_menu`  VALUES (4, 2325);
+INSERT INTO `system_role_menu`  VALUES (4, 2326);
+INSERT INTO `system_role_menu`  VALUES (4, 2327);
+INSERT INTO `system_role_menu`  VALUES (4, 2328);
+INSERT INTO `system_role_menu`  VALUES (4, 2329);
+INSERT INTO `system_role_menu`  VALUES (4, 2330);
+INSERT INTO `system_role_menu`  VALUES (4, 2331);
+INSERT INTO `system_role_menu`  VALUES (4, 2332);
 
 -- ----------------------------
 -- Table structure for system_user

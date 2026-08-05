@@ -86,7 +86,7 @@
               type="primary"
               plain
               @click="handleAdd"
-              v-hasPermi="['model:Calc:calc:add']"
+              v-hasPermi="['model:calc:calc:add']"
               @mousedown="(e) => e.preventDefault()"
             >
               <i class="iconfont-mini icon-xinzeng mr5"></i>新增
@@ -239,7 +239,7 @@
               type="primary"
               icon="View"
               @click="handleDetail(scope.row)"
-              v-hasPermi="['model:Calc:calc:query']"
+              v-hasPermi="['model:calc:calc:query']"
             >详情</el-button>
             <el-button
               link
@@ -266,7 +266,7 @@
                   type="primary"
                   icon="Edit"
                   @click="handleUpdate(scope.row)"
-                  v-hasPermi="['model:Calc:calc:edit']"
+                  v-hasPermi="['model:calc:calc:edit']"
                   style="margin-left: 0;"
                 >修改</el-button>
                 <el-button
@@ -274,7 +274,7 @@
                   type="danger"
                   icon="Delete"
                   @click="handleDelete(scope.row)"
-                  v-hasPermi="['model:Calc:calc:remove']"
+                  v-hasPermi="['model:calc:calc:remove']"
                   style="margin-left: 0;"
                 >删除</el-button>
               </div>
