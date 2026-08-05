@@ -357,7 +357,7 @@ function submitForm() {
         });
       } else {
         addModelKey(form.value).then(response => {
-          proxy.$modal.prompt("新增成功");
+          proxy.$modal.msgSuccess("新增成功");
           open.value = false;
           getList();
         }).catch(error => {
