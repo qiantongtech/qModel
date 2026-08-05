@@ -701,16 +701,8 @@ INSERT INTO `system_menu` VALUES (2306, '模型历史管理修改', 2303, 3, '#'
 INSERT INTO `system_menu` VALUES (2307, '模型历史管理删除', 2303, 4, '#', '', NULL, 1, 0, NULL, 'F', '0', '0', 'model:operate:operate:remove', '#', 'admin', '2026-07-20 14:23:04', '', NULL, '');
 INSERT INTO `system_menu` VALUES (2308, '模型历史管理导出', 2303, 5, '#', '', NULL, 1, 0, NULL, 'F', '0', '0', 'model:operate:operate:export', '#', 'admin', '2026-07-20 14:23:04', '', NULL, '');
 INSERT INTO `system_menu` VALUES (2309, '模型历史管理导入', 2303, 6, '#', '', NULL, 1, 0, NULL, 'F', '0', '0', 'model:operate:operate:import', '#', 'admin', '2026-07-20 14:23:04', '', NULL, '');
-INSERT INTO `system_menu` VALUES (2310, '模型计算', 0, 7, 'modelCompute', 'model/computeList/index', NULL, 1, 0, NULL, 'C', '0', '0', 'model:modelCacl:cacl:list', 'model-calculation', 'admin', '2026-07-20 14:27:32', '超级管理员', '2026-07-21 10:18:46', '模拟洪水预报-模型参数菜单');
-INSERT INTO `system_menu` VALUES (2311, '模型计算查询', 2310, 1, '#', '', NULL, 1, 0, NULL, 'F', '0', '0', 'model:model:compute:query', '#', 'admin', '2026-07-20 14:27:32', 'qModel', '2026-07-20 14:51:49', '');
-INSERT INTO `system_menu` VALUES (2312, '模型计算新增', 2310, 2, '#', '', NULL, 1, 0, NULL, 'F', '0', '0', 'model:modelCacl:cacl:add', '#', 'admin', '2026-07-20 14:27:32', '超级管理员', '2026-07-21 10:18:39', '');
-INSERT INTO `system_menu` VALUES (2313, '模型计算修改', 2310, 3, '#', '', NULL, 1, 0, NULL, 'F', '0', '0', 'model:modelCacl:cacl:edit', '#', 'admin', '2026-07-20 14:27:32', '超级管理员', '2026-07-21 10:18:30', '');
-INSERT INTO `system_menu` VALUES (2314, '模型计算删除', 2310, 4, '#', '', NULL, 1, 0, NULL, 'F', '0', '0', 'model:modelCacl:cacl:remove', '#', 'admin', '2026-07-20 14:27:32', '超级管理员', '2026-07-21 10:18:23', '');
-INSERT INTO `system_menu` VALUES (2315, '模型计算导出', 2310, 5, '#', '', NULL, 1, 0, NULL, 'F', '0', '0', 'model:modelCacl:cacl:export', '#', 'admin', '2026-07-20 14:27:32', '超级管理员', '2026-07-21 10:18:18', '');
-INSERT INTO `system_menu` VALUES (2316, '模型计算导入', 2310, 6, '#', '', NULL, 1, 0, NULL, 'F', '0', '0', 'model:modelCacl:cacl:import', '#', 'admin', '2026-07-20 14:27:32', '超级管理员', '2026-07-21 10:18:13', '');
 INSERT INTO `system_menu` VALUES (2317, '模型审批修改', 2253, 3, '#', '', NULL, 1, 0, NULL, 'F', '0', '0', 'model:modelAudit:audit:edit', '#', '	\r\n吴同', '2026-07-23 13:51:31', '', NULL, '');
 INSERT INTO `system_menu` VALUES (2318, '模型审批查询', 2253, 1, '#', '', NULL, 1, 0, NULL, 'F', '0', '0', 'model:modelAudit:audit:query', '#', '吴同', '2026-07-23 13:51:31', '', NULL, '');
-
 
 INSERT INTO `system_menu` VALUES (2319, '模型计算', 2310, 1, 'calc', 'model/calc/index', NULL, 1, 0, NULL, 'C', '0', '0', 'model:calc:calc:list', '#', 'admin', '2026-07-27 14:31:18', '', NULL, '模型计算任务菜单');
 INSERT INTO `system_menu` VALUES (2320, '模型计算任务查询', 2319, 1, '#', '', NULL, 1, 0, NULL, 'F', '0', '0', 'model:calc:calc:query', '#', 'admin', '2026-07-27 14:31:18', '', NULL, '');
@@ -720,6 +712,13 @@ INSERT INTO `system_menu` VALUES (2323, '模型计算任务删除', 2319, 4, '#'
 INSERT INTO `system_menu` VALUES (2324, '模型计算任务导出', 2319, 5, '#', '', NULL, 1, 0, NULL, 'F', '0', '0', 'model:calc:calc:export', '#', 'admin', '2026-07-27 14:31:18', '', NULL, '');
 INSERT INTO `system_menu` VALUES (2325, '模型计算任务导入', 2319, 6, '#', '', NULL, 1, 0, NULL, 'F', '0', '0', 'model:calc:calc:import', '#', 'admin', '2026-07-27 14:31:18', '', NULL, '');
 
+INSERT INTO `system_menu` VALUES (2326, '模型计算执行记录', 2319, 1, 'calcExecution', 'model/calcExecution/index', NULL, 1, 0, NULL, 'C', '0', '0', 'model:calcExecution:calcexecution:list', '#', 'admin', '2026-08-05 14:38:43', '', NULL, '模型计算执行记录菜单');
+INSERT INTO `system_menu` VALUES (2327, '模型计算执行记录查询', 2326, 1, '#', '', NULL, 1, 0, NULL, 'F', '0', '0', 'model:calcExecution:calcexecution:query', '#', 'admin', '2026-08-05 14:38:43', '', NULL, '');
+INSERT INTO `system_menu` VALUES (2328, '模型计算执行记录新增', 2326, 2, '#', '', NULL, 1, 0, NULL, 'F', '0', '0', 'model:calcExecution:calcexecution:add', '#', 'admin', '2026-08-05 14:38:43', '', NULL, '');
+INSERT INTO `system_menu` VALUES (2329, '模型计算执行记录修改', 2326, 3, '#', '', NULL, 1, 0, NULL, 'F', '0', '0', 'model:calcExecution:calcexecution:edit', '#', 'admin', '2026-08-05 14:38:43', '', NULL, '');
+INSERT INTO `system_menu` VALUES (2330, '模型计算执行记录删除', 2326, 4, '#', '', NULL, 1, 0, NULL, 'F', '0', '0', 'model:calcExecution:calcexecution:remove', '#', 'admin', '2026-08-05 14:38:43', '', NULL, '');
+INSERT INTO `system_menu` VALUES (2331, '模型计算执行记录导出', 2326, 5, '#', '', NULL, 1, 0, NULL, 'F', '0', '0', 'model:calcExecution:calcexecution:export', '#', 'admin', '2026-08-05 14:38:43', '', NULL, '');
+INSERT INTO `system_menu` VALUES (2332, '模型计算执行记录导入', 2326, 6, '#', '', NULL, 1, 0, NULL, 'F', '0', '0', 'model:calcExecution:calcexecution:import', '#', 'admin', '2026-08-05 14:38:43', '', NULL, '');
 
 
 -- ----------------------------

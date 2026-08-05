@@ -252,7 +252,7 @@
               <template #reference>
                 <el-button link type="primary" icon="ArrowDown">更多</el-button>
               </template>
-              <div style="display: flex; flex-direction: column; align-items: flex-start; gap: 8px; padding-left: 10px;">
+              <div class="task-action-list">
                 <el-button
                   v-if="scope.row.status === 1"
                   link
@@ -1194,7 +1194,17 @@ getList()
   }
 }
 
+.task-action-list {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 0 auto;
+  gap: 8px;
 
+  :deep(.el-button) {
+    margin: 0 !important;
+  }
+}
 </style>
 
 
