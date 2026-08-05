@@ -4088,6 +4088,10 @@ INSERT INTO `system_menu` VALUES (2329, '模型计算执行记录修改', 2326, 
 INSERT INTO `system_menu` VALUES (2330, '模型计算执行记录删除', 2326, 4, '#', '', NULL, 1, 0, NULL, 'F', '0', '0', 'model:calcExecution:calcexecution:remove', '#', 'admin', '2026-08-05 14:38:43', '', NULL, '');
 INSERT INTO `system_menu` VALUES (2331, '模型计算执行记录导出', 2326, 5, '#', '', NULL, 1, 0, NULL, 'F', '0', '0', 'model:calcExecution:calcexecution:export', '#', 'admin', '2026-08-05 14:38:43', '', NULL, '');
 INSERT INTO `system_menu` VALUES (2332, '模型计算执行记录导入', 2326, 6, '#', '', NULL, 1, 0, NULL, 'F', '0', '0', 'model:calcExecution:calcexecution:import', '#', 'admin', '2026-08-05 14:38:43', '', NULL, '');
+INSERT INTO `system_menu` VALUES (2333, '密钥管理', 0, 8, 'modelKey', 'model/modelKey/index', NULL, 1, 0, NULL, 'C', '0', '0', 'model:modelKey:key:list', 'password', 'admin', '2026-07-31 17:09:48', '超级管理员', '2026-07-31 17:14:15', '模型访问 key菜单');
+INSERT INTO `system_menu` VALUES (2334, '密钥管理复制', 2333, 1, '#', '', NULL, 1, 0, NULL, 'F', '0', '0', 'model:modelKey:key:copy', '#', 'admin', '2026-07-31 17:09:48', '', NULL, '');
+INSERT INTO `system_menu` VALUES (2335, '密钥管理新增', 2333, 2, '#', '', NULL, 1, 0, NULL, 'F', '0', '0', 'model:modelKey:key:add', '#', 'admin', '2026-07-31 17:09:49', '', NULL, '');
+INSERT INTO `system_menu` VALUES (2336, '密钥管理删除', 2333, 4, '#', '', NULL, 1, 0, NULL, 'F', '0', '0', 'model:modelKey:key:remove', '#', 'admin', '2026-07-31 17:09:49', '', NULL, '');
 
 
 -- ----------------------------
@@ -4312,6 +4316,11 @@ INSERT INTO `system_role_menu` VALUES (2, 2315);
 INSERT INTO `system_role_menu` VALUES (2, 2316);
 INSERT INTO `system_role_menu` VALUES (2, 2317);
 INSERT INTO `system_role_menu` VALUES (2, 2318);
+INSERT INTO `system_role_menu` VALUES (2, 2333);
+INSERT INTO `system_role_menu` VALUES (2, 2334);
+INSERT INTO `system_role_menu` VALUES (2, 2335);
+INSERT INTO `system_role_menu` VALUES (2, 2336);
+
 INSERT INTO `system_role_menu` VALUES (4, 1);
 INSERT INTO `system_role_menu` VALUES (4, 2);
 INSERT INTO `system_role_menu` VALUES (4, 101);
@@ -4433,6 +4442,10 @@ INSERT INTO `system_role_menu`  VALUES (4, 2329);
 INSERT INTO `system_role_menu`  VALUES (4, 2330);
 INSERT INTO `system_role_menu`  VALUES (4, 2331);
 INSERT INTO `system_role_menu`  VALUES (4, 2332);
+INSERT INTO `system_role_menu` VALUES (4, 2333);
+INSERT INTO `system_role_menu` VALUES (4, 2334);
+INSERT INTO `system_role_menu` VALUES (4, 2335);
+INSERT INTO `system_role_menu` VALUES (4, 2336);
 
 -- ----------------------------
 -- Table structure for system_user
@@ -4504,6 +4517,28 @@ CREATE TABLE `system_user_role` (
 -- ----------------------------
 INSERT INTO `system_user_role` VALUES (1, 1);
 INSERT INTO `system_user_role` VALUES (2, 4);
+
+-- ----------------------------
+-- Table structure for model_key
+-- ----------------------------
+DROP TABLE IF EXISTS `model_key`;
+CREATE TABLE `model_key`  (
+    `id` bigint NOT NULL AUTO_INCREMENT COMMENT 'ID',
+    `user_id` bigint NOT NULL COMMENT '用户id',
+    `name` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '密钥名称',
+    `api_key` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT 'key',
+    `last_use_time` datetime NULL DEFAULT NULL COMMENT '最后使用时间',
+    `valid_flag` tinyint(1) NOT NULL DEFAULT 1 COMMENT '是否有效;0：无效，1：有效',
+    `del_flag` tinyint(1) NOT NULL DEFAULT 0 COMMENT '删除标志;1：已删除，0：未删除',
+    `create_by` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '创建人',
+    `creator_id` bigint NULL DEFAULT NULL COMMENT '创建人id',
+    `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    `update_by` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '更新人',
+    `updator_id` bigint NULL DEFAULT NULL COMMENT '更新人id',
+    `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '更新时间',
+    `remark` varchar(512) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '备注',
+    PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 10 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '模型访问 key' ROW_FORMAT = Dynamic;
 
 SET FOREIGN_KEY_CHECKS = 1;
 
