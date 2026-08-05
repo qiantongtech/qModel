@@ -32,9 +32,12 @@
     <!-- 计算成功 -->
     <template v-else-if="calcDetail.status === 2">
       <div class="output-result-card">
-        <div class="output-result-body">
+        <div ref="bodyRef" class="output-result-body">
           <!-- 左侧：JSON 结构树 -->
-          <div class="json-section">
+          <div
+            class="json-section"
+            :style="{ width: `${leftWidth}px`, marginLeft: leftWidth == 0 ? '-15px' : '0px' }"
+          >
             <div class="section-header">
               <div class="h2-titles">JSON 结构树</div>
               <div class="btn-style">
@@ -44,7 +47,21 @@
               </div>
             </div>
             <div class="json-block">
-              <JsonTree :data="outputResult" />
+              <vue-json-pretty
+                :data="outputResult"
+                :deep="2"
+                :show-line="true"
+                :show-icon="true"
+                :editable="false"
+                :virtual="false"
+              />
+            </div>
+          </div>
+
+          <!-- 拖拽栏 -->
+          <div class="resize-bar" @mousedown="startResize">
+            <div class="resize-handle-sx">
+              <span class="zjsx"></span>
             </div>
           </div>
 
@@ -62,7 +79,7 @@
               <!-- 空状态 -->
               <div v-if="widgetList.length === 0" class="empty-widgets">
                 <el-icon class="empty-icon"><CirclePlus /></el-icon>
-                <p>请点击右上角添加您的可视化组件</p>
+                <p>请点击右上角添加可视化配置</p>
               </div>
 
               <!-- 组件列表 -->
@@ -75,10 +92,10 @@
                 >
                   <div class="widget-header">
                     <div class="widget-title">
-                      <el-icon class="widget-icon">
+                      <!-- <el-icon class="widget-icon">
                         <Picture v-if="widget.type === 'base64'" />
                         <TrendCharts v-else />
-                      </el-icon>
+                      </el-icon> -->
                       <span>{{ widget.title }}</span>
                     </div>
                     <div class="widget-actions">
@@ -250,9 +267,12 @@
                   </el-table-column>
                   <el-table-column label="操作" min-width="70" align="center">
                     <template #default="scope">
-                      <el-button size="mini" type="danger" plain @click="deleteYField(scope.$index)">
-                        删除
-                      </el-button>
+                      <el-button
+                          link
+                          type="danger"
+                          icon="Delete"
+                          @click="deleteYField(scope.$index)"
+                      >删除</el-button>
                     </template>
                   </el-table-column>
                 </el-table>
@@ -275,9 +295,10 @@
 <script setup name="OutputResult">
 import { ref, computed, watch, nextTick } from 'vue';
 import { ElMessage, ElMessageBox } from 'element-plus';
-import { WarningFilled, Picture, TrendCharts, Edit, Delete, Download, CirclePlus } from '@element-plus/icons-vue';
+import { WarningFilled, Edit, Delete, Download, CirclePlus } from '@element-plus/icons-vue';
 import { saveAs } from 'file-saver';
-import JsonTree from './widgets/JsonTree.vue';
+import VueJsonPretty from 'vue-json-pretty';
+import 'vue-json-pretty/lib/styles.css';
 import Base64Widget from './widgets/Base64Widget.vue';
 import LineChartWidget from './widgets/LineChartWidget.vue';
 import { listCalcWidgetByCalcId, addCalcWidget, updateCalcWidget, delCalcWidget } from '@/api/model/calcWidget/calcWidget';
@@ -440,6 +461,43 @@ const widgetTypeOptions = [
 ];
 
 const widgetList = ref([]);
+
+// ==================== 左右侧拖拽宽度 ====================
+const leftWidth = ref(380);
+const isResizing = ref(false);
+const bodyRef = ref(null);
+let startX = 0;
+let containerWidth = 0;
+const LEFT_MIN_WIDTH = 200;
+const RIGHT_MIN_WIDTH = 400;
+const RESIZE_BAR_WIDTH = 15;
+
+const startResize = (event) => {
+  isResizing.value = true;
+  startX = event.clientX;
+  containerWidth = bodyRef.value?.offsetWidth || 0;
+  document.addEventListener('mousemove', updateResize);
+  document.addEventListener('mouseup', stopResize);
+};
+
+const stopResize = () => {
+  isResizing.value = false;
+  document.removeEventListener('mousemove', updateResize);
+  document.removeEventListener('mouseup', stopResize);
+};
+
+const updateResize = (event) => {
+  if (isResizing.value) {
+    const delta = event.clientX - startX;
+    let newWidth = leftWidth.value + delta;
+    if (newWidth < LEFT_MIN_WIDTH) newWidth = LEFT_MIN_WIDTH;
+    if (containerWidth > 0 && newWidth > containerWidth - RESIZE_BAR_WIDTH - RIGHT_MIN_WIDTH) {
+      newWidth = containerWidth - RESIZE_BAR_WIDTH - RIGHT_MIN_WIDTH;
+    }
+    leftWidth.value = newWidth;
+    startX = event.clientX;
+  }
+};
 
 // 根据计算任务ID加载可视化组件列表
 function loadWidgetList() {
@@ -657,8 +715,8 @@ function submitWidget() {
             errorMsg = `第 ${i + 1} 条 Y 轴字段需要是数组类型`;
             break;
           }
-          if (Array.isArray(xValue) && yValue.length !== xValue.length) {
-            errorMsg = `第 ${i + 1} 条 Y 轴与 X 轴数组长度不一致`;
+          if (Array.isArray(xValue) && yValue.length > xValue.length) {
+            errorMsg = `第 ${i + 1} 条 Y 轴数组长度不能大于 X 轴数组长度`;
             break;
           }
         }
@@ -719,44 +777,46 @@ function handleExportWidget(widget) {
 // 当输出结果变化时，校验现有组件是否仍然合法
 watch(
   () => props.calcDetail.outputResult,
-  () => {
-    nextTick(() => {
-      widgetList.value.forEach((widget) => {
-        let errorMsg = '';
-        if (widget.type === 'base64') {
-          const value = getFieldValue(widget.field);
-          const isStringArray =
-            Array.isArray(value) && value.length > 0 && value.every((v) => typeof v === 'string');
-          if (value === undefined) errorMsg = '绑定的字段已不存在';
-          else if (typeof value !== 'string' && !isStringArray) {
-            errorMsg = '绑定的字段类型已变化，需要是字符串或字符串数组';
-          }
-        } else if (widget.type === 'line') {
-          const xValue = getFieldValue(widget.xField);
-          if (!Array.isArray(widget.yFields) || widget.yFields.length === 0) {
-            errorMsg = 'Y 轴配置已丢失';
-          } else {
-            for (let i = 0; i < widget.yFields.length; i++) {
-              const item = widget.yFields[i];
-              const yValue = getFieldValue(item.field);
-              if (yValue === undefined) {
-                errorMsg = `第 ${i + 1} 条 Y 轴字段已不存在`;
-                break;
-              }
-              if (!Array.isArray(yValue)) {
-                errorMsg = `第 ${i + 1} 条 Y 轴字段类型已变化，需要是数组`;
-                break;
-              }
-              if (Array.isArray(xValue) && yValue.length !== xValue.length) {
-                errorMsg = `第 ${i + 1} 条 Y 轴与 X 轴数组长度不一致`;
-                break;
-              }
+  async () => {
+    await nextTick();
+    for (const widget of widgetList.value) {
+      let errorMsg = '';
+      if (widget.type === 'base64') {
+        const value = getFieldValue(widget.field);
+        const isStringArray =
+          Array.isArray(value) && value.length > 0 && value.every((v) => typeof v === 'string');
+        if (value === undefined) errorMsg = '绑定的字段已不存在';
+        else if (typeof value !== 'string' && !isStringArray) {
+          errorMsg = '绑定的字段类型已变化，需要是字符串或字符串数组';
+        } else {
+          const validImage = await validateBase64Images(value);
+          if (!validImage) errorMsg = '图片数据无法解析，请检查 Base64 数据';
+        }
+      } else if (widget.type === 'line') {
+        const xValue = getFieldValue(widget.xField);
+        if (!Array.isArray(widget.yFields) || widget.yFields.length === 0) {
+          errorMsg = 'Y 轴配置已丢失';
+        } else {
+          for (let i = 0; i < widget.yFields.length; i++) {
+            const item = widget.yFields[i];
+            const yValue = getFieldValue(item.field);
+            if (yValue === undefined) {
+              errorMsg = `第 ${i + 1} 条 Y 轴字段已不存在`;
+              break;
+            }
+            if (!Array.isArray(yValue)) {
+              errorMsg = `第 ${i + 1} 条 Y 轴字段类型已变化，需要是数组`;
+              break;
+            }
+            if (Array.isArray(xValue) && yValue.length > xValue.length) {
+              errorMsg = `第 ${i + 1} 条 Y 轴数组长度不能大于 X 轴数组长度`;
+              break;
             }
           }
         }
-        widget.buildError = errorMsg;
-      });
-    });
+      }
+      widget.buildError = errorMsg;
+    }
   },
   { immediate: true, deep: true }
 );
@@ -787,7 +847,6 @@ watch(
 .output-result-body {
   flex: 1;
   display: flex;
-  gap: 24px;
 }
 
 .json-section {
@@ -795,6 +854,7 @@ watch(
   flex-shrink: 0;
   display: flex;
   flex-direction: column;
+  overflow: hidden;
 }
 
 .visual-section {
@@ -907,7 +967,7 @@ watch(
   gap: 8px;
   font-size: 14px;
   font-weight: 600;
-  color: #303133;
+  color: rgba(0, 0, 0, 0.65);
 
   .widget-icon {
     color: #409eff;
@@ -975,4 +1035,30 @@ watch(
     width: 100%;
   }
 }
+
+.resize-bar {
+  width: 15px;
+  cursor: ew-resize;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.resize-handle-sx {
+  width: 15px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.zjsx {
+  display: inline-block;
+  width: 5px;
+  height: 50px;
+  border-left: 1px solid #ccc;
+  border-right: 1px solid #ccc;
+}
+
 </style>

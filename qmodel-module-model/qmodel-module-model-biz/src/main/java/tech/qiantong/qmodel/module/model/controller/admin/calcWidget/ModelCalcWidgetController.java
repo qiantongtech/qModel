@@ -61,7 +61,7 @@ public class ModelCalcWidgetController extends BaseController {
     private IModelCalcWidgetService modelCalcWidgetService;
 
     @Operation(summary = "查询模型计算任务可视化组件配置列表")
-    @PreAuthorize("@ss.hasPermi('model:calcWidget:calcwidget:list')")
+//    @PreAuthorize("@ss.hasPermi('model:calcWidget:calcwidget:list')")
     @GetMapping("/list")
     public CommonResult<PageResult<ModelCalcWidgetRespVO>> list(ModelCalcWidgetPageReqVO modelCalcWidget) {
         PageResult<ModelCalcWidgetDO> page = modelCalcWidgetService.getModelCalcWidgetPage(modelCalcWidget);
@@ -69,14 +69,14 @@ public class ModelCalcWidgetController extends BaseController {
     }
 
     @Operation(summary = "根据计算任务ID查询可视化组件配置列表")
-    @PreAuthorize("@ss.hasPermi('model:calcWidget:calcwidget:list')")
+//    @PreAuthorize("@ss.hasPermi('model:calcWidget:calcwidget:list')")
     @GetMapping("/listByCalcId/{calcId}")
     public CommonResult<List<ModelCalcWidgetRespVO>> listByCalcId(@PathVariable("calcId") Long calcId) {
         return CommonResult.success(modelCalcWidgetService.getModelCalcWidgetListByCalcId(calcId));
     }
 
     @Operation(summary = "导出模型计算任务可视化组件配置列表")
-    @PreAuthorize("@ss.hasPermi('model:calcWidget:calcwidget:export')")
+//    @PreAuthorize("@ss.hasPermi('model:calcWidget:calcwidget:export')")
     @Log(title = "模型计算任务可视化组件配置", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
     public void export(HttpServletResponse response, ModelCalcWidgetPageReqVO exportReqVO) {
@@ -87,7 +87,7 @@ public class ModelCalcWidgetController extends BaseController {
     }
 
     @Operation(summary = "导入模型计算任务可视化组件配置列表")
-    @PreAuthorize("@ss.hasPermi('model:calcWidget:calcwidget:import')")
+//    @PreAuthorize("@ss.hasPermi('model:calcWidget:calcwidget:import')")
     @Log(title = "模型计算任务可视化组件配置", businessType = BusinessType.IMPORT)
     @PostMapping("/importData")
     public AjaxResult importData(MultipartFile file, boolean updateSupport) throws Exception {
@@ -99,7 +99,7 @@ public class ModelCalcWidgetController extends BaseController {
     }
 
     @Operation(summary = "获取模型计算任务可视化组件配置详细信息")
-    @PreAuthorize("@ss.hasPermi('model:calcWidget:calcwidget:query')")
+//    @PreAuthorize("@ss.hasPermi('model:calcWidget:calcwidget:query')")
     @GetMapping(value = "/{id}")
     public CommonResult<ModelCalcWidgetRespVO> getInfo(@PathVariable("id") Long id) {
         ModelCalcWidgetDO modelCalcWidgetDO = modelCalcWidgetService.getModelCalcWidgetById(id);
@@ -107,7 +107,7 @@ public class ModelCalcWidgetController extends BaseController {
     }
 
     @Operation(summary = "新增模型计算任务可视化组件配置")
-    @PreAuthorize("@ss.hasPermi('model:calcWidget:calcwidget:add')")
+//    @PreAuthorize("@ss.hasPermi('model:calcWidget:calcwidget:add')")
     @Log(title = "模型计算任务可视化组件配置", businessType = BusinessType.INSERT)
     @PostMapping
     public CommonResult<Long> add(@Valid @RequestBody ModelCalcWidgetSaveReqVO modelCalcWidget) {
@@ -115,7 +115,7 @@ public class ModelCalcWidgetController extends BaseController {
     }
 
     @Operation(summary = "修改模型计算任务可视化组件配置")
-    @PreAuthorize("@ss.hasPermi('model:calcWidget:calcwidget:edit')")
+//    @PreAuthorize("@ss.hasPermi('model:calcWidget:calcwidget:edit')")
     @Log(title = "模型计算任务可视化组件配置", businessType = BusinessType.UPDATE)
     @PutMapping
     public CommonResult<Integer> edit(@Valid @RequestBody ModelCalcWidgetSaveReqVO modelCalcWidget) {
@@ -123,7 +123,7 @@ public class ModelCalcWidgetController extends BaseController {
     }
 
     @Operation(summary = "删除模型计算任务可视化组件配置")
-    @PreAuthorize("@ss.hasPermi('model:calcWidget:calcwidget:remove')")
+//    @PreAuthorize("@ss.hasPermi('model:calcWidget:calcwidget:remove')")
     @Log(title = "模型计算任务可视化组件配置", businessType = BusinessType.DELETE)
     @DeleteMapping("/{ids}")
     public CommonResult<Integer> remove(@PathVariable Long[] ids) {

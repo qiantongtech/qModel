@@ -357,6 +357,7 @@ INSERT INTO `model` VALUES (7, NULL, 10, '梯度增强算法', 'GRADIENT_BOOSTIN
 INSERT INTO `model` VALUES (8, NULL, 1, '工业大模型-固定 Token', 'INDUSTRY_MODEL_TEST', 'API', 'v1.0', '吴同', 1, '[{\"name\":\"工业\"}]', '/2026/05/11/6a01a9a0e4b0d389f4f52e99.png', NULL, 1, 0, '吴同', 1, '2026-07-10 11:55:55', '吴同', 1, '2026-07-10 16:20:19', NULL);
 INSERT INTO `model` VALUES (9, NULL, 17, 'qKnow_周报模板测试', 'QKNOW_WEEKLYREPORT', 'API', 'V1.0', '吴同', 0, '[{\"name\":\"周报\"},{\"name\":\"测试\"}]', '/2026/05/11/6a01a9a0e4b0d389f4f52f99.png', '获取 qKnow 系统中的周报模板测试数据', 1, 0, '吴同', 1, '2026-07-16 14:25:22', 'qModel', 1, '2026-07-16 15:58:40', NULL);
 INSERT INTO `model` VALUES (10, NULL, 2, '水位流量插值算法', 'WQIA', 'PYTHON', 'V1.0', '吴同', 1, '[{\"name\":\"水位流量\"},{\"name\":\"预测\"}]', '/2026/05/11/6a01a9a0e4b0d389f4f5ff99.png', NULL, 1, 0, '吴同', 1, '2026-07-16 15:09:06', 'system', 1, '2026-07-17 09:24:46', NULL);
+INSERT INTO `model` VALUES (11, NULL, 1, '水量预测模型', 'WATER_VOLUME_MODEL', 'API', 'V1.0', '吴同', 1, '[{\"name\":\"预测\"},{\"name\":\"水量\"}]', '/2026/08/05/6a72b353ee5a274b8e519c08.png', NULL, 1, 0, '超级管理员', 1, '2026-08-05 11:20:28', '超级管理员', 1, '2026-08-05 16:05:22', NULL);
 
 -- ----------------------------
 -- Table structure for model_config
@@ -408,6 +409,40 @@ INSERT INTO `model_config` VALUES (6, NULL, 6, 'https://api.pipeline.com/v1/pipe
 INSERT INTO `model_config` VALUES (7, NULL, 7, 'https://api.multimodal.com/v1/generate', 'POST', 'application/json', 180, 'DYNAMIC', 'apiKey', 'Header', 'X-Auth-Token', 'Token', NULL, 'POST', 'https://auth.multimodal.com/v1/get_token', '{\n  \"Content-Type\": \"application/json\",\n  \"X-Client-Version\": \"1.0.0\"\n}', '{\n  \"app_id\": \"multimodal_app_001\",\n  \"app_secret\": \"sec_9876543210fedcba\"\n}', '{\n  \"grant_type\": \"password\",\n  \"username\": \"service_user\",\n  \"password\": \"srv_pass_2026!\"\n}', 'data.token', '{\n  \"type\": \"object\",\n  \"properties\": {\n    \"prompt\": {\n      \"type\": \"string\",\n      \"description\": \"生成提示词\"\n    },\n    \"modality\": {\n      \"type\": \"string\",\n      \"enum\": [\"text\", \"image\", \"audio\"],\n      \"description\": \"生成模态\"\n    },\n    \"size\": {\n      \"type\": \"string\",\n      \"default\": \"1024x1024\"\n    }\n  },\n  \"required\": [\"prompt\", \"modality\"]\n}', '{\n  \"type\": \"object\",\n  \"properties\": {\n    \"output\": {\n      \"type\": \"string\",\n      \"description\": \"生成的输出（文本或图片URL）\"\n    },\n    \"model_version\": {\n      \"type\": \"string\"\n    }\n  }\n}', 1, 0, '陈十三', 7, '2026-07-10 05:00:00', '陈十三', 7, '2026-07-10 05:00:00', '多模态生成-复杂动态Token');
 INSERT INTO `model_config` VALUES (8, NULL, 8, 'http://api.example.com/blade-vstec/call/log/call/model', 'POST', 'application/x-www-form-urlencoded', 30, 'FIXED', 'bearer', 'Header', NULL, NULL, 'bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0ZW5hbnRfaWQiOiI1OTUxNTIiLCJ1c2VySW5mbyI6eyJwYXNzd29yZCI6bnVsbCwidXNlcm5hbWUiOiJsY3Rlc3RlciIsImF1dGhvcml0aWVzIj', NULL, NULL, NULL, NULL, NULL, NULL, '{\n  \"type\": \"object\",\n  \"properties\": {\n    \"modelId\": {\n      \"type\": \"integer\",\n      \"description\": \"模型ID\"\n    },\n    \"files\": {\n      \"type\": \"string\",\n      \"format\": \"binary\",\n      \"description\": \"上传的文件\"\n    }\n  },\n  \"required\": [\n    \"modelId\",\n    \"files\"\n  ]\n}', NULL, 1, 0, '小桐', 1, '2026-07-10 11:55:55', '小桐', 1, '2026-07-10 11:57:55', NULL);
 INSERT INTO `model_config` VALUES (9, NULL, 9, 'http://env.qiantong.tech:51899/prod-api/api/app/weeklyReportTestData', 'GET', 'application/json', 30, 'NONE', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '{\n  \"type\": \"object\",\n  \"title\": \"搜索请求参数\",\n  \"description\": \"通用搜索入参结构\",\n  \"properties\": {\n    \"query\": {\n      \"type\": \"string\",\n      \"description\": \"搜索关键词、查询语句\",\n      \"minLength\": 0,\n      \"maxLength\": 500\n    }\n  }\n}', NULL, 1, 0, 'qModel', 1, '2026-07-16 14:25:22', 'qModel', 1, '2026-07-16 14:25:33', NULL);
+INSERT INTO `model_config` VALUES (10, NULL, 11, 'http://demo.qmodel.tech/prod-api/model/mock/waterPredict', 'GET', 'application/json', 30, 'NONE', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '{\n  \"type\": \"object\",\n  \"title\": \"搜索请求参数\",\n  \"description\": \"通用搜索入参结构\",\n  \"properties\": {\n    \"query\": {\n      \"type\": \"string\",\n      \"description\": \"搜索关键词、查询语句\",\n      \"minLength\": 0,\n      \"maxLength\": 500\n    }\n  }\n}', NULL, 1, 0, '超级管理员', 1, '2026-08-05 11:20:28', '超级管理员', 1, '2026-08-05 11:51:50', NULL);
+
+-- ----------------------------
+-- Table structure for model_calc_widget
+-- ----------------------------
+DROP TABLE IF EXISTS `model_calc_widget`;
+CREATE TABLE `model_calc_widget`  (
+                                  `id` bigint NOT NULL AUTO_INCREMENT COMMENT 'ID',
+                                  `company_id` bigint NULL DEFAULT NULL COMMENT '租户/公司ID',
+                                  `calc_id` bigint NOT NULL COMMENT '计算任务ID，关联 model_calc.id',
+                                  `model_id` bigint NULL DEFAULT NULL COMMENT '关联模型ID，冗余字段',
+                                  `type` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '组件类型：base64、line、bar、pie 等',
+                                  `title` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '组件显示标题',
+                                  `sort` int NOT NULL DEFAULT 0 COMMENT '展示排序',
+                                  `config` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '组件配置JSON',
+                                  `valid_flag` tinyint NOT NULL DEFAULT 1 COMMENT '是否有效;0：无效，1：有效',
+                                  `del_flag` tinyint NOT NULL DEFAULT 0 COMMENT '删除标志;1：已删除，0：未删除',
+                                  `create_by` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '创建人',
+                                  `creator_id` bigint NULL DEFAULT NULL COMMENT '创建人id',
+                                  `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+                                  `update_by` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '更新人',
+                                  `updator_id` bigint NULL DEFAULT NULL COMMENT '更新人id',
+                                  `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+                                  `remark` varchar(512) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '备注',
+                                  PRIMARY KEY (`id`) USING BTREE,
+                                  INDEX `idx_calc_id`(`calc_id` ASC) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 18 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '模型计算任务可视化组件配置' ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of model_calc_widget
+-- ----------------------------
+
+INSERT INTO `model_calc_widget` VALUES (1, NULL, 3, 11, 'base64', 'base64 图片解析', 1, '{\"field\":\"image_base64\"}', 1, 0, '超级管理员', 1, '2026-08-05 16:14:44', '超级管理员', 1, '2026-08-05 16:16:55', NULL);
+INSERT INTO `model_calc_widget` VALUES (2, NULL, 3, 11, 'line', '折线图可视化', 2, '{\"xField\":\"chart_data.dates\",\"yFields\":[{\"field\":\"chart_data.predict_flow\",\"tag\":\"预测值\"},{\"field\":\"chart_data.actual_flow\",\"tag\":\"实际值\"}]}', 1, 0, '超级管理员', 1, '2026-08-05 16:15:45', '超级管理员', 1, '2026-08-05 16:16:55', NULL);
 
 
 -- ----------------------------

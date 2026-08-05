@@ -43,6 +43,7 @@
     "vue": "3.4.31",
     "vue-clipboard3": "^2.0.0",
     "vue-cropper": "1.1.1",
+    "vue-json-pretty": "^2.6.0",
     "vue-router": "4.4.0",
     "vuedraggable": "^4.1.0",
     "weixin-js-sdk": "^1.0.0",

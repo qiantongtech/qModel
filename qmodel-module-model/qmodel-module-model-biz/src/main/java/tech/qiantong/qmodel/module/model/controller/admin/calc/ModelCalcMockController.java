@@ -52,17 +52,22 @@ public class ModelCalcMockController {
     @GetMapping("/waterPredict")
     public JSONObject waterPredictMockData() {
         List<String> dates = Arrays.asList(
-                "2026-08-01", "2026-08-02", "2026-08-03", "2026-08-04", "2026-08-05",
-                "2026-08-06", "2026-08-07", "2026-08-08", "2026-08-09", "2026-08-10"
+                "2026-07-01", "2026-07-02", "2026-07-03", "2026-07-04", "2026-07-05",
+                "2026-07-06", "2026-07-07", "2026-07-08", "2026-07-09", "2026-07-10"
         );
-
-        List<Double> actualFlow = Arrays.asList(
+        List<Double> predictFlow = Arrays.asList(
                 1150.2, 1310.5, 1260.3, 1350.9, 1280.7,
                 1490.6, 1310.2, 1520.8, 1340.5, 1550.3
         );
 
+        List<Double> actualFlow = Arrays.asList(
+                1380.5, 1520.8, 1490.2, 1580.6, 1510.4,
+                1750.3, 1540.7, 1780.5, 1590.2, 1820.9
+        );
+
         JSONObject chartData = new JSONObject();
         chartData.put("dates", dates);
+        chartData.put("predict_flow", predictFlow);
         chartData.put("actual_flow", actualFlow);
 
         JSONObject fitInfo = new JSONObject();

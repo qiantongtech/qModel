@@ -19,16 +19,33 @@
 <template>
   <div class="base64-widget">
     <template v-if="imageList.length > 0">
-      <div v-for="(src, index) in imageList" :key="index" class="image-preview">
-        <img :src="src" alt="Base64 图片" />
+      <div
+        v-for="(src, index) in imageList"
+        :key="index"
+        class="image-preview"
+        :class="{ 'image-error': loadErrors[index] }"
+        @click="openPreview(index)"
+      >
+        <el-empty
+          v-if="loadErrors[index]"
+          description="图片无法解析，请检查 Base64 数据"
+          :image-size="60"
+        />
+        <img v-else :src="src" alt="Base64 图片" @error="handleImageError(index)" />
       </div>
     </template>
     <el-empty v-else :description="emptyDesc" :image-size="60" />
+    <el-image-viewer
+      v-if="previewVisible"
+      @close="previewVisible = false"
+      :url-list="imageList"
+      :initial-index="previewIndex"
+    />
   </div>
 </template>
 
 <script setup name="Base64Widget">
-import { computed } from 'vue';
+import { computed, ref, watch } from 'vue';
 import { ElMessage } from 'element-plus';
 
 const props = defineProps({
@@ -64,6 +81,27 @@ const imageList = computed(() => {
   }
   return [];
 });
+
+const previewVisible = ref(false);
+const previewIndex = ref(0);
+const loadErrors = ref([]);
+
+watch(
+  () => imageList.value,
+  () => {
+    loadErrors.value = [];
+  }
+);
+
+function handleImageError(index) {
+  loadErrors.value[index] = true;
+}
+
+function openPreview(index) {
+  if (loadErrors.value[index]) return;
+  previewIndex.value = index;
+  previewVisible.value = true;
+}
 
 const emptyDesc = computed(() => {
   if (!props.value || (Array.isArray(props.value) && props.value.length === 0)) {
@@ -113,6 +151,13 @@ defineExpose({
   border-radius: 4px;
   overflow: hidden;
   background: #f5f7fa;
+  cursor: pointer;
+
+  &.image-error {
+    cursor: default;
+    border: none;
+    background: transparent;
+  }
 
   img {
     display: block;
