@@ -1,5 +1,5 @@
 <!--
-  Copyright © 2025-present Jiangsu Qiantong Technology Co., Ltd.
+  Copyright © 2026-present Jiangsu Qiantong Technology Co., Ltd.
 
   This file is part of qModel Module Platform (Open Source Edition).
 
@@ -50,7 +50,7 @@
           <el-select
             class="el-form-input-width"
             v-model="queryParams.status"
-            placeholder="全部"
+            placeholder="请选择任务状态"
             clearable
           >
             <el-option
@@ -86,7 +86,7 @@
               type="primary"
               plain
               @click="handleAdd"
-              v-hasPermi="['model:Calc:calc:add']"
+              v-hasPermi="['model:calc:calc:add']"
               @mousedown="(e) => e.preventDefault()"
             >
               <i class="iconfont-mini icon-xinzeng mr5"></i>新增
@@ -153,7 +153,7 @@
         </el-table-column>
         <el-table-column
           v-if="getColumnVisibility(3)"
-          label="状态"
+          label="任务状态"
           align="center"
           prop="status"
           width="120"
@@ -173,6 +173,30 @@
         >
           <template #default="scope">
             <dict-tag :options="model_calc_priority" :value="scope.row.priority" />
+          </template>
+        </el-table-column>
+        <el-table-column
+            v-if="getColumnVisibility(7)"
+            label="耗时"
+            align="center"
+            prop="duration"
+            width="100"
+            :show-overflow-tooltip="{ effect: 'light' }"
+        >
+          <template #default="scope">
+            {{ formatDuration(scope.row) }}
+          </template>
+        </el-table-column>
+        <el-table-column
+            v-if="getColumnVisibility(8)"
+            label="备注"
+            align="left"
+            prop="remark"
+            min-width="220"
+            :show-overflow-tooltip="{ effect: 'light' }"
+        >
+          <template #default="scope">
+            {{ scope.row.remark || scope.row.description || '-' }}
           </template>
         </el-table-column>
         <el-table-column
@@ -201,30 +225,7 @@
             {{ parseTime(scope.row.createTime, '{y}-{m}-{d} {h}:{i}') }}
           </template>
         </el-table-column>
-        <el-table-column
-          v-if="getColumnVisibility(7)"
-          label="耗时"
-          align="center"
-          prop="duration"
-          width="100"
-          :show-overflow-tooltip="{ effect: 'light' }"
-        >
-          <template #default="scope">
-            {{ formatDuration(scope.row) }}
-          </template>
-        </el-table-column>
-        <el-table-column
-          v-if="getColumnVisibility(8)"
-          label="备注"
-          align="left"
-          prop="remark"
-          min-width="220"
-          :show-overflow-tooltip="{ effect: 'light' }"
-        >
-          <template #default="scope">
-            {{ scope.row.remark || scope.row.description || '-' }}
-          </template>
-        </el-table-column>
+
         <el-table-column
           label="操作"
           align="center"
@@ -238,7 +239,7 @@
               type="primary"
               icon="View"
               @click="handleDetail(scope.row)"
-              v-hasPermi="['model:Calc:calc:query']"
+              v-hasPermi="['model:calc:calc:query']"
             >详情</el-button>
             <el-button
               link
@@ -251,7 +252,7 @@
               <template #reference>
                 <el-button link type="primary" icon="ArrowDown">更多</el-button>
               </template>
-              <div style="display: flex; flex-direction: column; align-items: flex-start; gap: 8px; padding-left: 10px;">
+              <div class="task-action-list">
                 <el-button
                   v-if="scope.row.status === 1"
                   link
@@ -265,7 +266,7 @@
                   type="primary"
                   icon="Edit"
                   @click="handleUpdate(scope.row)"
-                  v-hasPermi="['model:Calc:calc:edit']"
+                  v-hasPermi="['model:calc:calc:edit']"
                   style="margin-left: 0;"
                 >修改</el-button>
                 <el-button
@@ -273,7 +274,7 @@
                   type="danger"
                   icon="Delete"
                   @click="handleDelete(scope.row)"
-                  v-hasPermi="['model:Calc:calc:remove']"
+                  v-hasPermi="['model:calc:calc:remove']"
                   style="margin-left: 0;"
                 >删除</el-button>
               </div>
@@ -372,8 +373,8 @@
                 v-model="form.description"
                 type="textarea"
                 :rows="2"
-                placeholder="请输入描述"
-                maxlength="512"
+                placeholder="请输入任务描述"
+                maxlength="512个字符"
                 show-word-limit
               />
             </el-form-item>
@@ -387,7 +388,7 @@
                 type="textarea"
                 :rows="2"
                 placeholder="请输入备注"
-                maxlength="512"
+                maxlength="512个字符"
                 show-word-limit
               />
             </el-form-item>
@@ -395,63 +396,7 @@
         </el-row>
 
         <!-- 输入数据绑定 -->
-        <div class="h2-title">输入数据绑定</div>
-        <el-table :data="form.inputParams" border size="small" style="margin-bottom: 12px" max-height="200">
-          <el-table-column label="参数名" width="140">
-            <template #default="scope">
-              <el-input :model-value="scope.row.title || scope.row.name" disabled placeholder="自动填充" />
-            </template>
-          </el-table-column>
-          <el-table-column label="是否必填" width="90" align="center">
-            <template #default="scope">
-              <span>{{ scope.row.required ? '是' : '否' }}</span>
-            </template>
-          </el-table-column>
-          <el-table-column label="参数值" min-width="220">
-            <template #default="scope">
-              <!-- 文件类型：使用 FileUpload2 组件 -->
-              <FileUpload
-                v-if="scope.row.type === 'file'"
-                :model-value="scope.row.value || ''"
-                :limit="1"
-                :file-size="200"
-                :drag-flag="false"
-                @update:model-value="(val) => scope.row.value = val"
-              />
-              <!-- 数字类型：使用 el-input-number -->
-              <el-input-number
-                v-else-if="scope.row.type === 'integer' || scope.row.type === 'number'"
-                v-model="scope.row.value"
-                :placeholder="'请输入' + (scope.row.title || scope.row.name)"
-                :precision="scope.row.type === 'integer' ? 0 : 2"
-                controls-position="right"
-                style="width: 100%"
-              />
-              <!-- 字符串类型：使用 el-input -->
-              <el-input
-                v-else
-                v-model="scope.row.value"
-                :placeholder="'请输入' + (scope.row.title || scope.row.name)"
-                clearable
-              />
-            </template>
-          </el-table-column>
-          <el-table-column label="类型" width="130">
-            <template #default="scope">
-              <el-select :model-value="scope.row.type" disabled>
-                <el-option label="String" value="string" />
-                <el-option label="Integer" value="integer" />
-                <el-option label="Number" value="number" />
-                <el-option label="File" value="file" />
-              </el-select>
-            </template>
-          </el-table-column>
-          <el-table-column label="说明" min-width="180">
-            <template #default="scope">
-              <el-input :model-value="scope.row.description || scope.row.title" disabled />
-            </template>
-          </el-table-column>
-        </el-table>
+
 <!--        <el-empty v-if="form.inputParams.length === 0" description="请先选择模型，自动填充输入参数" :image-size="60" />-->
 
         <!-- 运行策略 -->
@@ -466,7 +411,9 @@
           </el-col>
           <el-col :span="12">
             <el-form-item label="重试次数" prop="maxRetryCount">
-              <el-input v-model="form.maxRetryCount" placeholder="请输入重试次数" />
+              <el-input v-model="form.maxRetryCount" placeholder="请输入重试次数" >
+                <template #append>次</template>
+              </el-input>
             </el-form-item>
           </el-col>
         </el-row>
@@ -484,6 +431,63 @@
           </el-col>
         </el-row>
       </el-form>
+      <div class="h2-title">数据绑定</div>
+      <el-table :data="form.inputParams" border size="small" style="margin-bottom: 12px" max-height="200">
+        <el-table-column label="参数名" width="140">
+          <template #default="scope">
+            <el-input :model-value="scope.row.title || scope.row.name" disabled placeholder="自动填充" />
+          </template>
+        </el-table-column>
+        <el-table-column label="是否必填" width="90" align="center">
+          <template #default="scope">
+            <span>{{ scope.row.required ? '是' : '否' }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column label="参数值" min-width="220">
+          <template #default="scope">
+            <!-- 文件类型：使用 FileUpload2 组件 -->
+            <FileUpload
+                v-if="scope.row.type === 'file'"
+                :model-value="scope.row.value || ''"
+                :limit="1"
+                :file-size="200"
+                :drag-flag="false"
+                @update:model-value="(val) => scope.row.value = val"
+            />
+            <!-- 数字类型：使用 el-input-number -->
+            <el-input-number
+                v-else-if="scope.row.type === 'integer' || scope.row.type === 'number'"
+                v-model="scope.row.value"
+                :placeholder="'请输入' + (scope.row.title || scope.row.name)"
+                :precision="scope.row.type === 'integer' ? 0 : 2"
+                controls-position="right"
+                style="width: 100%"
+            />
+            <!-- 字符串类型：使用 el-input -->
+            <el-input
+                v-else
+                v-model="scope.row.value"
+                :placeholder="'请输入' + (scope.row.title || scope.row.name)"
+                clearable
+            />
+          </template>
+        </el-table-column>
+        <el-table-column label="类型" width="130">
+          <template #default="scope">
+            <el-select :model-value="scope.row.type" disabled>
+              <el-option label="String" value="string" />
+              <el-option label="Integer" value="integer" />
+              <el-option label="Number" value="number" />
+              <el-option label="File" value="file" />
+            </el-select>
+          </template>
+        </el-table-column>
+        <el-table-column label="说明" min-width="180">
+          <template #default="scope">
+            <el-input :model-value="scope.row.description || scope.row.title" disabled />
+          </template>
+        </el-table-column>
+      </el-table>
       <template #footer>
         <div style="text-align: right">
           <el-button @click="cancel">取 消</el-button>
@@ -1190,7 +1194,17 @@ getList()
   }
 }
 
+.task-action-list {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 0 auto;
+  gap: 8px;
 
+  :deep(.el-button) {
+    margin: 0 !important;
+  }
+}
 </style>
 
 

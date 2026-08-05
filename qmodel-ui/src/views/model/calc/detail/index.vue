@@ -1,5 +1,5 @@
 <!--
-  Copyright © 2025-present Jiangsu Qiantong Technology Co., Ltd.
+  Copyright © 2026-present Jiangsu Qiantong Technology Co., Ltd.
 
   This file is part of qModel Module Platform (Open Source Edition).
 
@@ -164,6 +164,15 @@
         <el-tab-pane name="inputParams">
           <template #label>输入参数</template>
           <div v-if="activeName === 'inputParams'" class="tab-content">
+            <div class="justify-between mb15">
+              <div></div>
+              <div class="justify-end top-right-btn">
+                <right-toolbar
+                    :search="false"
+                    :columns="inputParamColumns"
+                ></right-toolbar>
+              </div>
+            </div>
             <el-table
               stripe
               v-loading="inputParamLoading"
@@ -175,11 +184,13 @@
                 label="参数名"
                 align="left"
                 prop="name"
+                min-width="160"
               />
               <el-table-column
                 v-if="getInputParamColumnVisibility(1)"
                 label="是否必填"
                 align="center"
+                min-width="90"
               >
                 <template #default="{ row }">
                   <span>{{ row.required ? '是' : '否' }}</span>
@@ -188,7 +199,8 @@
               <el-table-column
                 v-if="getInputParamColumnVisibility(2)"
                 label="参数值"
-                align="center"
+                align="left"
+                min-width="220"
               >
                 <template #default="{ row }">
                   <span v-if="row.type === 'file'">
@@ -212,15 +224,17 @@
                 v-if="getInputParamColumnVisibility(3)"
                 label="类型"
                 align="center"
+                width="100"
               >
                 <template #default="{ row }">
-                  <el-tag size="small" :type="getTypeTagType(row.type)">{{ row.type || '-' }}</el-tag>
+                  <span>{{ row.type || '-' }}</span>
                 </template>
               </el-table-column>
               <el-table-column
                 v-if="getInputParamColumnVisibility(4)"
                 label="说明"
                 align="left"
+                min-width="260"
                 prop="description"
                 :show-overflow-tooltip="{ effect: 'light' }"
               >
@@ -320,7 +334,7 @@
               >
                 <template #default="scope">
                   <span>{{
-                    parseTime(scope.row.startTime, "{y}-{m}-{d} {h}:{i}:{s}") || "-"
+                    parseTime(scope.row.startTime, "{y}-{m}-{d} {h}:{i}") || "-"
                   }}</span>
                 </template>
               </el-table-column>
@@ -335,7 +349,7 @@
               >
                 <template #default="scope">
                   <span>{{
-                    parseTime(scope.row.endTime, "{y}-{m}-{d} {h}:{i}:{s}") || "-"
+                    parseTime(scope.row.endTime, "{y}-{m}-{d} {h}:{i}") || "-"
                   }}</span>
                 </template>
               </el-table-column>
@@ -445,14 +459,14 @@
           <el-col :span="12">
             <el-form-item label="开始时间" prop="startTime">
               <div class="form-readonly">
-                {{ parseTime(execRecordForm.startTime, "{y}-{m}-{d} {h}:{i}:{s}") || "-" }}
+                {{ parseTime(execRecordForm.startTime, "{y}-{m}-{d} {h}:{i}") || "-" }}
               </div>
             </el-form-item>
           </el-col>
           <el-col :span="12">
             <el-form-item label="结束时间" prop="endTime">
               <div class="form-readonly">
-                {{ parseTime(execRecordForm.endTime, "{y}-{m}-{d} {h}:{i}:{s}") || "-" }}
+                {{ parseTime(execRecordForm.endTime, "{y}-{m}-{d} {h}:{i}") || "-" }}
               </div>
             </el-form-item>
           </el-col>
@@ -466,7 +480,7 @@
           <el-col :span="12">
             <el-form-item label="创建时间" prop="createTime">
               <div class="form-readonly">
-                {{ parseTime(execRecordForm.createTime, "{y}-{m}-{d} {h}:{i}:{s}") || "-" }}
+                {{ parseTime(execRecordForm.createTime, "{y}-{m}-{d} {h}:{i}") || "-" }}
               </div>
             </el-form-item>
           </el-col>
@@ -790,9 +804,7 @@ function getTypeTagType(type) {
 </script>
 
 <style lang="scss" scoped>
-.tab-content {
-  padding: 10px 0;
-}
+
 
 .output-result-tab {
   padding-top: 0;

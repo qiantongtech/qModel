@@ -6,7 +6,7 @@
 
 
 /*
- * Copyright © 2025-present Jiangsu Qiantong Technology Co., Ltd.
+ * Copyright © 2026-present Jiangsu Qiantong Technology Co., Ltd.
  *  
  * This file is part of qModel Module Platform (Open Source Edition).
  *  
