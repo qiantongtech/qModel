@@ -126,7 +126,7 @@ public class ModelCalcController extends BaseController {
     }
 
     @Operation(summary = "提交计算任务", description = "将计算任务加入优先级队列，异步执行")
-    @PreAuthorize("@ss.hasPermi('model:calc:calc:execute')")
+    @PreAuthorize("@ss.hasPermi('model:calc:calc:edit')")
     @Log(title = "提交计算任务", businessType = BusinessType.OTHER)
     @PostMapping("/execute")
     public CommonResult<CalcExecuteResultDTO> execute(@RequestParam Long id) {
@@ -134,7 +134,7 @@ public class ModelCalcController extends BaseController {
     }
 
     @Operation(summary = "终止计算任务", description = "按任务ID终止当前排队中或运行中的任务")
-    @PreAuthorize("@ss.hasPermi('model:calc:calc:cancel')")
+    @PreAuthorize("@ss.hasPermi('model:calc:calc:edit')")
     @Log(title = "终止计算任务", businessType = BusinessType.OTHER)
     @PostMapping("/cancel")
     public CommonResult<Boolean> cancel(@RequestParam Long id) {
@@ -142,7 +142,7 @@ public class ModelCalcController extends BaseController {
     }
 
     @Operation(summary = "取消排队任务", description = "取消排队中的任务（按执行批次号）")
-    @PreAuthorize("@ss.hasPermi('model:calc:calc:cancel')")
+    @PreAuthorize("@ss.hasPermi('model:calc:calc:edit')")
     @Log(title = "取消计算任务", businessType = BusinessType.OTHER)
     @PostMapping("/queue/cancel")
     public CommonResult<Boolean> cancelQueueTask(@RequestParam String executionNo) {
