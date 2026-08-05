@@ -67,7 +67,7 @@
     </div>
     <div class="pagecont-bottom">
       <div class="justify-between mb15">
-        <el-row :gutter="15" class="btn-style">
+        <el-row :gutter="10" class="btn-style">
           <el-col :span="1.5">
             <el-button
               type="primary"

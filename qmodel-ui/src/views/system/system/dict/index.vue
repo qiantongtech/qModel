@@ -140,6 +140,7 @@
               plain
               :disabled="multiple"
               @click="handleEnum"
+              v-hasPermi="['system:dict:export']"
             >
               <i class="iconfont-mini icon-daoru"></i> 下载</el-button
             >
@@ -235,7 +236,12 @@
           width="240"
         >
           <template #default="scope">
-            <el-button link type="primary" @click="handleEnum(scope.row)">
+            <el-button
+              link
+              type="primary"
+              @click="handleEnum(scope.row)"
+              v-hasPermi="['system:dict:export']"
+            >
               <i class="iconfont-mini icon-daoru"></i>下载</el-button
             >
             <el-button
@@ -247,7 +253,12 @@
             >
               详情</el-button
             >
-            <el-popover placement="bottom" :width="150" trigger="click">
+            <el-popover
+              placement="bottom"
+              :width="150"
+              trigger="click"
+              v-if="hasPermi('system:dict:edit')"
+            >
               <template #reference>
                 <el-button link type="primary" icon="ArrowDown"
                   >更多
@@ -409,6 +420,8 @@
 
 <script setup name="Dict">
 import useDictStore from "@/store/system/dict.js";
+import useUserStore from "@/store/system/user";
+
 import {
   listType,
   getType,
@@ -540,6 +553,21 @@ function handleUpdate(row) {
 /** 字典状态翻译 */
 function statusFormat(row) {
   return proxy.selectDictLabel(sys_normal_disable.value, row.status);
+}
+function hasPermi(permission) {
+  const permissions = useUserStore().permissions;
+  const allPermission = "*:*:*";
+
+  if (Array.isArray(permission)) {
+    return (
+      permissions.includes(allPermission) ||
+      permission.some((p) => permissions.includes(p))
+    );
+  } else {
+    return (
+      permissions.includes(allPermission) || permissions.includes(permission)
+    );
+  }
 }
 
 /** 详情按钮操作 */
