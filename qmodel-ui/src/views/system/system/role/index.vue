@@ -241,12 +241,21 @@
               <i class="iconfont-mini icon-a-shanchuxianxing"></i>
               删除
             </el-button>
-
+            <el-button
+              link
+              type="primary"
+              icon="View"
+              @click="handleView(scope.row)"
+              v-hasPermi="['system:role:query']"
+              v-if="scope.row.roleId !== 1 && !hasPermi('system:role:edit')"
+            >
+              详情
+            </el-button>
             <el-popover
               placement="bottom"
               :width="150"
               trigger="click"
-              v-if="scope.row.roleId !== 1"
+              v-if="scope.row.roleId !== 1 && hasPermi('system:role:edit')"
             >
               <template #reference>
                 <el-button link type="primary" icon="ArrowDown">更多</el-button>
@@ -256,6 +265,7 @@
                   style="padding-left: 14px"
                   link
                   type="primary"
+                  v-hasPermi="['system:role:edit']"
                   @click="handleDataScope(scope.row)"
                 >
                   <i class="iconfont-mini icon-a-mimaxianxing"></i>数据权限
@@ -263,6 +273,7 @@
                 <el-button
                   link
                   type="primary"
+                  v-hasPermi="['system:role:edit']"
                   @click="handleAuthUser(scope.row)"
                 >
                   <i class="iconfont-mini icon-a-yonghuzhanghaoxianxing"></i
@@ -623,7 +634,7 @@ const openDataScope = ref(false);
 const menuRef = ref(null);
 const detailMenuRef = ref(null);
 const deptRef = ref(null);
-const defaultSort = ref({ prop: "createTime", order: "descending" });
+const defaultSort = ref({ prop: "roleId", order: "ascending" });
 
 /** 数据范围选项*/
 const dataScopeOptions = ref([
@@ -992,13 +1003,18 @@ function cancelDataScope() {
 }
 
 function hasPermi(permission) {
-  // 从 store 或 localStorage 获取用户权限列表
   const permissions = useUserStore().permissions;
+  const allPermission = "*:*:*";
 
   if (Array.isArray(permission)) {
-    return permission.some((p) => permissions.includes(p));
+    return (
+      permissions.includes(allPermission) ||
+      permission.some((p) => permissions.includes(p))
+    );
   } else {
-    return permissions.includes(permission);
+    return (
+      permissions.includes(allPermission) || permissions.includes(permission)
+    );
   }
 }
 
