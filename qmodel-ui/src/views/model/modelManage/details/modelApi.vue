@@ -26,8 +26,12 @@
             <div class="infotop-row border-top">
               <div class="infotop-row-lable">Base URL</div>
               <div class="infotop-row-value">
-                <el-tooltip :content="baseUrl || '-'" placement="top" effect="light">
-                  <span class="ellipsis-text">{{ baseUrl || "-" }}</span>
+                <span class="ellipsis-text" style="margin-right: 5px">{{ baseUrl || "-" }}</span>
+                <el-tooltip
+                    content="Base URL 需要和接口定义中的地址拼接成完整的 URL 进行调用"
+                    placement="top"
+                >
+                  <el-icon style="color: #909399"><InfoFilled /></el-icon>
                 </el-tooltip>
               </div>
             </div>
@@ -36,7 +40,7 @@
             <div class="infotop-row border-top">
               <div class="infotop-row-lable">鉴权方式(API Key)</div>
               <div class="infotop-row-value">
-                <span class="ellipsis-text">Authorization: Bearer &lt;YOUR_KEY&gt; </span>
+                <span class="ellipsis-text" style="margin-right: 5px">Authorization: Bearer &lt;YOUR_KEY&gt; </span>
                 <el-tooltip
                     content="KEY 可以从 密钥管理 中进行获取"
                     placement="top"
@@ -180,11 +184,11 @@
 
 <script setup name="modelApi">
 import {ref, getCurrentInstance} from "vue";
-import {addModelKey, delModelKey, listModelKey} from "@/api/model/modelKey.js";
 
 const {proxy} = getCurrentInstance();
 
-const baseUrl = window.location.origin + "/dev-api/v1/models";
+const baseApi = import.meta.env.VITE_APP_BASE_API
+const baseUrl = window.location.origin + baseApi+"/v1/models";
 const demoTab = ref('curl')
 const activeNames = ref(['1'])
 const loading = ref(false)
