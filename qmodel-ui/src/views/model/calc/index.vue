@@ -820,7 +820,7 @@ function handleDialogOpen() {
 
 /** 加载模型选项 */
 function loadModelOptions() {
-  listModel({ pageNum: 1, pageSize: 999, status: 1 }).then((res) => {
+  listModel({ pageNum: 1, pageSize: 999, status: 5 }).then((res) => {
     modelOptions.value = res.data.rows || []
   })
 }
