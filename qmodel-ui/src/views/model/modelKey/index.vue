@@ -92,6 +92,12 @@
             <span>{{ parseTime(scope.row.lastUseTime, '{y}-{m}-{d}  {h}:{i}') }}</span>
           </template>
         </el-table-column>
+        <el-table-column v-if="getColumnVisibility(6)" label="备注" align="left" prop="remark"
+                         :show-overflow-tooltip="{ effect: 'light' }">
+          <template #default="scope">
+            <span>{{ scope.row.remark }}</span>
+          </template>
+        </el-table-column>
         <el-table-column v-if="getColumnVisibility(4)" label="创建人" align="center" width="120" prop="createBy">
           <template #default="scope">
             <span>{{ scope.row.createBy }}</span>
@@ -103,12 +109,7 @@
             <span>{{ parseTime(scope.row.createTime, '{y}-{m}-{d}  {h}:{i}') }}</span>
           </template>
         </el-table-column>
-        <el-table-column v-if="getColumnVisibility(6)" label="备注" align="center" prop="remark"
-                         :show-overflow-tooltip="{ effect: 'light' }">
-          <template #default="scope">
-            <span>{{ scope.row.modelId }}</span>
-          </template>
-        </el-table-column>
+
         <el-table-column v-if="getColumnVisibility(7)" label="操作" align="center"
                          class-name="small-padding fixed-width" fixed="right" width="180">
           <template #default="scope">
@@ -228,9 +229,9 @@ const columns = ref([
   {key: 1, label: "名称", visible: true},
   {key: 2, label: "密钥", visible: true},
   {key: 3, label: "最后使用时间", visible: true},
+  {key: 6, label: "备注", visible: true},
   {key: 4, label: "创建人", visible: true},
   {key: 5, label: "创建时间", visible: true},
-  {key: 6, label: "备注", visible: true},
   {key: 7, label: "操作", visible: true}
 ]);
 
