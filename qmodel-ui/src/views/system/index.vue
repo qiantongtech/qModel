@@ -779,6 +779,21 @@ function initModule4() {
 }
 
 const module5ChartRef = ref(null);
+function getRecentSevenDayLabels() {
+  const today = new Date();
+
+  return Array.from({ length: 7 }, (_, index) => {
+    const date = new Date(today);
+    date.setDate(today.getDate() - (6 - index));
+
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const day = String(date.getDate()).padStart(2, "0");
+    return `${month}-${day}`;
+  });
+}
+
+const recentSevenDayLabels = getRecentSevenDayLabels();
+
 function initModule5() {
   const intance = echarts.init(module5ChartRef.value, "macarons");
   intance.setOption({
@@ -804,7 +819,7 @@ function initModule5() {
     },
     xAxis: {
       type: "category",
-      data: ["07.28", "07.29", "07.30", "07.31", "08.01", "08.02", "08.03"],
+      data: recentSevenDayLabels,
     },
     yAxis: {
       type: "value",
@@ -943,7 +958,7 @@ function initModule8() {
     },
     xAxis: {
       type: "category",
-      data: ["07.28", "07.29", "07.30", "07.31", "08.01", "08.02", "08.03"],
+      data: recentSevenDayLabels,
     },
     yAxis: {
       type: "value",

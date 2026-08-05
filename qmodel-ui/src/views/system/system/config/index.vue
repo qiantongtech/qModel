@@ -48,7 +48,7 @@
           <el-select
             class="el-form-input-width"
             v-model="queryParams.configType"
-            placeholder="请选择系统是否内置"
+            placeholder="请选择系统内置"
             clearable
           >
             <el-option
@@ -338,42 +338,42 @@
     >
       <el-form :model="detailForm" label-width="80px">
         <el-row :gutter="20">
-          <el-col :span="12">
+          <el-col :span="24">
             <el-form-item label="参数编号">
               <div class="form-readonly">
                 {{ detailForm.configId || "-" }}
               </div>
             </el-form-item>
           </el-col>
-          <el-col :span="12">
+          <el-col :span="24">
             <el-form-item label="参数名称">
               <div class="form-readonly">
                 {{ detailForm.configName || "-" }}
               </div>
             </el-form-item>
           </el-col>
-          <el-col :span="12">
+          <el-col :span="24">
             <el-form-item label="参数键名">
               <div class="form-readonly">
                 {{ detailForm.configKey || "-" }}
               </div>
             </el-form-item>
           </el-col>
-          <el-col :span="12">
+          <el-col :span="24">
             <el-form-item label="参数键值">
               <div class="form-readonly">
                 {{ detailForm.configValue || "-" }}
               </div>
             </el-form-item>
           </el-col>
-          <el-col :span="12">
+          <el-col :span="24">
             <el-form-item label="系统内置">
               <div class="form-readonly">
                 {{ configTypeFormat(detailForm) || "-" }}
               </div>
             </el-form-item>
           </el-col>
-          <el-col :span="12">
+          <el-col :span="24">
             <el-form-item label="创建时间">
               <div class="form-readonly">
                 {{ parseTime(detailForm.createTime) || "-" }}
