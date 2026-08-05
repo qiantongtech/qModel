@@ -36,8 +36,13 @@
             <div class="infotop-row border-top">
               <div class="infotop-row-lable">鉴权方式(API Key)</div>
               <div class="infotop-row-value">
-                <span class="ellipsis-text">Authorization: Bearer &lt;YOUR_API_KEY&gt; </span>
-<!--                <el-icon><InfoFilled/></el-icon>-->
+                <span class="ellipsis-text">Authorization: Bearer &lt;YOUR_KEY&gt; </span>
+                <el-tooltip
+                    content="KEY 可以从 密钥管理 中进行获取"
+                    placement="top"
+                >
+                  <el-icon style="color: #909399"><InfoFilled /></el-icon>
+                </el-tooltip>
               </div>
             </div>
           </el-col>
@@ -110,9 +115,9 @@
 
             <template #title>
               <div class="api-title" style="color: #2666fb">
-                <el-tag type="primary" size="small" effect="dark" style="margin-left: 10px">GET</el-tag>
-                <span class="path">/status</span>
-                <span>获取模型当前运行状态</span>
+                <el-tag type="primary" size="small" effect="dark" style="margin-left: 10px;background: #909399!important;color: #ffffff!important;">GET</el-tag>
+                <span class="path" style="color: #909399">/status</span>
+                <span style="color: #909399">获取模型当前运行状态</span>
               </div>
             </template>
 
@@ -171,68 +176,6 @@
     </div>
   </div>
 
-  <!-- 添加或修改版本管理对话框 -->
-  <el-dialog
-      title="API Key"
-      v-model="openKey"
-      width="750px"
-      :close-on-click-modal="false"
-  >
-    <el-row style="margin-bottom: 10px" class="btn-style">
-      <el-col :span="1.5">
-        <el-button
-            type="primary"
-            plain
-            @click="handleAddToken"
-        >
-          <i class="iconfont-mini icon-xinzeng"></i>新增
-        </el-button>
-      </el-col>
-    </el-row>
-
-    <el-table
-        stripe
-        v-loading="loading"
-        :default-sort="{ prop: 'createTime', order: 'descending' }"
-        :data="apiKeyList"
-    >
-      <el-table-column label="密钥" align="center" prop="apiKey">
-        <template #default="scope">
-          {{ maskData(scope.row.apiKey) }}
-        </template>
-      </el-table-column>
-      <el-table-column label="创建人" align="center" prop="updateBy" width="120"
-                       :show-overflow-tooltip="{ effect: 'light' }"
-      >
-        <template #default="scope">
-          <span>{{ scope.row.createBy }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="创建时间" align="center" width="140" prop="createTime" sortable>
-        <template #default="scope">
-          {{ parseTime(scope.row.createTime, "{y}-{m}-{d} {h}:{i}") }}
-        </template>
-      </el-table-column>
-      <el-table-column label="操作" width="180" align="center">
-        <template #default="scope">
-          <el-button link type="primary" icon="CopyDocument" @click="copyToken(scope.row)">
-            复制
-          </el-button>
-          <el-button link type="danger" icon="Delete" @click="deleteToken(scope.row)">
-            删除
-          </el-button>
-        </template>
-      </el-table-column>
-    </el-table>
-
-    <template #footer>
-      <div class="dialog-footer">
-        <el-button @click="cancel">关 闭</el-button>
-      </div>
-    </template
-    >
-  </el-dialog>
-
 </template>
 
 <script setup name="modelApi">
@@ -244,8 +187,6 @@ const {proxy} = getCurrentInstance();
 const baseUrl = window.location.origin + "/dev-api/v1/models";
 const demoTab = ref('curl')
 const activeNames = ref(['1'])
-const openKey = ref(false)
-const apiKeyList = ref([])
 const loading = ref(false)
 
 const props = defineProps({
@@ -300,7 +241,7 @@ function genCURLExampleCode(method, path) {
 
   let arr = [];
   arr.push(`curl -X ${method} "${baseUrl}${path}"`);
-  arr.push(`-H "Authorization: Bearer <YOUR_API_KEY>"`);
+  arr.push(`-H "Authorization: Bearer <YOUR_KEY>"`);
   arr.push(`-H "Content-Type: application/json"`);
   arr.push(`-d '{"modelCode":"${modelCode}","param":${paramExampleStr}}'`);
   return arr.join("\n");
@@ -317,7 +258,7 @@ function genPythonExampleCode(method, path) {
   arr.push(`import requests`);
   arr.push(`url = "${baseUrl}${path}"`);
   arr.push(`headers = {`);
-  arr.push(`  "Authorization": "Bearer <YOUR_API_KEY>"`);
+  arr.push(`  "Authorization": "Bearer <YOUR_KEY>"`);
   arr.push(`  "Content-Type": "application/json"`);
   arr.push(`  }`);
   arr.push(`payload = {`);
@@ -347,7 +288,7 @@ function genNodeExampleCode(method, path) {
   arr.push(`    },`);
   arr.push(`    {`);
   arr.push(`      headers: {`);
-  arr.push(`            "Authorization": "Bearer Bearer <YOUR_API_KEY>",`);
+  arr.push(`            "Authorization": "Bearer Bearer <YOUR_KEY>",`);
   arr.push(`            "Content-Type": "application/json"`);
   arr.push(`      }`);
   arr.push(`    }`);
@@ -392,70 +333,6 @@ function buildEmptyDataBySchema(schema) {
     default:
       return null;
   }
-}
-
-// 获取Token
-function getToken() {
-  getTokenList();
-  openKey.value = true;
-}
-
-// 关闭 Token 窗口
-function cancel() {
-  openKey.value = false;
-}
-
-// 添加Token
-function handleAddToken() {
-  const param = {
-    modelId: props.model.id
-  }
-  addModelKey(param).then(res => {
-    proxy.$modal.msgSuccess("新增成功");
-    getTokenList();
-  });
-}
-
-// 获取Token列表
-function getTokenList() {
-  loading.value = true;
-  const param = {
-    modelId: props.model.id
-  }
-
-  listModelKey(param).then(res => {
-    apiKeyList.value = res.data;
-    loading.value = false;
-  });
-}
-
-// 复制Token
-async function copyToken(row) {
-  await navigator.clipboard.writeText(row.apiKey)
-  proxy.$modal.msgSuccess("API Key已复制");
-}
-
-// 删除 Token
-function deleteToken(row) {
-  proxy.$modal.confirm("是否确认删除该 API Key 吗？", {
-    confirmButtonText: "确定",
-    cancelButtonText: "取消",
-    type: "warning",
-  })
-      .then(() => {
-        return delModelKey(row.id);
-      })
-      .then(() => {
-        getTokenList();
-        proxy.$modal.msgSuccess("删除成功");
-      })
-
-}
-
-// 数据脱敏
-function maskData(data) {
-  if (!data || data.length < 16) return data
-  return data.slice(0, 6) + '****' + data.slice(-10)
 }
 
 </script>
