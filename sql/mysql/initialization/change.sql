@@ -18,6 +18,9 @@
 
 -- qmodel-v1.3.0之后更新的内容
 
+-- 2245: 模型中心 path 从 'model/version' 改为 'model/manage'
+UPDATE `system_menu` SET `path` = 'model/manage' WHERE `menu_id` = 2245;
+
 -- 2253: 模型审批 path 从 'audit' 改为 'model/audit'
 UPDATE `system_menu` SET `path` = 'model/audit' WHERE `menu_id` = 2253;
 
