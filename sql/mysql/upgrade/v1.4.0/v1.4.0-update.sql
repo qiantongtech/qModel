@@ -142,3 +142,25 @@ CREATE TABLE `model_calc_widget`  (
                                       PRIMARY KEY (`id`) USING BTREE,
                                       INDEX `idx_calc_id`(`calc_id` ASC) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 18 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '模型计算任务可视化组件配置' ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Table structure for model_key
+-- ----------------------------
+DROP TABLE IF EXISTS `model_key`;
+CREATE TABLE `model_key`  (
+                              `id` bigint NOT NULL AUTO_INCREMENT COMMENT 'ID',
+                              `user_id` bigint NOT NULL COMMENT '用户id',
+                              `name` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '密钥名称',
+                              `api_key` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT 'key',
+                              `last_use_time` datetime NULL DEFAULT NULL COMMENT '最后使用时间',
+                              `valid_flag` tinyint(1) NOT NULL DEFAULT 1 COMMENT '是否有效;0：无效，1：有效',
+                              `del_flag` tinyint(1) NOT NULL DEFAULT 0 COMMENT '删除标志;1：已删除，0：未删除',
+                              `create_by` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '创建人',
+                              `creator_id` bigint NULL DEFAULT NULL COMMENT '创建人id',
+                              `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+                              `update_by` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '更新人',
+                              `updator_id` bigint NULL DEFAULT NULL COMMENT '更新人id',
+                              `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '更新时间',
+                              `remark` varchar(512) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '备注',
+                              PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 10 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '模型访问 key' ROW_FORMAT = Dynamic;
