@@ -21,7 +21,6 @@ package tech.qiantong.qmodel.module.model.dal.mapper.modelKey;
 import org.apache.ibatis.annotations.Param;
 import tech.qiantong.qmodel.common.core.domain.entity.SysUser;
 import tech.qiantong.qmodel.common.core.page.PageResult;
-import tech.qiantong.qmodel.module.example.dal.dataobject.user.UserTypeDO;
 import tech.qiantong.qmodel.module.model.controller.admin.modelKey.vo.ModelKeyPageVO;
 import tech.qiantong.qmodel.module.model.dal.dataobject.modelKey.ModelKeyDO;
 import tech.qiantong.qmodel.mybatis.core.mapper.BaseMapperX;
