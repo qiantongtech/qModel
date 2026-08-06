@@ -75,7 +75,6 @@ public class ApiExecutionEngine implements IExecutionEngine {
                 modelConfig.getTimeoutSeconds()));
         testReqVO.setTestBody(testBody);
 
-        // 4. 复用已有 Service 方法：鉴权/Header/Body/调用历史/超时控制 全都包含在里面了
         ModelConfigTestRespVO resp = modelConfigService.testModelConfig(testReqVO);
         List<String> respLogs = resp.getLogs();
         if (respLogs != null && !respLogs.isEmpty()) {

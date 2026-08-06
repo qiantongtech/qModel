@@ -96,36 +96,73 @@ public class ProcessResourceMonitor {
      */
     @Data
     public static class ProcessStats {
-        /** 进程 PID */
         @JSONField(name = "进程PID")
         private long pid;
-        /** 监控开始时间（ms） */
-        @JSONField(name = "监控开始时间毫秒")
+
+        @JSONField(serialize = false)
         private long startTimeMs;
-        /** 监控结束时间（ms） */
-        @JSONField(name = "监控结束时间毫秒")
+
+        @JSONField(serialize = false)
         private long endTimeMs;
-        /** 执行时长（ms） */
+
         @JSONField(name = "执行时长毫秒")
         private long durationMs;
-        /** 平均 CPU 占用率（%，0-100） */
-        @JSONField(name = "平均CPU使用率")
+
+        @JSONField(serialize = false)
         private double avgCpuUsagePercent;
-        /** 峰值 CPU 占用率（%） */
-        @JSONField(name = "峰值CPU使用率")
+
+        @JSONField(serialize = false)
         private double maxCpuUsagePercent;
-        /** 平均内存使用（KB） */
-        @JSONField(name = "平均内存使用KB")
+
+        @JSONField(serialize = false)
         private long avgMemoryKb;
-        /** 峰值内存使用（KB） */
-        @JSONField(name = "峰值内存使用KB")
+
+        @JSONField(serialize = false)
         private long maxMemoryKb;
-        /** 采样次数 */
+
         @JSONField(name = "采样次数")
         private int sampleCount;
-        /** 是否正常完成 */
-        @JSONField(name = "是否正常完成")
+
+        @JSONField(serialize = false)
         private boolean completedNormally;
+
+        // --- 用于 JSON 序列化的格式化方法 ---
+
+        @JSONField(name = "监控开始时间", format = "yyyy-MM-dd HH:mm:ss")
+        public long getStartTimeMsForJson() {
+            return startTimeMs;
+        }
+
+        @JSONField(name = "监控结束时间", format = "yyyy-MM-dd HH:mm:ss")
+        public long getEndTimeMsForJson() {
+            return endTimeMs;
+        }
+
+        @JSONField(name = "平均CPU使用率")
+        public String getAvgCpuUsagePercentFormatted() {
+            return String.format("%.2f%%", avgCpuUsagePercent);
+        }
+
+        @JSONField(name = "峰值CPU使用率")
+        public String getMaxCpuUsagePercentFormatted() {
+            return String.format("%.2f%%", maxCpuUsagePercent);
+        }
+
+        @JSONField(name = "平均内存使用GB")
+        public String getAvgMemoryGb() {
+            if (avgMemoryKb <= 0) {
+                return "0.00";
+            }
+            return String.format("%.2f", (double) avgMemoryKb / 1024 / 1024);
+        }
+
+        @JSONField(name = "峰值内存使用GB")
+        public String getMaxMemoryGb() {
+            if (maxMemoryKb <= 0) {
+                return "0.00";
+            }
+            return String.format("%.2f", (double) maxMemoryKb / 1024 / 1024);
+        }
     }
 
     /**
@@ -231,7 +268,7 @@ public class ProcessResourceMonitor {
         double maxCpu = 0;
         double totalCpuPercent = 0;
         int cpuSampleCount = 0;
-        
+
         long finalCpuTimeMs = 0;
         long finalUpTimeMs = 0;
 
@@ -244,7 +281,7 @@ public class ProcessResourceMonitor {
                 totalCpuPercent += snap.getCpuUsagePercent();
                 cpuSampleCount++;
             }
-            
+
             if (snap.getCumulativeCpuTimeMs() > 0) {
                 finalCpuTimeMs = Math.max(finalCpuTimeMs, snap.getCumulativeCpuTimeMs());
             }
@@ -253,19 +290,21 @@ public class ProcessResourceMonitor {
             }
         }
 
-        stats.setAvgMemoryKb(snapshots.size() > 0 ? totalMemoryKb / snapshots.size() : 0);
+        stats.setAvgMemoryKb(totalMemoryKb / snapshots.size());
         stats.setMaxMemoryKb(maxMemoryKb);
-        stats.setMaxCpuUsagePercent(maxCpu);
-        
+        stats.setMaxCpuUsagePercent(Math.round(maxCpu * 100.0) / 100.0);
+
         // 优先使用累计 CPU 时间计算精确的平均 CPU 使用率
         if (finalUpTimeMs > 0) {
-            stats.setAvgCpuUsagePercent(100.0 * finalCpuTimeMs / finalUpTimeMs);
+            double avgCpu = 100.0 * finalCpuTimeMs / finalUpTimeMs;
+            stats.setAvgCpuUsagePercent(Math.round(avgCpu * 100.0) / 100.0);
             // 如果仅有 1 次采样，峰值 CPU 也就等于平均 CPU
             if (snapshots.size() == 1) {
                 stats.setMaxCpuUsagePercent(stats.getAvgCpuUsagePercent());
             }
         } else {
-            stats.setAvgCpuUsagePercent(cpuSampleCount > 0 ? totalCpuPercent / cpuSampleCount : 0);
+            double avgCpu = cpuSampleCount > 0 ? totalCpuPercent / cpuSampleCount : 0;
+            stats.setAvgCpuUsagePercent(Math.round(avgCpu * 100.0) / 100.0);
         }
 
         return stats;
@@ -282,12 +321,10 @@ public class ProcessResourceMonitor {
      * 获取进程 ID（兼容 Java 8+）
      */
     private long getProcessId(Process process) {
-        // 方法1：Java 9+ 原生 API
         try {
             Method pidMethod = Process.class.getMethod("pid");
             return (Long) pidMethod.invoke(process);
         } catch (Exception e) {
-            // 方法2：反射兼容 Java 8 (Linux/Mac)
             try {
                 if (process.getClass().getName().equals("java.lang.UNIXProcess")) {
                     Field pidField = process.getClass().getDeclaredField("pid");
@@ -295,7 +332,6 @@ public class ProcessResourceMonitor {
                     return pidField.getInt(process);
                 }
 
-                // Windows 下 Java 8
                 if (process.getClass().getName().equals("java.lang.ProcessImpl")) {
                     Field handleField = process.getClass().getDeclaredField("handle");
                     handleField.setAccessible(true);

@@ -501,14 +501,14 @@
         <el-row :gutter="20">
           <el-col :span="24">
             <el-form-item label="输入参数" prop="inputParams">
-              <div class="form-readonly textarea">{{ execRecordForm.inputParams || "-" }}</div>
+              <div class="form-readonly textarea json-pre">{{ execRecordForm.inputParams || "-" }}</div>
             </el-form-item>
           </el-col>
         </el-row>
         <el-row :gutter="20">
           <el-col :span="24">
             <el-form-item label="输出结果" prop="outputResult">
-              <div class="form-readonly textarea">{{ execRecordForm.outputResult || "-" }}</div>
+              <div class="form-readonly textarea json-pre">{{ execRecordForm.outputResult || "-" }}</div>
 
             </el-form-item>
           </el-col>
@@ -965,5 +965,7 @@ function getTypeTagType(type) {
 
 .error-text {
   color: #f56c6c;
+  max-height: 200px;
+  overflow-y: auto;
 }
 </style>

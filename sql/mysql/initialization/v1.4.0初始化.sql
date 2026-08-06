@@ -4063,7 +4063,7 @@ INSERT INTO `system_menu` VALUES (2299, '模型分类修改', 2296, 3, '#', '', 
 INSERT INTO `system_menu` VALUES (2300, '模型分类删除', 2296, 4, '#', '', NULL, 1, 0, NULL, 'F', '0', '0', 'model:classify:classify:remove', '#', 'admin', '2026-07-20 11:21:25', '', NULL, '');
 INSERT INTO `system_menu` VALUES (2301, '模型分类导出', 2296, 5, '#', '', NULL, 1, 0, NULL, 'F', '0', '0', 'model:classify:classify:export', '#', 'admin', '2026-07-20 11:21:25', '', NULL, '');
 INSERT INTO `system_menu` VALUES (2302, '模型分类导入', 2296, 6, '#', '', NULL, 1, 0, NULL, 'F', '0', '0', 'model:classify:classify:import', '#', 'admin', '2026-07-20 11:21:25', '', NULL, '');
-INSERT INTO `system_menu` VALUES (2303, '历史记录', 0, 5, 'model/operate', 'model/operateList/index', NULL, 1, 0, NULL, 'C', '0', '0', 'model:operate:operate:list', 'calculate-history', 'admin', '2026-07-20 14:23:04', 'qModel', '2026-07-20 15:16:31', '模型历史管理菜单');
+INSERT INTO `system_menu` VALUES (2303, '计算历史', 0, 5, 'model/operate', 'model/operateList/index', NULL, 1, 0, NULL, 'C', '0', '0', 'model:operate:operate:list', 'calculate-history', 'admin', '2026-07-20 14:23:04', 'qModel', '2026-07-20 15:16:31', '模型历史管理菜单');
 INSERT INTO `system_menu` VALUES (2304, '模型历史管理查询', 2303, 1, '#', '', NULL, 1, 0, NULL, 'F', '0', '0', 'model:operate:operate:query', '#', 'admin', '2026-07-20 14:23:04', '', NULL, '');
 INSERT INTO `system_menu` VALUES (2305, '模型历史管理新增', 2303, 2, '#', '', NULL, 1, 0, NULL, 'F', '0', '0', 'model:operate:operate:add', '#', 'admin', '2026-07-20 14:23:04', '', NULL, '');
 INSERT INTO `system_menu` VALUES (2306, '模型历史管理修改', 2303, 3, '#', '', NULL, 1, 0, NULL, 'F', '0', '0', 'model:operate:operate:edit', '#', 'admin', '2026-07-20 14:23:04', '', NULL, '');

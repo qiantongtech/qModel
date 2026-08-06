@@ -602,5 +602,7 @@ onMounted(() => {
 
 .error-text {
   color: #f56c6c;
+  max-height: 200px;
+  overflow-y: auto;
 }
 </style>

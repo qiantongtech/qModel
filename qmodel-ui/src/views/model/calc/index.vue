@@ -184,7 +184,7 @@
             :show-overflow-tooltip="{ effect: 'light' }"
         >
           <template #default="scope">
-            {{ formatDuration(scope.row) }}
+            {{ formatDuration(scope.row.duration) }}
           </template>
         </el-table-column>
         <el-table-column
@@ -707,21 +707,16 @@ function getAccessTypeByCalcType(calcType) {
 }
 
 /** 格式化耗时 */
-function formatDuration(row) {
-  if (row.startTime && row.endTime) {
-    const diff = new Date(row.endTime) - new Date(row.startTime)
-    if (diff < 1000) return diff + 'ms'
-    const s = Math.floor(diff / 1000)
-    if (s < 60) return s + 's'
-    const m = Math.floor(s / 60)
-    return m + 'min ' + (s % 60) + 's'
-  }
-  if (row.duration) {
-    const d = Number(row.duration)
-    if (d < 1000) return d + 'ms'
-    return Math.floor(d / 1000) + 's'
-  }
-  return '-'
+function formatDuration(duration) {
+  if (!duration && duration !== 0) return "-";
+  const ms = Number(duration);
+  if (ms < 1000) return ms + "ms";
+  const s = Math.floor(ms / 1000);
+  const remainMs = ms % 1000;
+  if (s < 60) return remainMs > 0 ? s + "s " + remainMs + "ms" : s + "s";
+  const m = Math.floor(s / 60);
+  const remainS = s % 60;
+  return remainS > 0 ? m + "min " + remainS + "s" : m + "min";
 }
 
 /** 解析输出结果 */

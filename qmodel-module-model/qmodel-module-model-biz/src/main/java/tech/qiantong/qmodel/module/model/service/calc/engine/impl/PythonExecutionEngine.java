@@ -140,7 +140,7 @@ public class PythonExecutionEngine implements IExecutionEngine {
         }
 
         // 日志中不再输出资源监控信息
-        /*
+        
         StringBuilder sb = new StringBuilder(256);
         sb.append("进程资源监控：PID=").append(stats.getPid() > 0 ? stats.getPid() : "N/A")
                 .append("，采样次数=").append(stats.getSampleCount())
@@ -151,7 +151,7 @@ public class PythonExecutionEngine implements IExecutionEngine {
                 .append("，峰值内存=").append(formatKbToHuman(stats.getMaxMemoryKb()))
                 .append("，完成状态=").append(stats.isCompletedNormally() ? "正常" : "异常");
         logBuffer.add(sb.toString());
-        */
+        
     }
 
     /**
