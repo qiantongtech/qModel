@@ -413,8 +413,6 @@ function copyKey(row) {
     // navigator.clipboard.writeText(response.data).then(() => {
     //   proxy.$modal.msgSuccess("密钥已复制");
     // })
-
-    response.data
   })
 }
 

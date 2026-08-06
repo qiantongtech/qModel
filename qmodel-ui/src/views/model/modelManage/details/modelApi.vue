@@ -119,13 +119,38 @@
                   <div class="sub-title">调用示例 (Call Example)</div>
                   <el-tabs v-model="demoTab" type="border-card">
                     <el-tab-pane label="CURL" name="curl">
-                      <pre class="code-block dark">{{ genCURLExampleCode("post", "/predict") }}</pre>
+                      <div class="code-wrap">
+                        <el-button
+                            class="copy-btn"
+                            icon="DocumentCopy"
+                            size="small"
+                            @click="copyCode('post', '/predict','curl')"
+                        />
+                        <pre class="code-block dark">{{ genCURLExampleCode("post", "/predict") }}</pre>
+                      </div>
                     </el-tab-pane>
                     <el-tab-pane label="Python (requests)" name="python">
-                      <pre class="code-block dark">{{ genPythonExampleCode("post", "/predict") }}</pre>
+                      <div class="code-wrap">
+                        <el-button
+                            class="copy-btn"
+                            icon="DocumentCopy"
+                            size="small"
+                            @click="copyCode('post', '/predict','python')"
+                        />
+                        <pre class="code-block dark">{{ genPythonExampleCode("post", "/predict") }}</pre>
+                      </div>
                     </el-tab-pane>
                     <el-tab-pane label="Node.js (axios)" name="node">
-                      <pre class="code-block dark">{{ genNodeExampleCode("post", "/predict") }}</pre>
+                      <div class="code-wrap">
+                        <el-button
+                            class="copy-btn"
+                            icon="DocumentCopy"
+                            size="small"
+                            @click="copyCode('post', '/predict','node')"
+                        />
+                        <pre class="code-block dark">{{ genNodeExampleCode("post", "/predict") }}</pre>
+                      </div>
+
                     </el-tab-pane>
                   </el-tabs>
                 </div>
@@ -226,13 +251,12 @@ function genPythonExampleCode(method, path) {
   arr.push(`import requests`);
   arr.push(`url = "${baseUrl}${path}"`);
   arr.push(`headers = {`);
-  arr.push(`  "Authorization": "Bearer <YOUR_KEY>"`);
+  arr.push(`  "Authorization": "Bearer <YOUR_KEY>",`);
   arr.push(`  "Content-Type": "application/json"`);
-  arr.push(`  }`);
+  arr.push(`}`);
   arr.push(`payload = {`);
-  arr.push(`  "instances": [`);
-  arr.push(`    {"modelCode":"${modelCode}","param":${paramExampleStr}}`);
-  arr.push(`  ]`);
+  arr.push(`  "modelCode":"${modelCode}",`);
+  arr.push(`  "param":${paramExampleStr}`);
   arr.push(`}`);
   arr.push(`resp = requests.post(url, json=payload, headers=headers)`);
   arr.push(`print(resp.json())`);
@@ -247,20 +271,18 @@ function genNodeExampleCode(method, path) {
   let modelCode = props.model.code;
 
   let arr = [];
-  arr.push(`const axios = require('axios');`);
+  arr.push(`import axios from 'axios';`);
   arr.push(`async function run() {`);
-  arr.push(`  const res = await axios.post(`);
-  arr.push(`    "${baseUrl}${path}",`);
-  arr.push(`    {`);
-  arr.push(`      instances: [{"modelCode":"${modelCode}","param":${paramExampleStr}}]`);
-  arr.push(`    },`);
-  arr.push(`    {`);
-  arr.push(`      headers: {`);
-  arr.push(`            "Authorization": "Bearer Bearer <YOUR_KEY>",`);
-  arr.push(`            "Content-Type": "application/json"`);
-  arr.push(`      }`);
-  arr.push(`    }`);
-  arr.push(`  )`);
+  arr.push(`  const url = "${baseUrl}${path}";`);
+  arr.push(`  const data = {`);
+  arr.push(`      "modelCode":"${modelCode}",`);
+  arr.push(`      "param":${paramExampleStr}`);
+  arr.push(`   };`);
+  arr.push(`  const headers = {`);
+  arr.push(`       "Authorization": "Bearer <YOUR_KEY>",`);
+  arr.push(`       "Content-Type": "application/json"`);
+  arr.push(`   };`);
+  arr.push(`  const res = await axios.post(url,data, {headers:headers})`);
   arr.push(`  console.log(res.data);`);
   arr.push(`}`);
   arr.push(`run();`);
@@ -303,9 +325,50 @@ function buildEmptyDataBySchema(schema) {
   }
 }
 
-
+function copyCode(method, path,type) {
+  let code = "";
+  switch (type) {
+    case 'curl':
+      code = genCURLExampleCode(method, path);break;
+    case 'python':
+      code = genPythonExampleCode(method, path);break;
+    case 'node':
+      code = genNodeExampleCode(method, path);break;
+  }
+  const ta = document.createElement('textarea');
+  ta.value = code;
+  ta.style.position = 'fixed';
+  ta.style.left = '-9999px';
+  document.body.appendChild(ta);
+  ta.select();
+  document.execCommand('copy'); // 旧API
+  ta.remove();
+  proxy.$modal.msgSuccess("已复制");
+}
 </script>
+
 <style lang="scss" scoped>
+.code-wrap {
+  position: relative;
+}
+
+.code-wrap .copy-btn {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  z-index: 10;
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+.code-wrap:hover .copy-btn {
+  opacity: 1;
+}
+.code-block {
+  margin: 0;
+  /* 给右上角按钮留出顶部空间，防止代码被遮挡 */
+  padding: 40px 12px 12px;
+  white-space: pre-wrap;
+}
 
 .h2-titles {
   font-size: 16px;
