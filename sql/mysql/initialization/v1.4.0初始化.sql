@@ -1364,7 +1364,7 @@ CREATE TABLE `model_calc`
     `model_version_id` bigint(20) DEFAULT NULL COMMENT '模型版本ID',
     `description`      text COMMENT '描述',
     `input_params`     longtext COMMENT '输入参数(JSON格式)',
-    `output_result`    text COMMENT '输出结果(JSON格式)',
+    `output_result`    longtext COMMENT '输出结果(JSON格式)',
     `start_time`       datetime          DEFAULT NULL COMMENT '开始时间',
     `end_time`         datetime          DEFAULT NULL COMMENT '结束时间',
     `duration`         int(11) DEFAULT NULL COMMENT '耗时(毫秒)',
