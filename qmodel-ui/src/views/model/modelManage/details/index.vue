@@ -276,7 +276,7 @@
           />
         </el-tab-pane>
 
-        <el-tab-pane name="modelApi" v-if="viewInfo.status === '5'">
+        <el-tab-pane name="modelApi" v-if="['3','4','5','6','7'].includes(viewInfo.status)">
           <template #label>API 接口</template>
           <ModelApi
               v-if="activeName === 'modelApi'"

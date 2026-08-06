@@ -18,7 +18,7 @@
 
 <template>
   <div>
-    <div class="infotop" >
+    <div class="infotop">
       <div class="h2-titles">服务信息</div>
       <div>
         <el-row :gutter="3" style="margin-bottom: 3px">
@@ -26,28 +26,44 @@
             <div class="infotop-row border-top">
               <div class="infotop-row-lable">Base URL</div>
               <div class="infotop-row-value">
-                <span class="ellipsis-text" style="margin-right: 5px">{{ baseUrl || "-" }}</span>
                 <el-tooltip
-                    content="Base URL 需要和接口定义中的地址拼接成完整的 URL 进行调用"
+                    :content="baseUrl || '-'"
                     placement="top"
+                    effect="light"
                 >
-                  <el-icon style="color: #909399"><InfoFilled /></el-icon>
+                  <span class="ellipsis-text">
+                    {{ baseUrl || "-" }}
+                  </span>
                 </el-tooltip>
               </div>
+            </div>
+            <div class="info-tip">
+              <el-icon>
+                <InfoFilled/>
+              </el-icon>
+              <span>Base URL 需要和接口定义中的地址拼接成完整的 URL 进行调用</span>
             </div>
           </el-col>
           <el-col :span="8">
             <div class="infotop-row border-top">
               <div class="infotop-row-lable">鉴权方式(API Key)</div>
               <div class="infotop-row-value">
-                <span class="ellipsis-text" style="margin-right: 5px">Authorization: Bearer &lt;YOUR_KEY&gt; </span>
                 <el-tooltip
-                    content="KEY 可以从 密钥管理 中进行获取"
+                    content="Authorization: Bearer &lt;YOUR_KEY&gt;"
                     placement="top"
+                    effect="light"
                 >
-                  <el-icon style="color: #909399"><InfoFilled /></el-icon>
+                  <span class="ellipsis-text">
+                    Authorization: Bearer &lt;YOUR_KEY&gt;
+                  </span>
                 </el-tooltip>
               </div>
+            </div>
+            <div class="info-tip">
+              <el-icon>
+                <InfoFilled/>
+              </el-icon>
+              <span>KEY 可以从 密钥管理 中进行获取</span>
             </div>
           </el-col>
 
@@ -55,7 +71,13 @@
             <div class="infotop-row border-top">
               <div class="infotop-row-lable">鉴权位置</div>
               <div class="infotop-row-value">
-                <span>header(请求头)</span>
+                <el-tooltip
+                    content="Request Headers(请求头)"
+                    placement="top"
+                    effect="light"
+                >
+                  <span class="ellipsis-text">Request Headers(请求头)</span>
+                </el-tooltip>
               </div>
             </div>
           </el-col>
@@ -70,7 +92,9 @@
 
             <template #title>
               <div class="api-title" style="color: #009e21">
-                <el-tag type="success" effect="dark" size="small" style="margin-left: 10px;background: #009e21!important;color: #ffffff!important;" >POST</el-tag>
+                <el-tag type="success" effect="dark" size="small"
+                        style="margin-left: 10px;background: #009e21!important;color: #ffffff!important;">POST
+                </el-tag>
                 <span class="path">/predict</span>
                 <span>执行模型推理预测</span>
               </div>
@@ -81,85 +105,18 @@
               <el-col :span="12">
                 <div class="sub-title under-line">请求参数 (Request Body)</div>
                 <pre class="code-block dark fixed-height">{{ getInputSchema() }}</pre>
-                <div class="code-hint">格式: application/json</div>
-                <!--                  <el-link type="primary">查看 Schema 详情</el-link>-->
               </el-col>
               <!-- 响应结果 -->
               <el-col :span="12">
-                <div class="sub-title under-line">响应结果 (Responses)</div>
+                <div class="sub-title under-line">响应结果 (Response)</div>
                 <pre class="code-block dark fixed-height">{{ getOutputSchema() }}</pre>
-                <div class="resp-status">
-                  <el-tag type="success" size="small" style="margin-right:10px">200</el-tag>
-                  <span>成功返回预测结果</span>
-                </div>
-
               </el-col>
             </el-row>
             <!-- 调用示例 -->
             <el-row :gutter="20" class="api-panel">
               <el-col :span="24">
                 <div class="demo-section">
-                  <div class="sub-title">调用示例 (Code Snippets)</div>
-                  <el-tabs v-model="demoTab" type="border-card">
-                    <el-tab-pane label="CURL" name="curl">
-                      <pre class="code-block dark">{{ genCURLExampleCode("post", "/predict") }}</pre>
-                    </el-tab-pane>
-                    <el-tab-pane label="Python (requests)" name="python">
-                      <pre class="code-block dark">{{ genPythonExampleCode("post", "/predict") }}</pre>
-                    </el-tab-pane>
-                    <el-tab-pane label="Node.js (axios)" name="node">
-                      <pre class="code-block dark">{{ genNodeExampleCode("post", "/predict") }}</pre>
-                    </el-tab-pane>
-                  </el-tabs>
-                </div>
-              </el-col>
-            </el-row>
-          </el-collapse-item>
-          <el-collapse-item name="2" disabled :class="['collapse-item-wrap', 'get']">
-
-            <template #title>
-              <div class="api-title" style="color: #2666fb">
-                <el-tag type="primary" size="small" effect="dark" style="margin-left: 10px;background: #909399!important;color: #ffffff!important;">GET</el-tag>
-                <span class="path" style="color: #909399">/status</span>
-                <span style="color: #909399">获取模型当前运行状态</span>
-              </div>
-            </template>
-
-            <el-row :gutter="20" class="api-panel">
-              <!-- 请求参数 -->
-              <el-col :span="12">
-                <div class="sub-title under-line">请求参数 (Request Body)</div>
-                <pre class="code-block dark fixed-height">{{ getInputSchema() }}</pre>
-                <div class="code-hint">格式: application/json
-                  <el-link type="primary">查看 Schema 详情</el-link>
-                </div>
-              </el-col>
-              <!-- 响应结果 -->
-              <el-col :span="12">
-                <div class="sub-title under-line">响应结果 (Responses)</div>
-                <pre class="code-block dark fixed-height">
-                                  {
-                                    "predictions": [
-                                      {
-                                        "store_id": "1001",
-                                        "predicted_sales_next_day": 162.3
-                                      }
-                                    ],
-                                    "model_version": "V1.0"
-                                  }
-                  </pre>
-                <div class="resp-status">
-                  <el-tag type="success" size="small">200</el-tag>
-                  <span>成功返回预测结果</span>
-                </div>
-
-              </el-col>
-            </el-row>
-            <!-- 调用示例 -->
-            <el-row :gutter="20" class="api-panel">
-              <el-col :span="24">
-                <div class="demo-section">
-                  <div class="sub-title">调用示例 (Code Snippets)</div>
+                  <div class="sub-title">调用示例 (Call Example)</div>
                   <el-tabs v-model="demoTab" type="border-card">
                     <el-tab-pane label="CURL" name="curl">
                       <pre class="code-block dark">{{ genCURLExampleCode("post", "/predict") }}</pre>
@@ -187,11 +144,12 @@ import {ref, getCurrentInstance} from "vue";
 
 const {proxy} = getCurrentInstance();
 
-const baseApi = import.meta.env.VITE_APP_BASE_API
-const baseUrl = window.location.origin + baseApi+"/v1/models";
-const demoTab = ref('curl')
-const activeNames = ref(['1'])
-const loading = ref(false)
+const rawBaseApi = import.meta.env.VITE_APP_BASE_API ?? '';
+const baseApi = rawBaseApi.endsWith('/') ? rawBaseApi : rawBaseApi + '/';
+const baseUrl = window.location.origin + baseApi + "v1/models";
+const demoTab = ref('curl');
+const activeNames = ref(['1']);
+const loading = ref(false);
 
 const props = defineProps({
   model: {
@@ -203,12 +161,17 @@ const props = defineProps({
 
 // 获取输入参数Schema
 function getInputSchema() {
+  let result = null;
   if (props.model.accessType === "API") {
-    return props.model.modelConfig.inputSchema;
+    result = props.model.modelConfig.inputSchema;
   } else if (props.model.accessType === "PYTHON") {
-    return props.model.modelFileResourceRespVO.inputSchema;
+    result = props.model.modelFileResourceRespVO ? props.model.modelFileResourceRespVO.inputSchema : null;
+  }
+
+  if (result) {
+    return result;
   } else {
-    return {}
+    return "{}";
   }
 }
 
@@ -307,10 +270,10 @@ function genNodeExampleCode(method, path) {
 
 // 生成参数示例
 function buildEmptyDataBySchema(schema) {
-  if (!schema) return null;
+  if (!schema) return {};
 
   if (schema.$ref) {
-    return null;
+    return {};
   }
 
   // type 可能是数组 ["string","null"]，取第一个有效类型
@@ -336,9 +299,10 @@ function buildEmptyDataBySchema(schema) {
       return result;
     }
     default:
-      return null;
+      return {};
   }
 }
+
 
 </script>
 <style lang="scss" scoped>
@@ -426,7 +390,28 @@ function buildEmptyDataBySchema(schema) {
 }
 
 .fixed-height {
-  height: 200px;
+  height: 250px;
+}
+
+.ellipsis-text {
+  display: inline-block;
+  width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  vertical-align: middle;
+}
+
+.info-tip {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  font-size: x-small;
+  color: #a8aaae;
+  margin-left: 5px;
+  margin-top: 5px;
+  justify-content: flex-start;
+  gap: 5px;
 }
 
 </style>

@@ -68,7 +68,7 @@ public class ModelExecuteController {
         String apiKey = authorization.substring(7);
         SysUser userByApiKey = modelKeyService.getUserByApiKey(apiKey);
         if (Objects.isNull(userByApiKey)) {
-            throw new ServiceException("apiKey 错误");
+            throw new ServiceException("apiKey 异常");
         }
         if (!Objects.equals(userByApiKey.getStatus(), "0")) {
             throw new ServiceException("用户状态异常");
@@ -79,7 +79,7 @@ public class ModelExecuteController {
             throw new ServiceException("模型不存在");
         }
         if (!Objects.equals(ModelStatusEnum.PUBLISHED.getStatus(), modelRespVO.getStatus())) {
-            throw new ServiceException("模型状态异常");
+            throw new ServiceException("模型未发布，拒绝访问");
         }
         ModelConfigDO modelConfig = modelRespVO.getModelConfig();
         if (AccessTypeEnum.API.getType().equals(modelRespVO.getAccessType())) {
