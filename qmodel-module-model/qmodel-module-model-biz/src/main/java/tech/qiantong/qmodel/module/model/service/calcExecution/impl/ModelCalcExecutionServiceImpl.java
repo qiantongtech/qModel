@@ -33,6 +33,8 @@ import tech.qiantong.qmodel.module.model.controller.admin.calcExecution.vo.Model
 import tech.qiantong.qmodel.module.model.dal.dataobject.calcExecution.ModelCalcExecutionDO;
 import tech.qiantong.qmodel.module.model.dal.mapper.calcExecution.ModelCalcExecutionMapper;
 import tech.qiantong.qmodel.module.model.service.calcExecution.IModelCalcExecutionService;
+import tech.qiantong.qmodel.mybatis.core.util.MyBatisUtils;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
@@ -57,6 +59,13 @@ public class ModelCalcExecutionServiceImpl extends ServiceImpl<ModelCalcExecutio
     @Override
     public PageResult<ModelCalcExecutionDO> getModelCalcExecutionPage(ModelCalcExecutionPageReqVO pageReqVO) {
         return modelCalcExecutionMapper.selectPage(pageReqVO);
+    }
+
+    @Override
+    public PageResult<ModelCalcExecutionRespVO> getExecutionPageResult(ModelCalcExecutionPageReqVO pageReqVO) {
+        IPage<ModelCalcExecutionRespVO> mpPage = MyBatisUtils.buildPage(pageReqVO);
+        modelCalcExecutionMapper.selectExecutionPage(mpPage, pageReqVO);
+        return new PageResult<>(mpPage.getRecords(), mpPage.getTotal());
     }
 
     @Override

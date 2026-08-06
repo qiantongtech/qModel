@@ -43,6 +43,12 @@ public class ModelCalcExecutionPageReqVO extends PageParam {
     @Schema(description = "模型id", example = "")
     private Long modelId;
 
+    @Schema(description = "模型名称", example = "")
+    private String modelName;
+
+    @Schema(description = "计算任务名称", example = "")
+    private String calcName;
+
     @Schema(description = "执行批次号", example = "")
     private String executionNo;
 

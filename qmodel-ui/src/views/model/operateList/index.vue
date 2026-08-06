@@ -110,76 +110,80 @@
         />
         <el-table-column
           v-if="getColumnVisibility(1)"
-          label="计算任务ID"
-          align="center"
-          prop="calcId"
-          width="100"
+          label="任务名称"
+          align="left"
+          prop="calcName"
+          min-width="200"
+          :show-overflow-tooltip="{ effect: 'light' }"
         >
           <template #default="scope">
-            {{ scope.row.calcId || "-" }}
+            {{ scope.row.calcName || "-" }}
           </template>
         </el-table-column>
         <el-table-column
           v-if="getColumnVisibility(2)"
+          label="模型名称"
+          align="left"
+          prop="modelName"
+          min-width="220"
+          :show-overflow-tooltip="{ effect: 'light' }"
+        >
+          <template #default="scope">
+            {{ scope.row.modelName || "-" }}
+          </template>
+        </el-table-column>
+        <el-table-column
+          v-if="getColumnVisibility(3)"
           label="执行批次号"
           align="left"
           prop="executionNo"
-          min-width="160"
+          min-width="240"
+          :show-overflow-tooltip="{ effect: 'light' }"
         >
           <template #default="scope">
             {{ scope.row.executionNo || "-" }}
           </template>
         </el-table-column>
         <el-table-column
-          v-if="getColumnVisibility(3)"
+          v-if="getColumnVisibility(4)"
           label="执行模式"
           align="center"
           prop="executionMode"
-          width="100"
+          min-width="120"
         >
           <template #default="scope">
             {{ getExecutionModeLabel(scope.row.executionMode) }}
           </template>
         </el-table-column>
         <el-table-column
-          v-if="getColumnVisibility(4)"
+          v-if="getColumnVisibility(5)"
           label="耗时"
           align="center"
           prop="duration"
-          width="110"
+          min-width="120"
         >
           <template #default="scope">
             {{ formatDuration(scope.row.duration) }}
           </template>
         </el-table-column>
         <el-table-column
-          v-if="getColumnVisibility(5)"
+          v-if="getColumnVisibility(6)"
           label="执行状态"
           align="center"
           prop="status"
-          width="100"
+          min-width="120"
         >
           <template #default="scope">
             <dict-tag :options="model_calc_status" :value="scope.row.status" />
           </template>
         </el-table-column>
+
         <el-table-column
-          v-if="getColumnVisibility(6)"
-          label="创建人"
-          align="center"
-          prop="createBy"
-          width="100"
-        >
-          <template #default="scope">
-            {{ scope.row.createBy || "-" }}
-          </template>
-        </el-table-column>
-        <el-table-column
-          v-if="getColumnVisibility(7)"
+          v-if="getColumnVisibility(8)"
           label="开始时间"
           align="center"
           prop="startTime"
-          width="160"
+          min-width="180"
           sortable="custom"
           :sort-orders="['descending', 'ascending']"
         >
@@ -190,11 +194,11 @@
           </template>
         </el-table-column>
         <el-table-column
-          v-if="getColumnVisibility(8)"
+          v-if="getColumnVisibility(9)"
           label="结束时间"
           align="center"
           prop="endTime"
-          width="160"
+          min-width="180"
           sortable="custom"
           :sort-orders="['descending', 'ascending']"
         >
@@ -205,11 +209,12 @@
           </template>
         </el-table-column>
         <el-table-column
-          v-if="getColumnVisibility(9)"
+          v-if="getColumnVisibility(10)"
           label="操作"
           align="center"
           class-name="small-padding fixed-width"
           width="100"
+          fixed="right"
         >
           <template #default="scope">
             <el-button
@@ -242,6 +247,7 @@
       :title="detailTitle"
       v-model="openDetail"
       width="1000px"
+      class="scrollbar"
       :append-to="$refs['app-container']"
       draggable
     >
@@ -251,6 +257,18 @@
         </span>
       </template>
       <el-form ref="detailFormRef" :model="detailForm" label-width="130px">
+        <el-row :gutter="20">
+          <el-col :span="12">
+            <el-form-item label="任务名称" prop="calcName">
+              <div class="form-readonly">{{ detailForm.calcName || "-" }}</div>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="模型名称" prop="modelName">
+              <div class="form-readonly">{{ detailForm.modelName || "-" }}</div>
+            </el-form-item>
+          </el-col>
+        </el-row>
         <el-row :gutter="20">
           <el-col :span="12">
             <el-form-item label="执行批次号" prop="executionNo">
@@ -361,15 +379,16 @@ const { model_calc_status } = proxy.useDict("model_calc_status");
 // 列配置
 const columns = ref([
   { key: 0, label: "编号", visible: true },
-  { key: 1, label: "计算任务ID", visible: true },
-  { key: 2, label: "执行批次号", visible: true },
-  { key: 3, label: "执行模式", visible: true },
-  { key: 4, label: "耗时", visible: true },
-  { key: 5, label: "执行状态", visible: true },
-  { key: 6, label: "创建人", visible: true },
-  { key: 7, label: "开始时间", visible: true },
-  { key: 8, label: "结束时间", visible: true },
-  { key: 9, label: "操作", visible: true },
+  { key: 1, label: "任务名称", visible: true },
+  { key: 2, label: "模型名称", visible: true },
+  { key: 3, label: "执行批次号", visible: true },
+  { key: 4, label: "执行模式", visible: true },
+  { key: 5, label: "耗时", visible: true },
+  { key: 6, label: "执行状态", visible: true },
+  { key: 7, label: "创建人", visible: true },
+  { key: 8, label: "开始时间", visible: true },
+  { key: 9, label: "结束时间", visible: true },
+  { key: 10, label: "操作", visible: true },
 ]);
 
 function getColumnVisibility(key) {
@@ -392,6 +411,8 @@ const defaultSort = ref({ prop: "createTime", order: "descending" });
 const queryParams = reactive({
   pageNum: 1,
   pageSize: 10,
+  calcName: null,
+  modelName: null,
   executionNo: null,
   status: null,
   executionMode: null,
@@ -445,6 +466,9 @@ function handleDetail(row) {
   resetDetailForm();
   getCalcExecution(row.id).then((response) => {
     Object.assign(detailForm, response.data);
+    // 补充关联查询出的名称字段
+    detailForm.calcName = row.calcName;
+    detailForm.modelName = row.modelName;
     openDetail.value = true;
     detailTitle.value = "执行记录详情";
   });
@@ -455,7 +479,9 @@ function resetDetailForm() {
   Object.assign(detailForm, {
     id: null,
     calcId: null,
+    calcName: null,
     modelId: null,
+    modelName: null,
     executionNo: null,
     executionMode: null,
     status: null,

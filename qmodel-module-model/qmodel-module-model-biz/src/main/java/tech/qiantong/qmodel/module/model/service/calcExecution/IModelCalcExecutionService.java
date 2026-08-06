@@ -44,6 +44,14 @@ public interface IModelCalcExecutionService extends IService<ModelCalcExecutionD
     PageResult<ModelCalcExecutionDO> getModelCalcExecutionPage(ModelCalcExecutionPageReqVO pageReqVO);
 
     /**
+     * 获得模型计算执行记录分页列表(包含模型名称、计算任务名称)
+     *
+     * @param pageReqVO 分页请求
+     * @return 模型计算执行记录分页列表
+     */
+    PageResult<ModelCalcExecutionRespVO> getExecutionPageResult(ModelCalcExecutionPageReqVO pageReqVO);
+
+    /**
      * 创建模型计算执行记录
      *
      * @param createReqVO 模型计算执行记录信息

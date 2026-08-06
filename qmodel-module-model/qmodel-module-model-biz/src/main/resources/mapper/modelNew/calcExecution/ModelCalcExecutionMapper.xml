@@ -53,6 +53,32 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         select id, calc_id, model_id, execution_no, execution_mode, status, start_time, end_time, duration, input_params, output_result, execution_log, error_message, retry_count, resource_usage, valid_flag, del_flag, create_by, creator_id, create_time, update_by, updator_id, update_time, remark from model_calc_execution
     </sql>
 
+    <select id="selectExecutionPage" resultType="tech.qiantong.qmodel.module.model.controller.admin.calcExecution.vo.ModelCalcExecutionRespVO">
+        SELECT e.*, c.model_name AS modelName, c.name AS calcName
+        FROM model_calc_execution e
+        LEFT JOIN model_calc c ON e.calc_id = c.id
+        WHERE e.del_flag = 0
+        <if test='reqVO.calcId != null'>
+            AND e.calc_id = #{reqVO.calcId}
+        </if>
+        <if test='reqVO.modelId != null'>
+            AND e.model_id = #{reqVO.modelId}
+        </if>
+        <if test='reqVO.executionNo != null and reqVO.executionNo != ""'>
+            AND e.execution_no = #{reqVO.executionNo}
+        </if>
+        <if test='reqVO.status != null'>
+            AND e.status = #{reqVO.status}
+        </if>
+        <if test='reqVO.modelName != null and reqVO.modelName != ""'>
+            AND c.model_name LIKE CONCAT('%', #{reqVO.modelName}, '%')
+        </if>
+        <if test='reqVO.calcName != null and reqVO.calcName != ""'>
+            AND c.name LIKE CONCAT('%', #{reqVO.calcName}, '%')
+        </if>
+        ORDER BY e.create_time DESC
+    </select>
+
     <select id="selectModelCalcExecutionList" parameterType="ModelCalcExecutionDO" resultMap="ModelCalcExecutionResult">
         <include refid="selectModelCalcExecutionVo"/>
         <where>

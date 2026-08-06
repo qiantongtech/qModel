@@ -28,6 +28,13 @@ import tech.qiantong.qmodel.module.model.controller.admin.calcExecution.vo.Model
 import tech.qiantong.qmodel.mybatis.core.mapper.BaseMapperX;
 import tech.qiantong.qmodel.mybatis.core.query.LambdaQueryWrapperX;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import org.apache.ibatis.annotations.Param;
+import tech.qiantong.qmodel.common.core.page.PageResult;
+import tech.qiantong.qmodel.module.model.controller.admin.calcExecution.vo.ModelCalcExecutionPageReqVO;
+import tech.qiantong.qmodel.module.model.controller.admin.calcExecution.vo.ModelCalcExecutionRespVO;
+import tech.qiantong.qmodel.mybatis.core.util.MyBatisUtils;
+
 /**
  * 模型计算执行记录Mapper接口
  *
@@ -35,6 +42,8 @@ import tech.qiantong.qmodel.mybatis.core.query.LambdaQueryWrapperX;
  * @date 2026-07-28
  */
 public interface ModelCalcExecutionMapper extends BaseMapperX<ModelCalcExecutionDO> {
+
+    IPage<ModelCalcExecutionRespVO> selectExecutionPage(IPage<ModelCalcExecutionRespVO> page, @Param("reqVO") ModelCalcExecutionPageReqVO reqVO);
 
     default PageResult<ModelCalcExecutionDO> selectPage(ModelCalcExecutionPageReqVO reqVO) {
         // 定义排序的字段（防止 SQL 注入，与数据库字段名称一致）

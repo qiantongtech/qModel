@@ -19,6 +19,8 @@
 package tech.qiantong.qmodel.module.model.controller.admin.calcExecution.vo;
 
 import java.util.Date;
+
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
@@ -84,6 +86,12 @@ public class ModelCalcExecutionRespVO implements Serializable {
     @Excel(name = "输出结果(JSON)")
     @Schema(description = "输出结果(JSON)", example = "")
     private String outputResult;
+
+    @TableField(exist = false)
+    private String modelName;
+
+    @TableField(exist = false)
+    private String calcName;
 
     @Excel(name = "执行日志")
     @Schema(description = "执行日志", example = "")

@@ -64,8 +64,8 @@ public class ModelCalcExecutionController extends BaseController {
     @PreAuthorize("@ss.hasPermi('model:calcExecution:calcexecution:list')")
     @GetMapping("/list")
     public CommonResult<PageResult<ModelCalcExecutionRespVO>> list(ModelCalcExecutionPageReqVO modelCalcExecution) {
-        PageResult<ModelCalcExecutionDO> page = modelCalcExecutionService.getModelCalcExecutionPage(modelCalcExecution);
-        return CommonResult.success(BeanUtils.toBean(page, ModelCalcExecutionRespVO.class));
+        PageResult<ModelCalcExecutionRespVO> page = modelCalcExecutionService.getExecutionPageResult(modelCalcExecution);
+        return CommonResult.success(page);
     }
 
     @Operation(summary = "导出模型计算执行记录列表")
