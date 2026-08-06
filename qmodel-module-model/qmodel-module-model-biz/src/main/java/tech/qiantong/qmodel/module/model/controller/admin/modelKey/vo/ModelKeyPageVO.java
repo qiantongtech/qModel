@@ -48,6 +48,9 @@ public class ModelKeyPageVO extends PageParam {
     @Schema(description = "key", example = "")
     private String apiKey;
 
+    @Schema(description = "描述", example = "")
+    private String description;
+
     @Schema(description = "最后使用时间", example = "")
     private Date lastUseTime;
 }

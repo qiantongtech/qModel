@@ -23,6 +23,7 @@ import lombok.Data;
 import tech.qiantong.qmodel.common.core.domain.BaseEntity;
 
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 @Schema(description = "模型密钥保存 VO")
 @Data
@@ -32,4 +33,11 @@ public class ModelKeySaveVO extends BaseEntity {
     @Schema(description = "名称", example = "")
     @NotNull(message = "名称不能为空")
     private String name;
+
+    /**
+     * 描述
+     */
+    @Schema(description = "描述", example = "")
+    @Size(max = 255, message = "描述长度不能超过255个字符")
+    private String description;
 }

@@ -74,43 +74,50 @@
         <el-table-column type="selection" width="55" align="center"/>
         <el-table-column v-if="getColumnVisibility(0)" label="编号" align="center" prop="id" width="80"
                          sortable="custom" :sort-orders="['descending', 'ascending']"/>
-        <el-table-column v-if="getColumnVisibility(1)" label="名称" align="left" width="180" prop="name"
+        <el-table-column v-if="getColumnVisibility(1)" label="名称" align="left" width="120" prop="name"
                          :show-overflow-tooltip="{ effect: 'light' }">
           <template #default="scope">
-            <span>{{ scope.row.name }}</span>
+            <span>{{ scope.row.name || "-" }}</span>
           </template>
         </el-table-column>
-        <el-table-column v-if="getColumnVisibility(2)" label="密钥" align="center" prop="apiKey">
-          <template #default="scope">
-            <span>{{ scope.row.apiKey }}</span>
-          </template>
-        </el-table-column>
-        <el-table-column v-if="getColumnVisibility(3)" label="最后使用时间" align="center" prop="lastUseTime"
-                         width="180"
-                         sortable="custom" :sort-orders="['descending', 'ascending']">
-          <template #default="scope">
-            <span>{{ parseTime(scope.row.lastUseTime, '{y}-{m}-{d}  {h}:{i}') }}</span>
-          </template>
-        </el-table-column>
-        <el-table-column v-if="getColumnVisibility(6)" label="备注" align="left" prop="remark"
+        <el-table-column v-if="getColumnVisibility(2)" label="密钥" align="left" prop="apiKey"
                          :show-overflow-tooltip="{ effect: 'light' }">
           <template #default="scope">
-            <span>{{ scope.row.remark }}</span>
+            <span>{{ scope.row.apiKey || "-" }}</span>
           </template>
         </el-table-column>
-        <el-table-column v-if="getColumnVisibility(4)" label="创建人" align="center" width="120" prop="createBy">
+        <el-table-column v-if="getColumnVisibility(3)" label="描述" align="left" prop="description"
+                         :show-overflow-tooltip="{ effect: 'light' }">
           <template #default="scope">
-            <span>{{ scope.row.createBy }}</span>
+            <span>{{ scope.row.description || "-" }}</span>
           </template>
         </el-table-column>
-        <el-table-column v-if="getColumnVisibility(5)" label="创建时间" align="center" prop="createTime" width="180"
+        <el-table-column v-if="getColumnVisibility(4)" label="最后使用时间" align="center" prop="lastUseTime"
+                         width="140"
                          sortable="custom" :sort-orders="['descending', 'ascending']">
           <template #default="scope">
-            <span>{{ parseTime(scope.row.createTime, '{y}-{m}-{d}  {h}:{i}') }}</span>
+            <span>{{ parseTime(scope.row.lastUseTime, '{y}-{m}-{d}  {h}:{i}') || "-" }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column v-if="getColumnVisibility(5)" label="备注" align="left" prop="remark"
+                         :show-overflow-tooltip="{ effect: 'light' }">
+          <template #default="scope">
+            <span>{{ scope.row.remark || "-" }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column v-if="getColumnVisibility(6)" label="创建人" align="center" width="120" prop="createBy">
+          <template #default="scope">
+            <span>{{ scope.row.createBy || "-" }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column v-if="getColumnVisibility(7)" label="创建时间" align="center" prop="createTime" width="140"
+                         sortable="custom" :sort-orders="['descending', 'ascending']">
+          <template #default="scope">
+            <span>{{ parseTime(scope.row.createTime, '{y}-{m}-{d}  {h}:{i}') || "-" }}</span>
           </template>
         </el-table-column>
 
-        <el-table-column v-if="getColumnVisibility(7)" label="操作" align="center"
+        <el-table-column v-if="getColumnVisibility(8)" label="操作" align="center"
                          class-name="small-padding fixed-width" fixed="right" width="180">
           <template #default="scope">
             <el-button link type="primary" icon="CopyDocument" @click="copyKey(scope.row)"
@@ -151,6 +158,14 @@
           <el-col :span="24">
             <el-form-item label="名称" prop="name">
               <el-input v-model="form.name" placeholder="请输入名称"/>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row :gutter="20">
+          <el-col :span="24">
+            <el-form-item label="描述" prop="remark">
+              <el-input v-model="form.description" type="textarea" placeholder="请输入描述" maxlength="500 个字符"
+                        show-word-limit/>
             </el-form-item>
           </el-col>
         </el-row>
@@ -228,11 +243,12 @@ const columns = ref([
   {key: 0, label: "编号", visible: true},
   {key: 1, label: "名称", visible: true},
   {key: 2, label: "密钥", visible: true},
-  {key: 3, label: "最后使用时间", visible: true},
-  {key: 6, label: "备注", visible: true},
-  {key: 4, label: "创建人", visible: true},
-  {key: 5, label: "创建时间", visible: true},
-  {key: 7, label: "操作", visible: true}
+  {key: 3, label: "描述", visible: true},
+  {key: 4, label: "最后使用时间", visible: true},
+  {key: 5, label: "备注", visible: true},
+  {key: 6, label: "创建人", visible: true},
+  {key: 7, label: "创建时间", visible: true},
+  {key: 8, label: "操作", visible: true}
 ]);
 
 const getColumnVisibility = (key) => {

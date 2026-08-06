@@ -82,6 +82,7 @@ public class ModelKeyServiceImpl extends ServiceImpl<ModelKeyMapper, ModelKeyDO>
         entity.setRemark(saveVO.getRemark());
         entity.setUserId(currentUser.getUserId());
         entity.setApiKey(generateApiKey());
+        entity.setDescription(saveVO.getDescription());
         baseMapper.insert(entity);
         return entity.getId();
     }

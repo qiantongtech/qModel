@@ -66,6 +66,11 @@ public class ModelKeyDO extends BaseEntity {
     private String apiKey;
 
     /**
+     * 描述
+     */
+    private String description;
+
+    /**
      * 是否有效
      */
     private Boolean validFlag;
