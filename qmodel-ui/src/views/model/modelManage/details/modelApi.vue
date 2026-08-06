@@ -19,7 +19,12 @@
 <template>
   <div>
     <div class="infotop">
-      <div class="h2-titles">服务信息</div>
+      <div class="h2-titles"><span>服务信息</span> <div v-if="props.model.status !== '5'" class="info-tip" style="margin-top: 0">
+        <el-icon>
+          <InfoFilled/>
+        </el-icon>
+        <span>未发布状态不可通过 API 方式进行调用</span>
+      </div></div>
       <div>
         <el-row :gutter="3" style="margin-bottom: 3px">
           <el-col :span="8">
@@ -30,8 +35,9 @@
                     :content="baseUrl || '-'"
                     placement="top"
                     effect="light"
+                    :disabled="!textOverflowMap.baseUrl"
                 >
-                  <span class="ellipsis-text">
+                  <span class="ellipsis-text" @mouseenter="(event) => checkTextOverflow(event, 'baseUrl')">
                     {{ baseUrl || "-" }}
                   </span>
                 </el-tooltip>
@@ -52,8 +58,9 @@
                     content="Authorization: Bearer &lt;YOUR_KEY&gt;"
                     placement="top"
                     effect="light"
+                    :disabled="!textOverflowMap.apikey"
                 >
-                  <span class="ellipsis-text">
+                  <span class="ellipsis-text" @mouseenter="(event) => checkTextOverflow(event, 'apikey')">
                     Authorization: Bearer &lt;YOUR_KEY&gt;
                   </span>
                 </el-tooltip>
@@ -75,8 +82,10 @@
                     content="Request Headers(请求头)"
                     placement="top"
                     effect="light"
+                    :disabled="!textOverflowMap.header"
                 >
-                  <span class="ellipsis-text">Request Headers(请求头)</span>
+                  <span class="ellipsis-text" @mouseenter="(event) => checkTextOverflow(event, 'header')">
+                    Request Headers(请求头)</span>
                 </el-tooltip>
               </div>
             </div>
@@ -165,7 +174,7 @@
 </template>
 
 <script setup name="modelApi">
-import {ref, getCurrentInstance} from "vue";
+import {ref, getCurrentInstance, reactive} from "vue";
 
 const {proxy} = getCurrentInstance();
 
@@ -175,6 +184,9 @@ const baseUrl = window.location.origin + baseApi + "v1/models";
 const demoTab = ref('curl');
 const activeNames = ref(['1']);
 const loading = ref(false);
+const textOverflowMap = reactive({});
+
+
 
 const props = defineProps({
   model: {
@@ -345,6 +357,13 @@ function copyCode(method, path,type) {
   ta.remove();
   proxy.$modal.msgSuccess("已复制");
 }
+
+const checkTextOverflow = (event, field) => {
+  const element = event.currentTarget;
+  if (element) {
+    textOverflowMap[field] = element.scrollWidth > element.clientWidth;
+  }
+};
 </script>
 
 <style lang="scss" scoped>
