@@ -488,6 +488,9 @@
           </template>
         </el-table-column>
       </el-table>
+      <div v-if="validateError" class="error-msg" style="margin-bottom: 20px;">
+        <el-icon><Warning /></el-icon> {{ validateError }}
+      </div>
       <template #footer>
         <div style="text-align: right">
           <el-button @click="cancel">取 消</el-button>
@@ -604,6 +607,7 @@
 
 <script setup name="Calc">
 import { useRouter } from 'vue-router';
+import { Warning } from '@element-plus/icons-vue'
 import { listCalc, getCalc, delCalc, addCalc, updateCalc, executeCalc, cancelCalc } from '@/api/model/calc/calc'
 import { listModel } from '@/api/model/model'
 import { listClassify } from '@/api/modelReconstitution/classify'
@@ -659,6 +663,7 @@ const openDetail = ref(false)
 const title = ref('')
 const detailTitle = ref('计算任务详情')
 const activeTab = ref('output')
+const validateError = ref('')
 
 const data = reactive({
   queryParams: {
@@ -783,6 +788,7 @@ function cancel() {
 
 /** 表单重置 */
 function reset() {
+  validateError.value = ''
   form.value = {
     id: null,
     code: '',
@@ -1052,14 +1058,38 @@ function handleDetail(row) {
 
 /** 提交 */
 function submitForm() {
+  validateError.value = ''
+
+  // 1. 手动校验基础表单
   proxy.$refs['calcRef'].validate((valid) => {
-    if (!valid) return
+    if (!valid) {
+      validateError.value = '请检查基础信息的必填项'
+      return
+    }
+
+    // 2. 手动校验 inputParams 表格
+    const errors = []
+    if (form.value.inputParams && form.value.inputParams.length > 0) {
+      form.value.inputParams.forEach(param => {
+        if (param.required) {
+          const value = param.value
+          if (value === null || value === undefined || value === '') {
+            errors.push(`参数“${param.title || param.name}”不能为空`)
+          }
+        }
+      })
+    }
+
+    if (errors.length > 0) {
+      validateError.value = errors.join('；')
+      return
+    }
+
+    // 3. 提交数据
     const submitData = { ...form.value }
-    // 序列化 inputParams
     if (Array.isArray(submitData.inputParams)) {
       submitData.inputParams = JSON.stringify({ params: submitData.inputParams })
     }
-    // 自动生成编码
     if (!submitData.code) {
       const now = new Date()
       const ts = now.getFullYear().toString() +
@@ -1199,6 +1229,18 @@ getList()
   :deep(.el-button) {
     margin: 0 !important;
   }
+}
+
+.error-msg {
+  margin-top: 10px;
+  padding: 8px 12px;
+  color: #f56c6c;
+  font-size: 13px;
+  background-color: #fef0f0;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
 }
 </style>
 
