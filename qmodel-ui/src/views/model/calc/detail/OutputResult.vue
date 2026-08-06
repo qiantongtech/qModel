@@ -20,12 +20,8 @@
   <div class="output-result-wrapper">
     <!-- 计算失败 -->
     <div v-if="calcDetail.status === 3" class="output-error">
-      <div class="output-section-title mb10">
-        <el-icon style="color: #f56c6c"><WarningFilled /></el-icon>
-        计算失败
-      </div>
       <div class="error-box">
-        <pre>{{ calcDetail.errorMessage || '暂无错误信息' }}</pre>
+        <el-empty description="计算任务运行失败，暂无输出结果，请在执行记录中查看失败原因" :image-size="150" />
       </div>
     </div>
 
@@ -994,6 +990,11 @@ watch(
 }
 
 .output-error {
+  min-height: calc(100vh - 390px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
   .output-section-title {
     display: flex;
     align-items: center;
@@ -1003,19 +1004,11 @@ watch(
   }
 
   .error-box {
-    background-color: #fef0f0;
-    border: 1px solid #fde2e2;
+    width: 100%;
     border-radius: 4px;
     padding: 12px 15px;
-
-    pre {
-      margin: 0;
-      white-space: pre-wrap;
-      word-break: break-all;
-      color: #f56c6c;
-      font-size: 13px;
-      line-height: 1.6;
-    }
+    max-height: 300px;
+    overflow-y: auto;
   }
 }
 
