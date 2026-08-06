@@ -164,7 +164,7 @@
         <el-row :gutter="20">
           <el-col :span="24">
             <el-form-item label="描述" prop="remark">
-              <el-input v-model="form.description" type="textarea" placeholder="请输入描述" maxlength="500 个字符"
+              <el-input v-model="form.description" type="textarea" placeholder="请输入描述" maxlength="200 个字符"
                         show-word-limit/>
             </el-form-item>
           </el-col>
