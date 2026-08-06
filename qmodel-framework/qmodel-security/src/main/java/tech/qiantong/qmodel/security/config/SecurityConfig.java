@@ -1,17 +1,17 @@
 /*
  * Copyright © 2026-present Jiangsu Qiantong Technology Co., Ltd.
- *  
+ *
  * This file is part of qModel Module Platform (Open Source Edition).
- *  
+ *
  * qModel is licensed under Apache License 2.0 with additional qModel terms.
  * You may use qModel for commercial purposes, but you may not remove, hide,
  * modify, or replace the qModel logo, copyright notices, license notices,
  * or attribution information without a separate commercial license.
- *  
+ *
  * White-label use, OEM distribution, rebranding, or presenting qModel as
  * another product requires separate commercial authorization from
  * Jiangsu Qiantong Technology Co., Ltd.
- *  
+ *
  * Business License: `https://qmodel.tech/`
  * See the LICENSE file in the project root for full license information.
  */
@@ -157,7 +157,8 @@ public class SecurityConfig
                             "/sys/**",
                             "/oauth2/**"
                     ).permitAll()
-                        .antMatchers("/v1/models/**").permitAll()
+                    .antMatchers("/v1/models/**").permitAll()
+                    .antMatchers("/model/mock/**").permitAll()
                     // 除上面外的所有请求全部需要鉴权认证
                     .anyRequest().authenticated();
             })
