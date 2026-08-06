@@ -1,17 +1,17 @@
 /*
  * Copyright © 2025-present Jiangsu Qiantong Technology Co., Ltd.
- *  
+ *
  * This file is part of qModel Module Platform (Open Source Edition).
- *  
+ *
  * qModel is licensed under Apache License 2.0 with additional qModel terms.
  * You may use qModel for commercial purposes, but you may not remove, hide,
  * modify, or replace the qModel logo, copyright notices, license notices,
  * or attribution information without a separate commercial license.
- *  
+ *
  * White-label use, OEM distribution, rebranding, or presenting qModel as
  * another product requires separate commercial authorization from
  * Jiangsu Qiantong Technology Co., Ltd.
- *  
+ *
  * Business License: `https://qmodel.tech/`
  * See the LICENSE file in the project root for full license information.
  */
@@ -33,13 +33,10 @@ export default [
                 meta: { title: '模型详情', noCache: true, activeMenu: '/model/manage' }
             },
             {
-                path: 'modelComputeInputOrOutput',
-                component: () =>
-                    import(
-                        '@/views/model/modelManage/parameterSettings/modelComputeInputOrOutput.vue'
-                    ),
-                name: 'modelComputeInputOrOutput',
-                meta: { title: '模型计算详情', noCache: true }
+                path: 'calc/detail',
+                component: () => import('@/views/model/calc/detail/index.vue'),
+                name: 'CalcDetail',
+                meta: { title: '模型计算详情', noCache: true, activeMenu: '/calc' }
             },
             {
                 path: 'modelInputAndOutput',
