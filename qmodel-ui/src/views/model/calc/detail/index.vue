@@ -431,8 +431,8 @@
           {{ execRecordDetailTitle }}
         </span>
       </template>
-      <el-form ref="execRecordDetailRef" :model="execRecordForm" label-width="130px">
-        <el-row :gutter="20">
+      <el-form ref="execRecordDetailRef" :model="execRecordForm" label-width="110px">
+        <el-row :gutter="20" class="textarea-form-item">
           <el-col :span="12">
             <el-form-item label="任务名称" prop="calcName">
               <div class="form-readonly">{{ execRecordForm.calcName || "-" }}</div>
@@ -501,14 +501,15 @@
         <el-row :gutter="20">
           <el-col :span="24">
             <el-form-item label="输入参数" prop="inputParams">
-              <pre class="form-readonly textarea json-pre">{{ execRecordForm.inputParams || "-" }}</pre>
+              <div class="form-readonly textarea">{{ execRecordForm.inputParams || "-" }}</div>
             </el-form-item>
           </el-col>
         </el-row>
         <el-row :gutter="20">
           <el-col :span="24">
             <el-form-item label="输出结果" prop="outputResult">
-              <pre class="form-readonly textarea json-pre">{{ execRecordForm.outputResult || "-" }}</pre>
+              <div class="form-readonly textarea">{{ execRecordForm.outputResult || "-" }}</div>
+
             </el-form-item>
           </el-col>
         </el-row>
@@ -529,7 +530,8 @@
         <el-row :gutter="20">
           <el-col :span="24">
             <el-form-item label="资源使用情况" prop="resourceUsage">
-              <pre class="form-readonly textarea json-pre">{{ execRecordForm.resourceUsage || "-" }}</pre>
+              <div class="form-readonly textarea">{{ execRecordForm.resourceUsage || "-" }}</div>
+
             </el-form-item>
           </el-col>
         </el-row>

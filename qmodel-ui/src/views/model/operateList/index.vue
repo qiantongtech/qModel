@@ -325,36 +325,38 @@
         </el-row>
         <el-row :gutter="20">
           <el-col :span="24">
-            <el-form-item label="输入参数" prop="inputParams">
-              <pre class="form-readonly textarea json-pre">{{ detailForm.inputParams || "-" }}</pre>
+            <el-form-item label="输入参数" prop="inputParams" class="textarea-form-item">
+              <div class="form-readonly textarea">{{ detailForm.inputParams || "-" }}</div>
+
             </el-form-item>
           </el-col>
         </el-row>
         <el-row :gutter="20">
           <el-col :span="24">
-            <el-form-item label="输出结果" prop="outputResult">
-              <pre class="form-readonly textarea json-pre">{{ detailForm.outputResult || "-" }}</pre>
+            <el-form-item label="输出结果" prop="outputResult" class="textarea-form-item">
+              <div class="form-readonly textarea">{{ detailForm.outputResult || "-" }}</div>
+
             </el-form-item>
           </el-col>
         </el-row>
         <el-row :gutter="20">
           <el-col :span="24">
-            <el-form-item label="执行日志" prop="executionLog">
+            <el-form-item label="执行日志" prop="executionLog" class="textarea-form-item">
               <div class="form-readonly textarea log-box">{{ detailForm.executionLog || "-" }}</div>
             </el-form-item>
           </el-col>
         </el-row>
         <el-row :gutter="20">
           <el-col :span="24">
-            <el-form-item label="错误信息" prop="errorMessage">
+            <el-form-item label="错误信息" prop="errorMessage" class="textarea-form-item">
               <div class="form-readonly textarea error-text">{{ detailForm.errorMessage || "-" }}</div>
             </el-form-item>
           </el-col>
         </el-row>
         <el-row :gutter="20">
           <el-col :span="24">
-            <el-form-item label="资源使用情况" prop="resourceUsage">
-              <pre class="form-readonly textarea json-pre">{{ detailForm.resourceUsage || "-" }}</pre>
+            <el-form-item label="资源使用情况" prop="resourceUsage" class="textarea-form-item">
+              <div class="form-readonly textarea">{{ detailForm.resourceUsage || "-" }}</div>
             </el-form-item>
           </el-col>
         </el-row>
@@ -538,6 +540,9 @@ onMounted(() => {
 </script>
 
 <style lang="scss" scoped>
+.textarea-form-item :deep(.el-form-item__label) {
+  align-self: flex-start;
+}
 .form-readonly {
   width: 100%;
   border: 1px solid #f1f1f1;

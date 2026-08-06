@@ -423,7 +423,7 @@ const entranceList = [
     path: "model/compute",
     query: {},
     icon: "知识推理",
-    perm: ["model:modelCacl:cacl:list"],
+    perm: ["model:cacl:cacl:list"],
     color: "color-orange",
   },
   {

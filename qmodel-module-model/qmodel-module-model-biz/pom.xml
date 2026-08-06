@@ -87,6 +87,19 @@
             <groupId>tech.qiantong</groupId>
             <artifactId>qmodel-es</artifactId>
             <version>1.3.0</version>
+            <exclusions>
+                <!-- 排除 Elasticsearch 自带的低版本 JNA，防止与 OSHI 冲突 -->
+                <exclusion>
+                    <groupId>org.elasticsearch</groupId>
+                    <artifactId>jna</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <!-- oshi 监控 -->
+        <dependency>
+            <groupId>com.github.oshi</groupId>
+            <artifactId>oshi-core</artifactId>
         </dependency>
 
         <dependency>

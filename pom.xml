@@ -43,7 +43,8 @@
         <kaptcha.version>2.3.3</kaptcha.version>
         <pagehelper.boot.version>1.4.7</pagehelper.boot.version>
         <fastjson.version>2.0.43</fastjson.version>
-        <oshi.version>6.6.1</oshi.version>
+        <oshi.version>6.4.2</oshi.version>
+        <jna.version>5.13.0</jna.version>
         <commons.io.version>2.13.0</commons.io.version>
         <poi.version>4.1.2</poi.version>
         <velocity.version>2.3</velocity.version>
@@ -115,11 +116,11 @@
             </dependency>
 
             <!-- 获取系统信息 -->
-            <dependency>
-                <groupId>com.github.oshi</groupId>
-                <artifactId>oshi-core</artifactId>
-                <version>${oshi.version}</version>
-            </dependency>
+        <dependency>
+            <groupId>com.github.oshi</groupId>
+            <artifactId>oshi-core</artifactId>
+            <version>5.7.0</version>
+        </dependency>
 
             <!-- Swagger3依赖 -->
 <!--            <dependency>

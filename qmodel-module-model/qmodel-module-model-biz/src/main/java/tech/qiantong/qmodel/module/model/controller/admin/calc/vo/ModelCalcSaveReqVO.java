@@ -19,6 +19,9 @@
 package tech.qiantong.qmodel.module.model.controller.admin.calc.vo;
 
 import java.util.Date;
+
+import com.baomidou.mybatisplus.annotation.FieldFill;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
@@ -125,6 +128,42 @@ public class ModelCalcSaveReqVO extends BaseEntity {
     @Schema(description = "备注", example = "")
     @Size(max = 512, message = "备注长度不能超过512个字符")
     private String remark;
+
+
+
+    @Schema(description = "创建者id", example = "")
+    private Long creatorId;
+
+    /**
+     * 创建者
+     */
+    @Schema(description = "创建者", example = "")
+    private String createBy;
+
+    /**
+     * 创建时间
+     */
+    // 创建时间自动填充
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @Schema(description = "创建时间", example = "")
+    private Date createTime;
+
+    @Schema(description = "更新者id", example = "")
+    private Long updatorId;
+
+    /**
+     * 更新者
+     */
+    @Schema(description = "更新者", example = "")
+    private String updateBy;
+
+    /**
+     * 更新时间
+     */
+    // 更新时间自动填充
+    @Schema(description = "更新时间", example = "")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    private Date updateTime;
 
 
 }
