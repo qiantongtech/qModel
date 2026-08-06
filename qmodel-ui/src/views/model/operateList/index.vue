@@ -326,7 +326,7 @@
         <el-row :gutter="20">
           <el-col :span="24">
             <el-form-item label="输入参数" prop="inputParams" class="textarea-form-item">
-              <div class="form-readonly textarea">{{ detailForm.inputParams || "-" }}</div>
+              <div class="form-readonly textarea json-pre">{{ detailForm.inputParams || "-" }}</div>
 
             </el-form-item>
           </el-col>
@@ -334,7 +334,7 @@
         <el-row :gutter="20">
           <el-col :span="24">
             <el-form-item label="输出结果" prop="outputResult" class="textarea-form-item">
-              <div class="form-readonly textarea">{{ detailForm.outputResult || "-" }}</div>
+              <div class="form-readonly textarea json-pre">{{ detailForm.outputResult || "-" }}</div>
 
             </el-form-item>
           </el-col>
@@ -356,7 +356,7 @@
         <el-row :gutter="20">
           <el-col :span="24">
             <el-form-item label="资源使用情况" prop="resourceUsage" class="textarea-form-item">
-              <div class="form-readonly textarea">{{ detailForm.resourceUsage || "-" }}</div>
+              <div class="form-readonly textarea json-pre">{{ detailForm.resourceUsage || "-" }}</div>
             </el-form-item>
           </el-col>
         </el-row>
