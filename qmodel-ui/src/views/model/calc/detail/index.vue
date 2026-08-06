@@ -434,6 +434,18 @@
       <el-form ref="execRecordDetailRef" :model="execRecordForm" label-width="130px">
         <el-row :gutter="20">
           <el-col :span="12">
+            <el-form-item label="任务名称" prop="calcName">
+              <div class="form-readonly">{{ execRecordForm.calcName || "-" }}</div>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="模型名称" prop="modelName">
+              <div class="form-readonly">{{ execRecordForm.modelName || "-" }}</div>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row :gutter="20">
+          <el-col :span="12">
             <el-form-item label="执行批次号" prop="executionNo">
               <div class="form-readonly">{{ execRecordForm.executionNo || "-" }}</div>
             </el-form-item>
@@ -658,6 +670,9 @@ function handleExecRecordDetail(row) {
   resetExecRecordForm();
   getCalcExecution(row.id).then((response) => {
     Object.assign(execRecordForm, response.data);
+    // 补充关联查询出的名称字段
+    execRecordForm.calcName = row.calcName;
+    execRecordForm.modelName = row.modelName;
     openExecRecordDetail.value = true;
     execRecordDetailTitle.value = "执行记录详情";
   });
@@ -668,7 +683,9 @@ function resetExecRecordForm() {
   Object.assign(execRecordForm, {
     id: null,
     calcId: null,
+    calcName: null,
     modelId: null,
+    modelName: null,
     executionNo: null,
     executionMode: null,
     status: null,
