@@ -29,6 +29,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import tech.qiantong.qmodel.common.core.domain.model.LoginUser;
 import tech.qiantong.qmodel.common.core.page.PageParam;
 import tech.qiantong.qmodel.common.core.domain.AjaxResult;
 import tech.qiantong.qmodel.common.annotation.Log;
@@ -106,7 +107,7 @@ public class ModelCalcController extends BaseController {
     @Log(title = "模型计算任务", businessType = BusinessType.INSERT)
     @PostMapping
     public CommonResult<Long> add(@Valid @RequestBody ModelCalcSaveReqVO modelCalc) {
-        return CommonResult.toAjax(modelCalcService.createModelCalc(modelCalc));
+        return CommonResult.toAjax(modelCalcService.createModelCalc(modelCalc,getLoginUser()));
     }
 
     @Operation(summary = "修改模型计算任务")
@@ -114,7 +115,7 @@ public class ModelCalcController extends BaseController {
     @Log(title = "模型计算任务", businessType = BusinessType.UPDATE)
     @PutMapping
     public CommonResult<Integer> edit(@Valid @RequestBody ModelCalcSaveReqVO modelCalc) {
-        return CommonResult.toAjax(modelCalcService.updateModelCalc(modelCalc));
+        return CommonResult.toAjax(modelCalcService.updateModelCalc(modelCalc,getLoginUser()));
     }
 
     @Operation(summary = "删除模型计算任务")

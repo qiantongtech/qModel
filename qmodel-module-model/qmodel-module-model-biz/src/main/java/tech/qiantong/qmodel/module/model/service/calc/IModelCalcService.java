@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Collection;
 import com.baomidou.mybatisplus.extension.service.IService;
+import tech.qiantong.qmodel.common.core.domain.model.LoginUser;
 import tech.qiantong.qmodel.common.core.page.PageResult;
 import tech.qiantong.qmodel.module.model.controller.admin.calc.vo.ModelCalcSaveReqVO;
 import tech.qiantong.qmodel.module.model.controller.admin.calc.vo.ModelCalcPageReqVO;
@@ -53,14 +54,14 @@ public interface IModelCalcService extends IService<ModelCalcDO> {
      * @param createReqVO 模型计算任务信息
      * @return 模型计算任务编号
      */
-    Long createModelCalc(ModelCalcSaveReqVO createReqVO);
+    Long createModelCalc(ModelCalcSaveReqVO createReqVO, LoginUser loginUser);
 
     /**
      * 更新模型计算任务
      *
      * @param updateReqVO 模型计算任务信息
      */
-    int updateModelCalc(ModelCalcSaveReqVO updateReqVO);
+    int updateModelCalc(ModelCalcSaveReqVO updateReqVO,LoginUser loginUser);
 
     /**
      * 删除模型计算任务

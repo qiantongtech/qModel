@@ -29,6 +29,8 @@ import com.alibaba.fastjson2.JSON;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import javax.annotation.Resource;
+
+import tech.qiantong.qmodel.common.core.domain.model.LoginUser;
 import tech.qiantong.qmodel.common.core.page.PageResult;
 import tech.qiantong.qmodel.common.utils.object.BeanUtils;
 import tech.qiantong.qmodel.common.utils.StringUtils;
@@ -73,12 +75,18 @@ public class ModelCalcServiceImpl  extends ServiceImpl<ModelCalcMapper,ModelCalc
     }
 
     @Override
-    public Long createModelCalc(ModelCalcSaveReqVO createReqVO) {
+    public Long createModelCalc(ModelCalcSaveReqVO createReqVO, LoginUser loginUser) {
         ModelCalcDO dictType = BeanUtils.toBean(createReqVO, ModelCalcDO.class);
         // 新建后默认入队：status=5（排队中）
         if (dictType.getStatus() == null) {
             dictType.setStatus(5);
         }
+        dictType.setUpdateBy(loginUser.getUser().getNickName());
+        dictType.setUpdateTime(new Date());
+        dictType.setUpdatorId(loginUser.getUserId());
+        dictType.setCreateBy(loginUser.getUser().getNickName());
+        dictType.setCreateTime(new Date());
+        dictType.setCreatorId(loginUser.getUserId());
         modelCalcMapper.insert(dictType);
 
         executeCalc(dictType.getId());
@@ -87,10 +95,13 @@ public class ModelCalcServiceImpl  extends ServiceImpl<ModelCalcMapper,ModelCalc
     }
 
     @Override
-    public int updateModelCalc(ModelCalcSaveReqVO updateReqVO) {
+    public int updateModelCalc(ModelCalcSaveReqVO updateReqVO,LoginUser loginUser) {
         ModelCalcDO updateObj = BeanUtils.toBean(updateReqVO, ModelCalcDO.class);
         // 修改后重新入队：强制 status=5（排队中）
         updateObj.setStatus(5);
+        updateObj.setUpdateBy(loginUser.getUser().getNickName());
+        updateObj.setUpdateTime(new Date());
+        updateObj.setUpdatorId(loginUser.getUserId());
         int result = modelCalcMapper.updateById(updateObj);
 
         executeCalc(updateReqVO.getId());
