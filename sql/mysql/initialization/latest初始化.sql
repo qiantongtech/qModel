@@ -3722,7 +3722,7 @@ INSERT INTO `system_dict_data` VALUES (125, 1, '运行中', '1', 'model_calc_sta
 INSERT INTO `system_dict_data` VALUES (126, 2, '运行成功', '2', 'model_calc_status', NULL, 'success', NULL, '0', '超级管理员', '2026-07-23 15:19:30', '超级管理员', '2026-07-23 15:19:57', NULL);
 INSERT INTO `system_dict_data` VALUES (127, 3, '运行失败', '3', 'model_calc_status', NULL, 'danger', NULL, '0', '超级管理员', '2026-07-23 15:20:10', NULL, NULL, NULL);
 INSERT INTO `system_dict_data` VALUES (128, 4, '已终止', '4', 'model_calc_status', NULL, 'warning', NULL, '0', '超级管理员', '2026-07-23 15:20:24', NULL, NULL, NULL);
-INSERT INTO `system_dict_data` VALUES (129, 5, '排队中', '5', 'model_calc_status', NULL, 'default', NULL, '0', '超级管理员', '2026-07-23 15:20:38', NULL, NULL, NULL);
+INSERT INTO `system_dict_data` VALUES (129, 5, '排队中', '5', 'model_calc_status', NULL, 'primary', NULL, '0', '超级管理员', '2026-07-23 15:20:38', NULL, NULL, NULL);
 INSERT INTO `system_dict_data` VALUES (130, 0, '高', '1', 'model_calc_priority', NULL, 'primary', NULL, '0', '超级管理员', '2026-07-23 15:21:41', NULL, NULL, NULL);
 INSERT INTO `system_dict_data` VALUES (131, 2, '中', '2', 'model_calc_priority', NULL, 'info', NULL, '0', '超级管理员', '2026-07-23 15:21:53', NULL, NULL, NULL);
 INSERT INTO `system_dict_data` VALUES (132, 3, '低', '3', 'model_calc_priority', NULL, 'danger', NULL, '0', '超级管理员', '2026-07-23 15:22:06', NULL, NULL, NULL);

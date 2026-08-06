@@ -161,6 +161,13 @@
 
     <div class="pagecont-bottom">
       <el-tabs v-model="activeName" class="demo-tabs" @tab-click="handleClick">
+        <el-tab-pane name="outputResult">
+          <template #label>输出结果</template>
+          <div v-if="activeName === 'outputResult'" class="tab-content output-result-tab">
+            <OutputResult :calc-detail="calcDetail" />
+          </div>
+        </el-tab-pane>
+
         <el-tab-pane name="inputParams">
           <template #label>输入参数</template>
           <div v-if="activeName === 'inputParams'" class="tab-content">
@@ -407,13 +414,6 @@
 <!--            </div>-->
 <!--          </div>-->
 <!--        </el-tab-pane>-->
-
-        <el-tab-pane name="outputResult">
-          <template #label>输出结果</template>
-          <div v-if="activeName === 'outputResult'" class="tab-content output-result-tab">
-            <OutputResult :calc-detail="calcDetail" />
-          </div>
-        </el-tab-pane>
       </el-tabs>
     </div>
 
@@ -422,6 +422,7 @@
       :title="execRecordDetailTitle"
       v-model="openExecRecordDetail"
       width="1000px"
+      class="scrollbar"
       :append-to="$refs['app-container']"
       draggable
     >
@@ -545,7 +546,7 @@ const route = useRoute();
 const { model_calc_status, model_access_type, model_calc_priority } = proxy.useDict("model_calc_status", "model_access_type", "model_calc_priority");
 
 const showSearch = ref(true);
-const activeName = ref("inputParams");
+const activeName = ref("outputResult");
 
 const calcDetail = ref({});
 
