@@ -48,6 +48,9 @@ import tech.qiantong.qmodel.module.model.service.calc.IModelCalcService;
 import tech.qiantong.qmodel.module.model.service.calc.dto.CalcExecuteResultDTO;
 import tech.qiantong.qmodel.module.model.service.calc.dto.CalcQueueStatusDTO;
 import tech.qiantong.qmodel.module.model.service.calc.dto.QueueTask;
+import tech.qiantong.qmodel.module.model.service.model.IModelService;
+import tech.qiantong.qmodel.module.model.controller.admin.model.vo.ModelRespVO;
+import tech.qiantong.qmodel.common.exception.ServiceException;
 
 /**
  * 模型计算任务Controller
@@ -62,6 +65,9 @@ import tech.qiantong.qmodel.module.model.service.calc.dto.QueueTask;
 public class ModelCalcController extends BaseController {
     @Resource
     private IModelCalcService modelCalcService;
+
+    @Resource
+    private IModelService modelService;
 
     @Operation(summary = "查询模型计算任务列表")
     @PreAuthorize("@ss.hasPermi('model:calc:calc:list')")
@@ -131,6 +137,14 @@ public class ModelCalcController extends BaseController {
     @Log(title = "提交计算任务", businessType = BusinessType.OTHER)
     @PostMapping("/execute")
     public CommonResult<CalcExecuteResultDTO> execute(@RequestParam Long id) {
+        ModelCalcDO calcDO = modelCalcService.getModelCalcById(id);
+        if (calcDO == null) {
+            throw new ServiceException("计算任务不存在");
+        }
+        ModelRespVO modelInfo = modelService.getModelById(calcDO.getModelId());
+        if (modelInfo == null || !"5".equals(String.valueOf(modelInfo.getStatus()))) {
+            throw new ServiceException("模型已下线");
+        }
         return CommonResult.success(modelCalcService.executeCalc(id));
     }
 

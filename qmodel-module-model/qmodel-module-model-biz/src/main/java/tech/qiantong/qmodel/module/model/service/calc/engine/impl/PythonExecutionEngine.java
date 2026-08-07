@@ -102,6 +102,7 @@ public class PythonExecutionEngine implements IExecutionEngine {
             }
 
             result.setSuccess(false);
+            result.setOutput(null); // 确保异常时输出结果为空
             result.setDuration(System.currentTimeMillis() - overallStart);
             String errMsg = (e instanceof ServiceException
                     ? e.getMessage()

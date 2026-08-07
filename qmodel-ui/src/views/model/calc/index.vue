@@ -354,9 +354,13 @@
                 <el-option
                   v-for="item in filteredModelOptions"
                   :key="item.id"
-                  :label="item.name + (item.accessType ? ' (' + item.accessType + ')' : '')"
+                  :label="item.name"
                   :value="item.id"
-                />
+                  :disabled="item.status != 5"
+                >
+                  <span>{{ item.name }}</span>
+                  <span v-if="item.status != 5" style="color: #999; font-size: 12px; margin-left: 5px;">(已下线)</span>
+                </el-option>
               </el-select>
             </el-form-item>
           </el-col>
@@ -821,7 +825,7 @@ function handleDialogOpen() {
 
 /** 加载模型选项 */
 function loadModelOptions() {
-  listModel({ pageNum: 1, pageSize: 999, status: 5 }).then((res) => {
+  listModel({ pageNum: 1, pageSize: 999 }).then((res) => {
     modelOptions.value = res.data.rows || []
   })
 }
@@ -1057,64 +1061,63 @@ function handleDetail(row) {
 }
 
 /** 提交 */
-function submitForm() {
+async function submitForm() {
   validateError.value = ''
 
-  // 1. 手动校验基础表单
-  proxy.$refs['calcRef'].validate((valid) => {
-    if (!valid) {
-      validateError.value = '请检查基础信息的必填项'
-      return
-    }
+  // 1. 校验主表单
+  try {
+    await proxy.$refs['calcRef'].validate()
+  } catch (e) {
+    validateError.value = '请检查基础信息的必填项'
+    return
+  }
 
-    // 2. 手动校验 inputParams 表格
-    const errors = []
-    if (form.value.inputParams && form.value.inputParams.length > 0) {
-      form.value.inputParams.forEach(param => {
-        if (param.required) {
-          const value = param.value
-          if (value === null || value === undefined || value === '') {
-            errors.push(`参数“${param.title || param.name}”不能为空`)
-          }
+  // 2. 校验参数表格
+  const errors = []
+  if (form.value.inputParams && form.value.inputParams.length > 0) {
+    form.value.inputParams.forEach(param => {
+      if (param.required) {
+        const value = param.value
+        if (value === null || value === undefined || value === '') {
+          errors.push(`参数“${param.title || param.name}”不能为空`)
         }
-      })
-    }
+      }
+    })
+  }
+  if (errors.length > 0) {
+    validateError.value = errors.join('；')
+    return
+  }
 
-    if (errors.length > 0) {
-      validateError.value = errors.join('；')
-      return
-    }
+  // 3. 提交数据
+  const submitData = { ...form.value }
+  if (Array.isArray(submitData.inputParams)) {
+    submitData.inputParams = JSON.stringify({ params: submitData.inputParams })
+  }
+  if (!submitData.code) {
+    const now = new Date()
+    const ts = now.getFullYear().toString() +
+      String(now.getMonth() + 1).padStart(2, '0') +
+      String(now.getDate()).padStart(2, '0') +
+      String(now.getHours()).padStart(2, '0') +
+      String(now.getMinutes()).padStart(2, '0') +
+      String(now.getSeconds()).padStart(2, '0')
+    submitData.code = 'CALC_' + ts
+  }
 
-    // 3. 提交数据
-    const submitData = { ...form.value }
-    if (Array.isArray(submitData.inputParams)) {
-      submitData.inputParams = JSON.stringify({ params: submitData.inputParams })
-    }
-    if (!submitData.code) {
-      const now = new Date()
-      const ts = now.getFullYear().toString() +
-        String(now.getMonth() + 1).padStart(2, '0') +
-        String(now.getDate()).padStart(2, '0') +
-        String(now.getHours()).padStart(2, '0') +
-        String(now.getMinutes()).padStart(2, '0') +
-        String(now.getSeconds()).padStart(2, '0')
-      submitData.code = 'CALC_' + ts
-    }
-
+  try {
     if (form.value.id) {
-      updateCalc(submitData).then(() => {
-        proxy.$modal.msgSuccess('修改成功')
-        open.value = false
-        getList()
-      })
+      await updateCalc(submitData)
+      proxy.$modal.msgSuccess('修改成功')
     } else {
-      addCalc(submitData).then(() => {
-        proxy.$modal.msgSuccess('提交成功')
-        open.value = false
-        getList()
-      })
+      await addCalc(submitData)
+      proxy.$modal.msgSuccess('提交成功')
     }
-  })
+    open.value = false
+    getList()
+  } catch (e) {
+    console.error('提交失败', e)
+  }
 }
 
 /** 终止 */
