@@ -362,9 +362,31 @@ const addLog = (content, type = "info") => {
 
 const buildTestPayload = () => {
   const payload = {};
+  const schema = inputSchemaObj.value;
+  const properties = (schema && schema.type === 'object' && schema.properties) ? schema.properties : {};
+
   Object.keys(formValues).forEach((key) => {
-    if (formValues[key] !== undefined && formValues[key] !== "") {
-      payload[key] = formValues[key];
+    let value = formValues[key];
+    if (value !== undefined && value !== "") {
+      // 获取该字段在 schema 中的定义类型
+      const fieldType = properties[key]?.type;
+      
+      // 如果期望是数组，并且输入的是字符串，则尝试解析为 JS 数组
+      if (fieldType === 'array' && typeof value === 'string') {
+        try {
+          value = JSON.parse(value);
+        } catch (e) {
+          // 解析失败保留原字符串，交由后续 ajv 抛出校验错误
+        }
+      } else if (fieldType === 'object' && typeof value === 'string') {
+        // 同理，如果是 object 类型也可以顺便支持解析
+        try {
+          value = JSON.parse(value);
+        } catch (e) {
+        }
+      }
+
+      payload[key] = value;
     }
   });
   return payload;
