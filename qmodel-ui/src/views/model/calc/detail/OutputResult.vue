@@ -500,7 +500,11 @@ function loadWidgetList() {
   const calcId = props.calcDetail.id;
   if (!calcId) return;
   listCalcWidgetByCalcId(calcId).then((response) => {
-    widgetList.value = (response.data || []).map((item) => ({
+    const list = response.data || [];
+    list.sort((a, b) => {
+      return (b.createTime || '').localeCompare(a.createTime || '');
+    });
+    widgetList.value = (list || []).map((item) => ({
       ...item,
       buildError: ''
     }));

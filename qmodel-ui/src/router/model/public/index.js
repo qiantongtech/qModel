@@ -36,7 +36,7 @@ export default [
                 path: 'calc/detail',
                 component: () => import('@/views/model/calc/detail/index.vue'),
                 name: 'CalcDetail',
-                meta: { title: '模型计算详情', noCache: true, activeMenu: '/calc' }
+                meta: { title: '模型计算详情', noCache: true, activeMenu: '/model/calc' }
             },
             {
                 path: 'modelInputAndOutput',

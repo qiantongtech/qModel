@@ -26,8 +26,8 @@
               {{ calcDetail.id || "-" }}
             </div>
             <div class="task-name">
-              <el-tooltip :content="calcDetail.name || ''" placement="top" effect="light">
-                <span class="ellipsis-text">{{ calcDetail.name || "" }}</span>
+              <el-tooltip :content="calcDetail.name || ''" placement="top" effect="light" :disabled="!textOverflowMap.name">
+                <span class="ellipsis-text" @mouseenter="(event) => checkTextOverflow(event, 'name')">{{ calcDetail.name || "" }}</span>
               </el-tooltip>
             </div>
             <dict-tag
@@ -62,8 +62,8 @@
             <div class="infotop-row border-top">
               <div class="infotop-row-lable">计算编码</div>
               <div class="infotop-row-value">
-                <el-tooltip :content="calcDetail.code || '-'" placement="top" effect="light">
-                  <span class="ellipsis-text">{{ calcDetail.code || "-" }}</span>
+                <el-tooltip :content="calcDetail.code || '-'" placement="top" effect="light" :disabled="!textOverflowMap.code">
+                  <span class="ellipsis-text" @mouseenter="(event) => checkTextOverflow(event, 'code')">{{ calcDetail.code || "-" }}</span>
                 </el-tooltip>
               </div>
             </div>
@@ -72,8 +72,8 @@
             <div class="infotop-row border-top">
               <div class="infotop-row-lable">模型分类</div>
               <div class="infotop-row-value">
-                <el-tooltip :content="calcDetail.classifyName || '-'" placement="top" effect="light">
-                  <span class="ellipsis-text">{{ calcDetail.classifyName || "-" }}</span>
+                <el-tooltip :content="calcDetail.classifyName || '-'" placement="top" effect="light" :disabled="!textOverflowMap.classifyName">
+                  <span class="ellipsis-text" @mouseenter="(event) => checkTextOverflow(event, 'classifyName')">{{ calcDetail.classifyName || "-" }}</span>
                 </el-tooltip>
               </div>
             </div>
@@ -82,8 +82,8 @@
             <div class="infotop-row border-top">
               <div class="infotop-row-lable">版本号</div>
               <div class="infotop-row-value">
-                <el-tooltip :content="calcDetail.modelVersion || '-'" placement="top" effect="light">
-                  <span class="ellipsis-text">{{ calcDetail.modelVersion || "-" }}</span>
+                <el-tooltip :content="calcDetail.modelVersion || '-'" placement="top" effect="light" :disabled="!textOverflowMap.modelVersion">
+                  <span class="ellipsis-text" @mouseenter="(event) => checkTextOverflow(event, 'modelVersion')">{{ calcDetail.modelVersion || "-" }}</span>
                 </el-tooltip>
               </div>
             </div>
@@ -95,8 +95,8 @@
             <div class="infotop-row border-top">
               <div class="infotop-row-lable">模型名称</div>
               <div class="infotop-row-value" style="display: inline-flex; align-items: center; gap: 8px;">
-                <el-tooltip :content="calcDetail.modelName || '-'" placement="top" effect="light">
-                  <span class="ellipsis-text">{{ calcDetail.modelName || "-" }}</span>
+                <el-tooltip :content="calcDetail.modelName || '-'" placement="top" effect="light" :disabled="!textOverflowMap.modelName">
+                  <span class="ellipsis-text" @mouseenter="(event) => checkTextOverflow(event, 'modelName')">{{ calcDetail.modelName || "-" }}</span>
                 </el-tooltip>
                 <dict-tag
                   v-if="calcDetail.calcType !== undefined && calcDetail.calcType !== null"
@@ -123,8 +123,8 @@
             <div class="infotop-row border-top">
               <div class="infotop-row-lable">耗时</div>
               <div class="infotop-row-value">
-                <el-tooltip :content="formatDuration(calcDetail.duration)" placement="top" effect="light">
-                  <span class="ellipsis-text">{{ formatDuration(calcDetail.duration) }}</span>
+                <el-tooltip :content="formatDuration(calcDetail.duration)" placement="top" effect="light" :disabled="!textOverflowMap.duration">
+                  <span class="ellipsis-text" @mouseenter="(event) => checkTextOverflow(event, 'duration')">{{ formatDuration(calcDetail.duration) }}</span>
                 </el-tooltip>
               </div>
             </div>
@@ -136,8 +136,8 @@
             <div class="infotop-row border-top">
               <div class="infotop-row-lable">任务描述</div>
               <div class="infotop-row-value">
-                <el-tooltip :content="calcDetail.description || '-'" placement="top" effect="light">
-                  <div class="ellipsis-2">{{ calcDetail.description || "-" }}</div>
+                <el-tooltip :content="calcDetail.description || '-'" placement="top" effect="light" :disabled="!textOverflowMap.description">
+                  <div class="ellipsis-2" @mouseenter="(event) => checkTextOverflow(event, 'description')">{{ calcDetail.description || "-" }}</div>
                 </el-tooltip>
               </div>
             </div>
@@ -149,8 +149,8 @@
             <div class="infotop-row border-top">
               <div class="infotop-row-lable">备注</div>
               <div class="infotop-row-value">
-                <el-tooltip :content="calcDetail.remark || '-'" placement="top" effect="light">
-                  <div class="ellipsis-2">{{ calcDetail.remark || "-" }}</div>
+                <el-tooltip :content="calcDetail.remark || '-'" placement="top" effect="light" :disabled="!textOverflowMap.remark">
+                  <div class="ellipsis-2" @mouseenter="(event) => checkTextOverflow(event, 'remark')">{{ calcDetail.remark || "-" }}</div>
                 </el-tooltip>
               </div>
             </div>
@@ -561,6 +561,14 @@ const { model_calc_status, model_access_type, model_calc_priority } = proxy.useD
 
 const showSearch = ref(true);
 const activeName = ref("outputResult");
+
+const textOverflowMap = reactive({});
+const checkTextOverflow = (event, field) => {
+  const element = event.currentTarget;
+  if (element) {
+    textOverflowMap[field] = element.scrollWidth > element.clientWidth || element.scrollHeight > element.clientHeight;
+  }
+};
 
 const calcDetail = ref({});
 

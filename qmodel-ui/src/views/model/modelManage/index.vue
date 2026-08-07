@@ -256,7 +256,7 @@
                           link
                           type="primary"
                           icon="Edit"
-                          :disabled="['4'].includes(String(item.status))"
+                          :disabled="['4','5'].includes(String(item.status))"
                           @click.stop="handleUpdate(item)"
                           >修改</el-button
                         >
