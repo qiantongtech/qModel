@@ -210,40 +210,18 @@
             </div>
           </el-col>
         </el-row>
-        <el-row :gutter="3">
-          <el-col :span="24">
-            <div class="infotop-row border-top">
-              <div class="infotop-row-lable">备注</div>
-              <div class="infotop-row-value">
-                <el-tooltip
-                  :content="viewInfo.remark || '-'"
-                  placement="top"
-                  effect="light"
-                  :disabled="!textOverflowMap.remark"
-                >
-                  <span
-                    class="ellipsis-text"
-                    @mouseenter="(event) => checkTextOverflow(event, 'remark')"
-                  >
-                    {{ viewInfo.remark || "-" }}
-                  </span>
-                </el-tooltip>
-              </div>
-            </div>
-          </el-col>
-        </el-row>
       </div>
     </div>
 
     <div class="pagecont-bottom">
       <el-tabs v-model="activeName" class="demo-tabs" @tab-click="handleClick">
-        <el-tab-pane name="version">
-          <template #label>版本管理</template>
-          <VersionManage
-            v-if="activeName === 'version'"
-            @refresh="getModelById"
-            :model="viewInfo"
-            style="margin: 0; padding: 0"
+
+        <el-tab-pane name="modelApi" >
+          <template #label>API 接口</template>
+          <ModelApi
+              v-if="activeName === 'modelApi'"
+              :model="viewInfo"
+              style="margin: 0; padding: 0"
           />
         </el-tab-pane>
 
@@ -276,10 +254,11 @@
           />
         </el-tab-pane>
 
-        <el-tab-pane name="modelApi" v-if="['3','4','5','6','7'].includes(viewInfo.status)">
-          <template #label>API 接口</template>
-          <ModelApi
-              v-if="activeName === 'modelApi'"
+        <el-tab-pane name="version">
+          <template #label>版本管理</template>
+          <VersionManage
+              v-if="activeName === 'version'"
+              @refresh="getModelById"
               :model="viewInfo"
               style="margin: 0; padding: 0"
           />
@@ -444,7 +423,7 @@ const title = ref("");
 const open = ref(false);
 const classifyOptions = ref([]);
 const interfaceAddressList = ref([]);
-const activeName = ref("version");
+const activeName = ref("modelApi");
 const showSearch = ref(true);
 const textOverflowMap = reactive({});
 
