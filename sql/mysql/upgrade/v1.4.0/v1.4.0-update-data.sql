@@ -123,6 +123,19 @@ INSERT INTO `system_menu` VALUES (2334, '密钥管理复制', 2333, 1, '#', '', 
 INSERT INTO `system_menu` VALUES (2335, '密钥管理新增', 2333, 2, '#', '', NULL, 1, 0, NULL, 'F', '0', '0', 'model:modelKey:key:add', '#', 'admin', '2026-07-31 17:09:49', '', NULL, '');
 INSERT INTO `system_menu` VALUES (2336, '密钥管理删除', 2333, 4, '#', '', NULL, 1, 0, NULL, 'F', '0', '0', 'model:modelKey:key:remove', '#', 'admin', '2026-07-31 17:09:49', '', NULL, '');
 
+DELETE from system_menu WHERE menu_id in (2319,2303,2245,2296,2268,2261,2253,2337,2333,1,2,3);
+INSERT INTO `system_menu` VALUES (2319, '计算任务', 2337, 1, 'model/calc', 'model/calc/index', NULL, 1, 0, NULL, 'C', '0', '0', 'model:calc:calc:list', 'model-calculation', '吴同', '2026-07-27 14:31:18', '吴同', NULL, '模型计算任务菜单');
+INSERT INTO `system_menu` VALUES (2303, '计算历史', 2337, 2, 'model/operate', 'model/operateList/index', NULL, 1, 0, NULL, 'C', '0', '0', 'model:operate:operate:list', 'calculate-history', '吴同', '2026-07-20 14:23:04', '吴同', '2026-07-20 15:16:31', '模型历史管理菜单');
+INSERT INTO `system_menu` VALUES (2245, '模型中心', 0, 10, 'model/manage', 'model/modelManage/index', NULL, 1, 0, NULL, 'C', '0', '0', 'model:model:list', 'model-administration', '吴同', '2025-11-14 15:32:43', '吴同', '2026-07-20 14:19:25', NULL);
+INSERT INTO `system_menu` VALUES (2296, '模型分类', 0, 20, 'model/classify', 'model/modelClassify/index', NULL, 1, 0, NULL, 'C', '0', '0', 'model:classify:classify:list', 'category-management', '吴同', '2026-07-20 11:21:25', '吴同', '2026-07-20 13:42:46', '模型分类菜单');
+INSERT INTO `system_menu` VALUES (2268, '调用记录', 0, 30, 'model/invokeHistory', 'model/invokeHistory/index', NULL, 1, 0, NULL, 'C', '0', '0', 'model:invokeHistory:invokehistory:list', 'call-record', '吴同', '2026-07-17 13:39:50', '吴同', '2026-07-20 14:13:58', '模型调用历史记录菜单');
+INSERT INTO `system_menu` VALUES (2261, '构建日志', 0, 40, 'model/buildLog', 'model/buildLog/index', NULL, 1, 0, NULL, 'C', '0', '0', 'model:buildLog:buildlog:list', 'build-log', '吴同', '2026-07-17 13:39:16', '吴同', '2026-07-20 14:14:10', '构建日志菜单');
+INSERT INTO `system_menu` VALUES (2253, '模型审批', 0, 50, 'model/audit', 'model/modelAudit/index', NULL, 1, 0, NULL, 'C', '0', '0', 'model:modelAudit:audit:list', 'model-approve', '吴同', '2026-07-14 15:49:56', '吴同', '2026-07-20 14:14:23', NULL);
+INSERT INTO `system_menu` VALUES (2337, '模型计算', 0, 60, 'calc', NULL, NULL, 1, 0, NULL, 'M', '0', '0', NULL, 'model-calculation', '吴同', '2024-05-06 06:12:17', '吴同', '2025-12-31 10:03:45', '系统管理目录');
+INSERT INTO `system_menu` VALUES (2333, '密钥管理', 0, 70, 'model/key', 'model/modelKey/index', NULL, 1, 0, NULL, 'C', '0', '0', 'model:modelKey:key:list', 'password', '吴同', '2026-07-31 17:09:48', '吴同', '2026-07-31 17:14:15', '模型访问 key菜单');
+INSERT INTO `system_menu` VALUES (1, '系统管理', 0, 400, 'system', NULL, NULL, 1, 0, NULL, 'M', '0', '0', NULL, 'system-m', '吴同', '2024-05-06 06:12:17', '吴同', '2025-12-31 10:03:45', '系统管理目录');
+INSERT INTO `system_menu` VALUES (3, '系统工具', 0, 600, 'tool', NULL, NULL, 1, 0, NULL, 'M', '0', '0', '', 'system-tool', '吴同', '2024-05-06 06:12:17', '吴同', '2026-07-17 11:58:09', '系统工具目录');
+INSERT INTO `system_menu` VALUES (2, '系统监控', 0, 700, 'monitor', NULL, NULL, 1, 0, NULL, 'M', '0', '0', NULL, 'system-watch', '吴同', '2024-05-06 06:12:17', '吴同', '2025-12-31 10:04:15', '系统监控目录');
 
 
 
@@ -132,6 +145,7 @@ INSERT INTO `system_role_menu` VALUES (2, 2333);
 INSERT INTO `system_role_menu` VALUES (2, 2334);
 INSERT INTO `system_role_menu` VALUES (2, 2335);
 INSERT INTO `system_role_menu` VALUES (2, 2336);
+INSERT INTO `system_role_menu` VALUES (2, 2337);
 
 INSERT INTO `system_role_menu` VALUES (4, 2317);
 INSERT INTO `system_role_menu` VALUES (4, 2318);
@@ -153,6 +167,7 @@ INSERT INTO `system_role_menu` VALUES (4, 2333);
 INSERT INTO `system_role_menu` VALUES (4, 2334);
 INSERT INTO `system_role_menu` VALUES (4, 2335);
 INSERT INTO `system_role_menu` VALUES (4, 2336);
+INSERT INTO `system_role_menu` VALUES (4, 2337);
 
 
 UPDATE `system_menu` SET `path` = 'model/manage' WHERE `menu_id` = 2245;

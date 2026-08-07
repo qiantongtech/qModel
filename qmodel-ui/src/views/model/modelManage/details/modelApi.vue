@@ -19,9 +19,11 @@
 <template>
   <div>
     <div class="infotop">
-      <div class="h2-titles"><span>服务信息</span> <div class="info-tip" style="margin-top: 0">
-        <span>未发布状态不可通过 API 方式进行调用</span>
-      </div></div>
+      <div class="h2-titles"><span>服务信息</span>
+        <div class="info-tip" style="margin-top: 0">
+          <span>未发布状态不可通过 API 方式进行调用</span>
+        </div>
+      </div>
       <div>
         <el-row :gutter="3" style="margin-bottom: 3px">
           <el-col :span="8">
@@ -94,15 +96,16 @@
       <div class="h2-titles">接口定义</div>
       <div>
         <el-collapse accordion v-model="activeNames">
-          <el-collapse-item name="1" :class="['collapse-item-wrap', 'post']">
-
+          <el-collapse-item v-for="api in apiList" :key="api.path" :name="api.path"
+                            :class="['collapse-item-wrap', api.method]">
             <template #title>
               <div class="api-title" style="color: #009e21">
                 <el-tag type="success" effect="dark" size="small"
-                        style="margin-left: 10px;background: #009e21!important;color: #ffffff!important;">POST
+                        style="margin-left: 10px;background: #009e21!important;color: #ffffff!important;">
+                  {{ api.method.toUpperCase() }}
                 </el-tag>
-                <span class="path">/execute</span>
-                <span>执行模型计算</span>
+                <span class="path">{{ api.path }}</span>
+                <span>{{ api.description }}</span>
               </div>
             </template>
 
@@ -130,9 +133,9 @@
                             class="copy-btn"
                             icon="DocumentCopy"
                             size="small"
-                            @click="copyCode('post', '/execute','curl')"
+                            @click="copyCode(api.method, api.path,'curl')"
                         />
-                        <pre class="code-block dark">{{ genCURLExampleCode("post", "/execute") }}</pre>
+                        <pre class="code-block dark">{{ genCURLExampleCode(api.method, api.path) }}</pre>
                       </div>
                     </el-tab-pane>
                     <el-tab-pane label="Python (requests)" name="python">
@@ -141,9 +144,9 @@
                             class="copy-btn"
                             icon="DocumentCopy"
                             size="small"
-                            @click="copyCode('post', '/execute','python')"
+                            @click="copyCode(api.method, api.path,'python')"
                         />
-                        <pre class="code-block dark">{{ genPythonExampleCode("post", "/execute") }}</pre>
+                        <pre class="code-block dark">{{ genPythonExampleCode(api.method, api.path) }}</pre>
                       </div>
                     </el-tab-pane>
                     <el-tab-pane label="Node.js (axios)" name="node">
@@ -152,9 +155,9 @@
                             class="copy-btn"
                             icon="DocumentCopy"
                             size="small"
-                            @click="copyCode('post', '/execute','node')"
+                            @click="copyCode(api.method, api.path,'node')"
                         />
-                        <pre class="code-block dark">{{ genNodeExampleCode("post", "/execute") }}</pre>
+                        <pre class="code-block dark">{{ genNodeExampleCode(api.method, api.path) }}</pre>
                       </div>
 
                     </el-tab-pane>
@@ -174,16 +177,12 @@
 import {ref, getCurrentInstance, reactive} from "vue";
 
 const {proxy} = getCurrentInstance();
-
 const rawBaseApi = import.meta.env.VITE_APP_BASE_API ?? '';
 const baseApi = rawBaseApi.endsWith('/') ? rawBaseApi : rawBaseApi + '/';
 const baseUrl = window.location.origin + baseApi + "v1/models";
 const demoTab = ref('curl');
-const activeNames = ref(['1']);
 const loading = ref(false);
 const textOverflowMap = reactive({});
-
-
 
 const props = defineProps({
   model: {
@@ -192,6 +191,16 @@ const props = defineProps({
     required: true,
   },
 });
+
+const apiList = [
+  {
+    method: "post",
+    path: "/execute",
+    description: "执行模型计算",
+  },
+];
+
+const activeNames = ref([apiList[0].path]);
 
 // 获取输入参数Schema
 function getInputSchema() {
@@ -334,15 +343,18 @@ function buildEmptyDataBySchema(schema) {
   }
 }
 
-function copyCode(method, path,type) {
+function copyCode(method, path, type) {
   let code = "";
   switch (type) {
     case 'curl':
-      code = genCURLExampleCode(method, path);break;
+      code = genCURLExampleCode(method, path);
+      break;
     case 'python':
-      code = genPythonExampleCode(method, path);break;
+      code = genPythonExampleCode(method, path);
+      break;
     case 'node':
-      code = genNodeExampleCode(method, path);break;
+      code = genNodeExampleCode(method, path);
+      break;
   }
   const ta = document.createElement('textarea');
   ta.value = code;
@@ -376,9 +388,11 @@ const checkTextOverflow = (event, field) => {
   opacity: 0;
   transition: opacity 0.2s;
 }
+
 .code-wrap:hover .copy-btn {
   opacity: 1;
 }
+
 .code-block {
   margin: 0;
   /* 给右上角按钮留出顶部空间，防止代码被遮挡 */
