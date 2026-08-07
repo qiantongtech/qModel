@@ -23,7 +23,7 @@
     <parent>
         <artifactId>qmodel-module-model</artifactId>
         <groupId>tech.qiantong</groupId>
-        <version>1.3.0</version>
+        <version>1.4.0</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -38,35 +38,35 @@
         <dependency>
             <groupId>tech.qiantong</groupId>
             <artifactId>qmodel-config</artifactId>
-            <version>1.3.0</version>
+            <version>1.4.0</version>
         </dependency>
 
         <!-- 系統模块 websocket-->
         <dependency>
             <groupId>tech.qiantong</groupId>
             <artifactId>qmodel-websocket</artifactId>
-            <version>1.3.0</version>
+            <version>1.4.0</version>
         </dependency>
 
         <!-- 系统模块 anivia-security -->
         <dependency>
             <groupId>tech.qiantong</groupId>
             <artifactId>qmodel-security</artifactId>
-            <version>1.3.0</version>
+            <version>1.4.0</version>
         </dependency>
 
         <!-- 系统模块 mybatis -->
         <dependency>
             <groupId>tech.qiantong</groupId>
             <artifactId>qmodel-mybatis</artifactId>
-            <version>1.3.0</version>
+            <version>1.4.0</version>
         </dependency>
 
         <!-- 系统模块 redis -->
         <dependency>
             <groupId>tech.qiantong</groupId>
             <artifactId>qmodel-redis</artifactId>
-            <version>1.3.0</version>
+            <version>1.4.0</version>
         </dependency>
 
         <!-- 通用工具-->
@@ -79,14 +79,14 @@
         <dependency>
             <groupId>tech.qiantong</groupId>
             <artifactId>qmodel-file</artifactId>
-            <version>1.3.0</version>
+            <version>1.4.0</version>
         </dependency>
 
         <!-- es-->
         <dependency>
             <groupId>tech.qiantong</groupId>
             <artifactId>qmodel-es</artifactId>
-            <version>1.3.0</version>
+            <version>1.4.0</version>
             <exclusions>
                 <!-- 排除 Elasticsearch 自带的低版本 JNA，防止与 OSHI 冲突 -->
                 <exclusion>
