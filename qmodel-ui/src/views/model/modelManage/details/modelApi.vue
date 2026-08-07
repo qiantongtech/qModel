@@ -20,9 +20,6 @@
   <div>
     <div class="infotop">
       <div class="h2-titles"><span>服务信息</span> <div v-if="props.model.status !== '5'" class="info-tip" style="margin-top: 0">
-        <el-icon>
-          <InfoFilled/>
-        </el-icon>
         <span>未发布状态不可通过 API 方式进行调用</span>
       </div></div>
       <div>
@@ -104,8 +101,8 @@
                 <el-tag type="success" effect="dark" size="small"
                         style="margin-left: 10px;background: #009e21!important;color: #ffffff!important;">POST
                 </el-tag>
-                <span class="path">/predict</span>
-                <span>执行模型推理预测</span>
+                <span class="path">/execute</span>
+                <span>执行模型计算</span>
               </div>
             </template>
 
@@ -133,9 +130,9 @@
                             class="copy-btn"
                             icon="DocumentCopy"
                             size="small"
-                            @click="copyCode('post', '/predict','curl')"
+                            @click="copyCode('post', '/execute','curl')"
                         />
-                        <pre class="code-block dark">{{ genCURLExampleCode("post", "/predict") }}</pre>
+                        <pre class="code-block dark">{{ genCURLExampleCode("post", "/execute") }}</pre>
                       </div>
                     </el-tab-pane>
                     <el-tab-pane label="Python (requests)" name="python">
@@ -144,9 +141,9 @@
                             class="copy-btn"
                             icon="DocumentCopy"
                             size="small"
-                            @click="copyCode('post', '/predict','python')"
+                            @click="copyCode('post', '/execute','python')"
                         />
-                        <pre class="code-block dark">{{ genPythonExampleCode("post", "/predict") }}</pre>
+                        <pre class="code-block dark">{{ genPythonExampleCode("post", "/execute") }}</pre>
                       </div>
                     </el-tab-pane>
                     <el-tab-pane label="Node.js (axios)" name="node">
@@ -155,9 +152,9 @@
                             class="copy-btn"
                             icon="DocumentCopy"
                             size="small"
-                            @click="copyCode('post', '/predict','node')"
+                            @click="copyCode('post', '/execute','node')"
                         />
-                        <pre class="code-block dark">{{ genNodeExampleCode("post", "/predict") }}</pre>
+                        <pre class="code-block dark">{{ genNodeExampleCode("post", "/execute") }}</pre>
                       </div>
 
                     </el-tab-pane>

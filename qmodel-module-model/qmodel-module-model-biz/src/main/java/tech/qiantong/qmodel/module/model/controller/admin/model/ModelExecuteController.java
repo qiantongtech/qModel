@@ -58,29 +58,14 @@ public class ModelExecuteController {
     private IModelKeyService modelKeyService;
 
     @Operation(summary = "执行模型脚本")
-    @PostMapping("/predict")
+    @PostMapping("/execute")
     public CommonResult<Object> predict(HttpServletRequest request,
                                         @Validated @RequestBody ModelExecuteVO modelExecuteVO) {
-        String authorization = request.getHeader("Authorization");
-        if (StrUtil.isBlank(authorization) || authorization.length() <= 7) {
-            throw new ServiceException("apiKey 异常");
-        }
-        String apiKey = authorization.substring(7);
-        SysUser userByApiKey = modelKeyService.getUserByApiKey(apiKey);
-        if (Objects.isNull(userByApiKey)) {
-            throw new ServiceException("apiKey 异常");
-        }
-        if (!Objects.equals(userByApiKey.getStatus(), "0")) {
-            throw new ServiceException("用户状态异常");
-        }
+        String apiKey = getApiKey(request);
+        checkApiKey(apiKey);
+        modelKeyService.updateUseTime(apiKey);
 
-        ModelRespVO modelRespVO = modelService.getModelByCode(modelExecuteVO.getModelCode());
-        if (Objects.isNull(modelRespVO)) {
-            throw new ServiceException("模型不存在");
-        }
-        if (!Objects.equals(ModelStatusEnum.PUBLISHED.getStatus(), modelRespVO.getStatus())) {
-            throw new ServiceException("模型未发布，拒绝访问");
-        }
+        ModelRespVO modelRespVO = getModelByCode(modelExecuteVO.getModelCode());
         ModelConfigDO modelConfig = modelRespVO.getModelConfig();
         if (AccessTypeEnum.API.getType().equals(modelRespVO.getAccessType())) {
             ModelConfigTestReqVO testReqVO = new ModelConfigTestReqVO();
@@ -103,11 +88,55 @@ public class ModelExecuteController {
             testReqVO.setAuthDynamicBody(modelConfig.getAuthDynamicBody());
             testReqVO.setAuthExtractPath(modelConfig.getAuthExtractPath());
             testReqVO.setTestBody(JSON.toJSONString(modelExecuteVO.getParam()));
-            modelKeyService.updateUseTime(apiKey);
             return CommonResult.success(modelConfigService.testModelConfig(testReqVO));
         } else {
-            modelKeyService.updateUseTime(apiKey);
             return CommonResult.success(modelFileResourceService.runModelScript(modelRespVO.getId(), modelExecuteVO.getParam()));
+        }
+    }
+
+    /**
+     * 获取模型信息
+     *
+     * @param modelCode 模型编码
+     * @return 模型信息
+     */
+    private ModelRespVO getModelByCode(String modelCode) {
+        ModelRespVO modelRespVO = modelService.getModelByCode(modelCode);
+        if (Objects.isNull(modelRespVO)) {
+            throw new ServiceException("模型不存在");
+        }
+        if (!Objects.equals(ModelStatusEnum.PUBLISHED.getStatus(), modelRespVO.getStatus())) {
+            throw new ServiceException("模型未发布，拒绝访问");
+        }
+        return modelRespVO;
+    }
+
+    /**
+     * 获取 apiKey
+     *
+     * @param request 请求
+     * @return apiKey
+     */
+    private String getApiKey(HttpServletRequest request) {
+        String authorization = request.getHeader("Authorization");
+        if (StrUtil.isBlank(authorization) || authorization.length() <= 7) {
+            throw new ServiceException("apiKey 异常");
+        }
+        return authorization.substring(7);
+    }
+
+    /**
+     * 校验 apiKey
+     *
+     * @param apiKey apiKey
+     */
+    private void checkApiKey(String apiKey) {
+        SysUser userByApiKey = modelKeyService.getUserByApiKey(apiKey);
+        if (Objects.isNull(userByApiKey)) {
+            throw new ServiceException("apiKey 异常");
+        }
+        if (!Objects.equals(userByApiKey.getStatus(), "0")) {
+            throw new ServiceException("用户状态异常");
         }
     }
 }
