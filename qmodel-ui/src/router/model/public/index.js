@@ -30,13 +30,23 @@ export default [
                 path: 'modelManageView',
                 component: () => import('@/views/model/modelManage/details/index.vue'),
                 name: 'modelManageView',
-                meta: { title: '模型详情', noCache: true, activeMenu: '/model/manage' }
+                meta: {
+                    title: '模型详情',
+                    noCache: true,
+                    activeMenu: '/model/manage',
+                    breadcrumbParent: [{ title: '模型中心', path: '/model/manage' }]
+                }
             },
             {
                 path: 'calc/detail',
                 component: () => import('@/views/model/calc/detail/index.vue'),
                 name: 'CalcDetail',
-                meta: { title: '模型计算详情', noCache: true, activeMenu: '/model/calc' }
+                meta: {
+                    title: '模型计算详情',
+                    noCache: true,
+                    activeMenu: '/model/calc',
+                    breadcrumbParent: [{ title: '模型计算', path: '/model/calc' }]
+                }
             },
             {
                 path: 'modelInputAndOutput',
@@ -49,13 +59,23 @@ export default [
                 path: 'modelManage/add',
                 component: () => import('@/views/model/modelManage/add/index.vue'),
                 name: 'ModelManageAdd',
-                meta: { title: '新增模型', noCache: true, activeMenu: '/model/manage' }
+                meta: {
+                    title: '新增模型',
+                    noCache: true,
+                    activeMenu: '/model/manage',
+                    breadcrumbParent: [{ title: '模型中心', path: '/model/manage' }]
+                }
             },
             {
                 path: 'modelManage/edit',
                 component: () => import('@/views/model/modelManage/add/index.vue'),
                 name: 'ModelManageEdit',
-                meta: { title: '修改模型', noCache: true, activeMenu: '/model/manage' }
+                meta: {
+                    title: '修改模型',
+                    noCache: true,
+                    activeMenu: '/model/manage',
+                    breadcrumbParent: [{ title: '模型中心', path: '/model/manage' }]
+                }
             }
         ]
     }

@@ -85,7 +85,7 @@
           </div>
         </div>
 
-        <el-row :gutter="20">
+        <el-row :gutter="15">
           <el-col :xs="24" :sm="24" :md="12" :lg="12">
             <!-- 模块4 饼图 -->
             <div class="module-4 border-item">
@@ -295,8 +295,10 @@ import { ElMessageBox } from "element-plus";
 import * as echarts from "echarts";
 // eslint-disable-next-line no-unused-vars
 import {
+  onActivated,
   onBeforeUnmount,
   onMounted,
+  nextTick,
   ref,
   watch,
   getCurrentInstance,
@@ -1044,28 +1046,46 @@ const module9 = ref([
 ]);
 
 function chartIntancesResize() {
-  console.log(chartIntances);
   chartIntances.forEach((intance) => {
-    intance.resize();
+    if (intance && !intance.isDisposed?.()) {
+      intance.resize();
+    }
   });
 }
 
-window.addEventListener("resize", chartIntancesResize);
+let chartResizeTimers = [];
 
-onBeforeUnmount(() => {
-  window.removeEventListener("resize", chartIntancesResize);
-});
+function clearChartResizeTimers() {
+  chartResizeTimers.forEach((timer) => window.clearTimeout(timer));
+  chartResizeTimers = [];
+}
+
+function scheduleChartResize() {
+  clearChartResizeTimers();
+  nextTick(() => {
+    [0, 80, 180, 320].forEach((delay) => {
+      const timer = window.setTimeout(() => {
+        window.requestAnimationFrame(chartIntancesResize);
+      }, delay);
+      chartResizeTimers.push(timer);
+    });
+  });
+}
 
 // 获取当前实例
 const instance = getCurrentInstance();
 
-function callback() {}
+const handleSidebarStatusChange = () => {
+  scheduleChartResize();
+};
 
 // 在组件销毁时移除事件监听
 onBeforeUnmount(() => {
+  clearChartResizeTimers();
+  window.removeEventListener("resize", scheduleChartResize);
   instance.appContext.config.globalProperties.$bus.off(
     "getsidebarStatus",
-    callback()
+    handleSidebarStatusChange
   );
 });
 
@@ -1075,13 +1095,17 @@ onMounted(() => {
   initModule6();
   initModule8();
   getxljtcont();
+  scheduleChartResize();
   checkLicense();
   instance.appContext.config.globalProperties.$bus.on(
     "getsidebarStatus",
-    () => {
-      window.addEventListener("resize", chartIntancesResize);
-    }
+    handleSidebarStatusChange
   );
+  window.addEventListener("resize", scheduleChartResize);
+});
+
+onActivated(() => {
+  scheduleChartResize();
 });
 </script>
 
@@ -1121,8 +1145,6 @@ onMounted(() => {
   min-width: 1290px;
   max-width: 100%;
   // width: 100%;
-  height: 100%;
-  // padding: 24px;
   background: #f0f2f5;
 
   ::v-deep .el-carousel {
@@ -1631,16 +1653,6 @@ onMounted(() => {
   //         background-color: #fff !important;
   //     }
   // }
-  ::v-deep {
-    // 列表表头
-    .el-table thead {
-      height: 53px;
-      .el-table__cell.is-leaf {
-        background: rgba(19, 90, 251, 0.04) !important;
-        // border-radius: 4px 4px 0px 0px;
-      }
-    }
-  }
 }
 .module-9 {
   .border-item-body {

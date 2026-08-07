@@ -699,13 +699,14 @@ function goKtPage() {
     justify-content: space-between;
 
     .logo {
-      width: 100px;
-      height: 33px;
+      width: 260px;
+      height: 45px;
       margin-left: 20%;
 
       img {
         // width: 100%;
         height: 100%;
+        margin-top: 25px;
       }
     }
 

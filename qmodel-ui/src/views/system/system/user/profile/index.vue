@@ -143,6 +143,7 @@ getUser();
   .el-card {
     height: 100%;
     border-radius: 2px !important;
+    box-shadow: 0 5px 8px rgba(128, 145, 165, 0.1) !important;
 
     .el-card__header {
       padding: 14px !important;

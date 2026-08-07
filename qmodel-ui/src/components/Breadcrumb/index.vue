@@ -35,6 +35,19 @@ const levelList = ref([])
 function getBreadcrumb() {
   // only show routes with meta.title
   let matched = route.matched.filter(item => item.meta && item.meta.title);
+  const breadcrumbParent = route.meta && route.meta.breadcrumbParent
+
+  if (breadcrumbParent && breadcrumbParent.length) {
+    const hasParent = matched.some(item => breadcrumbParent.some(parent => parent.path === item.path))
+    if (!hasParent) {
+      matched = breadcrumbParent.map(item => ({
+        path: item.path,
+        redirect: item.redirect || 'noRedirect',
+        meta: { title: item.title }
+      })).concat(matched)
+    }
+  }
+
   const first = matched[0]
   // 判断是否为首页
   // if (!isDashboard(first)) {

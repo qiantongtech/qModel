@@ -31,7 +31,11 @@ export default [
         path: 'role/:userId(\\d+)',
         component: () => import('@/views/system/system/user/authRole.vue'),
         name: 'AuthRole',
-        meta: { title: '分配角色', activeMenu: '/system/user' }
+        meta: {
+          title: '分配角色',
+          activeMenu: '/system/user',
+          breadcrumbParent: [{ title: '用户管理', path: '/system/user' }]
+        }
       }
     ]
   },
@@ -45,7 +49,11 @@ export default [
         path: 'user/:roleId(\\d+)',
         component: () => import('@/views/system/system/role/authUser.vue'),
         name: 'AuthUser',
-        meta: { title: '分配用户', activeMenu: '/system/role' }
+        meta: {
+          title: '分配用户',
+          activeMenu: '/system/role',
+          breadcrumbParent: [{ title: '角色管理', path: '/system/role' }]
+        }
       }
     ]
   },
@@ -59,7 +67,11 @@ export default [
         path: 'index/:dictId(\\d+)',
         component: () => import('@/views/system/system/dict/data.vue'),
         name: 'Data',
-        meta: { title: '字典数据', activeMenu: '/system/dict' }
+        meta: {
+          title: '字典数据',
+          activeMenu: '/system/dict',
+          breadcrumbParent: [{ title: '字典管理', path: '/system/dict' }]
+        }
       }
     ]
   },
@@ -73,7 +85,11 @@ export default [
         path: 'index/:jobId(\\d+)',
         component: () => import('@/views/system/monitor/job/log.vue'),
         name: 'JobLog',
-        meta: { title: '调度日志', activeMenu: '/monitor/job' }
+        meta: {
+          title: '调度日志',
+          activeMenu: '/monitor/job',
+          breadcrumbParent: [{ title: '定时任务', path: '/monitor/job' }]
+        }
       }
     ]
   },
@@ -87,7 +103,11 @@ export default [
         path: 'index/:tableId(\\d+)',
         component: () => import('@/views/system/tool/gen/editTable.vue'),
         name: 'GenEdit',
-        meta: { title: '修改生成配置', activeMenu: '/tool/gen' }
+        meta: {
+          title: '修改生成配置',
+          activeMenu: '/tool/gen',
+          breadcrumbParent: [{ title: '代码生成', path: '/tool/gen' }]
+        }
       }
     ]
   }
