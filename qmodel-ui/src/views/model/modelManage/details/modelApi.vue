@@ -19,7 +19,7 @@
 <template>
   <div>
     <div class="infotop">
-      <div class="h2-titles"><span>服务信息</span> <div v-if="props.model.status !== '5'" class="info-tip" style="margin-top: 0">
+      <div class="h2-titles"><span>服务信息</span> <div class="info-tip" style="margin-top: 0">
         <span>未发布状态不可通过 API 方式进行调用</span>
       </div></div>
       <div>

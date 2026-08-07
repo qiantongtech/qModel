@@ -74,13 +74,13 @@
         <el-table-column type="selection" width="55" align="center"/>
         <el-table-column v-if="getColumnVisibility(0)" label="编号" align="center" prop="id" width="80"
                          sortable="custom" :sort-orders="['descending', 'ascending']"/>
-        <el-table-column v-if="getColumnVisibility(1)" label="名称" align="left" width="120" prop="name"
+        <el-table-column v-if="getColumnVisibility(1)" label="名称" align="left" width="180" prop="name"
                          :show-overflow-tooltip="{ effect: 'light' }">
           <template #default="scope">
             <span>{{ scope.row.name || "-" }}</span>
           </template>
         </el-table-column>
-        <el-table-column v-if="getColumnVisibility(2)" label="密钥" align="left" prop="apiKey"
+        <el-table-column v-if="getColumnVisibility(2)" label="密钥" align="left" width="290" prop="apiKey"
                          :show-overflow-tooltip="{ effect: 'light' }">
           <template #default="scope">
             <span>{{ scope.row.apiKey || "-" }}</span>
