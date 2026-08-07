@@ -826,7 +826,13 @@ function handleDialogOpen() {
 /** 加载模型选项 */
 function loadModelOptions() {
   listModel({ pageNum: 1, pageSize: 999 }).then((res) => {
-    modelOptions.value = res.data.rows || []
+    let rows = res.data.rows || []
+    rows.sort((a, b) => {
+      if (a.status == 5 && b.status != 5) return -1
+      if (a.status != 5 && b.status == 5) return 1
+      return 0
+    })
+    modelOptions.value = rows
   })
 }
 
