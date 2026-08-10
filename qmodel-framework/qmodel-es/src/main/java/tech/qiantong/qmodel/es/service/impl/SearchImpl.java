@@ -24,6 +24,7 @@ import org.dromara.easyes.core.biz.EsPageInfo;
 import org.dromara.easyes.core.conditions.select.LambdaEsQueryWrapper;
 import org.dromara.easyes.core.conditions.update.LambdaEsUpdateWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Service;
 import tech.qiantong.qmodel.es.esmapper.example.EsTextDocumentMapper;
 import tech.qiantong.qmodel.es.model.Search;
@@ -38,6 +39,7 @@ import javax.annotation.PostConstruct;
  * @author qModel
  */
 @Service
+@ConditionalOnProperty(prefix = "qmodel.es", name = "enabled", havingValue = "true", matchIfMissing = false)
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class SearchImpl implements ISearchService {
     private final EsTextDocumentMapper esTextDocumentMapper;

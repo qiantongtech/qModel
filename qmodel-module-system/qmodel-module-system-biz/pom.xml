@@ -41,6 +41,13 @@
             <version>1.4.0</version>
         </dependency>
 
+        <!-- es -->
+        <dependency>
+            <groupId>tech.qiantong</groupId>
+            <artifactId>qmodel-es</artifactId>
+            <version>1.4.0</version>
+        </dependency>
+
         <!-- 系統模块 websocket-->
         <dependency>
             <groupId>tech.qiantong</groupId>
@@ -98,13 +105,6 @@
         <dependency>
             <groupId>tech.qiantong</groupId>
             <artifactId>qmodel-file</artifactId>
-            <version>1.4.0</version>
-        </dependency>
-
-        <!-- es-->
-        <dependency>
-            <groupId>tech.qiantong</groupId>
-            <artifactId>qmodel-es</artifactId>
             <version>1.4.0</version>
         </dependency>
 

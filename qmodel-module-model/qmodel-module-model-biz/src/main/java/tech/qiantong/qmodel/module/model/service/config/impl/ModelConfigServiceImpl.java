@@ -1,17 +1,17 @@
 /*
  * Copyright © 2026-present Jiangsu Qiantong Technology Co., Ltd.
- *  
+ *
  * This file is part of qModel Module Platform (Open Source Edition).
- *  
+ *
  * qModel is licensed under Apache License 2.0 with additional qModel terms.
  * You may use qModel for commercial purposes, but you may not remove, hide,
  * modify, or replace the qModel logo, copyright notices, license notices,
  * or attribution information without a separate commercial license.
- *  
+ *
  * White-label use, OEM distribution, rebranding, or presenting qModel as
  * another product requires separate commercial authorization from
  * Jiangsu Qiantong Technology Co., Ltd.
- *  
+ *
  * Business License: `https://qmodel.tech/`
  * See the LICENSE file in the project root for full license information.
  */
@@ -19,6 +19,7 @@
 package tech.qiantong.qmodel.module.model.service.config.impl;
 
 import com.alibaba.fastjson2.JSON;
+import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
@@ -243,6 +244,61 @@ public class ModelConfigServiceImpl  extends ServiceImpl<ModelConfigMapper,Model
             HttpMethod method = HttpMethod.valueOf(testReqVO.getRequestMethod().toUpperCase());
             HttpEntity<?> entity;
 
+            String testBodyStr = testReqVO.getTestBody();
+            String inputSchema = testReqVO.getInputSchema();
+            if (StringUtils.isNotBlank(testBodyStr) && StringUtils.isNotBlank(inputSchema)) {
+                try {
+                    JSONObject bodyJson = JSON.parseObject(testBodyStr);
+                    JSONObject schemaJson = JSON.parseObject(inputSchema);
+                    JSONObject properties = schemaJson.getJSONObject("properties");
+                    if (properties != null) {
+                        for (String key : bodyJson.keySet()) {
+                            JSONObject prop = properties.getJSONObject(key);
+                            if (prop != null) {
+                                // 兼容 type 是数组的情况（例如 ["array", "string"]）
+                                String type = "";
+                                if (prop.get("type") instanceof JSONArray) {
+                                    JSONArray typeArr = prop.getJSONArray("type");
+                                    if (typeArr.contains("array")) {
+                                        type = "array";
+                                    } else if (typeArr.contains("object")) {
+                                        type = "object";
+                                    } else if (!typeArr.isEmpty()) {
+                                        type = typeArr.getString(0);
+                                    }
+                                } else {
+                                    type = prop.getString("type");
+                                }
+                                
+                                Object val = bodyJson.get(key);
+                                if ("array".equals(type) && val instanceof String) {
+                                    try {
+                                        JSONArray arr = JSON.parseArray((String) val);
+                                        bodyJson.put(key, arr);
+                                    } catch (Exception e) {
+                                        String strVal = (String) val;
+                                        if (strVal.startsWith("[") && strVal.endsWith("]")) {
+                                            // invalid json array, do nothing
+                                        } else {
+                                            bodyJson.put(key, strVal.split(","));
+                                        }
+                                    }
+                                } else if ("object".equals(type) && val instanceof String) {
+                                    try {
+                                        JSONObject obj = JSON.parseObject((String) val);
+                                        bodyJson.put(key, obj);
+                                    } catch (Exception e) {
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    testReqVO.setTestBody(bodyJson.toJSONString());
+                } catch (Exception e) {
+                    logs.add("根据 Schema 转换参数失败：" + e.getMessage());
+                }
+            }
+
             String contentType = testReqVO.getContentType() != null ? testReqVO.getContentType().toLowerCase() : "";
             if (contentType.contains("multipart/form-data") || contentType.contains("application/x-www-form-urlencoded")) {
                 String testBody = testReqVO.getTestBody();
@@ -252,13 +308,29 @@ public class ModelConfigServiceImpl  extends ServiceImpl<ModelConfigMapper,Model
                         LinkedMultiValueMap<String, Object> formData = new LinkedMultiValueMap<>();
                         bodyJson.forEach((k, v) -> {
                             if (v != null) {
-                                String value = String.valueOf(v);
-                                File file = resolveLocalFile(value);
-                                if (file != null && file.exists()) {
-                                    formData.add(k, new FileSystemResource(file));
-                                    logs.add("文件字段 " + k + " 已加载本地文件：" + file.getAbsolutePath());
+                                if (v instanceof java.util.Collection) {
+                                    Iterable<?> iter = (Iterable<?>) v;
+                                    for (Object item : iter) {
+                                        if (item != null) {
+                                            String value = String.valueOf(item);
+                                            File file = resolveLocalFile(value);
+                                            if (file != null && file.exists()) {
+                                                formData.add(k, new FileSystemResource(file));
+                                                logs.add("文件字段 " + k + " 已加载本地文件：" + file.getAbsolutePath());
+                                            } else {
+                                                formData.add(k, value);
+                                            }
+                                        }
+                                    }
                                 } else {
-                                    formData.add(k, value);
+                                    String value = String.valueOf(v);
+                                    File file = resolveLocalFile(value);
+                                    if (file != null && file.exists()) {
+                                        formData.add(k, new FileSystemResource(file));
+                                        logs.add("文件字段 " + k + " 已加载本地文件：" + file.getAbsolutePath());
+                                    } else {
+                                        formData.add(k, value);
+                                    }
                                 }
                             }
                         });
