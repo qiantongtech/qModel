@@ -44,8 +44,11 @@ export default [
                 meta: {
                     title: '模型计算详情',
                     noCache: true,
-                    activeMenu: '/model/calc',
-                    breadcrumbParent: [{ title: '模型计算', path: '/model/calc' }]
+                    activeMenu: '/calc/model/calc',
+                    breadcrumbParent: [
+                        { title: '模型计算', path: '/calc' },
+                        { title: '计算任务', path: '/model/calc' }
+                    ]
                 }
             },
             {

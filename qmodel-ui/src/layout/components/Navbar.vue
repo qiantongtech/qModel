@@ -167,9 +167,9 @@
           ></i>
         </div> -->
 
-        <header-search id="header-search" class="right-menu-item" />
+        <header-search id="header-search" class="right-menu-item hover-effect" />
 
-        <!-- <screenfull id="screenfull" class="right-menu-item hover-effect" /> -->
+        <screenfull id="screenfull" class="right-menu-item hover-effect" />
 
         <!-- <el-tooltip content="布局大小" effect="dark" placement="bottom">
                   <size-select id="size-select" class="right-menu-item hover-effect" />

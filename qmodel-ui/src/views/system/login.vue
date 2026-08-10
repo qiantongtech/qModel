@@ -20,7 +20,7 @@
   <!-- 上次登录用户登录页面登录页面样式二 -->
   <div class="app-container login-two sysInfo sysInfo-wrap" ref="app-container">
     <div class="left-content">
-      <div class="swiper leftSwiper">
+      <div class="swiper leftSwiper" ref="bannerStageRef">
         <div class="swiper-wrapper">
           <!--          <el-carousel  style="width:100%;heght:100%;" arrow="never" autoplay>-->
           <!--            <el-carousel-item v-for="(item,index) in loginimglist" :key="index">-->
@@ -28,7 +28,12 @@
           <!--            </el-carousel-item>-->
           <!--          </el-carousel>-->
 
-          <el-carousel style="width: 100%; height: 100%" arrow="never" autoplay>
+          <el-carousel
+            style="width: 100%; height: 100%"
+            arrow="never"
+            autoplay
+            indicator-position="none"
+          >
             <el-carousel-item
               v-for="(item, index) in loginimglist"
               :key="index"
@@ -314,7 +319,7 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { getCurrentInstance, nextTick, onBeforeUnmount, onMounted, ref } from "vue";
 import { getCodeImg } from "@/api/system/login";
 import Cookies from "js-cookie";
 import { encrypt, decrypt } from "@/utils/jsencrypt";
@@ -326,6 +331,9 @@ import defaultLogo from "@/assets/system/images/login/qmodel-logo.png";
 
 const userStore = useUserStore();
 const dialogVisible = ref(false);
+const bannerStageRef = ref(null);
+const defaultBannerRatio = 1306 / 1205;
+let bannerResizeObserver = null;
 const { proxy } = getCurrentInstance();
 const loading = ref(false);
 const codeUrl = ref("");
@@ -349,13 +357,8 @@ const fpForm = ref({
 const defaltImglist = ref([
   {
     id: 1,
-    image: new URL("@/assets/system/images/login/banner.jpg", import.meta.url)
-      .href,
-  },
-  {
-    id: 4,
     image: new URL(
-      "@/assets/system/images/login/banner-gy.jpg",
+      "@/assets/system/images/login/qmodel-login-banner.png",
       import.meta.url
     ).href,
   },
@@ -364,8 +367,28 @@ const loginimglist = ref([]);
 
 const getBackgroundStyle = (item) => {
   return {
-    background: `url(${item.image}) center center / cover no-repeat`,
+    backgroundImage: `url(${item.image})`,
+    backgroundRepeat: "no-repeat",
+    backgroundPosition: "center center",
+    backgroundSize: "cover",
   };
+};
+
+const updateBannerLayerSize = () => {
+  const stage = bannerStageRef.value;
+  if (!stage) return;
+
+  const { width, height } = stage.getBoundingClientRect();
+  if (!width || !height) return;
+
+  const stageRatio = width / height;
+  const renderWidth =
+    stageRatio > defaultBannerRatio ? width : height * defaultBannerRatio;
+  const renderHeight =
+    stageRatio > defaultBannerRatio ? width / defaultBannerRatio : height;
+
+  stage.style.setProperty("--login-banner-render-width", `${renderWidth}px`);
+  stage.style.setProperty("--login-banner-render-height", `${renderHeight}px`);
 };
 
 const getAssetsFile = (url) => {
@@ -383,11 +406,25 @@ const contentDetail = ref(null);
 
 onMounted(() => {
   fetchContent();
+  nextTick(() => {
+    updateBannerLayerSize();
+    window.addEventListener("resize", updateBannerLayerSize);
+
+    if (window.ResizeObserver && bannerStageRef.value) {
+      bannerResizeObserver = new ResizeObserver(updateBannerLayerSize);
+      bannerResizeObserver.observe(bannerStageRef.value);
+    }
+  });
+});
+
+onBeforeUnmount(() => {
+  window.removeEventListener("resize", updateBannerLayerSize);
+  bannerResizeObserver?.disconnect();
 });
 // 使用 getContent 来获取数据，而不是重新定义一个 getContent 函数
 const fetchContent = async () => {
   // logo.value = defaultLogo;
-  // loginimglist.value = defaltImglist.value
+  loginimglist.value = defaltImglist.value;
   try {
     // 调用你从 API 导入的 getContent 方法
     const res = await getContent(1); // 假设请求的是 id 为 1 的数据
@@ -396,25 +433,6 @@ const fetchContent = async () => {
       contentDetail.value = data;
       const sysLogo = data.loginLogo;
       logo.value = sysLogo ? sysLogo : defaultLogo;
-      const carouselImageList = data.carouselImage.split(",");
-      // console.log('-----contentDetail',contentDetail.value)
-      // console.log('-----login-----0----0--0--------0-',carouselImageList)
-      const carouselImgList = [];
-      for (let i = 0; i <= carouselImageList.length; i++) {
-        let item = carouselImageList[i];
-        if (item) {
-          carouselImgList.push({
-            id: i + 1,
-            image: item,
-          });
-        }
-      }
-      // console.log('-----login-----1----1--1--------1-',carouselImgList)
-      if (carouselImgList.length > 0) {
-        loginimglist.value = carouselImgList;
-      } else {
-        loginimglist.value = defaltImglist.value;
-      }
     } else {
       loginimglist.value = defaltImglist.value;
     }
@@ -569,6 +587,16 @@ function goKtPage() {
     }
   }
 
+  .swiper-slide {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: var(--login-banner-render-width);
+    height: var(--login-banner-render-height);
+    background-color: #f4f8ff;
+    transform: translate(-50%, -50%);
+  }
+
   .form-actions {
     display: flex;
     align-items: center;
@@ -664,8 +692,17 @@ function goKtPage() {
     }
 
     .leftSwiper {
+      --login-banner-render-width: 100%;
+      --login-banner-render-height: 100%;
       width: 100%;
       height: 100%;
+      position: relative;
+      overflow: hidden;
+
+      .swiper-wrapper {
+        position: relative;
+        height: 100%;
+      }
 
       .swiper-imagesize {
         width: 100%;
