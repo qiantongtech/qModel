@@ -370,7 +370,7 @@ const buildTestPayload = () => {
     if (value !== undefined && value !== "") {
       // 获取该字段在 schema 中的定义类型
       const fieldType = properties[key]?.type;
-      
+
       // 如果期望是数组，并且输入的是字符串，则尝试解析为 JS 数组
       if (fieldType === 'array' && typeof value === 'string') {
         try {
@@ -489,6 +489,7 @@ const handleTest = async () => {
       const data = {
         modelId: props.modelId,
         modelName: props.modelName,
+        inputSchema: configData.inputSchema,
         apiUrl: configData.apiUrl,
         requestMethod: configData.requestMethod,
         contentType: configData.contentType,

@@ -260,17 +260,16 @@ const buildTestPayload = () => {
   const payload = {}
   const schema = inputSchemaObj.value
   const properties = (schema && schema.type === 'object' && schema.properties) ? schema.properties : {}
-
   Object.keys(formValues).forEach((key) => {
     let value = formValues[key]
     if (value !== undefined && value !== '') {
       // 获取该字段在 schema 中的定义类型
       const fieldType = properties[key]?.type
-      
       // 如果期望是数组，并且输入的是字符串，则尝试解析为 JS 数组
-      if (fieldType === 'array' && typeof value === 'string') {
+      if (fieldType === 'array' ) {
         try {
           value = JSON.parse(value)
+
         } catch (e) {
           // 解析失败保留原字符串，交由后续 ajv 抛出校验错误
         }
@@ -281,7 +280,6 @@ const buildTestPayload = () => {
         } catch (e) {
         }
       }
-
       payload[key] = value
     }
   })
@@ -346,6 +344,7 @@ const handleTest = async () => {
 
   try {
     const data = {
+      inputSchema: formData.value.inputSchema,
       apiUrl: formData.value.apiUrl,
       requestMethod: formData.value.requestMethod,
       contentType: formData.value.contentType,

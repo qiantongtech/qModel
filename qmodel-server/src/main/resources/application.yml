@@ -16,6 +16,8 @@
 
 
 qmodel:
+  es:
+    enabled: false
   # 名称
   name: qModel
   # 版本
