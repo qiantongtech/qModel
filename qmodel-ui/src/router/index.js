@@ -85,6 +85,11 @@ const router = createRouter({
 // 在路由守卫中添加取消请求逻辑
 router.beforeEach((to, from, next) => {
     clearCancelTokens() // 在路由切换前取消所有未完成的请求
+    if (to.name === "CalcDetail"){
+        if (from.path === '/model/modelManageView'){
+            to.meta.activeMenu = '/model/manage'
+        }
+    }
     next()
 })
 

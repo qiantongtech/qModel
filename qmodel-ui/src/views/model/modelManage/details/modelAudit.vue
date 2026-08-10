@@ -38,18 +38,18 @@
     >
       <el-table-column v-if="getColumnVisibility(0)" label="编号" align="center" width="80" prop="id"
                        sortable="custom" :sort-orders="['descending', 'ascending']"/>
-      <el-table-column v-if="getColumnVisibility(5)" label="申请理由" align="left" prop="applyReason"
+      <el-table-column v-if="getColumnVisibility(1)" label="申请理由" align="left" prop="applyReason"
                        :show-overflow-tooltip="{ effect: 'light' }">
         <template #default="scope">
           {{ scope.row.applyReason || "-" }}
         </template>
       </el-table-column>
-      <el-table-column v-if="getColumnVisibility(3)" label="申请人" align="center" prop="applyName" width="100">
+      <el-table-column v-if="getColumnVisibility(2)" label="申请人" align="center" prop="applyName" width="100">
         <template #default="scope">
           {{ scope.row.applyName || "-" }}
         </template>
       </el-table-column>
-      <el-table-column v-if="getColumnVisibility(4)" label="申请时间" align="center" prop="applyTime" width="180"
+      <el-table-column v-if="getColumnVisibility(3)" label="申请时间" align="center" prop="applyTime" width="180"
                        sortable="custom"
                        :sort-orders="['descending', 'ascending']">
         <template #default="scope">
@@ -58,7 +58,7 @@
               }}</span>
         </template>
       </el-table-column>
-      <el-table-column v-if="getColumnVisibility(6)" label="审批状态" align="center" prop="auditStatus" width="100">
+      <el-table-column v-if="getColumnVisibility(4)" label="审批状态" align="center" prop="auditStatus" width="100">
         <template #default="scope">
           <dict-tag
               :options="model_audit_status"
@@ -66,12 +66,12 @@
           />
         </template>
       </el-table-column>
-      <el-table-column v-if="getColumnVisibility(3)" label="审批人" align="center" prop="applyName" width="100">
+      <el-table-column v-if="getColumnVisibility(5)" label="审批人" align="center" prop="applyName" width="100">
         <template #default="scope">
           {{ scope.row.applyName || "-" }}
         </template>
       </el-table-column>
-      <el-table-column v-if="getColumnVisibility(4)" label="审批时间" align="center" prop="applyTime" width="180"
+      <el-table-column v-if="getColumnVisibility(6)" label="审批时间" align="center" prop="applyTime" width="180"
                        sortable="custom"
                        :sort-orders="['descending', 'ascending']">
         <template #default="scope">
@@ -390,12 +390,12 @@ const { queryParams, form, rules } = toRefs(data);
 // 列显隐信息
 const columns = ref([
   {key: 0, label: "编号", visible: true},
-  {key: 1, label: "模型名称", visible: true},
-  {key: 2, label: "模型编码", visible: true},
-  {key: 3, label: "申请人", visible: true},
-  {key: 4, label: "申请时间", visible: true},
-  {key: 5, label: "申请理由", visible: true},
-  {key: 6, label: "审批状态", visible: true},
+  {key: 1, label: "申请理由", visible: true},
+  {key: 2, label: "申请人", visible: true},
+  {key: 3, label: "申请时间", visible: true},
+  {key: 4, label: "审批状态", visible: true},
+  {key: 5, label: "审批人", visible: true},
+  {key: 6, label: "审批时间", visible: true},
   {key: 7, label: "审批意见", visible: true},
   {key: 8, label: "操作", visible: true},
 ]);
@@ -403,7 +403,6 @@ const columns = ref([
 /** 查询模型审批列表 */
 function getList() {
   loading.value = true;
-  console.log(props.model)
   queryParams.value.modelId = props.model.id;
   listAudit(queryParams.value).then((response) => {
     auditList.value = response.data.rows;

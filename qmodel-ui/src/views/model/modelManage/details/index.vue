@@ -263,6 +263,14 @@
           />
         </el-tab-pane>
 
+        <el-tab-pane name="modelCalc" >
+          <template #label>计算任务</template>
+          <ModelCalc
+              v-if="activeName === 'modelCalc'"
+              :model="viewInfo"
+              style="margin: 0; padding: 0"
+          />
+        </el-tab-pane>
 
         <el-tab-pane name="version">
           <template #label>版本管理</template>
@@ -423,6 +431,7 @@ import InvokeHistory from "./invokeHistory.vue";
 import BuildLog from "./buildLog.vue";
 import ModelApi from "./modelApi.vue";
 import ModelAudit from "@/views/model/modelManage/details/modelAudit.vue";
+import ModelCalc from "@/views/model/modelManage/details/modelCalc.vue";
 
 const { proxy } = getCurrentInstance();
 const router = useRouter();
