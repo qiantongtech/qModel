@@ -3727,9 +3727,9 @@ INSERT INTO `system_dict_data` VALUES (130, 0, '高', '1', 'model_calc_priority'
 INSERT INTO `system_dict_data` VALUES (131, 2, '中', '2', 'model_calc_priority', NULL, 'info', NULL, '0', '超级管理员', '2026-07-23 15:21:53', NULL, NULL, NULL);
 INSERT INTO `system_dict_data` VALUES (132, 3, '低', '3', 'model_calc_priority', NULL, 'danger', NULL, '0', '超级管理员', '2026-07-23 15:22:06', NULL, NULL, NULL);
 
-INSERT INTO `system_dict_data` VALUES (133, 1, '待审核', '0', 'model_audit_status', NULL, 'primary', NULL, '0', '吴同', '2026-07-23 14:20:34', '吴同', '2026-07-23 14:21:07', NULL);
-INSERT INTO `system_dict_data` VALUES (134, 2, '审核通过', '1', 'model_audit_status', NULL, 'success', NULL, '0', '吴同', '2026-07-23 14:21:02', NULL, NULL, NULL);
-INSERT INTO `system_dict_data` VALUES (135, 3, '审核拒绝', '2', 'model_audit_status', NULL, 'danger', NULL, '0', '吴同', '2026-07-23 14:21:28', NULL, NULL, NULL);
+INSERT INTO `system_dict_data` VALUES (133, 1, '待审批', '0', 'model_audit_status', NULL, 'primary', NULL, '0', '吴同', '2026-07-23 14:20:34', '吴同', '2026-07-23 14:21:07', NULL);
+INSERT INTO `system_dict_data` VALUES (134, 2, '审批通过', '1', 'model_audit_status', NULL, 'success', NULL, '0', '吴同', '2026-07-23 14:21:02', NULL, NULL, NULL);
+INSERT INTO `system_dict_data` VALUES (135, 3, '审批拒绝', '2', 'model_audit_status', NULL, 'danger', NULL, '0', '吴同', '2026-07-23 14:21:28', NULL, NULL, NULL);
 INSERT INTO `system_dict_data` VALUES (136, 1, '构建中', '0', 'model_status', NULL, 'primary', NULL, '0', '吴同', '2026-07-23 14:30:35', '吴同', '2026-07-24 17:40:09', NULL);
 INSERT INTO `system_dict_data` VALUES (137, 2, '构建成功', '1', 'model_status', NULL, 'default', NULL, '1', '吴同', '2026-07-23 14:30:51', '吴同', '2026-07-24 17:39:25', NULL);
 INSERT INTO `system_dict_data` VALUES (138, 3, '构建失败', '2', 'model_status', NULL, 'danger', NULL, '0', '吴同', '2026-07-23 14:31:05', '吴同', '2026-07-23 14:35:14', NULL);
