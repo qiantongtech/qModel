@@ -226,3 +226,23 @@ aside {
   height: 1em;
   margin-right: 8px;
 }
+
+.form-readonly {
+  width: 100%;
+  border: 1px solid #f1f1f1;
+  padding: 0px 10px;
+  min-height: 34px;
+  background-color: #fcfcfc;
+  border-radius: 2px;
+  color: #333;
+  display: flex;
+  align-items: center;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  word-break: break-all;
+}
+
+.form-readonly.textarea {
+  min-height: 80px;
+  align-items: flex-start;
+}

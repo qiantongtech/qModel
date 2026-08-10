@@ -37,7 +37,7 @@ export function useDict(...args) {
         })
       }
     })
-    console.log(toRefs(res.value))
+    // console.log(toRefs(res.value))
     return toRefs(res.value);
   })()
 }

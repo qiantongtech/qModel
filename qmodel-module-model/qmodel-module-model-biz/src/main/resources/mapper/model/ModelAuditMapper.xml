@@ -42,6 +42,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <if test="query.auditStatus != null and query.auditStatus != '' ">
             and ma.audit_status = #{query.auditStatus}
         </if>
+        <if test="query.modelId != null and query.modelId != '' ">
+            and ma.model_id = #{query.modelId}
+        </if>
         order by
         <choose>
             <when test="query.orderByColumn == 'id' ">ma.id</when>

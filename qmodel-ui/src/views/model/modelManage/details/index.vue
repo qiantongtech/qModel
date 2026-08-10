@@ -254,6 +254,16 @@
           />
         </el-tab-pane>
 
+        <el-tab-pane name="modelAudit" >
+          <template #label>模型审批</template>
+          <ModelAudit
+              v-if="activeName === 'modelAudit'"
+              :model="viewInfo"
+              style="margin: 0; padding: 0"
+          />
+        </el-tab-pane>
+
+
         <el-tab-pane name="version">
           <template #label>版本管理</template>
           <VersionManage
@@ -412,6 +422,7 @@ import OnlineTest from "./onlineTest.vue";
 import InvokeHistory from "./invokeHistory.vue";
 import BuildLog from "./buildLog.vue";
 import ModelApi from "./modelApi.vue";
+import ModelAudit from "@/views/model/modelManage/details/modelAudit.vue";
 
 const { proxy } = getCurrentInstance();
 const router = useRouter();
