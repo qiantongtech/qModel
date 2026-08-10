@@ -146,27 +146,28 @@
           </div>
         </div>
         <div class="border-item module-7">
-          <div class="border-item-head">
-            <span class="head-title">快捷功能入口</span>
-          </div>
-          <div
-            class="border-item-body"
-            style="padding-top: 8px; padding-left: 5px"
-          >
-            <div class="all-entrance">
-              <div
-                class="entrance-item"
-                v-for="item in entranceList"
-                :key="item.name"
-                v-hasPermi="item.perm"
-                @click="routeTo(item.path, item.query)"
-              >
-                <div class="image">
-                  <div class="icon-background" :class="item.color">
-                    <svg-icon :icon-class="item.icon" class="icon" />
+          <div class="news">
+            <div class="border-item">
+              <div class="border-item-head">
+                <span class="head-title">快捷功能入口</span>
+              </div>
+              <div class="border-item-body">
+                <div class="all-entrance">
+                  <div
+                    class="entrance-item"
+                    v-for="item in entranceList"
+                    :key="item.name"
+                    v-hasPermi="item.perm"
+                    @click="routeTo(item.path, item.query)"
+                  >
+                    <div class="image">
+                      <div class="icon-background" :class="item.color">
+                        <svg-icon :icon-class="item.icon" class="icon" />
+                      </div>
+                    </div>
+                    <div class="name">{{ item.name }}</div>
                   </div>
                 </div>
-                <div class="name">{{ item.name }}</div>
               </div>
             </div>
           </div>
@@ -405,35 +406,67 @@ function toPolicy() {
 
 const entranceList = [
   {
-    name: "模型分类",
-    path: "model/classify",
-    query: {},
-    perm: ["model:classify:classify:list"],
-    icon: "知识中心",
-    color: "color-primary",
-  },
-  {
     name: "模型中心",
     path: "model/manage",
     query: {},
-    icon: "知识抽取",
+    icon: "知识中心",
     perm: ["model:model:list"],
     color: "color-pale-blue",
   },
   {
-    name: "模型计算",
-    path: "model/compute",
+    name: "模型分类",
+    path: "model/classify",
     query: {},
-    icon: "知识推理",
+    perm: ["model:classify:classify:list"],
+    icon: "知识抽取",
+    color: "color-primary",
+  },
+  {
+    name: "调用记录",
+    path: "model/invokeHistory",
+    query: {},
+    perm: ["model:invokeHistory:invokehistory:list"],
+    icon: "数据管理",
+    color: "color-primary",
+  },
+  {
+    name: "构建日志",
+    path: "model/buildLog",
+    query: {},
+    perm: ["model:buildLog:buildlog:list"],
+    icon: "系统监控",
+    color: "color-primary",
+  },
+  {
+    name: "模型审批",
+    path: "model/audit",
+    query: {},
+    perm: ["model:modelAudit:audit:list"],
+    icon: "知识融合",
+    color: "color-primary",
+  },
+  {
+    name: "计算任务",
+    path: "calc/model/calc",
+    query: {},
+    icon: "系统工具",
     perm: ["model:calc:calc:list"],
     color: "color-orange",
   },
   {
-    name: "历史记录",
-    path: "model/operate",
+    name: "计算历史",
+    path: "calc/model/operate",
     query: {},
     icon: "知识应用",
     perm: ["model:operate:operate:list"],
+    color: "color-pink",
+  },
+  {
+    name: "系统管理",
+    path: "system/role",
+    query: {},
+    icon: "系统设置",
+    perm: ["system:role:list"],
     color: "color-pink",
   },
 ];
@@ -1172,13 +1205,28 @@ onActivated(() => {
 .module-6,
 .module-7 {
   height: 250px !important;
+}
+
+.module-7 {
+  .news {
+    height: 245px;
+  }
+
+  .border-item-body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
   .all-entrance {
+    width: 100%;
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(4, 1fr);
 
     .entrance-item {
-      padding: 7px;
+      padding: 14px 4px;
       text-align: center;
+      font-size: 14px;
       cursor: pointer;
 
       .name {
@@ -1187,7 +1235,7 @@ onActivated(() => {
       }
 
       .image {
-        height: 44px;
+        height: 40px;
         display: flex;
         justify-content: center;
 
@@ -1518,7 +1566,7 @@ onActivated(() => {
 }
 
 .border-item .border-item-head {
-  height: 40px;
+  height: 50px;
   padding: 0 20px;
   display: flex;
   justify-content: space-between;
