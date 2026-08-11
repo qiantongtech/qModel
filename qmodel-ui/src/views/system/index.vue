@@ -442,7 +442,7 @@ const entranceList = [
     path: "model/audit",
     query: {},
     perm: ["model:modelAudit:audit:list"],
-    icon: "知识融合",
+    icon: "模型审批",
     color: "color-primary",
   },
   {
@@ -457,7 +457,7 @@ const entranceList = [
     name: "计算历史",
     path: "calc/model/operate",
     query: {},
-    icon: "知识应用",
+    icon: "计算历史",
     perm: ["model:operate:operate:list"],
     color: "color-pink",
   },
