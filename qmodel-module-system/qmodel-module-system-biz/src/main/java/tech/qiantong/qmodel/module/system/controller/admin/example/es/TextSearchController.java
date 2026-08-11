@@ -28,6 +28,7 @@ import tech.qiantong.qmodel.module.system.service.ISysNoticeService;
 import tech.qiantong.qmodel.es.service.ISearchService;
 import org.dromara.easyes.core.biz.EsPageInfo;
 import javax.annotation.Resource;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -38,6 +39,12 @@ import org.springframework.web.bind.annotation.*;
  */
 @RestController
 @RequestMapping("/search/fulltext")
+@ConditionalOnProperty(
+        prefix = "qmodel.es",
+        name = "enabled",
+        havingValue = "true",
+        matchIfMissing = false
+)
 public class TextSearchController
 {
     @Resource
