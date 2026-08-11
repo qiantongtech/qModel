@@ -254,29 +254,34 @@
         </span>
       </template>
       <el-form ref="calcRef" :model="form" :rules="rules" label-width="146px" @submit.prevent>
-        <!-- 基础信息 -->
-        <div class="h2-title">基础信息</div>
+        <!-- 模型选择 -->
+        <div class="h2-title">模型选择</div>
         <el-row :gutter="20">
           <el-col :span="12">
-            <el-form-item label="任务名称" prop="name">
-              <el-input v-model="form.name" placeholder="请输入任务名称"/>
+            <el-form-item label="模型分类" prop="classifyId">
+              <el-input v-model="form.classifyName" disabled placeholder="选择模型后自动填充"/>
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="模型分类" prop="classifyName">
-              <el-input v-model="form.classifyName" disabled placeholder="选择模型后自动填充"/>
+            <el-form-item label="模型" prop="modelId">
+              <el-input v-model="form.modelName" disabled placeholder="选择模型后自动填充"/>
             </el-form-item>
           </el-col>
         </el-row>
         <el-row :gutter="20">
           <el-col :span="12">
-            <el-form-item label="模型" prop="modelName">
-              <el-input v-model="form.modelName" disabled placeholder="选择模型后自动填充"/>
+            <el-form-item label="版本" prop="modelVersion">
+              <el-input v-model="form.modelVersion" disabled placeholder="选择模型后自动填充"/>
             </el-form-item>
           </el-col>
-          <el-col :span="12">
-            <el-form-item label="版本号">
-              <el-input v-model="form.modelVersion" disabled placeholder="选择模型后自动填充"/>
+        </el-row>
+
+        <!-- 任务信息 -->
+        <div class="h2-title">任务信息</div>
+        <el-row :gutter="20">
+          <el-col :span="24">
+            <el-form-item label="任务名称" prop="name">
+              <el-input v-model="form.name" placeholder="请输入任务名称"/>
             </el-form-item>
           </el-col>
         </el-row>
@@ -294,20 +299,20 @@
             </el-form-item>
           </el-col>
         </el-row>
-        <el-row :gutter="20">
-          <el-col :span="24">
-            <el-form-item label="备注" prop="remark">
-              <el-input
-                  v-model="form.remark"
-                  type="textarea"
-                  :rows="2"
-                  placeholder="请输入备注"
-                  maxlength="512个字符"
-                  show-word-limit
-              />
-            </el-form-item>
-          </el-col>
-        </el-row>
+<!--        <el-row :gutter="20">-->
+<!--          <el-col :span="24">-->
+<!--            <el-form-item label="备注" prop="remark">-->
+<!--              <el-input-->
+<!--                  v-model="form.remark"-->
+<!--                  type="textarea"-->
+<!--                  :rows="2"-->
+<!--                  placeholder="请输入备注"-->
+<!--                  maxlength="512个字符"-->
+<!--                  show-word-limit-->
+<!--              />-->
+<!--            </el-form-item>-->
+<!--          </el-col>-->
+<!--        </el-row>-->
 
         <!-- 输入数据绑定 -->
 
@@ -501,6 +506,7 @@ const data = reactive({
     name: [{required: true, message: '任务名称不能为空', trigger: 'blur'}],
     classifyId: [{required: true, message: '请选择模型分类', trigger: 'change'}],
     modelId: [{required: true, message: '请选择模型', trigger: 'change'}],
+    modelVersion: [{required: true, message: '请选择版本', trigger: 'change'}],
     description: [{required: false, message: '描述不能为空', trigger: 'blur'}]
   }
 })

@@ -315,14 +315,9 @@
         </span>
       </template>
       <el-form ref="calcRef" :model="form" :rules="rules" label-width="146px" @submit.prevent>
-        <!-- 基础信息 -->
-        <div class="h2-title">基础信息</div>
+        <!-- 模型选择 -->
+        <div class="h2-title">模型选择</div>
         <el-row :gutter="20">
-          <el-col :span="12">
-            <el-form-item label="任务名称" prop="name">
-              <el-input v-model="form.name" placeholder="请输入任务名称" />
-            </el-form-item>
-          </el-col>
           <el-col :span="12">
             <el-form-item label="模型分类" prop="classifyId">
               <el-tree-select
@@ -331,7 +326,6 @@
                 :props="{ value: 'id', label: 'name', children: 'children' }"
                 :render-after-expand="false"
                 placeholder="请选择模型分类"
-                clearable
                 filterable
                 check-strictly
                 style="width: 100%"
@@ -339,8 +333,6 @@
               />
             </el-form-item>
           </el-col>
-        </el-row>
-        <el-row :gutter="20">
           <el-col :span="12">
             <el-form-item label="模型" prop="modelId">
               <el-select
@@ -348,7 +340,7 @@
                 placeholder="请选择模型"
                 style="width: 100%"
                 filterable
-                clearable
+                :disabled="form.classifyId == null"
                 @change="handleModelChange"
               >
                 <el-option
@@ -364,9 +356,33 @@
               </el-select>
             </el-form-item>
           </el-col>
+        </el-row>
+        <el-row :gutter="20">
           <el-col :span="12">
-            <el-form-item label="版本号">
-              <el-input v-model="form.modelVersion" disabled placeholder="选择模型后自动填充" />
+            <el-form-item label="版本" prop="modelVersion">
+              <el-select
+                v-model="form.modelVersion"
+                placeholder="请选择版本"
+                style="width: 100%"
+                :disabled="!form.modelId"
+              >
+                <el-option
+                  v-for="item in versionOptions"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value"
+                />
+              </el-select>
+            </el-form-item>
+          </el-col>
+        </el-row>
+
+        <!-- 任务信息 -->
+        <div class="h2-title">任务信息</div>
+        <el-row :gutter="20">
+          <el-col :span="24">
+            <el-form-item label="任务名称" prop="name">
+              <el-input v-model="form.name" placeholder="请输入任务名称" />
             </el-form-item>
           </el-col>
         </el-row>
@@ -378,20 +394,6 @@
                 type="textarea"
                 :rows="2"
                 placeholder="请输入任务描述"
-                maxlength="512个字符"
-                show-word-limit
-              />
-            </el-form-item>
-          </el-col>
-        </el-row>
-        <el-row :gutter="20">
-          <el-col :span="24">
-            <el-form-item label="备注" prop="remark">
-              <el-input
-                v-model="form.remark"
-                type="textarea"
-                :rows="2"
-                placeholder="请输入备注"
                 maxlength="512个字符"
                 show-word-limit
               />
@@ -628,10 +630,14 @@ const { model_calc_status, model_calc_priority, model_access_type } = proxy.useD
 const calcList = ref([])
 const modelOptions = ref([])          // 所有模型列表
 const classifyTreeOptions = ref([])   // 树形分类选项
+const versionOptions = ref([])        // 所选模型的版本下拉选项
 
-// 根据分类筛选的模型列表（计算属性）
+// 根据分类筛选的模型列表（计算属性）：顶级分类(id=0) = 全部
 const filteredModelOptions = computed(() => {
   if (!form.value.classifyId) {
+    return modelOptions.value
+  }
+  if (form.value.classifyId === 0) {
     return modelOptions.value
   }
   return modelOptions.value.filter(m => m.classifyId === form.value.classifyId)
@@ -701,6 +707,7 @@ const data = reactive({
     name: [{ required: true, message: '任务名称不能为空', trigger: 'blur' }],
     classifyId: [{ required: true, message: '请选择模型分类', trigger: 'change' }],
     modelId: [{ required: true, message: '请选择模型', trigger: 'change' }],
+    modelVersion: [{ required: true, message: '请选择版本', trigger: 'change' }],
     description: [{ required: false, message: '描述不能为空', trigger: 'blur' }]
   }
 })
@@ -793,6 +800,7 @@ function cancel() {
 /** 表单重置 */
 function reset() {
   validateError.value = ''
+  versionOptions.value = []
   form.value = {
     id: null,
     code: '',
@@ -846,7 +854,7 @@ function loadClassifyOptions() {
   })
 }
 
-/** 处理分类选择 - 选择分类后筛选模型列表 */
+/** 处理分类选择 - 分类变化时清空模型与版本，强制级联 */
 function handleClassifyChange(classifyId) {
   // 获取分类名称（遍历树形结构）
   const findClassifyName = (nodes, id) => {
@@ -861,25 +869,22 @@ function handleClassifyChange(classifyId) {
   }
   form.value.classifyName = findClassifyName(classifyTreeOptions.value, classifyId) || ''
 
-  // 如果当前选择的模型不在新分类下，清空模型选择
-  if (form.value.modelId) {
-    const model = modelOptions.value.find(m => m.id === form.value.modelId)
-    if (model && model.classifyId !== classifyId) {
-      form.value.modelId = null
-      form.value.modelName = ''
-      form.value.modelVersion = ''
-      form.value.accessType = ''
-      form.value.calcType = null
-      form.value.inputParams = []
-    }
-  }
+  // 清空模型和版本（强制级联：先选分类，再选模型，再选版本）
+  form.value.modelId = null
+  form.value.modelName = ''
+  form.value.modelVersion = ''
+  versionOptions.value = []
+  form.value.accessType = ''
+  form.value.calcType = null
+  form.value.inputParams = []
 }
 
-/** 处理模型选择 - 选择模型后自动回填分类 */
+/** 处理模型选择 - 选择模型后自动回填版本号 */
 function handleModelChange(modelId) {
   if (!modelId) {
     form.value.modelName = ''
     form.value.modelVersion = ''
+    versionOptions.value = []
     form.value.accessType = ''
     form.value.calcType = null
     form.value.inputParams = []
@@ -893,10 +898,21 @@ function handleModelChange(modelId) {
     form.value.accessType = model.accessType
     // 接入类型映射：API 字符串 -> 0，PYTHON 字符串 -> 1
     form.value.calcType = accessTypeToCalcType(model.accessType)
-    // 从模型本身获取版本号
-    form.value.modelVersion = model.version || ''
 
-    // 2. 自动回填分类信息（如果分类为空或与模型分类不同）
+    // 2. 根据所选模型生成版本下拉选项
+    const version = model.version || ''
+    if (version) {
+      const list = version.includes(',')
+        ? version.split(',').map(v => v.trim()).filter(Boolean)
+        : [version]
+      versionOptions.value = list.map(v => ({ value: v, label: v }))
+      form.value.modelVersion = list[0]
+    } else {
+      versionOptions.value = []
+      form.value.modelVersion = ''
+    }
+
+    // 3. 自动回填分类信息（如果分类为空或与模型分类不同）
     if (model.classifyId && model.classifyId !== form.value.classifyId) {
       form.value.classifyId = model.classifyId
       // 获取分类名称
@@ -914,7 +930,7 @@ function handleModelChange(modelId) {
     }
   }
 
-  // 3. 根据 accessType 选择不同的 API 获取 inputSchema
+  // 4. 根据 accessType 选择不同的 API 获取 inputSchema
   // accessType: 'PYTHON' 或 'API'（大写）
   const isPythonModel = form.value.accessType === 'PYTHON'
 
@@ -1213,19 +1229,6 @@ getList()
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-}
-
-/* Style for disabled select in edit/add dialog */
-:deep(.dialog .el-select) {
-  .el-select__wrapper.is-disabled {
-    cursor: default;
-    background-color: #fcfcfc;
-    --el-select-disabled-color: #333;
-
-    .el-select__suffix {
-      display: none;
-    }
-  }
 }
 
 .task-action-list {
