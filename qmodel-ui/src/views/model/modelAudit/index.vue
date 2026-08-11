@@ -591,7 +591,7 @@ function handleAudit(row) {
   reset();
   form.value = { ...row };
   form.value.applyTime = parseTime(row.applyTime, "{y}-{m}-{d} {h}:{i}:{s}");
-  // form.value.auditStatus = '1';
+  form.value.auditStatus = '1';
   open.value = true;
   title.value = "模型审批";
 }

@@ -579,8 +579,8 @@ CREATE TABLE `model_classify`
     `name`        varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '分类名称',
     `description` varchar(1024) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '分类描述',
     `order_num`   int NULL DEFAULT 0 COMMENT '显示顺序',
-    `valid_flag`  int(11) NOT NULL COMMENT '是否有效 0：无效，1：有效',
-    `del_flag`    int(11) NOT NULL COMMENT '删除标志 1：已删除，0：未删除',
+    `valid_flag`  int(11) NOT NULL DEFAULT 1 COMMENT '是否有效 0：无效，1：有效',
+    `del_flag`    int(11) NOT NULL DEFAULT 0 COMMENT '删除标志 1：已删除，0：未删除',
     `create_by`   varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '创建人',
     `creator_id`  int(11) NULL DEFAULT NULL COMMENT '创建人id 创建者的sys_user_id',
     `create_time` datetime NOT NULL COMMENT '创建时间',
@@ -2252,85 +2252,6 @@ CREATE TABLE `model_cacl_reconstitution`
 -- Records of model_cacl_reconstitution
 -- ----------------------------
 
--- ----------------------------
--- Table structure for model_classify
--- ----------------------------
-DROP TABLE IF EXISTS `model_classify`;
-CREATE TABLE `model_classify`
-(
-    `id`          int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID',
-    `company_id`  int(11) NULL DEFAULT NULL COMMENT '企业id',
-    `parent_id`   int(11) NULL DEFAULT NULL COMMENT '父级id',
-    `ancestors`   varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '祖籍列表',
-    `name`        varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '分类名称',
-    `description` varchar(1024) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '分类描述',
-    `order_num`   int NULL DEFAULT 0 COMMENT '显示顺序',
-    `valid_flag`  int(11) NOT NULL COMMENT '是否有效 0：无效，1：有效',
-    `del_flag`    int(11) NOT NULL COMMENT '删除标志 1：已删除，0：未删除',
-    `create_by`   varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '创建人',
-    `creator_id`  int(11) NULL DEFAULT NULL COMMENT '创建人id 创建者的sys_user_id',
-    `create_time` datetime NOT NULL COMMENT '创建时间',
-    `update_by`   varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '更新人',
-    `updator_id`  int(11) NULL DEFAULT NULL COMMENT '更新人id 更新者的sys_user_id',
-    `update_time` datetime NOT NULL COMMENT '更新时间',
-    `remark`      varchar(1024) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '备注',
-    PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 32 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '模型分类' ROW_FORMAT = DYNAMIC;
-
--- ----------------------------
--- Records of model_classify
--- ----------------------------
-INSERT INTO `model_classify`
-VALUES (1, NULL, 0, '0', '工业大模型', '面向工业领域的预训练大语言模型及衍生应用', 1, 1, 0, '吴同', 1,
-        '2026-07-14 09:15:22', NULL, NULL, '2026-07-14 09:15:22', '面向工业领域的预训练大语言模型及衍生应用');
-INSERT INTO `model_classify`
-VALUES (2, NULL, 0, '0', '机器学习', '经典机器学习算法与模型', 0, 1, 0, '吴同', 1, '2026-07-14 09:32:45', NULL, NULL,
-        '2026-07-14 09:32:45', '经典机器学习算法与模型');
-INSERT INTO `model_classify`
-VALUES (3, NULL, 0, '0', '深度学习', '基于深度神经网络的模型', 1, 1, 0, '吴同', 1, '2026-07-14 09:48:10', NULL, NULL,
-        '2026-07-14 09:48:10', '基于深度神经网络的模型');
-INSERT INTO `model_classify`
-VALUES (4, NULL, 0, '0', '数据智能', '面向数据的分析、预测与挖掘模型', 1, 1, 0, '吴同', 1, '2026-07-14 10:05:33', NULL,
-        NULL, '2026-07-14 10:05:33', '面向数据的分析、预测与挖掘模型');
-INSERT INTO `model_classify`
-VALUES (5, NULL, 1, '0,1', '文本生成', '文本生成、摘要、扩写等大模型能力', 1, 1, 0, '吴同', 1, '2026-07-14 10:22:18',
-        NULL, NULL, '2026-07-14 10:22:18', '文本生成、摘要、扩写等大模型能力');
-INSERT INTO `model_classify`
-VALUES (6, NULL, 1, '0,1', '对话交互', '问答、对话、助手类大模型应用', 2, 1, 0, '吴同', 1, '2026-07-14 10:45:09', NULL,
-        NULL, '2026-07-14 10:45:09', '问答、对话、助手类大模型应用');
-INSERT INTO `model_classify`
-VALUES (7, NULL, 1, '0,1', '代码生成', '代码辅助、生成、审查类大模型', 3, 1, 0, '吴同', 1, '2026-07-14 11:12:55', NULL,
-        NULL, '2026-07-14 11:12:55', '代码辅助、生成、审查类大模型');
-INSERT INTO `model_classify`
-VALUES (8, NULL, 2, '0,2', '回归模型', '连续值预测类机器学习模型', 1, 1, 0, '吴同', 1, '2026-07-14 11:35:40', NULL,
-        NULL, '2026-07-14 11:35:40', '连续值预测类机器学习模型');
-INSERT INTO `model_classify`
-VALUES (9, NULL, 2, '0,2', '分类模型', '离散类别预测类机器学习模型', 2, 1, 0, '吴同', 1, '2026-07-14 13:20:15', NULL,
-        NULL, '2026-07-14 13:20:15', '离散类别预测类机器学习模型');
-INSERT INTO `model_classify`
-VALUES (10, NULL, 2, '0,2', '集成学习', '多基学习器集成的机器学习模型', 3, 1, 0, '吴同', 1, '2026-07-14 13:55:28', NULL,
-        NULL, '2026-07-14 13:55:28', '多基学习器集成的机器学习模型');
-INSERT INTO `model_classify`
-VALUES (11, NULL, 2, '0,2', '降维与特征工程', '特征降维、选择与工程化方法', 4, 1, 0, '吴同', 1, '2026-07-14 14:30:42',
-        NULL, NULL, '2026-07-14 14:30:42', '特征降维、选择与工程化方法');
-INSERT INTO `model_classify`
-VALUES (12, NULL, 3, '0,3', '计算机视觉', '图像识别、检测、分割等视觉模型', 1, 1, 0, '吴同', 1, '2026-07-14 14:58:11',
-        NULL, NULL, '2026-07-14 14:58:11', '图像识别、检测、分割等视觉模型');
-INSERT INTO `model_classify`
-VALUES (13, NULL, 3, '0,3', '自然语言处理', '文本分类、序列标注、语义理解等模型', 2, 1, 0, '吴同', 1,
-        '2026-07-14 15:25:36', NULL, NULL, '2026-07-14 15:25:36', '文本分类、序列标注、语义理解等模型');
-INSERT INTO `model_classify`
-VALUES (14, NULL, 3, '0,3', '语音识别', '语音转文字、声纹识别等模型', 3, 1, 0, '吴同', 1, '2026-07-14 16:10:48', NULL,
-        NULL, '2026-07-14 16:10:48', '语音转文字、声纹识别等模型');
-INSERT INTO `model_classify`
-VALUES (15, NULL, 4, '0,4', '时序预测', '时间序列分析与预测模型', 1, 1, 0, '吴同', 1, '2026-07-14 16:45:22', NULL, NULL,
-        '2026-07-14 16:45:22', '时间序列分析与预测模型');
-INSERT INTO `model_classify`
-VALUES (16, NULL, 4, '0,4', '推荐系统', '协同过滤、内容推荐等模型', 2, 1, 0, '吴同', 1, '2026-07-14 17:20:55', NULL,
-        NULL, '2026-07-14 17:20:55', '协同过滤、内容推荐等模型');
-INSERT INTO `model_classify`
-VALUES (17, NULL, 4, '0,4', '异常检测', '离群点、异常行为识别模型', 3, 1, 0, '吴同', 1, '2026-07-14 17:55:30', NULL,
-        NULL, '2026-07-14 17:55:30', '离群点、异常行为识别模型');
 
 -- ----------------------------
 -- Table structure for model_compute

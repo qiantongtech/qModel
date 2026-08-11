@@ -96,13 +96,13 @@
                     </div>
                     <div class="widget-actions">
                       <el-button link type="primary" size="small" @click="handleEditWidget(widget)">
-                        <el-icon><Edit /></el-icon>
+                        <el-icon :size="14"><Edit /></el-icon>
                       </el-button>
                       <el-button link type="danger" size="small" @click="handleDeleteWidget(widget)">
-                        <el-icon><Delete /></el-icon>
+                        <el-icon :size="14"><Delete /></el-icon>
                       </el-button>
                       <el-button link type="primary" size="small" @click="handleExportWidget(widget)">
-                        <el-icon><Download /></el-icon>
+                        <el-icon :size="14"><Download /></el-icon>
                       </el-button>
                     </div>
                   </div>

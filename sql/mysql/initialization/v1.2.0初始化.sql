@@ -644,24 +644,25 @@ CREATE TABLE `model_cacl_reconstitution`  (
 -- Table structure for model_classify
 -- ----------------------------
 DROP TABLE IF EXISTS `model_classify`;
-CREATE TABLE `model_classify`  (
-                                   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID',
-                                   `company_id` int(11) NULL DEFAULT NULL COMMENT '企业id',
-                                   `parent_id` int(11) NULL DEFAULT NULL COMMENT '父级id',
-                                   `ancestors` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '祖籍列表',
-                                   `name` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '分类名称',
-                                   `description` varchar(1024) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '分类描述',
-                                   `order_num` int NULL DEFAULT 0 COMMENT '显示顺序',
-                                   `valid_flag` int(11) NOT NULL COMMENT '是否有效 0：无效，1：有效',
-                                   `del_flag` int(11) NOT NULL COMMENT '删除标志 1：已删除，0：未删除',
-                                   `create_by` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '创建人',
-                                   `creator_id` int(11) NULL DEFAULT NULL COMMENT '创建人id 创建者的sys_user_id',
-                                   `create_time` datetime NOT NULL COMMENT '创建时间',
-                                   `update_by` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '更新人',
-                                   `updator_id` int(11) NULL DEFAULT NULL COMMENT '更新人id 更新者的sys_user_id',
-                                   `update_time` datetime NOT NULL COMMENT '更新时间',
-                                   `remark` varchar(1024) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '备注',
-                                   PRIMARY KEY (`id`) USING BTREE
+CREATE TABLE `model_classify`
+(
+    `id`          int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID',
+    `company_id`  int(11) NULL DEFAULT NULL COMMENT '企业id',
+    `parent_id`   int(11) NULL DEFAULT NULL COMMENT '父级id',
+    `ancestors`   varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '祖籍列表',
+    `name`        varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '分类名称',
+    `description` varchar(1024) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '分类描述',
+    `order_num`   int NULL DEFAULT 0 COMMENT '显示顺序',
+    `valid_flag`  int(11) NOT NULL DEFAULT 1 COMMENT '是否有效 0：无效，1：有效',
+    `del_flag`    int(11) NOT NULL DEFAULT 0 COMMENT '删除标志 1：已删除，0：未删除',
+    `create_by`   varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '创建人',
+    `creator_id`  int(11) NULL DEFAULT NULL COMMENT '创建人id 创建者的sys_user_id',
+    `create_time` datetime NOT NULL COMMENT '创建时间',
+    `update_by`   varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '更新人',
+    `updator_id`  int(11) NULL DEFAULT NULL COMMENT '更新人id 更新者的sys_user_id',
+    `update_time` datetime NOT NULL COMMENT '更新时间',
+    `remark`      varchar(1024) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '备注',
+    PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 32 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '模型分类' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------

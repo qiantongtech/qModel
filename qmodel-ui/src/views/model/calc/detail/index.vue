@@ -144,18 +144,7 @@
           </el-col>
         </el-row>
 
-        <el-row :gutter="3">
-          <el-col :span="24">
-            <div class="infotop-row border-top">
-              <div class="infotop-row-lable">备注</div>
-              <div class="infotop-row-value">
-                <el-tooltip :content="calcDetail.remark || '-'" placement="top" effect="light" :disabled="!textOverflowMap.remark">
-                  <div class="ellipsis-2" @mouseenter="(event) => checkTextOverflow(event, 'remark')">{{ calcDetail.remark || "-" }}</div>
-                </el-tooltip>
-              </div>
-            </div>
-          </el-col>
-        </el-row>
+        
       </div>
     </div>
 
