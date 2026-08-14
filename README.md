@@ -192,10 +192,10 @@ qModel 提供 **开源版** 与 **商业版** 双轨模式：
     </tr>
     <tr>
         <td><img alt="模型分类" src=".gitee/system/modelCategory.png"/></td>
-        <td><img alt="模型输入" src=".gitee/system/input.png"/></td>
+        <td><img alt="模型列表" src=".gitee/system/modelList.png"/></td>
     </tr>
     <tr>
-        <td><img alt="模型列表" src=".gitee/system/modelList.png"/></td>
+        <td><img alt="模型详情" src=".gitee/system/modelDetail.png"/></td>
         <td><img alt="计算任务" src=".gitee/system/taskList.png"/></td>
     </tr>
 </table>
