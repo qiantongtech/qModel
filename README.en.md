@@ -1,4 +1,7 @@
-[banner.png](.gitee/banner.png)
+<p align="center">
+ <img src=".gitee/banner.png" alt="qModel Banner">
+</p>
+
 <p align="center">
  <img src="https://img.shields.io/badge/JDK-1.8+-brightgreen.svg" alt="JDK">
  <img src="https://img.shields.io/badge/Spring%20Boot-2.5.15-blue.svg" alt="Spring Boot">
@@ -10,85 +13,87 @@
 </p>
 
 <p align="center">
-  <a href="README.md">📖简体中文</a> | 📖English
+  📖English | <a href="README.md">📖简体中文</a>
 </p>
 
 
-## 🌈 Introduction
+## 🌈 Platform Overview
 
-**qModel** is an open-source model management platform centered around **full lifecycle management of AI models**. It provides capabilities including model ingestion, registration, testing, deployment, computation, fusion, orchestration, and service exposure—helping enterprises and research institutions transform algorithmic assets into intelligent services that are operable, reusable, and governable.
 
-The platform supports multiple model formats such as Python scripts, Java JARs, and executable binaries (`exe`), bridging the engineering gap from experimentation to production, and serving as a robust foundation for collaborative applications involving traditional algorithms.
+Large models are hot, but what truly drives business落地 is often small models. qModel, the open-source algorithm platform, is built to solve enterprises' "small model chaos." The competition of the future is not just about data — it's about model assets. Those who can turn algorithms into **manageable, iterable, reusable, and tradable** services will seize the initiative in intelligence.
 
-✨✨✨**Live Demo**✨✨✨  
-<a href="demo.qmodel.tech" target="_blank">demo.qmodel.tech</a>  
-(Username: `qModel`, Password: `qModel123`)
+**qModel** is an open-source algorithm platform centered on **full lifecycle model management**, providing capabilities for industry algorithm model integration, registration, testing, deployment, computation, fusion, orchestration, and servitization. It helps enterprises and research institutions transform algorithm assets into operable, reusable, and governable intelligent services.  
+The platform supports multiple model formats including Python, Java, and exe, bridging the engineering pipeline from experiment to production, and providing a solid foundation for collaborative application of traditional algorithms.
 
-> **qModel — Empowering models throughout their full lifecycle, driving continuous value through intelligence.**
+✨✨✨**Online Documentation**✨✨✨ <a href="https://community.qmodel.tech" target="_blank">https://community.qmodel.tech</a>
 
-## 🍱 Typical Use Cases
+✨✨✨**Demo Address**✨✨✨ <a href="https://demo.qmodel.tech" target="_blank">https://demo.qmodel.tech</a> (Account: `qModel`, Password: `qModel123`)
 
-| Scenario                                     | Description                                                                                                                       |
-|----------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------|
-| **AI Model Asset Management**                | Centralized governance of scattered models across teams, with version control, categorization, tagging, and permission management |
-| **Engineering Lab-to-Production Transition** | Rapidly package research algorithms into callable services to accelerate technology transfer                                      |
-| **Multi-Model Fusion Inference**             | Supports strategies like weighted averaging, voting, and stacking to enhance prediction robustness                                |
-| **Intelligent Workflow Orchestration**       | Visually drag-and-drop to build AI workflows combining multiple models for complex business logic                                 |
-| **Private Model Marketplace**                | Establish internal model sharing and trading mechanisms to promote knowledge reuse and innovation                                 |
+> **qModel Model Management Platform — Empowering models across their full lifecycle, continuously creating intelligent value.**
 
-## 🚀 Key Advantages
+## 🍱 Typical Application Scenarios
 
-- **Full lifecycle coverage**: From upload, testing, and release to monitoring and retirement—fully traceable
-- **Multi-language support**: Compatible with Python, Java, executables, and more
-- **Lightweight architecture**: Ready-to-run out of the box; supports one-click Docker deployment
-- **Modular design**: Core features are decoupled for easy integration and secondary development
-- **Open from day one**: Community-driven and continuously evolving
+| Scenario | Description |
+|----------------|-------------|
+| **AI Model Asset Management** | Centrally manage models scattered across teams, enabling version control, classification tags, and permission governance |
+| **Research Achievement Engineering** | Quickly encapsulate algorithms from the lab into callable services, accelerating成果转化 |
+| **Multi-Model Fusion Inference** | Support weighted fusion, voting, Stacking, and other strategies to improve prediction robustness |
+| **Intelligent Workflow Orchestration** | Visually drag-and-drop to build AI workflows containing multiple models, supporting complex business logic |
+| **Private Model Marketplace** | Build enterprise-internal model sharing and trading mechanisms, promoting knowledge reuse and innovative collaboration |
+
+## 🚀 Core Advantages
+
+- **Full lifecycle coverage**: From upload, testing, and release to monitoring and decommissioning — fully traceable
+- **Multi-language compatibility**: Supports Python scripts, Java JARs, executable programs, and other model formats
+- **Lightweight architecture**: Ready to use out of the box, supports one-click Docker deployment
+- **Modular design**: Core functions are decoupled, facilitating secondary development and integration
+- **Born open-source**: Community-driven, continuously evolving
 
 ## ✨ Core Features
 
-| Module                              | Description                                                                                                               | Open Source Status |
-|-------------------------------------|---------------------------------------------------------------------------------------------------------------------------|--------------------|
-| **System Management**               | Unified governance of users, roles, departments, menus, dictionaries, parameters, announcements, and logs                 | ✅ Implemented      |
-| **Model Categories**                | Create and manage hierarchical model categories and tag groups                                                            | ✅ Implemented      |
-| **Model Management**                | Register, categorize, tag, approve, publish/retire, and version-control models                                            | ✅ Implemented      |
-| **Model Computation**               | Manage tasks, configure parameters, visualize results, and download outputs (input data binding required manually in OSS) | ✅ Implemented      |
-| **Computation History**             | View historical tasks; filter by model, time, status; and revisit results                                                 | ✅ Implemented      |
-| **Model Ingestion & Execution**     | Upload multi-language models, auto-parse metadata, and perform compatibility checks                                       | ❌ Planned          |
-| **Model Packaging**                 | Standardized packaging guidelines and documentation                                                                       | ❌ Planned          |
-| **Service Governance & Scheduling** | Auto-generate RESTful APIs with authentication, rate limiting, concurrency control, call tracing, and watermarking        | ❌ Planned          |
-| **Documentation Center**            | Integrated developer documentation management                                                                             | ❌ Planned          |
+| Feature Module | Description | Open Source |
+|-------------|-------------|-----------|
+| **System Management** | Unified governance of users, roles, departments, menus, dictionaries, parameters, announcements, logs | ✅ Done |
+| **Model Classification** | Create and manage model classification systems, including classification hierarchy and tag grouping | ✅ Done |
+| **Model Management** | Register, classify, tag, approve, publish/decommission, version control | ✅ Done |
+| **Model Computation** | Task management, parameter configuration, result visualization, download; open-source version requires manual input data binding | ✅ Done |
+| **Computation History** | View historical computation task records, filter by model, time, status, and trace results | ✅ Done |
+| **Model Integration & Runtime** | Support multi-language model upload, auto-parsing, compatibility detection; open-source supports Python/Java/exe | ⏳ Planned |
+| **Model Packaging** | Provide standardized packaging specifications; documentation guidance provided | ⏳ Planned |
+| **Service Governance & Scheduling** | Auto-generate RESTful API; support authentication, rate limiting, concurrency control, call chain monitoring, watermarking, etc. | ⏳ Planned |
+| **Comprehensive Management** | Development documentation management | ⏳ Planned |
 
-> 💡 Note: Advanced features such as automated containerization, online debugging, model fusion, workflow orchestration, and training loop integration will be available in the commercial edition. Community contributions to extend the open-source version are warmly welcomed!
+> Note: Advanced features such as automated containerization, online debugging, fusion orchestration, and training loops will be available in the commercial edition. Community contributions to the open-source version are welcome!
 
 ## 🛠️ Tech Stack
 
-qModel adopts a frontend-backend separated architecture: Spring Boot on the backend and Vue 3 on the frontend, integrated with mainstream middleware for enterprise-grade model management.
+qModel adopts a front-back separated architecture. The backend is based on Spring Boot, the frontend on Vue 3, integrating mainstream middleware to build an enterprise-grade model management solution.
 
 <table>
   <tr>
-    <th>Tech Layer</th><th>Framework</th><th>Description</th>
+    <th>Tech Stack</th><th>Framework</th><th>Description</th>
   </tr>
   <tr>
-    <td rowspan="6">Backend</td><td>Spring Boot</td><td>Main application framework</td>
+    <td rowspan="6">Backend</td><td>Spring Boot</td><td>Core framework, simplifying configuration and development</td>
   </tr>
   <tr>
-    <td>MyBatis-Plus</td><td>ORM for simplified database operations</td>
+    <td>MyBatis-Plus</td><td>ORM framework, simplifying database operations</td>
   </tr>
   <tr>
-    <td>Spring Security</td><td>Authentication and authorization</td>
+    <td>Spring Security</td><td>Authentication, authorization, and security control</td>
   </tr>
   <tr>
-    <td>Quartz</td><td>Scheduled task execution (e.g., batch computations)</td>
+    <td>Quartz</td><td>Task scheduling (for computation tasks)</td>
   </tr>
   <tr>
     <td>Alibaba Druid</td><td>High-performance database connection pool</td>
   </tr>
   <tr>
-    <td>Swagger</td><td>Auto-generated API documentation</td>
+    <td>Swagger</td><td>Auto-generate API documentation</td>
   </tr>
 
   <tr>
-    <td rowspan="7">Frontend</td><td>Vue 3</td><td>Reactive UI framework</td>
+    <td rowspan="7">Frontend</td><td>Vue 3</td><td>Reactive frontend framework</td>
   </tr>
   <tr>
     <td>Vite</td><td>Ultra-fast build tool</td>
@@ -100,51 +105,51 @@ qModel adopts a frontend-backend separated architecture: Spring Boot on the back
     <td>Pinia</td><td>Lightweight state management</td>
   </tr>
   <tr>
-    <td>Vue Router</td><td>Client-side routing</td>
+    <td>Vue Router</td><td>Frontend routing management</td>
   </tr>
   <tr>
-    <td>Axios</td><td>HTTP client for API calls</td>
+    <td>Axios</td><td>HTTP request encapsulation</td>
   </tr>
   <tr>
-    <td>ECharts</td><td>Visualization of computation results and system metrics</td>
+    <td>ECharts</td><td>Computation result and resource monitoring visualization</td>
   </tr>
 
   <tr>
-    <td rowspan="4">Third-party Dependencies</td><td>MySQL</td><td>Metadata storage</td>
+    <td rowspan="5">Third-party Dependencies</td><td>MySQL</td><td>Model metadata storage</td>
   </tr>
   <tr>
     <td>Redis</td><td>Task queue and caching</td>
   </tr>
   <tr>
-    <td>Docker (optional)</td><td>Containerized deployment (auto-image building in commercial edition)</td>
+    <td>Docker (optional)</td><td>Containerized deployment support (commercial edition auto-builds images)</td>
   </tr>
   <tr>
-    <td>Local Storage</td><td>Store model files and computation outputs</td>
+    <td>Local Storage</td><td>Model files and computation result storage</td>
   </tr>
 </table>
 
 ## 🏗️ Deployment Requirements
 
-Ensure the following environment is ready before deploying qModel:
+Before deploying qModel, please ensure the following environment is ready:
 
 <table>
   <tr>
-    <th>Environment</th><th>Component</th><th>Recommended Version</th><th>Note</th>
+    <th>Environment</th><th>Item</th><th>Recommended Version</th><th>Description</th>
   </tr>
   <tr>
     <td rowspan="5">Backend</td><td>JDK</td><td>1.8+</td><td>Runtime environment</td>
   </tr>
   <tr>
-    <td>Maven</td><td>3.6+</td><td>Project build tool</td>
+    <td>Maven</td><td>3.6+</td><td>Project build</td>
   </tr>
   <tr>
     <td>MySQL</td><td>5.7 / 8.0</td><td>Metadata database</td>
   </tr>
   <tr>
-    <td>Redis</td><td>5.0+</td><td>For task queues and caching</td>
+    <td>Redis</td><td>5.0+</td><td>Task queue and caching</td>
   </tr>
   <tr>
-    <td>OS</td><td>Linux / Windows / macOS</td><td>Fully supported</td>
+    <td>OS</td><td>Linux / Windows / macOS</td><td>Universal support</td>
   </tr>
 
   <tr>
@@ -158,52 +163,42 @@ Ensure the following environment is ready before deploying qModel:
   </tr>
 </table>
 
-## 🚨 Commercial Licensing
+## 🚨 Commercial License
 
-qModel offers both **open-source** and **commercial** editions:
-- The **open-source edition** is ideal for learning, evaluation, and lightweight production use, licensed under Apache 2.0 (commercial use allowed with logo retention).
-- The **commercial edition** targets enterprise and government clients, offering advanced capabilities such as **automated containerization, model fusion, visual workflow orchestration, training-in-loop, and private model marketplace**, along with dedicated technical support and private repository access.
+qModel offers a dual-track model: **Open Source** and **Commercial**:
+- The **Open Source edition** is suitable for learning, evaluation, and lightweight production, governed by the Apache 2.0 license (commercial use allowed, retain the Logo);
+- The **Commercial edition** targets enterprise and government customers, providing advanced capabilities such as **automated containerization, model fusion, workflow orchestration, training loops, and model marketplace**, along with dedicated technical support and private repository access.
 
-👉 For **custom branding licensing** or **commercial trial requests**, please  
-<a href="https://qmodel.qiantong.tech/discuss.html">join our official QQ group for consultation</a>.
+👉 For **brand customization licensing** or to **request a commercial edition trial**, please join the QQ group for consultation.
+
+[![Join QQ Group](https://img.shields.io/badge/QQ_Group-1064842367-blue.svg)](https://qm.qq.com/q/Ph8rhmZBQY)
 
 ## 🚀 Quick Start
 
 👉 <a href="./QUICKSTART.md">View Quick Deployment Guide</a>
 
-## 👥 Community Support
+## 👥 QQ Group
 
-Join the official qModel QQ group to stay updated, ask questions, and share experiences!
+Welcome to join the official qModel QQ group to get the latest updates, technical support, and usage experience sharing!
 
-👉 <a href="https://qmodel.qiantong.tech/discuss.html">Join the QQ Group</a>
+[![Join QQ Group](https://img.shields.io/badge/QQ_Group-1064842367-blue.svg)](https://qm.qq.com/q/Ph8rhmZBQY)
 
-## 🖼️ Screenshots
+## 🖼️ System Screenshots
 <table>
     <tr>
         <td><img alt="Login Page" src=".gitee/system/login.png"/></td>
-        <td><img alt="Dashboard" src=".gitee/system/workbench.png"/></td>
+        <td><img alt="Workbench" src=".gitee/system/workbench.png"/></td>
     </tr>
     <tr>
+        <td><img alt="Model Classification" src=".gitee/system/modelCategory.png"/></td>
         <td><img alt="Model List" src=".gitee/system/modelList.png"/></td>
-        <td><img alt="Model Detail" src=".gitee/system/modelDetail.png"/></td>
     </tr>
     <tr>
-        <td><img alt="Compute Tasks" src=".gitee/system/taskList.png"/></td>
-        <td><img alt="Task History" src=".gitee/system/taskHistory.png"/></td>
-    </tr>
-</table>
-
-<table>
-    <tr>
-        <td><img alt="Login Page" src=".gitee/system/login.png"/></td>
-        <td><img alt="Dashboard" src=".gitee/system/workbench.png"/></td>
+        <td><img alt="Model Details" src=".gitee/system/modelDetail.png"/></td>
+        <td><img alt="Computation Tasks" src=".gitee/system/taskList.png"/></td>
     </tr>
     <tr>
-        <td><img alt="Model Category" src=".gitee/system/modelCategory.png"/></td>
-        <td><img alt="Model Input" src=".gitee/system/input.png"/></td>
-    </tr>
-    <tr>
-        <td><img alt="Model List" src=".gitee/system/modelList.png"/></td>
-        <td><img alt="Compute Tasks" src=".gitee/system/taskList.png"/></td>
+        <td><img alt="History Record Details" src=".gitee/system/taskExecDetail.png"/></td>
+        <td><img alt="API KEY" src=".gitee/system/password.png"/></td>
     </tr>
 </table>
