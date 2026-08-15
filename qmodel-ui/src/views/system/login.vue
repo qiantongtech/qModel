@@ -736,14 +736,12 @@ function goKtPage() {
     justify-content: space-between;
 
     .logo {
-      width: 260px;
-      height: 45px;
+      height: 33px;
       margin-left: 20%;
+      display: flex;
 
       img {
-        // width: 100%;
         height: 100%;
-        margin-top: 25px;
       }
     }
 
