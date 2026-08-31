@@ -218,6 +218,9 @@
                                 <argument>linux/amd64,linux/arm64</argument>
                                 <argument>--no-cache</argument>
                                 <argument>--push</argument>
+                                <argument>--provenance=false</argument>
+                                <argument>--output</argument>
+                                <argument>type=registry,oci-mediatypes=false</argument>
                                 <argument>-t</argument>
                                 <argument>${docker.hub}/${docker.repo}:${docker.tag}</argument>
                                 <argument>${project.basedir}</argument>
