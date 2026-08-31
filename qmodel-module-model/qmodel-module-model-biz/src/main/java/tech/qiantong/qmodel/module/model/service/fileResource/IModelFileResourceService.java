@@ -134,7 +134,7 @@ public interface IModelFileResourceService extends IService<ModelFileResourceDO>
      * @param saveReqVO 模型保存请求
      * @param modelId 模型ID
      */
-    void saveFileResourceFromModel(ModelSaveReqVO saveReqVO, Long modelId);
+    void saveFileResourceFromModel(ModelFileResourceSaveReqVO saveReqVO, Long modelId);
 
     /**
      * 执行模型脚本
@@ -178,4 +178,12 @@ public interface IModelFileResourceService extends IService<ModelFileResourceDO>
      */
     Map<String, Object> uploadParamFile(MultipartFile file, Long modelId);
 
+    /**
+     * 根据模型ID和版本号获取模型文件资源
+     *
+     * @param modelId 模型ID
+     * @param version 版本号
+     * @return 模型文件资源
+     */
+    ModelFileResourceDO getByModel(Long modelId, String version);
 }

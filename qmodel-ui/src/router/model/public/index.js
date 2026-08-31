@@ -79,6 +79,42 @@ export default [
                     activeMenu: '/model/manage',
                     breadcrumbParent: [{ title: '模型中心', path: '/model/manage' }]
                 }
+            },
+            {
+                path: 'modelManageView/modelVersionDiff',
+                component: () => import('@/views/model/modelManage/details/modelVersionDiff.vue'),
+                name: 'modelVersionDiff',
+                meta: {
+                    title: '模型版本对比',
+                    noCache: true,
+                    activeMenu: '/model/modelManage',
+                    breadcrumbParent: [{ title: '模型中心', path: '/model/manage' },
+                        { title: '模型详情', path: '/model/modelManageView' }]
+                }
+            },
+            {
+                path: 'modelManageView/modelVersion/add',
+                component: () => import('@/views/model/modelManage/add/index.vue'),
+                name: 'modelVersionAdd',
+                meta: {
+                    title: '新增模型版本',
+                    noCache: true,
+                    activeMenu: '/model/modelManage',
+                    breadcrumbParent: [{ title: '模型中心', path: '/model/manage' },
+                        { title: '模型详情', path: '/model/modelManageView' }]
+                }
+            },
+            {
+                path: 'modelManageView/modelVersion/edit',
+                component: () => import('@/views/model/modelManage/add/index.vue'),
+                name: 'modelVersionEdit',
+                meta: {
+                    title: '修改模型版本',
+                    noCache: true,
+                    activeMenu: '/model/modelManage',
+                    breadcrumbParent: [{ title: '模型中心', path: '/model/manage' },
+                        { title: '模型详情', path: '/model/modelManageView' }]
+                }
             }
         ]
     }

@@ -2,7 +2,7 @@
  * Copyright (c) 2026 Jiangsu Qiantong Technology Co., Ltd.
  *  *
  * Software Name: qModel Algorithm Model Platform (Commercial Edition)
- *
+ * Software Copyright Registration No. 16069171
  *  *
  * [RIGHTS AND LICENSE STATEMENT]
  * This file contains non-public commercial source code of which Jiangsu Qiantong
@@ -41,7 +41,7 @@
  *  *
  * Copyright (c) 2026 江苏千桐科技有限公司
  *  *
- * 软件名称：qModel 算法模型平台（商业版）
+ * 软件名称：qModel 算法模型平台（商业版） | 软著登字第16069171号
  *  *
  * 【权利与授权声明】
  * 本文件属于江苏千桐科技有限公司依法享有完全知识产权的非公开商业源代码。
@@ -62,95 +62,32 @@
  * 等法律法规，严厉追究违约与侵权责任。
  */
 
-import request from '@/utils/request'
 
-// 查询版本管理列表
-export function listVersion(query) {
-    return request({
-        url: '/model/version/list',
-        method: 'get',
-        params: query
-    })
-}
+package tech.qiantong.qmodel.module.model.enums;
 
-// 版本的切换
-export function changeVersion(data) {
-    return request({
-        url: '/model/version/changeVersion',
-        method: 'post',
-        data: data
-    })
-}
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 
-// 删除版本管理
-export function delVersion(id) {
-    return request({
-        url: '/model/version/' + id,
-        method: 'delete'
-    })
-}
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
 
-// 查询一个模型全部版本记录
-export function getModelVersionDict(modelId) {
-    return request({
-        url: '/model/version/getModelVersionDict/?modelId=' + modelId,
-        method: 'get'
-    })
-}
+@Getter
+@AllArgsConstructor
+public enum ModelVersionDigestEnum {
 
-// 查询一个模型指定版本
-export function getModelVersion(modelId, version) {
-    return request({
-        url: '/model/version/getModelVersion',
-        method: 'get',
-        params: {modelId, version}
-    })
-}
+    INIT_VERSION("0", "初始化版本",null),
+    FILE_CHANGE("1", "文件修改", new HashSet<>(Arrays.asList("fileName","fileSize","scriptName"))),
+    PARAM_CHANGE("2", "参数修改",  new HashSet<>(Arrays.asList("inputSchema","fileName"))),
+    AUTH_CHANGE("3", "授权修改", new HashSet<>(Arrays.asList("authType","authMethod","authInjectPosition",
+            "authKeyName","authTokenValue","authDynamicMethod","authDynamicUrl","authDynamicHeaders","authDynamicParams",
+            "authExtractPath","authTokenPrefix"))),
+    ADDRESS_CHANGE("4", "地址修改",new HashSet<>(Arrays.asList("requestMethod","apiUrl","contentType",
+            "timeoutSeconds")))
+    ;
 
-// 查询版本是否存在
-export function isModelVersionExists(modelId, modelVersion) {
-    return request({
-        url: '/model/version/isModelVersionExists',
-        method: 'get',
-        params: {modelId, modelVersion}
-    })
-}
+    private final String code;
+    private final String changeMode;
+    private final Set<String> filedSet;
 
-// ---------------------
-
-
-// 查询版本管理详细
-export function getVersion(id) {
-    return request({
-        url: '/model/version/' + id,
-        method: 'get'
-    })
-}
-
-
-// 展示一个模型全部版本记录
-export function getVersionList(query) {
-    return request({
-        url: '/model/version/versionList/',
-        method: 'get',
-        params: query
-    })
-}
-
-// 新增版本管理
-export function addVersion(data) {
-    return request({
-        url: '/model/version',
-        method: 'post',
-        data: data
-    })
-}
-
-// 修改版本管理
-export function updateVersion(data) {
-    return request({
-        url: '/model/version',
-        method: 'put',
-        data: data
-    })
 }

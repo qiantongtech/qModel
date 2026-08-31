@@ -62,95 +62,95 @@
  * 等法律法规，严厉追究违约与侵权责任。
  */
 
-import request from '@/utils/request'
+package tech.qiantong.qmodel.module.model.service.modelVersion;
 
-// 查询版本管理列表
-export function listVersion(query) {
-    return request({
-        url: '/model/version/list',
-        method: 'get',
-        params: query
-    })
-}
+import com.baomidou.mybatisplus.extension.service.IService;
+import tech.qiantong.qmodel.common.core.domain.entity.SysDictData;
+import tech.qiantong.qmodel.common.core.page.PageResult;
+import tech.qiantong.qmodel.module.model.controller.admin.modelVersion.vo.ModelVersionPageReqVO;
+import tech.qiantong.qmodel.module.model.controller.admin.modelVersion.vo.ModelVersionSaveReqVO;
+import tech.qiantong.qmodel.module.model.dal.dataobject.modelVersion.ModelVersionDO;
 
-// 版本的切换
-export function changeVersion(data) {
-    return request({
-        url: '/model/version/changeVersion',
-        method: 'post',
-        data: data
-    })
-}
+import java.util.Collection;
+import java.util.List;
 
-// 删除版本管理
-export function delVersion(id) {
-    return request({
-        url: '/model/version/' + id,
-        method: 'delete'
-    })
-}
+/**
+ * 模型版本Service接口
+ *
+ * @author anivia
+ * @date 2026-08-17
+ */
+public interface IModelVersionService extends IService<ModelVersionDO> {
 
-// 查询一个模型全部版本记录
-export function getModelVersionDict(modelId) {
-    return request({
-        url: '/model/version/getModelVersionDict/?modelId=' + modelId,
-        method: 'get'
-    })
-}
+    /**
+     * 获得模型版本分页列表
+     *
+     * @param pageReqVO 分页请求
+     * @return 模型版本分页列表
+     */
+    PageResult<ModelVersionDO> getModelVersionPage(ModelVersionPageReqVO pageReqVO);
 
-// 查询一个模型指定版本
-export function getModelVersion(modelId, version) {
-    return request({
-        url: '/model/version/getModelVersion',
-        method: 'get',
-        params: {modelId, version}
-    })
-}
+    /**
+     * 创建模型版本
+     *
+     * @param createReqVO 模型版本信息
+     * @return 模型版本编号
+     */
+    Long createModelVersion(ModelVersionSaveReqVO createReqVO);
 
-// 查询版本是否存在
-export function isModelVersionExists(modelId, modelVersion) {
-    return request({
-        url: '/model/version/isModelVersionExists',
-        method: 'get',
-        params: {modelId, modelVersion}
-    })
-}
+    /**
+     * 更新模型版本
+     *
+     * @param updateReqVO 模型版本信息
+     */
+    Boolean updateModelVersion(ModelVersionSaveReqVO updateReqVO);
 
-// ---------------------
+    /**
+     * 删除模型版本
+     *
+     * @param idList 模型版本编号
+     */
+    Integer removeModelVersion(Collection<Long> idList);
 
+    /**
+     * 获得模型版本详情
+     *
+     * @param id 模型版本编号
+     * @return 模型版本
+     */
+    ModelVersionDO getModelVersionById(Long id);
 
-// 查询版本管理详细
-export function getVersion(id) {
-    return request({
-        url: '/model/version/' + id,
-        method: 'get'
-    })
-}
+    /**
+     * 查询版本号是否存在
+     *
+     * @param modelId      模型id
+     * @param modelVersion 模型版本号
+     * @return 是否存在
+     */
+    boolean isModelVersionExists(Long modelId, String modelVersion);
 
+    /**
+     * 获取版本号列表字典
+     *
+     * @param modelId 模型id
+     * @return 版本号列表字典
+     */
+    List<SysDictData> getModelVersionDict(Long modelId);
 
-// 展示一个模型全部版本记录
-export function getVersionList(query) {
-    return request({
-        url: '/model/version/versionList/',
-        method: 'get',
-        params: query
-    })
-}
+    /**
+     * 修改版本号
+     *
+     * @param modelVersion 模型版本信息
+     * @return 是否切换成功
+     */
+    Boolean changeVersion(ModelVersionSaveReqVO modelVersion);
 
-// 新增版本管理
-export function addVersion(data) {
-    return request({
-        url: '/model/version',
-        method: 'post',
-        data: data
-    })
-}
-
-// 修改版本管理
-export function updateVersion(data) {
-    return request({
-        url: '/model/version',
-        method: 'put',
-        data: data
-    })
+    /**
+     * 根据模型id和版本号获取模型版本
+     *
+     * @param modelId 模型id
+     * @param version 版本号
+     * @return 模型版本
+     */
+    ModelVersionDO getModelVersion(Long modelId, String version);
 }

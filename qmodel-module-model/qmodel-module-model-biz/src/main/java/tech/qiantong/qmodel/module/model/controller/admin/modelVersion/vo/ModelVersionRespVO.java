@@ -62,95 +62,88 @@
  * 等法律法规，严厉追究违约与侵权责任。
  */
 
-import request from '@/utils/request'
+package tech.qiantong.qmodel.module.model.controller.admin.modelVersion.vo;
 
-// 查询版本管理列表
-export function listVersion(query) {
-    return request({
-        url: '/model/version/list',
-        method: 'get',
-        params: query
-    })
-}
+import com.fasterxml.jackson.annotation.JsonFormat;
+import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.Data;
+import tech.qiantong.qmodel.common.annotation.Excel;
 
-// 版本的切换
-export function changeVersion(data) {
-    return request({
-        url: '/model/version/changeVersion',
-        method: 'post',
-        data: data
-    })
-}
+import java.io.Serializable;
+import java.util.Date;
 
-// 删除版本管理
-export function delVersion(id) {
-    return request({
-        url: '/model/version/' + id,
-        method: 'delete'
-    })
-}
+/**
+ * 模型版本 Response VO 对象 model_version
+ *
+ * @author anivia
+ * @date 2026-08-17
+ */
+@Schema(description = "模型版本 Response VO")
+@Data
+public class ModelVersionRespVO implements Serializable {
 
-// 查询一个模型全部版本记录
-export function getModelVersionDict(modelId) {
-    return request({
-        url: '/model/version/getModelVersionDict/?modelId=' + modelId,
-        method: 'get'
-    })
-}
+    private static final long serialVersionUID = 1L;
 
-// 查询一个模型指定版本
-export function getModelVersion(modelId, version) {
-    return request({
-        url: '/model/version/getModelVersion',
-        method: 'get',
-        params: {modelId, version}
-    })
-}
+    @Excel(name = "ID")
+    @Schema(description = "ID")
+    private Long id;
 
-// 查询版本是否存在
-export function isModelVersionExists(modelId, modelVersion) {
-    return request({
-        url: '/model/version/isModelVersionExists',
-        method: 'get',
-        params: {modelId, modelVersion}
-    })
-}
+    @Excel(name = "模型id")
+    @Schema(description = "模型id", example = "")
+    private Long modelId;
 
-// ---------------------
+    @Excel(name = "版本号")
+    @Schema(description = "版本号", example = "")
+    private String modelVersion;
 
+    @Excel(name = "描述")
+    @Schema(description = "描述", example = "")
+    private String description;
 
-// 查询版本管理详细
-export function getVersion(id) {
-    return request({
-        url: '/model/version/' + id,
-        method: 'get'
-    })
-}
+    @Excel(name = "版本摘要")
+    @Schema(description = "版本摘要", example = "")
+    private String digest;
 
+    @Excel(name = "基础版本")
+    @Schema(description = "基础版本", example = "")
+    private String baseVersion;
 
-// 展示一个模型全部版本记录
-export function getVersionList(query) {
-    return request({
-        url: '/model/version/versionList/',
-        method: 'get',
-        params: query
-    })
-}
+    @Excel(name = "是否有效")
+    @Schema(description = "是否有效", example = "")
+    private Boolean validFlag;
 
-// 新增版本管理
-export function addVersion(data) {
-    return request({
-        url: '/model/version',
-        method: 'post',
-        data: data
-    })
-}
+    @Excel(name = "删除标志")
+    @Schema(description = "删除标志", example = "")
+    private Boolean delFlag;
 
-// 修改版本管理
-export function updateVersion(data) {
-    return request({
-        url: '/model/version',
-        method: 'put',
-        data: data
-    })
+    @Excel(name = "创建人")
+    @Schema(description = "创建人", example = "")
+    private String createBy;
+
+    @Excel(name = "创建人id")
+    @Schema(description = "创建人id", example = "")
+    private Long creatorId;
+
+    @Excel(name = "创建时间", width = 30, dateFormat = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @Schema(description = "创建时间", example = "")
+    private Date createTime;
+
+    @Excel(name = "更新人")
+    @Schema(description = "更新人", example = "")
+    private String updateBy;
+
+    @Excel(name = "更新人id")
+    @Schema(description = "更新人id", example = "")
+    private Long updatorId;
+
+    @Excel(name = "更新时间", width = 30, dateFormat = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @Schema(description = "更新时间", example = "")
+    private Date updateTime;
+
+    @Excel(name = "备注")
+    @Schema(description = "备注", example = "")
+    private String remark;
+
 }

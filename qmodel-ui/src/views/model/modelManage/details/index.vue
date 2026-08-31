@@ -1,19 +1,65 @@
 <!--
-  Copyright © 2026-present Jiangsu Qiantong Technology Co., Ltd.
+  Copyright (c) 2026 Jiangsu Qiantong Technology Co., Ltd.
+   *
+  Software Name: qModel Algorithm Model Platform (Commercial Edition)
 
-  This file is part of qModel Module Platform (Open Source Edition).
-
-  qModel is licensed under Apache License 2.0 with additional qModel terms.
-  You may use qModel for commercial purposes, but you may not remove, hide,
-  modify, or replace the qModel logo, copyright notices, license notices,
-  or attribution information without a separate commercial license.
-
-  White-label use, OEM distribution, rebranding, or presenting qModel as
-  another product requires separate commercial authorization from
-  Jiangsu Qiantong Technology Co., Ltd.
-
-  Business License: `https://qmodel.tech/`
-  See the LICENSE file in the project root for full license information.
+   *
+  [RIGHTS AND LICENSE STATEMENT]
+  This file contains non-public commercial source code of which Jiangsu Qiantong
+  Technology Co., Ltd. lawfully possesses complete intellectual property rights.
+   *
+  Access and use are limited to entities or individuals who have signed a valid
+  commercial license agreement, within the scope stipulated in the agreement.
+  The "accessibility" of this source code is premised on lawful authorization
+  and does not constitute any form of transfer of intellectual property rights
+  or implied licensing.
+   *
+  [PROHIBITIONS]
+  Unless explicitly agreed in the license agreement, the following acts in any
+  form are strictly prohibited:
+  1. Copying, disseminating, disclosing, selling, renting, or redistributing
+  this source code;
+  2. Providing the software's functionality to third parties via SaaS, PaaS,
+  cloud hosting, or other means;
+  3. Using this software or its derivative versions to develop products that
+  compete with the Right Holder;
+  4. Providing or displaying this source code or related technical information
+  to unauthorized third parties;
+  5. Tampering with, circumventing, or destroying copyright notices, license
+  verifications, or other technical protection measures.
+   *
+  [LEGAL LIABILITY]
+  Any unauthorized use constitutes an infringement of trade secrets and
+  intellectual property rights.
+   *
+  The Right Holder will strictly pursue liability for breach of contract and
+  infringement in accordance with the commercial agreement and laws such as
+  the "Copyright Law of the People's Republic of China" and the "Anti-Unfair
+  Competition Law".
+   *
+  ============================================================================
+   *
+  Copyright (c) 2026 江苏千桐科技有限公司
+   *
+  软件名称：qModel 算法模型平台（商业版）
+   *
+  【权利与授权声明】
+  本文件属于江苏千桐科技有限公司依法享有完全知识产权的非公开商业源代码。
+  仅限已签署有效商业授权合同的单位或个人在约定范围内查阅和使用。
+  源代码的“可访问性”均以合法授权为前提，不构成任何形式的知识产权转让或默示授权。
+   *
+  【禁止事项】
+  除授权合同明确约定外，严禁任何形式的：
+  1. 复制、传播、披露、出售、出租或再分发本源代码；
+  2. 通过 SaaS、PaaS、云托管等方式向第三方提供本软件功能；
+  3. 将本软件或其衍生版本用于开发与权利人构成竞争的产品；
+  4. 向未授权第三方提供或展示本源代码或相关技术信息；
+  5. 篡改、规避或破坏版权标识、授权校验及其他技术保护措施。
+   *
+  【法律责任】
+  任何未经授权的利用行为，均构成对商业秘密及知识产权的侵害。
+  权利人将依据商业合同及《中华人民共和国著作权法》《反不正当竞争法》
+  等法律法规，严厉追究违约与侵权责任。
 -->
 
 <template>
@@ -30,14 +76,14 @@
             <!-- 名称 -->
             <div class="task-name">
               <el-tooltip
-                :content="viewInfo.name || ''"
-                placement="top"
-                effect="light"
-                :disabled="!textOverflowMap.name"
+                  :content="viewInfo.name || ''"
+                  placement="top"
+                  effect="light"
+                  :disabled="!textOverflowMap.name"
               >
                 <span
-                  class="ellipsis-text"
-                  @mouseenter="(event) => checkTextOverflow(event, 'name')"
+                    class="ellipsis-text"
+                    @mouseenter="(event) => checkTextOverflow(event, 'name')"
                 >
                   {{ viewInfo.name || "" }}
                 </span>
@@ -46,20 +92,21 @@
             <div>
               <dict-tag :options="model_status" :value="viewInfo.status" />
             </div>
+
           </div>
           <el-row :gutter="15" class="btn-style" style="margin-left: auto">
             <el-col :span="1.5">
               <el-button
-                type="primary"
-                size="small"
-                class="fhbtn"
-                plain
-                @click="goBack"
-                @mousedown="(e) => e.preventDefault()"
+                  type="primary"
+                  size="small"
+                  class="fhbtn"
+                  plain
+                  @click="goBack"
+                  @mousedown="(e) => e.preventDefault()"
               >
                 <svg-icon
-                  style="width: 12px; height: 12px; margin-right: 3px"
-                  :iconClass="'fhs'"
+                    style="width: 12px; height: 12px; margin-right: 3px"
+                    :iconClass="'fhs'"
                 />
                 返回
               </el-button>
@@ -73,14 +120,14 @@
               <div class="infotop-row-lable">模型编号</div>
               <div class="infotop-row-value">
                 <el-tooltip
-                  :content="viewInfo.code || '-'"
-                  placement="top"
-                  effect="light"
-                  :disabled="!textOverflowMap.code"
+                    :content="viewInfo.code || '-'"
+                    placement="top"
+                    effect="light"
+                    :disabled="!textOverflowMap.code"
                 >
                   <span
-                    class="ellipsis-text"
-                    @mouseenter="(event) => checkTextOverflow(event, 'code')"
+                      class="ellipsis-text"
+                      @mouseenter="(event) => checkTextOverflow(event, 'code')"
                   >
                     {{ viewInfo.code || "-" }}
                   </span>
@@ -93,14 +140,14 @@
               <div class="infotop-row-lable">模型分类</div>
               <div class="infotop-row-value">
                 <el-tooltip
-                  :content="viewInfo.classifyName || '-'"
-                  placement="top"
-                  effect="light"
-                  :disabled="!textOverflowMap.classifyName"
+                    :content="viewInfo.classifyName || '-'"
+                    placement="top"
+                    effect="light"
+                    :disabled="!textOverflowMap.classifyName"
                 >
                   <span
-                    class="ellipsis-text"
-                    @mouseenter="
+                      class="ellipsis-text"
+                      @mouseenter="
                       (event) => checkTextOverflow(event, 'classifyName')
                     "
                   >
@@ -116,11 +163,11 @@
               <div class="infotop-row-lable">图标</div>
               <div class="infotop-row-value">
                 <img
-                  v-if="viewInfo.icon"
-                  :src="getIconUrl(viewInfo.icon)"
-                  class="icon-preview"
-                  @click="previewIcon"
-                  alt="图标"
+                    v-if="viewInfo.icon"
+                    :src="getIconUrl(viewInfo.icon)"
+                    class="icon-preview"
+                    @click="previewIcon"
+                    alt="图标"
                 />
                 <span v-else>-</span>
               </div>
@@ -131,17 +178,17 @@
         <el-row :gutter="3" style="margin-bottom: 3px">
           <el-col :span="8">
             <div class="infotop-row border-top">
-              <div class="infotop-row-lable">版本号</div>
+              <div class="infotop-row-lable">当前版本</div>
               <div class="infotop-row-value">
                 <el-tooltip
-                  :content="viewInfo.version || '-'"
-                  placement="top"
-                  effect="light"
-                  :disabled="!textOverflowMap.version"
+                    :content="viewInfo.version || '-'"
+                    placement="top"
+                    effect="light"
+                    :disabled="!textOverflowMap.version"
                 >
                   <span
-                    class="ellipsis-text"
-                    @mouseenter="(event) => checkTextOverflow(event, 'version')"
+                      class="ellipsis-text"
+                      @mouseenter="(event) => checkTextOverflow(event, 'version')"
                   >
                     {{ viewInfo.version || "-" }}
                   </span>
@@ -154,14 +201,14 @@
               <div class="infotop-row-lable">作者</div>
               <div class="infotop-row-value">
                 <el-tooltip
-                  :content="viewInfo.author || '-'"
-                  placement="top"
-                  effect="light"
-                  :disabled="!textOverflowMap.author"
+                    :content="viewInfo.author || '-'"
+                    placement="top"
+                    effect="light"
+                    :disabled="!textOverflowMap.author"
                 >
                   <span
-                    class="ellipsis-text"
-                    @mouseenter="(event) => checkTextOverflow(event, 'author')"
+                      class="ellipsis-text"
+                      @mouseenter="(event) => checkTextOverflow(event, 'author')"
                   >
                     {{ viewInfo.author || "-" }}
                   </span>
@@ -174,10 +221,10 @@
               <div class="infotop-row-lable">标签</div>
               <div class="infotop-row-value tag-list">
                 <el-tag
-                  v-for="tag in parsedTags"
-                  :key="tag.name"
-                  size="small"
-                  class="mr3"
+                    v-for="tag in parsedTags"
+                    :key="tag.name"
+                    size="small"
+                    class="mr3"
                 >
                   {{ tag.name }}
                 </el-tag>
@@ -192,14 +239,14 @@
               <div class="infotop-row-lable">描述</div>
               <div class="infotop-row-value">
                 <el-tooltip
-                  :content="viewInfo.description || '-'"
-                  placement="top"
-                  effect="light"
-                  :disabled="!textOverflowMap.description"
+                    :content="viewInfo.description || '-'"
+                    placement="top"
+                    effect="light"
+                    :disabled="!textOverflowMap.description"
                 >
                   <span
-                    class="ellipsis-text"
-                    @mouseenter="
+                      class="ellipsis-text"
+                      @mouseenter="
                       (event) => checkTextOverflow(event, 'description')
                     "
                   >
@@ -228,29 +275,30 @@
         <el-tab-pane name="onlineTest">
           <template #label>在线调试</template>
           <OnlineTest
-            v-if="activeName === 'onlineTest'"
-            :model-id="viewInfo.id"
-            :model-name="viewInfo.name"
-            :access-mode="viewInfo.accessType === 'API' ? 1 : 0"
-            style="margin: 0; padding: 0"
+              v-if="activeName === 'onlineTest'"
+              :model-id="viewInfo.id"
+              :model-name="viewInfo.name"
+              :access-mode="viewInfo.accessType === 'API' ? 1 : 0"
+              :model-version="viewInfo.version"
+              style="margin: 0; padding: 0"
           />
         </el-tab-pane>
 
         <el-tab-pane name="invokeHistory">
           <template #label>调用记录</template>
           <InvokeHistory
-            v-if="activeName === 'invokeHistory'"
-            :model-id="viewInfo.id"
-            style="margin: 0; padding: 0"
+              v-if="activeName === 'invokeHistory'"
+              :model-id="viewInfo.id"
+              style="margin: 0; padding: 0"
           />
         </el-tab-pane>
 
         <el-tab-pane name="buildLog" v-if="viewInfo.accessType === 'PYTHON'">
           <template #label>构建日志</template>
           <BuildLog
-            v-if="activeName === 'buildLog'"
-            :model-id="viewInfo.id"
-            style="margin: 0; padding: 0"
+              v-if="activeName === 'buildLog'"
+              :model-id="viewInfo.id"
+              style="margin: 0; padding: 0"
           />
         </el-tab-pane>
 
@@ -285,128 +333,14 @@
       </el-tabs>
     </div>
 
-    <el-dialog
-      :title="title"
-      v-model="open"
-      width="750px"
-      :close-on-click-modal="false"
-      append-to="body"
-    >
-      <el-form ref="formRef" :model="form" :rules="rules" label-width="180px">
-        <el-row>
-          <el-col :span="20">
-            <el-form-item label="模型名称：" prop="name">
-              <el-input
-                clearable
-                v-model="form.name"
-                placeholder="请输入模型名称"
-              />
-            </el-form-item>
-          </el-col>
-        </el-row>
-        <el-row>
-          <el-col :span="20">
-            <el-form-item
-              label="模型分类："
-              prop="classifyId"
-              class="formClass"
-            >
-              <el-tree-select
-                v-model="form.classifyId"
-                :options="classifyOptions"
-                :normalizer="normalizer"
-                :show-count="true"
-                placeholder="请选择模型分类"
-                noResultsText="暂无数据"
-              />
-            </el-form-item>
-          </el-col>
-        </el-row>
-        <el-row>
-          <el-col :span="20">
-            <el-form-item label="是否预置：" prop="builtin">
-              <el-radio v-model="form.builtin" :label="Number(1)">是</el-radio>
-              <el-radio v-model="form.builtin" :label="Number(0)">否</el-radio>
-              <el-tooltip
-                class="item"
-                effect="dark"
-                content="选择是之后则不可去设置修改输入参数"
-                placement="right"
-              >
-                <i class="el-icon-question"></i>
-              </el-tooltip>
-            </el-form-item>
-          </el-col>
-        </el-row>
-        <el-row>
-          <el-col :span="20">
-            <el-form-item label="接入方式：" prop="accessMode">
-              <el-radio v-model="form.accessMode" :label="Number(0)"
-                >python脚本</el-radio
-              >
-              <el-radio v-model="form.accessMode" :label="Number(1)"
-                >API接口</el-radio
-              >
-              <el-tooltip placement="top">
-                <template #content>
-                  Tips: 核心信息请在详情页版本控制里面修改
-                </template>
-                <i class="el-icon-question" />
-              </el-tooltip>
-            </el-form-item>
-          </el-col>
-        </el-row>
-        <el-row v-if="form.accessMode == 1">
-          <el-col :span="20">
-            <el-form-item label="API地址:端口：" prop="interfaceorfileAddress">
-              <el-input
-                clearable
-                v-model="form.interfaceorfileAddress"
-                placeholder="请输入API接口"
-              />
-            </el-form-item>
-          </el-col>
-        </el-row>
-        <el-row v-if="form.accessMode == 0">
-          <el-col :span="20">
-            <el-form-item label="上传文件：" prop="uploadFile">
-              <FileUpload
-                v-model="form.uploadFile"
-                :fileStyle2="true"
-                :limit="1"
-                :fileType="['zip']"
-                :fileSize="200"
-              />
-            </el-form-item>
-          </el-col>
-        </el-row>
-        <el-row>
-          <el-col :span="20">
-            <el-form-item label="模型介绍：" prop="remark">
-              <el-input
-                v-model="form.remark"
-                :rows="3"
-                type="textarea"
-                placeholder="请输入内容"
-              />
-            </el-form-item>
-          </el-col>
-        </el-row>
-      </el-form>
-      <template #footer>
-        <div class="dialog-footer">
-          <el-button type="primary" @click="submitForm">确 定</el-button>
-          <el-button @click="cancel">取 消</el-button>
-        </div>
-      </template>
-    </el-dialog>
+
 
     <el-image-viewer
-      v-if="iconPreviewVisible"
-      @close="closeIconPreview"
-      :url-list="[iconPreviewUrl]"
-      :src="iconPreviewUrl"
-      z-index="9999"
+        v-if="iconPreviewVisible"
+        @close="closeIconPreview"
+        :url-list="[iconPreviewUrl]"
+        :src="iconPreviewUrl"
+        z-index="9999"
     />
   </div>
 </template>
@@ -421,16 +355,14 @@ import {
   watch,
 } from "vue";
 import { useRouter, useRoute } from "vue-router";
-import { ElMessage, ElMessageBox, ElImageViewer } from "element-plus";
-import { getModel, updateModel, addModel } from "@/api/model/model";
-import { listClassify } from "@/api/modelReconstitution/classify";
+import { ElImageViewer } from "element-plus";
+import { getModel } from "@/api/model/model";
+import { listClassify } from "@/api/model/classify";
 import { useDict } from "@/utils/dict.js";
 import VersionManage from "./modelVersion.vue";
 import OnlineTest from "./onlineTest.vue";
 import InvokeHistory from "./invokeHistory.vue";
 import BuildLog from "./buildLog.vue";
-import ModelApi from "./modelApi.vue";
-import ModelAudit from "@/views/model/modelManage/details/modelAudit.vue";
 import ModelCalc from "@/views/model/modelManage/details/modelCalc.vue";
 
 const { proxy } = getCurrentInstance();
@@ -442,7 +374,6 @@ const form = ref({});
 const title = ref("");
 const open = ref(false);
 const classifyOptions = ref([]);
-const interfaceAddressList = ref([]);
 const activeName = ref("modelApi");
 const showSearch = ref(true);
 const textOverflowMap = reactive({});
@@ -466,46 +397,11 @@ const parsedTags = computed(() => {
   return [];
 });
 
-const rules = reactive({
-  validFlag: [
-    {
-      required: true,
-      message: "是否有效 0：无效，1：有效不能为空",
-      trigger: "blur",
-    },
-  ],
-  delFlag: [
-    {
-      required: true,
-      message: "删除标志 1：已删除，0：未删除不能为空",
-      trigger: "blur",
-    },
-  ],
-  createTime: [
-    { required: true, message: "创建时间不能为空", trigger: "blur" },
-  ],
-  updateTime: [
-    { required: true, message: "更新时间不能为空", trigger: "blur" },
-  ],
-  classifyId: [
-    { required: true, message: "模型分类不能为空", trigger: "blur" },
-  ],
-  name: [{ required: true, message: "模型名称不能为空", trigger: "blur" }],
-  version: [{ required: true, message: "版本号不能为空", trigger: "blur" }],
-  description: [
-    { required: true, message: "版本发布说明不能为空", trigger: "blur" },
-  ],
-  interfaceAddress: [
-    { required: true, message: "模型调用接口不能为空", trigger: "blur" },
-  ],
-});
-
 const model_type = useDict("model_type").model_type;
 
 const modelId = computed(() => route.query.modelId);
 
 const formRef = ref(null);
-const actionHistoryRef = ref(null);
 
 const checkTextOverflow = (event, field) => {
   const element = event.currentTarget;
@@ -525,7 +421,7 @@ const getModelById = (params) => {
 
 const goBack = () => {
   router.push({
-    path: "/model/manage",
+    path: "/model/modelManage",
     query: {
       pageNum: 1,
     },
@@ -643,40 +539,40 @@ const normalizer = (node) => {
   };
 };
 
-const submitForm = () => {
-  if (formRef.value) {
-    formRef.value.validate((valid) => {
-      if (valid) {
-        const formData = { ...form.value };
-        if (formData.id != null) {
-          updateModel(formData).then((response) => {
-            proxy.$modal.msgSuccess("修改成功");
-            open.value = false;
-            getList();
-          });
-        } else {
-          addModel(formData).then((response) => {
-            proxy.$modal.msgSuccess("新增成功");
-            open.value = false;
-            getList();
-          });
-        }
-      }
-    });
-  }
-};
+// const submitForm = () => {
+//   if (formRef.value) {
+//     formRef.value.validate((valid) => {
+//       if (valid) {
+//         const formData = { ...form.value };
+//         if (formData.id != null) {
+//           updateModel(formData).then((response) => {
+//             proxy.$modal.msgSuccess("修改成功");
+//             open.value = false;
+//             getList();
+//           });
+//         } else {
+//           addModel(formData).then((response) => {
+//             proxy.$modal.msgSuccess("新增成功");
+//             open.value = false;
+//             getList();
+//           });
+//         }
+//       }
+//     });
+//   }
+// };
 
 const getList = () => {
   getModelById(modelId.value);
 };
 
 watch(
-  () => route.query.modelId,
-  (newId) => {
-    if (newId) {
-      getModelById(newId);
+    () => route.query.modelId,
+    (newId) => {
+      if (newId) {
+        getModelById(newId);
+      }
     }
-  }
 );
 
 onMounted(() => {
@@ -732,8 +628,8 @@ onMounted(() => {
 }
 
 .icon-preview {
-  width: 40px;
-  height: 40px;
+  width: 28px;
+  height: 28px;
   border-radius: 4px;
   cursor: pointer;
   object-fit: cover;

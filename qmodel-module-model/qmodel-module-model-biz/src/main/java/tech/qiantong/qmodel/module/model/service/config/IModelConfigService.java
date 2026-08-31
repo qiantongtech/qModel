@@ -113,8 +113,18 @@ public interface IModelConfigService extends IService<ModelConfigDO> {
      * 根据模型ID查询模型配置详情
      *
      * @param modelId 模型ID
+     * @param modelVersion 模型版本
      * @return 模型配置详情
      */
+    ModelConfigDO getByModelId(Long modelId,String modelVersion);
+
+    /**
+     * 根据模型ID查询模型配置详情
+     *
+     * @param modelId 模型ID
+     * @return 模型配置详情
+     */
+    @Deprecated
     ModelConfigDO getByModelId(Long modelId);
 
 }

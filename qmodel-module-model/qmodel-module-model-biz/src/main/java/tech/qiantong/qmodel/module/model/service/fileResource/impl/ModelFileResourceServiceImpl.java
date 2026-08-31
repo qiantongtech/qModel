@@ -30,6 +30,8 @@ import java.util.regex.Pattern;
 import java.util.concurrent.TimeUnit;
 import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.TypeReference;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.transaction.support.TransactionSynchronizationManager;
 import org.springframework.transaction.support.TransactionSynchronization;
@@ -391,7 +393,7 @@ public class ModelFileResourceServiceImpl extends ServiceImpl<ModelFileResourceM
     }
 
     @Override
-    public void saveFileResourceFromModel(ModelSaveReqVO saveReqVO, Long modelId) {
+    public void saveFileResourceFromModel(ModelFileResourceSaveReqVO saveReqVO, Long modelId) {
         if (StringUtils.isEmpty(saveReqVO.getFilePath())) {
             log.warn("文件路径为空，跳过文件资源保存，modelId: {}", modelId);
             return;
@@ -404,37 +406,23 @@ public class ModelFileResourceServiceImpl extends ServiceImpl<ModelFileResourceM
         fileResourceDO.setFileSize(saveReqVO.getFileSize());
         fileResourceDO.setScriptName(StringUtils.isNotEmpty(saveReqVO.getScriptName()) ? saveReqVO.getScriptName() : "main.py");
         fileResourceDO.setResourceType(StringUtils.isNotEmpty(saveReqVO.getResourceType()) ? saveReqVO.getResourceType() : ResourceTypeEnum.PYTHON_SCRIPT.getType());
-        fileResourceDO.setModelVersion(saveReqVO.getModelVersion() != null ? saveReqVO.getModelVersion() : 1L);
+        fileResourceDO.setModelVersion(saveReqVO.getModelVersion());
         fileResourceDO.setInputSchema(saveReqVO.getInputSchema());
         fileResourceDO.setOutputSchema(saveReqVO.getOutputSchema());
         fileResourceDO.setImageBuildStatus(ImageBuildStatusEnum.CHECKING.getStatus());
         fileResourceDO.setValidFlag(true);
 
-        if (saveReqVO.getFileResourceId() != null) {
-            fileResourceDO.setId(saveReqVO.getFileResourceId());
-            modelFileResourceMapper.updateById(fileResourceDO);
-            log.info("更新文件资源成功，fileResourceId: {}", saveReqVO.getFileResourceId());
+        modelFileResourceMapper.insert(fileResourceDO);
+        Long fileResourceId = fileResourceDO.getId();
+        log.info("创建文件资源成功，fileResourceId: {}", fileResourceId);
 
-            final Long fileResourceId = saveReqVO.getFileResourceId();
-            TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronization() {
-                @Override
-                public void afterCommit() {
-                    depsCheckHandler.checkDependencies(fileResourceId);
-                }
-            });
-        } else {
-            modelFileResourceMapper.insert(fileResourceDO);
-            Long fileResourceId = fileResourceDO.getId();
-            log.info("创建文件资源成功，fileResourceId: {}", fileResourceId);
-
-            final Long finalFileResourceId = fileResourceId;
-            TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronization() {
-                @Override
-                public void afterCommit() {
-                    depsCheckHandler.checkDependencies(finalFileResourceId);
-                }
-            });
-        }
+        final Long finalFileResourceId = fileResourceId;
+        TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronization() {
+            @Override
+            public void afterCommit() {
+                depsCheckHandler.checkDependencies(finalFileResourceId);
+            }
+        });
     }
 
     // 文件路径解析方法
@@ -771,5 +759,20 @@ public class ModelFileResourceServiceImpl extends ServiceImpl<ModelFileResourceM
 
         log.info("模型参数文件上传成功，modelId: {}, relativePath: {}", modelId, relativePath);
         return result;
+    }
+
+    /**
+     * 根据模型ID和版本号获取模型文件资源
+     *
+     * @param modelId 模型ID
+     * @param version 版本号
+     * @return 模型文件资源
+     */
+    @Override
+    public ModelFileResourceDO getByModel(Long modelId, String version) {
+        LambdaQueryWrapper<ModelFileResourceDO> queryWrapper = Wrappers.lambdaQuery(ModelFileResourceDO.class)
+                .eq(ModelFileResourceDO::getModelId, modelId)
+                .eq(ModelFileResourceDO::getModelVersion, version);
+        return super.getOne(queryWrapper);
     }
 }

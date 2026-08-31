@@ -62,95 +62,39 @@
  * 等法律法规，严厉追究违约与侵权责任。
  */
 
-import request from '@/utils/request'
+package tech.qiantong.qmodel.module.model.controller.admin.modelVersion.vo;
 
-// 查询版本管理列表
-export function listVersion(query) {
-    return request({
-        url: '/model/version/list',
-        method: 'get',
-        params: query
-    })
-}
+import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.Data;
+import tech.qiantong.qmodel.common.core.page.PageParam;
 
-// 版本的切换
-export function changeVersion(data) {
-    return request({
-        url: '/model/version/changeVersion',
-        method: 'post',
-        data: data
-    })
-}
+/**
+ * 模型版本 Request VO 对象 model_version
+ *
+ * @author anivia
+ * @date 2026-08-17
+ */
+@Schema(description = "模型版本 Request VO")
+@Data
+public class ModelVersionPageReqVO extends PageParam {
 
-// 删除版本管理
-export function delVersion(id) {
-    return request({
-        url: '/model/version/' + id,
-        method: 'delete'
-    })
-}
+    private static final long serialVersionUID = 1L;
 
-// 查询一个模型全部版本记录
-export function getModelVersionDict(modelId) {
-    return request({
-        url: '/model/version/getModelVersionDict/?modelId=' + modelId,
-        method: 'get'
-    })
-}
+    private Long id;
 
-// 查询一个模型指定版本
-export function getModelVersion(modelId, version) {
-    return request({
-        url: '/model/version/getModelVersion',
-        method: 'get',
-        params: {modelId, version}
-    })
-}
+    @Schema(description = "版本号", example = "")
+    private String modelVersion;
 
-// 查询版本是否存在
-export function isModelVersionExists(modelId, modelVersion) {
-    return request({
-        url: '/model/version/isModelVersionExists',
-        method: 'get',
-        params: {modelId, modelVersion}
-    })
-}
+    @Schema(description = "模型 id", example = "")
+    private Long modelId;
 
-// ---------------------
+    @Schema(description = "描述", example = "")
+    private String description;
 
+    @Schema(description = "版本摘要", example = "")
+    private String digest;
 
-// 查询版本管理详细
-export function getVersion(id) {
-    return request({
-        url: '/model/version/' + id,
-        method: 'get'
-    })
-}
+    @Schema(description = "基础版本", example = "")
+    private String baseVersion;
 
-
-// 展示一个模型全部版本记录
-export function getVersionList(query) {
-    return request({
-        url: '/model/version/versionList/',
-        method: 'get',
-        params: query
-    })
-}
-
-// 新增版本管理
-export function addVersion(data) {
-    return request({
-        url: '/model/version',
-        method: 'post',
-        data: data
-    })
-}
-
-// 修改版本管理
-export function updateVersion(data) {
-    return request({
-        url: '/model/version',
-        method: 'put',
-        data: data
-    })
 }

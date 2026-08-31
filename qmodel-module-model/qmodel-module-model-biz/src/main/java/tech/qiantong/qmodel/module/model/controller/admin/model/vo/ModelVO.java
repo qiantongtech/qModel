@@ -2,7 +2,7 @@
  * Copyright (c) 2026 Jiangsu Qiantong Technology Co., Ltd.
  *  *
  * Software Name: qModel Algorithm Model Platform (Commercial Edition)
- *
+ * Software Copyright Registration No. 16069171
  *  *
  * [RIGHTS AND LICENSE STATEMENT]
  * This file contains non-public commercial source code of which Jiangsu Qiantong
@@ -41,7 +41,7 @@
  *  *
  * Copyright (c) 2026 江苏千桐科技有限公司
  *  *
- * 软件名称：qModel 算法模型平台（商业版）
+ * 软件名称：qModel 算法模型平台（商业版） | 软著登字第16069171号
  *  *
  * 【权利与授权声明】
  * 本文件属于江苏千桐科技有限公司依法享有完全知识产权的非公开商业源代码。
@@ -62,95 +62,30 @@
  * 等法律法规，严厉追究违约与侵权责任。
  */
 
-import request from '@/utils/request'
+package tech.qiantong.qmodel.module.model.controller.admin.model.vo;
 
-// 查询版本管理列表
-export function listVersion(query) {
-    return request({
-        url: '/model/version/list',
-        method: 'get',
-        params: query
-    })
-}
+import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.Data;
+import tech.qiantong.qmodel.module.model.controller.admin.config.vo.ModelConfigSaveReqVO;
+import tech.qiantong.qmodel.module.model.controller.admin.fileResource.vo.ModelFileResourceSaveReqVO;
+import tech.qiantong.qmodel.module.model.controller.admin.modelVersion.vo.ModelVersionSaveReqVO;
 
-// 版本的切换
-export function changeVersion(data) {
-    return request({
-        url: '/model/version/changeVersion',
-        method: 'post',
-        data: data
-    })
-}
+import javax.validation.constraints.NotNull;
 
-// 删除版本管理
-export function delVersion(id) {
-    return request({
-        url: '/model/version/' + id,
-        method: 'delete'
-    })
-}
+@Data
+@Schema(description = "模型详情 Response VO")
+public class ModelVO {
 
-// 查询一个模型全部版本记录
-export function getModelVersionDict(modelId) {
-    return request({
-        url: '/model/version/getModelVersionDict/?modelId=' + modelId,
-        method: 'get'
-    })
-}
+    @Schema(description = "模型基础信息", requiredMode = Schema.RequiredMode.REQUIRED)
+    @NotNull(message = "模型基础信息不能为空")
+    private ModelSaveReqVO model;
 
-// 查询一个模型指定版本
-export function getModelVersion(modelId, version) {
-    return request({
-        url: '/model/version/getModelVersion',
-        method: 'get',
-        params: {modelId, version}
-    })
-}
+    @Schema(description = "模型配置详情")
+    private ModelConfigSaveReqVO modelConfig;
 
-// 查询版本是否存在
-export function isModelVersionExists(modelId, modelVersion) {
-    return request({
-        url: '/model/version/isModelVersionExists',
-        method: 'get',
-        params: {modelId, modelVersion}
-    })
-}
+    @Schema(description = "文件资源详情")
+    private ModelFileResourceSaveReqVO fileResource;
 
-// ---------------------
-
-
-// 查询版本管理详细
-export function getVersion(id) {
-    return request({
-        url: '/model/version/' + id,
-        method: 'get'
-    })
-}
-
-
-// 展示一个模型全部版本记录
-export function getVersionList(query) {
-    return request({
-        url: '/model/version/versionList/',
-        method: 'get',
-        params: query
-    })
-}
-
-// 新增版本管理
-export function addVersion(data) {
-    return request({
-        url: '/model/version',
-        method: 'post',
-        data: data
-    })
-}
-
-// 修改版本管理
-export function updateVersion(data) {
-    return request({
-        url: '/model/version',
-        method: 'put',
-        data: data
-    })
+    @Schema(description = "模型版本详情")
+    private ModelVersionSaveReqVO modelVersion;
 }

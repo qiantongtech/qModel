@@ -173,6 +173,21 @@ public class ModelConfigServiceImpl  extends ServiceImpl<ModelConfigMapper,Model
                 ));
     }
 
+
+    /**
+     * 根据模型ID查询模型配置详情
+     *
+     * @param modelId 模型ID
+     * @return 模型配置详情
+     */
+    @Override
+    public ModelConfigDO getByModelId(Long modelId,String modelVersion) {
+        LambdaQueryWrapper<ModelConfigDO> queryWrapper = Wrappers.lambdaQuery(ModelConfigDO.class)
+                .eq(ModelConfigDO::getModelId, modelId)
+                .eq(ModelConfigDO::getModelVersion, modelVersion);
+        return super.getOne(queryWrapper);
+    }
+
     /**
      * 根据模型ID查询模型配置详情
      *
@@ -183,7 +198,8 @@ public class ModelConfigServiceImpl  extends ServiceImpl<ModelConfigMapper,Model
     public ModelConfigDO getByModelId(Long modelId) {
         LambdaQueryWrapper<ModelConfigDO> queryWrapper = Wrappers.lambdaQuery(ModelConfigDO.class)
                 .eq(ModelConfigDO::getModelId, modelId);
-        return super.getOne(queryWrapper);
+        List<ModelConfigDO> list = super.list(queryWrapper);
+        return list.size() > 0 ? list.get(0) : null;
     }
 
 

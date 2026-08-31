@@ -37,11 +37,11 @@ import tech.qiantong.qmodel.module.model.controller.admin.output.vo.ModelOutputP
 import tech.qiantong.qmodel.module.model.controller.admin.output.vo.ModelOutputRespVO;
 import tech.qiantong.qmodel.module.model.controller.admin.output.vo.ModelOutputSaveReqVO;
 import tech.qiantong.qmodel.module.model.convert.output.ModelOutputConvert;
+import tech.qiantong.qmodel.module.model.dal.dataobject.modelVersion.ModelVersionDO;
 import tech.qiantong.qmodel.module.model.dal.dataobject.output.ModelOutputDO;
-import tech.qiantong.qmodel.module.model.dal.dataobject.version.ModelVersionDO;
 import tech.qiantong.qmodel.module.model.service.modelReconstitution.IModelReconstitutionService;
+import tech.qiantong.qmodel.module.model.service.modelVersion.IModelVersionService;
 import tech.qiantong.qmodel.module.model.service.output.IModelOutputService;
-import tech.qiantong.qmodel.module.model.service.version.IModelVersionService;
 import tech.qiantong.qmodel.module.modelReconstitution.domain.ModelReconstitution;
 
 import javax.annotation.Resource;
@@ -155,7 +155,7 @@ public class ModelOutputController extends BaseController {
     @PostMapping("/findAllModelVersion")
     public AjaxResult findAllModelVersion(@RequestBody ModelVersionDO modelVersion) {
         modelVersion.setDelFlag(false);
-        return AjaxResult.success(modelVersionService.selectModelVersionList(modelVersion));
+        return AjaxResult.success(modelVersionService.list());
     }
 
 

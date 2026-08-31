@@ -1,19 +1,65 @@
 <!--
-  Copyright © 2026-present Jiangsu Qiantong Technology Co., Ltd.
+  Copyright (c) 2026 Jiangsu Qiantong Technology Co., Ltd.
+   *
+  Software Name: qModel Algorithm Model Platform (Commercial Edition)
 
-  This file is part of qModel Module Platform (Open Source Edition).
-
-  qModel is licensed under Apache License 2.0 with additional qModel terms.
-  You may use qModel for commercial purposes, but you may not remove, hide,
-  modify, or replace the qModel logo, copyright notices, license notices,
-  or attribution information without a separate commercial license.
-
-  White-label use, OEM distribution, rebranding, or presenting qModel as
-  another product requires separate commercial authorization from
-  Jiangsu Qiantong Technology Co., Ltd.
-
-  Business License: `https://qmodel.tech/`
-  See the LICENSE file in the project root for full license information.
+   *
+  [RIGHTS AND LICENSE STATEMENT]
+  This file contains non-public commercial source code of which Jiangsu Qiantong
+  Technology Co., Ltd. lawfully possesses complete intellectual property rights.
+   *
+  Access and use are limited to entities or individuals who have signed a valid
+  commercial license agreement, within the scope stipulated in the agreement.
+  The "accessibility" of this source code is premised on lawful authorization
+  and does not constitute any form of transfer of intellectual property rights
+  or implied licensing.
+   *
+  [PROHIBITIONS]
+  Unless explicitly agreed in the license agreement, the following acts in any
+  form are strictly prohibited:
+  1. Copying, disseminating, disclosing, selling, renting, or redistributing
+  this source code;
+  2. Providing the software's functionality to third parties via SaaS, PaaS,
+  cloud hosting, or other means;
+  3. Using this software or its derivative versions to develop products that
+  compete with the Right Holder;
+  4. Providing or displaying this source code or related technical information
+  to unauthorized third parties;
+  5. Tampering with, circumventing, or destroying copyright notices, license
+  verifications, or other technical protection measures.
+   *
+  [LEGAL LIABILITY]
+  Any unauthorized use constitutes an infringement of trade secrets and
+  intellectual property rights.
+   *
+  The Right Holder will strictly pursue liability for breach of contract and
+  infringement in accordance with the commercial agreement and laws such as
+  the "Copyright Law of the People's Republic of China" and the "Anti-Unfair
+  Competition Law".
+   *
+  ============================================================================
+   *
+  Copyright (c) 2026 江苏千桐科技有限公司
+   *
+  软件名称：qModel 算法模型平台（商业版）
+   *
+  【权利与授权声明】
+  本文件属于江苏千桐科技有限公司依法享有完全知识产权的非公开商业源代码。
+  仅限已签署有效商业授权合同的单位或个人在约定范围内查阅和使用。
+  源代码的“可访问性”均以合法授权为前提，不构成任何形式的知识产权转让或默示授权。
+   *
+  【禁止事项】
+  除授权合同明确约定外，严禁任何形式的：
+  1. 复制、传播、披露、出售、出租或再分发本源代码；
+  2. 通过 SaaS、PaaS、云托管等方式向第三方提供本软件功能；
+  3. 将本软件或其衍生版本用于开发与权利人构成竞争的产品；
+  4. 向未授权第三方提供或展示本源代码或相关技术信息；
+  5. 篡改、规避或破坏版权标识、授权校验及其他技术保护措施。
+   *
+  【法律责任】
+  任何未经授权的利用行为，均构成对商业秘密及知识产权的侵害。
+  权利人将依据商业合同及《中华人民共和国著作权法》《反不正当竞争法》
+  等法律法规，严厉追究违约与侵权责任。
 -->
 
 <template>
@@ -22,9 +68,9 @@
       <div class="steps-inner">
         <ul class="zl-step">
           <li
-            v-for="(item, index) in stepsList"
-            :key="index"
-            :class="[
+              v-for="(item, index) in stepsList"
+              :key="index"
+              :class="[
               {
                 statusEnd: activeStep === index,
                 prevStep: index < activeStep,
@@ -34,8 +80,8 @@
             ]"
           >
             <div
-              class="step-circle"
-              :class="{
+                class="step-circle"
+                :class="{
                 active: activeStep === index,
                 prev: index < activeStep,
               }"
@@ -50,72 +96,64 @@
 
     <div class="pagecont-top">
       <div class="main" :class="{ 'step-3': activeStep === 2 }">
-        <BasicInfoStep
-          v-show="activeStep === 0"
-          ref="basicStepRef"
-          v-model:form-data="form"
-          :classify-options="classifyOptions"
-          :dict-access-type="model_access_type"
+        <BasicInfoStep v-if="activeStep === 0"
+            ref="basicStepRef"
+            v-model:form-data="model"
+            v-model:model-version="modelVersion"
+            :classify-options="classifyOptions"
+            :dict-access-type="model_access_type"
         />
 
-        <ApiConfigStep
-          v-show="activeStep === 1 && form.accessType === 'API'"
-          ref="apiStepRef"
-          v-model:form-data="form"
-          :dict-request-method="model_access_mode"
-          :dict-content-type="content_type"
-          :dict-auth-type="auth_type"
-          :dict-inject-position="auth_inject_position"
+        <ApiConfigStep v-if="activeStep === 1 && model.accessType === 'API'"
+            ref="apiStepRef"
+            v-model:form-data="modelConfig"
+            :dict-request-method="model_access_mode"
+            :dict-content-type="content_type"
+            :dict-auth-type="auth_type"
+            :dict-inject-position="auth_inject_position"
         />
 
-        <CheckUploadFile
-          v-show="activeStep === 1 && form.accessType === 'PYTHON'"
-          ref="checkUploadFileRef"
-          :file-resource="fileResource"
-          @file-checked="handleFileChecked"
+        <CheckUploadFile v-if="activeStep === 1 && model.accessType === 'PYTHON'"
+            ref="checkUploadFileRef"
+            :file-resource="fileResource"
+            @file-checked="handleFileChecked"
         />
 
-        <ParamDefineStep
-          v-show="activeStep === 2"
-          ref="paramStepRef"
-          v-model:form-data="form"
+        <ParamDefineStep v-if="activeStep === 2"
+            ref="paramStepRef"
+            v-model:form-data="inputSchema"
         />
 
-        <TestSaveStep
-          v-show="activeStep === 3 && form.accessType === 'API'"
-          ref="testStepRef"
-          v-model:form-data="form"
+        <TestSaveStep v-if="activeStep === 3 && model.accessType === 'API'"
+            ref="testStepRef"
+            v-model:form-data="modelConfig"
         />
 
-        <ConfirmBuildStep
-          v-show="activeStep === 3 && form.accessType === 'PYTHON'"
-          ref="confirmBuildStepRef"
-          :file-path="form.filePath"
+        <ConfirmBuildStep v-if="activeStep === 3 && model.accessType === 'PYTHON'"
+            ref="confirmBuildStepRef"
+            :file-path="fileResource.filePath"
+            v-model:build-type="fileResource.buildType"
         />
       </div>
     </div>
 
     <div class="button-style" :class="{ 'step-3': activeStep === 2 }">
       <el-button type="primary" @click="handleCancel">返回列表</el-button>
-      <el-button v-if="activeStep > 0" @click="handlePrevStep"
-        >上一步</el-button
-      >
-      <el-button v-if="activeStep < 3" @click="handleNextStep"
-        >下一步</el-button
-      >
+      <el-button v-if="activeStep > 0" @click="handlePrevStep">上一步</el-button>
+      <el-button v-if="activeStep < 3" @click="handleNextStep">下一步</el-button>
       <el-button
-        v-if="activeStep === 3 && form.accessType === 'API'"
-        type="primary"
-        :loading="submitLoading"
-        @click="handleSubmit"
+          v-if="activeStep === 3 && model.accessType === 'API'"
+          type="primary"
+          :loading="submitLoading"
+          @click="handleSubmit"
       >
         确定并退出
       </el-button>
       <el-button
-        v-if="activeStep === 3 && form.accessType === 'PYTHON'"
-        type="primary"
-        :loading="submitLoading"
-        @click="handleSubmit"
+          v-if="activeStep === 3 && model.accessType === 'PYTHON'"
+          type="primary"
+          :loading="submitLoading"
+          @click="handleSubmit"
       >
         确认并开始构建
       </el-button>
@@ -124,35 +162,20 @@
 </template>
 
 <script setup name="ModelManageAdd">
-import { ref, reactive, computed, onMounted } from "vue";
-import { useRoute, useRouter } from "vue-router";
-import { ElMessage } from "element-plus";
-import useTagsViewStore from "@/store/system/tagsView";
-import {
-  addModel,
-  getModel,
-  updateModel,
-  saveModelWithConfig,
-} from "@/api/model/model";
-import { listModelConfig } from "@/api/model/config";
-import { listClassify } from "@/api/modelReconstitution/classify";
+import {computed, onMounted, ref} from "vue";
+import {useRoute, useRouter} from "vue-router";
+import {addModelVO, getModelVO, updateModelVO,addModelVersion,updateModelVersion} from "@/api/model/model";
+import {listClassify} from "@/api/model/classify";
 import BasicInfoStep from "./basicInfoStep.vue";
 import ApiConfigStep from "./apiConfigStep.vue";
 import CheckUploadFile from "./checkUploadFile.vue";
 import ParamDefineStep from "./paramDefineStep.vue";
 import TestSaveStep from "./testSaveStep.vue";
 import ConfirmBuildStep from "./confirmBuildStep.vue";
-import { listModelFileResource } from "@/api/model/fileResource.js";
 
-const { proxy } = getCurrentInstance();
+const {proxy} = getCurrentInstance();
 const route = useRoute();
 const router = useRouter();
-const tagsViewStore = useTagsViewStore();
-
-const updateRouteTitle = (title) => {
-  route.meta.title = title;
-  tagsViewStore.updateVisitedView(route);
-};
 
 const {
   model_access_type,
@@ -161,11 +184,11 @@ const {
   auth_type,
   auth_inject_position,
 } = proxy.useDict(
-  "model_access_type",
-  "model_access_mode",
-  "content_type",
-  "auth_type",
-  "auth_inject_position"
+    "model_access_type",
+    "model_access_mode",
+    "content_type",
+    "auth_type",
+    "auth_inject_position"
 );
 
 const activeStep = ref(0);
@@ -177,187 +200,78 @@ const checkUploadFileRef = ref(null);
 const paramStepRef = ref(null);
 const testStepRef = ref(null);
 const confirmBuildStepRef = ref(null);
-const isEdit = ref(false);
-const configId = ref(null);
-const fileResource = ref(null);
+
+const model = ref({})
+const modelVersion = ref({})
+const modelConfig = ref({})
+const fileResource = ref({});
+
+const accessType = ref("");
 
 const stepsList = computed(() => {
-  if (form.accessType === "PYTHON") {
+  if (model.value.accessType === "PYTHON") {
     return [
-      { name: "基础配置", id: 0 },
-      { name: "文件上传与校验", id: 1 },
-      { name: "参数定义", id: 2 },
-      { name: "确认构建", id: 3 },
+      {name: "基础配置", id: 0},
+      {name: "文件上传与校验", id: 1},
+      {name: "参数定义", id: 2},
+      {name: "确认构建", id: 3},
     ];
   }
   return [
-    { name: "基础配置", id: 0 },
-    { name: "API 配置", id: 1 },
-    { name: "参数定义", id: 2 },
-    { name: "测试与保存", id: 3 },
+    {name: "基础配置", id: 0},
+    {name: "API 配置", id: 1},
+    {name: "参数定义", id: 2},
+    {name: "测试与保存", id: 3},
   ];
 });
 
-const form = reactive({
-  // 基础配置
-  id: null,
-  companyId: null,
-  name: "",
-  code: "",
-  classifyId: null,
-  accessType: "API",
-  version: "V1.0",
-  author: "",
-  status: "0",
-  tags: "",
-  icon: "",
-  description: "",
-  remark: "",
-  // API 配置
-  apiUrl: "",
-  requestMethod: "POST",
-  contentType: "application/json",
-  timeoutSeconds: 30,
-  authType: "NONE",
-  authMethod: "bearer",
-  authInjectPosition: "Header",
-  authKeyName: null,
-  authTokenPrefix: "",
-  authTokenValue: "",
-  authDynamicMethod: "POST",
-  authDynamicUrl: "",
-  authDynamicHeaders: "",
-  authDynamicParams: "",
-  authDynamicBody: "",
-  authExtractPath: "",
-  // 参数定义
-  inputSchema: "",
-  outputSchema: "",
-  // 测试与保存
-  testBody: "",
-  // Python 文件上传
-  uploadedFile: null,
-  filePath: "",
-  fileName: "",
-  fileResourceId: null,
-});
+const inputSchema = computed({
+  get() {
+    if (model.value.accessType === "API") {
+      return modelConfig.value;
+    } else if (model.value.accessType === "PYTHON") {
+      return fileResource.value;
+    }
+  },
+  set(newVal) {
+    if (model.value.accessType === "API") {
+      modelConfig.value = newVal;
+    } else if (model.value.accessType === "PYTHON") {
+      fileResource.value = newVal;
+    }
+  }
+})
+
+let tipText = "新增模型";
 
 onMounted(() => {
   getClassifyOptions();
+  tipText = route.meta.title;
   const editId = route.query.id;
+  const version = route.query.version;
   if (editId) {
-    isEdit.value = true;
-    updateRouteTitle("修改模型");
-    loadModelData(editId);
-  } else {
-    updateRouteTitle("新增模型");
+    loadModelData(editId,version);
   }
 });
 
-const normalizeAccessType = (val) => {
-  if (val == null) return "API";
-  const str = String(val).toUpperCase();
-  // 表结构注释：0-API接口, 1-Python本地
-  if (str === "API" || str === "0" || str === "API接口") return "API";
-  if (
-    str === "PYTHON" ||
-    str === "1" ||
-    str === "Python本地" ||
-    str === "PYTHON本地"
-  )
-    return "PYTHON";
-  return "API";
-};
-
-const normalizeAuthType = (val) => {
-  if (val == null) return "NONE";
-  const str = String(val).toUpperCase();
-  if (str === "NONE" || str === "0" || str === "无") return "NONE";
-  if (
-    str === "FIXED" ||
-    str === "1" ||
-    str === "固定TOKEN" ||
-    str === "固定 Token / API Key".toUpperCase()
-  )
-    return "FIXED";
-  if (
-    str === "DYNAMIC" ||
-    str === "2" ||
-    str === "动态TOKEN" ||
-    str === "动态 Token API".toUpperCase()
-  )
-    return "DYNAMIC";
-  return "NONE";
-};
-
-const loadModelData = async (id) => {
+const loadModelData = async (id,version) => {
   try {
-    const modelRes = await getModel(id);
-    const modelData = modelRes.data || {};
-    const accessType = normalizeAccessType(modelData.accessType);
-    Object.assign(form, {
-      id: modelData.id,
-      companyId: modelData.companyId,
-      name: modelData.name || "",
-      code: modelData.code || "",
-      classifyId: modelData.classifyId || null,
-      accessType,
-      version: modelData.version || "V1.0",
-      author: modelData.author || "",
-      status: modelData.status != null ? String(modelData.status) : "3",
-      tags: modelData.tags || "",
-      icon: modelData.icon || "",
-      description: modelData.description || "",
-      remark: modelData.remark || "",
-    });
+    const modelRes = await getModelVO(id,version);
+    model.value = modelRes.data.model;
+    const modelData = modelRes.data.model;
+    accessType.value = modelData.accessType;
+    modelVersion.value = modelRes.data.modelVersion;
+    if (!modelVersion.value.baseVersion){
+      modelVersion.value.baseVersion = version;
+    }
 
-    if (accessType === "API") {
-      const configRes = await listModelConfig({ modelId: id });
-      // listModelConfig 返回分页结构 { rows: [], total: 0 }
-      const configList = configRes.data?.rows || configRes.data || [];
-      if (configList.length > 0) {
-        const config = configList[0];
-        configId.value = config.id;
-        const authType = normalizeAuthType(config.authType);
-        Object.assign(form, {
-          apiUrl: config.apiUrl || "",
-          requestMethod: config.requestMethod || "POST",
-          contentType: config.contentType || "application/json",
-          timeoutSeconds: config.timeoutSeconds || 30,
-          authType,
-          authMethod: config.authMethod || "apiKey",
-          authInjectPosition: config.authInjectPosition || "Header",
-          authKeyName: config.authKeyName,
-          authTokenPrefix: config.authTokenPrefix || "",
-          authTokenValue: config.authTokenValue || "",
-          authDynamicMethod: config.authDynamicMethod || "POST",
-          authDynamicUrl: config.authDynamicUrl || "",
-          authDynamicHeaders: config.authDynamicHeaders || "",
-          authDynamicParams: config.authDynamicParams || "",
-          authDynamicBody: config.authDynamicBody || "",
-          authExtractPath: config.authExtractPath || "",
-          inputSchema: config.inputSchema || "",
-          outputSchema: config.outputSchema || "",
-        });
-      }
-    } else if (accessType === "PYTHON") {
-      const fileResRes = await listModelFileResource({ modelId: id });
-      const fileResList = fileResRes.data?.rows || fileResRes.data || [];
-      if (fileResList.length > 0) {
-        const fileRes = fileResList[0];
-        fileResource.value = fileRes;
-        Object.assign(form, {
-          fileResourceId: fileRes.id,
-          filePath: fileRes.filePath || "",
-          fileName: fileRes.fileName || "",
-          inputSchema: fileRes.inputSchema || "",
-          outputSchema: fileRes.outputSchema || "",
-        });
-      }
+    if (model.value.accessType === "API") {
+      modelConfig.value = modelRes.data.modelConfig;
+    } else if (model.value.accessType === "PYTHON") {
+      fileResource.value = modelRes.data.fileResource;
     }
   } catch (error) {
-    ElMessage.error("加载模型数据失败");
-    console.error(error);
+    proxy.$modal.msgError("加载模型数据失败");
   }
 };
 
@@ -384,45 +298,62 @@ const getClassifyOptions = () => {
 };
 
 const handleFileChecked = (result) => {
-  console.log("[ModelAdd] handleFileChecked", result);
   if (result.pass) {
-    form.uploadedFile = result.file;
-    form.filePath = result.filePath || "";
-    form.fileName = result.fileName || "";
+    fileResource.value.uploadedFile = result.file;
+    fileResource.value.filePath = result.filePath || "";
+    if (result.fileName){
+      fileResource.value.fileName = result.fileName
+    }
+    if (result.fileSize){
+      fileResource.value.fileSize = result.fileSize;
+    }
+    fileResource.value.inputSchema = fileResource.value.inputSchema || "";
   } else {
-    form.uploadedFile = null;
-    form.filePath = "";
-    form.fileName = "";
+    fileResource.value.uploadedFile = null;
+    fileResource.value.filePath = "";
+    fileResource.value.fileName = "";
+    fileResource.value.inputSchema = fileResource.value.inputSchema || "";
   }
 };
 
+// 取消
 const handleCancel = () => {
-  const message = isEdit.value
-    ? "确认取消修改模型吗？已修改的内容将不会保存。"
-    : "确认取消新增模型吗？已填写的内容将不会保存。";
-  proxy.$modal
-    .confirm(message)
-    .then(() => {
-      router.push("/model/manage");
-    })
-    .catch(() => {});
+  const message = "确认取消" + tipText + "吗？已修改的内容将不会保存。"
+  proxy.$modal.confirm(message)
+      .then(() => {cancel();});
 };
 
+// 返回
+function cancel() {
+  let param;
+  if (['ModelManageAdd','ModelManageEdit'].includes(route.name)){
+    param = {path: "/model/manage"}
+  }else if (['modelVersionAdd','modelVersionEdit'].includes(route.name)){
+    param = {
+      path: "/model/modelManageView",
+      query: { modelId: model.value.id, tab: "version" },
+    }
+  }
+  router.push(param);
+}
+
+// 上一步
 const handlePrevStep = () => {
   if (activeStep.value > 0) {
     activeStep.value--;
   }
 };
 
+// 下一步
 const handleNextStep = async () => {
   try {
     if (activeStep.value === 0) {
       await basicStepRef.value.validate();
     }
     if (activeStep.value === 1) {
-      if (form.accessType === "API") {
+      if (model.value.accessType === "API") {
         await apiStepRef.value.validate();
-      } else if (form.accessType === "PYTHON") {
+      } else if (model.value.accessType === "PYTHON") {
         if (!checkUploadFileRef.value) {
           throw new Error("请上传并检测通过 ZIP 模型包");
         }
@@ -439,120 +370,41 @@ const handleNextStep = async () => {
       activeStep.value++;
     }
   } catch (error) {
-    ElMessage.error(error?.message || "请上传并检测通过 ZIP 模型包");
+    if (error.message !== ""){
+      proxy.$modal.msgError(error?.message || "请上传并检测通过 ZIP 模型包");
+    }
   }
 };
 
-const buildModelData = () => {
-  const modelData = {
-    id: isEdit.value ? form.id : undefined,
-    companyId: form.companyId,
-    name: form.name,
-    code: form.code,
-    classifyId: form.classifyId,
-    accessType: form.accessType,
-    version: form.version,
-    author: form.author || null,
-    status: form.status || "3",
-    tags: form.tags || null,
-    icon: form.icon || "",
-    description: form.description || null,
-    remark: form.remark || null,
-  };
-
-  if (form.accessType === "PYTHON") {
-    modelData.filePath = form.filePath || undefined;
-    modelData.fileName = form.fileName || form.uploadedFile?.name || undefined;
-    modelData.fileSize = form.uploadedFile?.size
-      ? Math.round(form.uploadedFile.size / (1024 * 1024))
-      : undefined;
-    modelData.scriptName = "main.py";
-    modelData.resourceType = "2";
-    modelData.status = "0";
-    modelData.modelVersion = 1;
-    modelData.inputSchema = form.inputSchema || undefined;
-    modelData.outputSchema = form.outputSchema || undefined;
-    modelData.fileResourceId = isEdit.value ? form.fileResourceId : undefined;
-    modelData.accessType = "PYTHON";
-  }
-
-  return modelData;
-};
-
-const buildConfigData = (modelId) => {
-  const configData = {
-    id: isEdit.value ? configId.value : undefined,
-    companyId: form.companyId,
-    modelId: modelId,
-    apiUrl: form.apiUrl,
-    requestMethod: form.requestMethod,
-    contentType: form.contentType,
-    timeoutSeconds: form.timeoutSeconds,
-    authType: form.authType,
-    inputSchema: form.inputSchema || null,
-    outputSchema: form.outputSchema || null,
-    remark: form.remark || null,
-  };
-
-  if (form.authType === "FIXED") {
-    configData.authMethod = form.authMethod || null;
-    configData.authTokenValue = form.authTokenValue || null;
-    configData.authInjectPosition = form.authInjectPosition || null;
-    configData.authKeyName = form.authKeyName || null;
-    configData.authTokenPrefix = form.authTokenPrefix || null;
-  }
-
-  if (form.authType === "DYNAMIC") {
-    configData.authDynamicMethod = form.authDynamicMethod || null;
-    configData.authDynamicUrl = form.authDynamicUrl || null;
-    configData.authDynamicHeaders = form.authDynamicHeaders || null;
-    configData.authDynamicParams = form.authDynamicParams || null;
-    configData.authDynamicBody = form.authDynamicBody || null;
-    configData.authExtractPath = form.authExtractPath || null;
-    configData.authTokenPrefix = form.authTokenPrefix || null;
-    configData.authInjectPosition = form.authInjectPosition || null;
-    configData.authKeyName = form.authKeyName || null;
-  }
-
-  return configData;
-};
-
+// 提交
 const handleSubmit = async () => {
-  submitLoading.value = true;
-  console.log("[ModelAdd] handleSubmit start", { form, isEdit: isEdit.value });
-  try {
-    const modelData = buildModelData();
-    console.log("[ModelAdd] modelData", modelData);
+  model.value.version = modelVersion.value.modelVersion;
+  const param = {
+    model: model.value,
+    modelVersion: modelVersion.value,
+    modelConfig: modelConfig.value,
+    fileResource: fileResource.value,
+  }
 
-    if (form.accessType === "API") {
-      const configData = buildConfigData(modelData.id);
-      const payload = {
-        model: modelData,
-        config: configData,
-      };
-      await saveModelWithConfig(payload);
-      if (form.authType === "NONE") {
-        apiStepRef.value?.clearAuthState();
-      }
-    } else {
-      if (isEdit.value) {
-        await updateModel(modelData);
-      } else {
-        await addModel(modelData);
-      }
+  try {
+    switch (route.name){
+      case 'ModelManageAdd'://新增模型
+        await addModelVO(param);break;
+      case 'ModelManageEdit':// 修改模型
+        await updateModelVO(param);break;
+      case 'modelVersionAdd':// 新增模型版本
+        await addModelVersion(param);break;
+      case 'modelVersionEdit':// 修改模型版本
+        await updateModelVersion(param);break;
     }
 
-    const successMsg = isEdit.value ? "修改模型成功" : "新增模型成功";
-    ElMessage.success(successMsg);
-    router.push("/model/manage");
+    const successMsg = tipText + "成功";
+    proxy.$modal.msgSuccess(successMsg);
+    cancel();
   } catch (error) {
-    console.error("[ModelAdd] 保存模型失败：", error);
-    ElMessage.error(
-      error?.msg || error?.message || "保存模型失败，请检查网络或数据"
-    );
+    proxy.$modal.msgError(error?.msg || error?.message || "保存模型失败，请检查网络或数据");
   } finally {
     submitLoading.value = false;
-    console.log("[ModelAdd] handleSubmit end");
   }
 };
 </script>
@@ -613,11 +465,11 @@ const handleSubmit = async () => {
         &.step-1 {
           z-index: 4;
           clip-path: polygon(
-            0 0,
-            calc(100% - 20px) 0,
-            100% 50%,
-            calc(100% - 20px) 100%,
-            0 100%
+                  0 0,
+                  calc(100% - 20px) 0,
+                  100% 50%,
+                  calc(100% - 20px) 100%,
+                  0 100%
           );
         }
 
@@ -625,11 +477,11 @@ const handleSubmit = async () => {
           z-index: 3;
           margin-left: -10px;
           clip-path: polygon(
-            0 0,
-            calc(100% - 20px) 0,
-            100% 50%,
-            calc(100% - 20px) 100%,
-            0 100%
+                  0 0,
+                  calc(100% - 20px) 0,
+                  100% 50%,
+                  calc(100% - 20px) 100%,
+                  0 100%
           );
 
           &::before {
@@ -649,11 +501,11 @@ const handleSubmit = async () => {
           z-index: 2;
           margin-left: -10px;
           clip-path: polygon(
-            0 0,
-            calc(100% - 20px) 0,
-            100% 50%,
-            calc(100% - 20px) 100%,
-            0 100%
+                  0 0,
+                  calc(100% - 20px) 0,
+                  100% 50%,
+                  calc(100% - 20px) 100%,
+                  0 100%
           );
 
           &::before {
@@ -673,6 +525,7 @@ const handleSubmit = async () => {
           z-index: 1;
           margin-left: -10px;
           clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+
           &::before {
             content: "";
             position: absolute;
@@ -764,7 +617,7 @@ const handleSubmit = async () => {
 }
 
 .button-style {
-  position: absolute;
+  //position: absolute;
   left: 0;
   right: 0;
   bottom: 0;

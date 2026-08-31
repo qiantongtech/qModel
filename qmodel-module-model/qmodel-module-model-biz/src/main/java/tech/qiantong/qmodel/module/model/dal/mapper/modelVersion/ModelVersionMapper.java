@@ -62,95 +62,40 @@
  * 等法律法规，严厉追究违约与侵权责任。
  */
 
-import request from '@/utils/request'
+package tech.qiantong.qmodel.module.model.dal.mapper.modelVersion;
 
-// 查询版本管理列表
-export function listVersion(query) {
-    return request({
-        url: '/model/version/list',
-        method: 'get',
-        params: query
-    })
-}
+import tech.qiantong.qmodel.common.core.page.PageResult;
+import tech.qiantong.qmodel.module.model.controller.admin.modelVersion.vo.ModelVersionPageReqVO;
+import tech.qiantong.qmodel.module.model.dal.dataobject.modelVersion.ModelVersionDO;
+import tech.qiantong.qmodel.mybatis.core.mapper.BaseMapperX;
+import tech.qiantong.qmodel.mybatis.core.query.LambdaQueryWrapperX;
 
-// 版本的切换
-export function changeVersion(data) {
-    return request({
-        url: '/model/version/changeVersion',
-        method: 'post',
-        data: data
-    })
-}
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
 
-// 删除版本管理
-export function delVersion(id) {
-    return request({
-        url: '/model/version/' + id,
-        method: 'delete'
-    })
-}
+/**
+ * 版本管理Mapper接口
+ *
+ * @author qModel
+ * @date 2026-01-09
+ */
+public interface ModelVersionMapper extends BaseMapperX<ModelVersionDO> {
 
-// 查询一个模型全部版本记录
-export function getModelVersionDict(modelId) {
-    return request({
-        url: '/model/version/getModelVersionDict/?modelId=' + modelId,
-        method: 'get'
-    })
-}
+    default PageResult<ModelVersionDO> selectPage(ModelVersionPageReqVO reqVO) {
+        // 定义排序的字段（防止 SQL 注入，与数据库字段名称一致）
+        Set<String> allowedColumns = new HashSet<>(Arrays.asList("id", "create_time", "update_time"));
 
-// 查询一个模型指定版本
-export function getModelVersion(modelId, version) {
-    return request({
-        url: '/model/version/getModelVersion',
-        method: 'get',
-        params: {modelId, version}
-    })
-}
-
-// 查询版本是否存在
-export function isModelVersionExists(modelId, modelVersion) {
-    return request({
-        url: '/model/version/isModelVersionExists',
-        method: 'get',
-        params: {modelId, modelVersion}
-    })
-}
-
-// ---------------------
+        // 构造动态查询条件
+        return selectPage(reqVO, new LambdaQueryWrapperX<ModelVersionDO>()
+                .eqIfPresent(ModelVersionDO::getModelId, reqVO.getModelId())
+                .eqIfPresent(ModelVersionDO::getDescription, reqVO.getDescription())
+                .eqIfPresent(ModelVersionDO::getCreateTime, reqVO.getCreateTime())
+                // 如果 reqVO.getName() 不为空，则添加 name 的精确匹配条件（name = '<name>'）
+                // .likeIfPresent(ModelVersionDO::getName, reqVO.getName())
+                // 按照 createTime 字段降序排序
+                .orderBy(reqVO.getOrderByColumn(), reqVO.getIsAsc(), allowedColumns));
+    }
 
 
-// 查询版本管理详细
-export function getVersion(id) {
-    return request({
-        url: '/model/version/' + id,
-        method: 'get'
-    })
-}
-
-
-// 展示一个模型全部版本记录
-export function getVersionList(query) {
-    return request({
-        url: '/model/version/versionList/',
-        method: 'get',
-        params: query
-    })
-}
-
-// 新增版本管理
-export function addVersion(data) {
-    return request({
-        url: '/model/version',
-        method: 'post',
-        data: data
-    })
-}
-
-// 修改版本管理
-export function updateVersion(data) {
-    return request({
-        url: '/model/version',
-        method: 'put',
-        data: data
-    })
 }

@@ -62,95 +62,71 @@
  * 等法律法规，严厉追究违约与侵权责任。
  */
 
-import request from '@/utils/request'
+package tech.qiantong.qmodel.module.model.dal.dataobject.modelVersion;
 
-// 查询版本管理列表
-export function listVersion(query) {
-    return request({
-        url: '/model/version/list',
-        method: 'get',
-        params: query
-    })
-}
+import com.baomidou.mybatisplus.annotation.*;
+import lombok.*;
+import tech.qiantong.qmodel.common.core.domain.BaseEntity;
 
-// 版本的切换
-export function changeVersion(data) {
-    return request({
-        url: '/model/version/changeVersion',
-        method: 'post',
-        data: data
-    })
-}
+/**
+ * 模型版本 DO 对象 model_version
+ *
+ * @author anivia
+ * @date 2026-08-17
+ */
+@Data
+@TableName(value = "model_version")
+// 用于 Oracle、PostgreSQL、Kingbase、DB2、H2 数据库的主键自增。如果是 MySQL 等数据库，可不写。
+// @KeySequence("model_version_seq")
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+@EqualsAndHashCode(callSuper = true)
+public class ModelVersionDO extends BaseEntity {
+    @TableField(exist = false)
+    private static final long serialVersionUID = 1L;
 
-// 删除版本管理
-export function delVersion(id) {
-    return request({
-        url: '/model/version/' + id,
-        method: 'delete'
-    })
-}
+    /**
+     * ID
+     */
+    @TableId(type = IdType.AUTO)
+    private Long id;
 
-// 查询一个模型全部版本记录
-export function getModelVersionDict(modelId) {
-    return request({
-        url: '/model/version/getModelVersionDict/?modelId=' + modelId,
-        method: 'get'
-    })
-}
+    /**
+     * 模型id
+     */
+    private Long modelId;
 
-// 查询一个模型指定版本
-export function getModelVersion(modelId, version) {
-    return request({
-        url: '/model/version/getModelVersion',
-        method: 'get',
-        params: {modelId, version}
-    })
-}
+    /**
+     * 版本号
+     */
+    private String modelVersion;
 
-// 查询版本是否存在
-export function isModelVersionExists(modelId, modelVersion) {
-    return request({
-        url: '/model/version/isModelVersionExists',
-        method: 'get',
-        params: {modelId, modelVersion}
-    })
-}
+    /**
+     * 描述
+     */
+    private String description;
 
-// ---------------------
+    /**
+     * 版本摘要
+     */
+    private String digest;
 
+    /**
+     * 基础版本
+     */
+    private String baseVersion;
 
-// 查询版本管理详细
-export function getVersion(id) {
-    return request({
-        url: '/model/version/' + id,
-        method: 'get'
-    })
-}
+    /**
+     * 是否有效
+     */
+    private Boolean validFlag;
+
+    /**
+     * 删除标志
+     */
+    @TableLogic
+    private Boolean delFlag;
 
 
-// 展示一个模型全部版本记录
-export function getVersionList(query) {
-    return request({
-        url: '/model/version/versionList/',
-        method: 'get',
-        params: query
-    })
-}
-
-// 新增版本管理
-export function addVersion(data) {
-    return request({
-        url: '/model/version',
-        method: 'post',
-        data: data
-    })
-}
-
-// 修改版本管理
-export function updateVersion(data) {
-    return request({
-        url: '/model/version',
-        method: 'put',
-        data: data
-    })
 }
