@@ -93,7 +93,7 @@ export function delVersion(id) {
 // 查询一个模型全部版本记录
 export function getModelVersionDict(modelId) {
     return request({
-        url: '/model/version/getModelVersionDict/?modelId=' + modelId,
+        url: '/model/version/getModelVersionDict?modelId=' + modelId,
         method: 'get'
     })
 }

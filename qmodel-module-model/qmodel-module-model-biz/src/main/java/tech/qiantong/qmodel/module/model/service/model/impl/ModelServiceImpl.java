@@ -112,8 +112,6 @@ public class ModelServiceImpl extends ServiceImpl<ModelMapper, ModelDO> implemen
 
     @Override
     public int updateModel(ModelSaveReqVO updateReqVO) {
-
-
         ModelDO updateObj = BeanUtils.toBean(updateReqVO, ModelDO.class);
         modelMapper.updateById(updateObj);
         Long modelId = updateReqVO.getId();
@@ -157,8 +155,7 @@ public class ModelServiceImpl extends ServiceImpl<ModelMapper, ModelDO> implemen
         ModelDO modelDO = modelMapper.selectById(id);
         if(ObjectUtil.isNotNull(modelDO)){
             if(AccessTypeEnum.PYTHON.getType().equals(modelDO.getAccessType())){
-                ModelFileResourceDO one = modelFileResourceService.getOne(new QueryWrapper<ModelFileResourceDO>()
-                        .eq("model_id",id));
+                ModelFileResourceDO one = modelFileResourceService.getByModel(id, modelDO.getVersion());
                 modelDO.setModelFileResourceRespVO(one);
             }
             if(modelDO.getClassifyId() != null){
@@ -191,8 +188,7 @@ public class ModelServiceImpl extends ServiceImpl<ModelMapper, ModelDO> implemen
         ModelDO modelDO = entityList.get(0);
         if(ObjectUtil.isNotNull(modelDO)){
             if(AccessTypeEnum.PYTHON.getType().equals(modelDO.getAccessType())){
-                ModelFileResourceDO one = modelFileResourceService.getOne(new QueryWrapper<ModelFileResourceDO>()
-                        .eq("model_id",modelDO.getId()));
+                ModelFileResourceDO one = modelFileResourceService.getByModel(modelDO.getId(), modelDO.getVersion());
                 modelDO.setModelFileResourceRespVO(one);
             }
             if(modelDO.getClassifyId() != null){
@@ -357,6 +353,7 @@ public class ModelServiceImpl extends ServiceImpl<ModelMapper, ModelDO> implemen
             if (StringUtils.isEmpty(fileResource.getFilePath())) {
                 throw new ServiceException("Python类型模型必须上传文件");
             }
+            modelFileResourceService.saveFileResourceFromModel(fileResource, modelId);
         }
 
         return modelId;

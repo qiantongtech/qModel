@@ -364,6 +364,8 @@ import OnlineTest from "./onlineTest.vue";
 import InvokeHistory from "./invokeHistory.vue";
 import BuildLog from "./buildLog.vue";
 import ModelCalc from "@/views/model/modelManage/details/modelCalc.vue";
+import ModelApi from "@/views/model/modelManage/details/modelApi.vue";
+import ModelAudit from "@/views/model/modelManage/details/modelAudit.vue";
 
 const { proxy } = getCurrentInstance();
 const router = useRouter();
@@ -421,7 +423,7 @@ const getModelById = (params) => {
 
 const goBack = () => {
   router.push({
-    path: "/model/modelManage",
+    path: "/model/manage",
     query: {
       pageNum: 1,
     },

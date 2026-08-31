@@ -54,7 +54,7 @@ public class ModelFileResourcePageReqVO extends PageParam {
     private String depsFilePath;
 
     @Schema(description = "模型版本号", example = "")
-    private Long modelVersion;
+    private String modelVersion;
 
     @Schema(description = "资源类型：1=模型文件(onnx/pth/safetensors)，2=Python算法脚本(.py)", example = "")
     private String resourceType;
