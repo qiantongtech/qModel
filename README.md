@@ -168,8 +168,6 @@ qModel 提供 **开源版** 与 **商业版** 双轨模式：
 
 👉 如需 **开源版品牌定制授权** 或 **咨询专业版**，请点击按钮查看详情：[💼 了解授权详情](https://community.qmodel.tech/business/policy.html)
 
-[![加入QQ群](https://img.shields.io/badge/QQ群-1064842367-blue.svg)](https://qm.qq.com/q/Ph8rhmZBQY)
-
 ## 🚀 快速开始
 
 | 部署方式                                                                                        | 说明                                                                       | 适用场景                   |
