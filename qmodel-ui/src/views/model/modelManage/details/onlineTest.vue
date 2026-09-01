@@ -476,7 +476,7 @@ const handleTest = async () => {
       addLog(`执行 Python 脚本，模型ID：${props.modelId}`);
       addLog("正在执行脚本...");
 
-      const res = await runModelScript(props.modelId, body);
+      const res = await runModelScript(props.modelId,selectedVersion.value, body);
       if (res.code === 200) {
         const result = res.data || {};
         addLog("脚本执行成功", "success");

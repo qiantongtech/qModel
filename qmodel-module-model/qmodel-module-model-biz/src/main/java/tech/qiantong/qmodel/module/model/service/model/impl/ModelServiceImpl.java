@@ -353,6 +353,7 @@ public class ModelServiceImpl extends ServiceImpl<ModelMapper, ModelDO> implemen
             if (StringUtils.isEmpty(fileResource.getFilePath())) {
                 throw new ServiceException("Python类型模型必须上传文件");
             }
+            fileResource.setModelVersion(modelDO.getVersion());
             modelFileResourceService.saveFileResourceFromModel(fileResource, modelId);
         }
 

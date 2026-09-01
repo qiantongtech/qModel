@@ -58,8 +58,8 @@ public class ModelBuildLogDO extends BaseEntity {
     /** 模型名称 */
     private String modelName;
 
-    /** 版本id */
-    private Long versionId;
+    /** 版本号 */
+    private String modelVersion;
 
     /** 构建类型 */
     private Integer buildType;

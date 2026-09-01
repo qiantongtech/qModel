@@ -28,6 +28,8 @@ import java.util.zip.ZipEntry;
 import java.nio.charset.StandardCharsets;
 import java.util.regex.Pattern;
 import java.util.concurrent.TimeUnit;
+
+import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.TypeReference;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
@@ -458,24 +460,25 @@ public class ModelFileResourceServiceImpl extends ServiceImpl<ModelFileResourceM
     }
 
     @Override
-    public Object runModelScript(Long modelId, Map<String, Object> inputParam) {
+    public Object runModelScript(Long modelId, String modelVersion, Map<String, Object> inputParam) {
         Date startTime = new Date();
         String clientIp = getSafeClientIp();
         if (inputParam == null) {
             inputParam = new HashMap<>();
         }
+        ModelRespVO modelInfo = modelService.getModelById(modelId);
+        if (Objects.isNull(modelVersion)){
+            modelVersion =  modelInfo.getVersion();
+        }
 
         // 先清掉线程里上次残留的监控数据（防止线程池复用污染）
         ProcessResourceStatsContext.clear();
-
-        ModelFileResourceDO fileResourceDO = modelFileResourceMapper.selectOne(
-                new QueryWrapper<ModelFileResourceDO>()
-                        .eq("model_id", modelId)
-                        .eq("del_flag", 0)
-                        .last("LIMIT 1")
-        );
-
-        ModelRespVO modelInfo = modelService.getModelById(modelId);
+        LambdaQueryWrapper<ModelFileResourceDO> queryWrapper = Wrappers.lambdaQuery(ModelFileResourceDO.class)
+                .eq(ModelFileResourceDO::getModelId, modelId)
+                .eq(ModelFileResourceDO::getModelVersion, modelVersion)
+                .eq(ModelFileResourceDO::getDelFlag, 0)
+                .last("LIMIT 1");
+        ModelFileResourceDO fileResourceDO = modelFileResourceMapper.selectOne(queryWrapper);
 
         if (modelInfo == null) {
             throw new ServiceException("模型不存在，modelId: " + modelId);
@@ -601,7 +604,7 @@ public class ModelFileResourceServiceImpl extends ServiceImpl<ModelFileResourceM
             }
 
             Date endTime = new Date();
-            modelInvokeHistoryService.saveInvokeLogAsync(modelId, modelInfo.getName(), InvokeTypeEnum.PYTHON.getType(),
+            modelInvokeHistoryService.saveInvokeLogAsync(modelId, modelInfo.getName(),modelVersion, InvokeTypeEnum.PYTHON.getType(),
                     paramJson, JSON.toJSONString(result), InvokeStatusEnum.SUCCESS.getStatus(), null,
                     endTime.getTime() - startTime.getTime(), startTime, endTime, clientIp);
 
@@ -621,7 +624,7 @@ public class ModelFileResourceServiceImpl extends ServiceImpl<ModelFileResourceM
             }
 
             Date endTime = new Date();
-            modelInvokeHistoryService.saveInvokeLogAsync(modelId, modelInfo.getName(), InvokeTypeEnum.PYTHON.getType(),
+            modelInvokeHistoryService.saveInvokeLogAsync(modelId, modelInfo.getName(), modelVersion, InvokeTypeEnum.PYTHON.getType(),
                     paramJson, null, InvokeStatusEnum.FAILED.getStatus(), e.getMessage(),
                     endTime.getTime() - startTime.getTime(), startTime, endTime, clientIp);
             throw e;
@@ -640,7 +643,7 @@ public class ModelFileResourceServiceImpl extends ServiceImpl<ModelFileResourceM
             }
 
             Date endTime = new Date();
-            modelInvokeHistoryService.saveInvokeLogAsync(modelId, modelInfo.getName(), InvokeTypeEnum.PYTHON.getType(),
+            modelInvokeHistoryService.saveInvokeLogAsync(modelId, modelInfo.getName(), modelVersion, InvokeTypeEnum.PYTHON.getType(),
                     paramJson, null, InvokeStatusEnum.FAILED.getStatus(), e.getMessage(),
                     endTime.getTime() - startTime.getTime(), startTime, endTime, clientIp);
             log.error("执行模型脚本失败，modelId: {}", modelId, e);
@@ -692,7 +695,7 @@ public class ModelFileResourceServiceImpl extends ServiceImpl<ModelFileResourceM
     }
 
     @Override
-    public Object runModelScript(Long modelId, String paramsJson, String fileKeys, List<MultipartFile> files) {
+    public Object runModelScript(Long modelId,String modelVersion, String paramsJson, String fileKeys, List<MultipartFile> files) {
         Map<String, Object> inputParam = new HashMap<>();
 
         if (StringUtils.isNotBlank(paramsJson)) {
@@ -718,7 +721,7 @@ public class ModelFileResourceServiceImpl extends ServiceImpl<ModelFileResourceM
             }
         }
 
-        return runModelScript(modelId, inputParam);
+        return runModelScript(modelId, modelVersion, inputParam);
     }
 
     @Override

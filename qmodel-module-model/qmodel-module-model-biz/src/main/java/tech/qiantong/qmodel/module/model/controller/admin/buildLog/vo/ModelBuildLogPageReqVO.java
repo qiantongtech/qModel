@@ -46,8 +46,8 @@ public class ModelBuildLogPageReqVO extends PageParam {
     @Schema(description = "模型名称", example = "")
     private String modelName;
 
-    @Schema(description = "版本id", example = "")
-    private Long versionId;
+    @Schema(description = "版本号", example = "")
+    private String modelVersion;
 
     @Schema(description = "构建类型", example = "")
     private String buildType;

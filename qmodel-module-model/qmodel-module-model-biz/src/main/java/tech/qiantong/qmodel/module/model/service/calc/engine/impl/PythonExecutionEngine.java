@@ -62,7 +62,7 @@ public class PythonExecutionEngine implements IExecutionEngine {
 
             // 调用 runModelScript —— 内部已包含：脚本路径检查、构建状态校验、
 
-            Object scriptResult = modelFileResourceService.runModelScript(ctx.getModelId(), inputParam);
+            Object scriptResult = modelFileResourceService.runModelScript(ctx.getModelId(),null, inputParam);
 
             ProcessResourceMonitor.ProcessStats stats = ProcessResourceStatsContext.getAndClear();
             if (stats != null || ProcessResourceStatsContext.isEnableMonitor()) {
