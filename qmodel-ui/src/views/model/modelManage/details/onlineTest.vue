@@ -28,6 +28,7 @@
             :loading="testing"
             :icon="VideoPlay"
             @click="handleTest"
+            :disabled="!selectedVersion"
           >
             调用测试
           </el-button>
