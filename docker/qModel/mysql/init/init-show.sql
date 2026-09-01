@@ -330,113 +330,54 @@ INSERT INTO `model` VALUES (11, NULL, 1, '水量预测模型', 'WATER_VOLUME_MOD
 -- Table structure for model_config
 -- ----------------------------
 DROP TABLE IF EXISTS `model_config`;
-CREATE TABLE `model_config`
-(
-    `id`                   bigint   NOT NULL AUTO_INCREMENT COMMENT '主键ID',
-    `company_id`           bigint NULL DEFAULT NULL COMMENT '企业ID',
-    `model_id`             bigint NULL DEFAULT NULL COMMENT '关联模型ID',
-    `api_url`              varchar(3072) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '业务接口地址',
-    `request_method`       varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '请求方式;0-GET, 1-POST, 2-PUT, 3-DELETE, 4-PATCH',
-    `content_type`         varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '请求内容类型例',
-    `timeout_seconds`      int NULL DEFAULT NULL COMMENT '超时时间单位秒',
-    `auth_type`            varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '鉴权类型;NONE-无, FIXED-固定Token, DYNAMIC-动态Token',
-    `auth_method`          varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '鉴权方式（bearer / apiKey）',
-    `auth_inject_position` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '注入位置',
-    `auth_key_name`        varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '鉴权键名例',
-    `auth_token_prefix`    varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT 'Token前缀',
-    `auth_token_value`     text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL COMMENT '固定Token值或APIKey;0-GET 1-POST',
-    `auth_dynamic_method`  varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '获取Token方式;GET/POST',
-    `auth_dynamic_url`     varchar(3072) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '获取Token的URL地址',
-    `auth_dynamic_headers` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL COMMENT '获取Token时的请求头',
-    `auth_dynamic_body`    text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL COMMENT '获取Token的请求体',
-    `auth_dynamic_params`  text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL COMMENT '获取Token时的Query参数',
-    `auth_extract_path`    varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT 'Token提取路径',
-    `input_schema`         text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL COMMENT '入参JSONSchema定义',
-    `output_schema`        text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL COMMENT '出参JSONSchema定义',
-    `valid_flag`           tinyint(1) NOT NULL DEFAULT 1 COMMENT '是否有效;0：无效，1：有效',
-    `del_flag`             tinyint(1) NOT NULL DEFAULT 0 COMMENT '删除标志;1：已删除，0：未删除',
-    `create_by`            varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '创建人',
-    `creator_id`           bigint NULL DEFAULT NULL COMMENT '创建人ID',
-    `create_time`          datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-    `update_by`            varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '更新人',
-    `updator_id`           bigint NULL DEFAULT NULL COMMENT '更新人ID',
-    `update_time`          datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '更新时间',
-    `remark`               varchar(512) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '备注',
-    PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 21 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '模型配置详情表' ROW_FORMAT = Dynamic;
+CREATE TABLE `model_config`  (
+                                 `id` bigint NOT NULL AUTO_INCREMENT COMMENT '主键ID',
+                                 `company_id` bigint NULL DEFAULT NULL COMMENT '企业ID',
+                                 `model_id` bigint NULL DEFAULT NULL COMMENT '关联模型ID',
+                                 `model_version` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '模型版本',
+                                 `api_url` varchar(3072) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '业务接口地址',
+                                 `request_method` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '请求方式;0-GET, 1-POST, 2-PUT, 3-DELETE, 4-PATCH',
+                                 `content_type` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '请求内容类型例',
+                                 `timeout_seconds` int NULL DEFAULT NULL COMMENT '超时时间单位秒',
+                                 `auth_type` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '鉴权类型;NONE-无, FIXED-固定Token, DYNAMIC-动态Token',
+                                 `auth_method` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '鉴权方式（bearer / apiKey）',
+                                 `auth_inject_position` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '注入位置',
+                                 `auth_key_name` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '鉴权键名例',
+                                 `auth_token_prefix` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT 'Token前缀',
+                                 `auth_token_value` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL COMMENT '固定Token值或APIKey;0-GET 1-POST',
+                                 `auth_dynamic_method` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '获取Token方式;GET/POST',
+                                 `auth_dynamic_url` varchar(3072) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '获取Token的URL地址',
+                                 `auth_dynamic_headers` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL COMMENT '获取Token时的请求头',
+                                 `auth_dynamic_body` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL COMMENT '获取Token的请求体',
+                                 `auth_dynamic_params` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL COMMENT '获取Token时的Query参数',
+                                 `auth_extract_path` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT 'Token提取路径',
+                                 `input_schema` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL COMMENT '入参JSONSchema定义',
+                                 `output_schema` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL COMMENT '出参JSONSchema定义',
+                                 `valid_flag` tinyint(1) NOT NULL DEFAULT 1 COMMENT '是否有效;0：无效，1：有效',
+                                 `del_flag` tinyint(1) NOT NULL DEFAULT 0 COMMENT '删除标志;1：已删除，0：未删除',
+                                 `create_by` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '创建人',
+                                 `creator_id` bigint NULL DEFAULT NULL COMMENT '创建人ID',
+                                 `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+                                 `update_by` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '更新人',
+                                 `updator_id` bigint NULL DEFAULT NULL COMMENT '更新人ID',
+                                 `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '更新时间',
+                                 `remark` varchar(512) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '备注',
+                                 PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 21 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '模型配置详情表' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of model_config
 -- ----------------------------
-INSERT INTO `model_config`
-VALUES (1, NULL, 1, 'http://api.example.com/blade-vstec/call/log/call/model', 'POST',
-        'application/x-www-form-urlencoded', 30, 'DYNAMIC', 'apiKey', 'Header', 'Blade-Auth', 'bearer', NULL, 'POST',
-        'http://api.example.com/blade-auth/oauth/token',
-        '{\n  \"Content-Type\": \"application/x-www-form-urlencoded\",\n  \"Tenant-Id\": \"595\",\n  \"Authorization\": \"Basic c3dvcmQ6c3dvcmRfc2VjcmV0\"\n}',
-        NULL,
-        '{\n  \"grant_type\": \"password\",\n  \"username\": \"admin\",\n  \"password\": \"21232f297a57a5a743894a0e4a801fc3\",\n  \"scope\": \"all\"\n}',
-        'access_token',
-        '{\n  \"type\": \"object\",\n  \"properties\": {\n    \"modelId\": {\n      \"type\": \"integer\",\n      \"description\": \"模型ID\"\n    },\n    \"files\": {\n      \"type\": \"string\",\n      \"format\": \"binary\",\n      \"description\": \"上传的文件\"\n    }\n  },\n  \"required\": [\n    \"modelId\",\n    \"files\"\n  ]\n}',
-        NULL, 1, 0, '小桐', 1, '2026-07-09 15:06:46', 'qModel', 1, '2026-07-14 10:07:30', '测试数据');
-INSERT INTO `model_config`
-VALUES (2, NULL, 2, 'https://api.example.com/v1/predict', 'POST', 'application/json', 60, 'FIXED', 'apiKey', 'Header',
-        'Authorization', 'Bearer',
-        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36',
-        NULL, NULL, NULL, NULL, NULL, NULL,
-        '{\n  \"type\": \"object\",\n  \"properties\": {\n    \"text\": {\n      \"type\": \"string\",\n      \"description\": \"待分析文本\"\n    },\n    \"top_k\": {\n      \"type\": \"integer\",\n      \"default\": 5\n    }\n  },\n  \"required\": [\"text\"]\n}',
-        '{\n  \"type\": \"object\",\n  \"properties\": {\n    \"result\": {\n      \"type\": \"array\",\n      \"items\": {\n        \"type\": \"string\"\n      }\n    }\n  }\n}',
-        1, 0, '张三', 2, '2026-07-10 10:00:00', '小桐', 1, '2026-07-10 11:48:06', '固定Token示例');
-INSERT INTO `model_config`
-VALUES (3, NULL, 3, 'https://api.openai.com/v1/chat/completions', 'POST', 'application/json', 120, 'FIXED', 'apiKey',
-        'Header', 'X-API-Key', NULL, 'sk-proj-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx', NULL, NULL, NULL, NULL,
-        NULL, NULL,
-        '{\n  \"type\": \"object\",\n  \"properties\": {\n    \"messages\": {\n      \"type\": \"array\",\n      \"items\": {\n        \"type\": \"object\",\n        \"properties\": {\n          \"role\": {\"type\": \"string\"},\n          \"content\": {\"type\": \"string\"}\n        }\n      }\n    },\n    \"temperature\": {\n      \"type\": \"number\",\n      \"default\": 0.7\n    }\n  },\n  \"required\": [\"messages\"]\n}',
-        '{\n  \"type\": \"object\",\n  \"properties\": {\n    \"choices\": {\n      \"type\": \"array\",\n      \"items\": {\n        \"type\": \"object\",\n        \"properties\": {\n          \"message\": {\n            \"type\": \"object\",\n            \"properties\": {\n              \"content\": {\"type\": \"string\"}\n            }\n          }\n        }\n      }\n    }\n  }\n}',
-        1, 0, '王五', 3, '2026-07-10 09:00:00', '小桐', 1, '2026-07-10 11:49:14', 'APIKey固定鉴权示例');
-INSERT INTO `model_config`
-VALUES (4, NULL, 4, 'http://api.example.com/image/recognize', 'POST', 'multipart/form-data', 45, 'NONE', NULL, NULL,
-        NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
-        '{\n  \"type\": \"object\",\n  \"properties\": {\n    \"image\": {\n      \"type\": \"string\",\n      \"format\": \"binary\",\n      \"description\": \"待识别的图片文件\"\n    },\n    \"top_n\": {\n      \"type\": \"integer\",\n      \"default\": 3\n    }\n  },\n  \"required\": [\"image\"]\n}',
-        '{\n  \"type\": \"object\",\n  \"properties\": {\n    \"labels\": {\n      \"type\": \"array\",\n      \"items\": {\n        \"type\": \"object\",\n        \"properties\": {\n          \"name\": {\"type\": \"string\"},\n          \"confidence\": {\"type\": \"number\"}\n        }\n      }\n    }\n  }\n}',
-        1, 0, '孙七', 4, '2026-07-10 08:00:00', '小桐', 1, '2026-07-10 13:33:41', '无鉴权示例');
-INSERT INTO `model_config`
-VALUES (5, NULL, 5, 'https://api.enterprise.com/v1/qa', 'POST', 'application/json', 30, 'DYNAMIC', 'bearer', 'Header',
-        'Authorization', 'Bearer', NULL, 'GET', 'https://auth.enterprise.com/oauth/token',
-        '{\n  \"Accept\": \"application/json\"\n}', NULL,
-        '{\n  \"grant_type\": \"client_credentials\",\n  \"client_id\": \"svc_qa_bot\",\n  \"client_secret\": \"abc123def456ghi789\"\n}',
-        'access_token',
-        '{\n  \"type\": \"object\",\n  \"properties\": {\n    \"question\": {\n      \"type\": \"string\",\n      \"description\": \"用户问题\"\n    },\n    \"context\": {\n      \"type\": \"string\",\n      \"description\": \"上下文信息\"\n    }\n  },\n  \"required\": [\"question\"]\n}',
-        '{\n  \"type\": \"object\",\n  \"properties\": {\n    \"answer\": {\n      \"type\": \"string\"\n    },\n    \"confidence\": {\n      \"type\": \"number\"\n    }\n  }\n}',
-        1, 0, '周九', 5, '2026-07-10 07:30:00', '周九', 5, '2026-07-10 07:30:00', 'QA问答-动态Token-GET方式获取');
-INSERT INTO `model_config`
-VALUES (6, NULL, 6, 'https://api.pipeline.com/v1/pipeline/update', 'PUT', 'application/json', 90, 'FIXED', 'apiKey',
-        'Query', 'api_key', NULL, 'pipe_live_9876543210abcdef', NULL, NULL, NULL, NULL, NULL, NULL,
-        '{\n  \"type\": \"object\",\n  \"properties\": {\n    \"pipeline_id\": {\n      \"type\": \"string\",\n      \"description\": \"流水线ID\"\n    },\n    \"status\": {\n      \"type\": \"string\",\n      \"enum\": [\"running\", \"paused\", \"stopped\"]\n    }\n  },\n  \"required\": [\"pipeline_id\", \"status\"]\n}',
-        '{\n  \"type\": \"object\",\n  \"properties\": {\n    \"success\": {\n      \"type\": \"boolean\"\n    },\n    \"message\": {\n      \"type\": \"string\"\n    }\n  }\n}',
-        1, 0, '郑十一', 6, '2026-07-10 06:00:00', '郑十一', 6, '2026-07-10 06:00:00', '流水线状态更新-APIKey注入Query');
-INSERT INTO `model_config`
-VALUES (7, NULL, 7, 'https://api.multimodal.com/v1/generate', 'POST', 'application/json', 180, 'DYNAMIC', 'apiKey',
-        'Header', 'X-Auth-Token', 'Token', NULL, 'POST', 'https://auth.multimodal.com/v1/get_token',
-        '{\n  \"Content-Type\": \"application/json\",\n  \"X-Client-Version\": \"1.0.0\"\n}',
-        '{\n  \"app_id\": \"multimodal_app_001\",\n  \"app_secret\": \"sec_9876543210fedcba\"\n}',
-        '{\n  \"grant_type\": \"password\",\n  \"username\": \"service_user\",\n  \"password\": \"srv_pass_2026!\"\n}',
-        'data.token',
-        '{\n  \"type\": \"object\",\n  \"properties\": {\n    \"prompt\": {\n      \"type\": \"string\",\n      \"description\": \"生成提示词\"\n    },\n    \"modality\": {\n      \"type\": \"string\",\n      \"enum\": [\"text\", \"image\", \"audio\"],\n      \"description\": \"生成模态\"\n    },\n    \"size\": {\n      \"type\": \"string\",\n      \"default\": \"1024x1024\"\n    }\n  },\n  \"required\": [\"prompt\", \"modality\"]\n}',
-        '{\n  \"type\": \"object\",\n  \"properties\": {\n    \"output\": {\n      \"type\": \"string\",\n      \"description\": \"生成的输出（文本或图片URL）\"\n    },\n    \"model_version\": {\n      \"type\": \"string\"\n    }\n  }\n}',
-        1, 0, '陈十三', 7, '2026-07-10 05:00:00', '陈十三', 7, '2026-07-10 05:00:00', '多模态生成-复杂动态Token');
-INSERT INTO `model_config`
-VALUES (8, NULL, 8, 'http://api.example.com/blade-vstec/call/log/call/model', 'POST',
-        'application/x-www-form-urlencoded', 30, 'FIXED', 'bearer', 'Header', NULL, NULL,
-        'bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0ZW5hbnRfaWQiOiI1OTUxNTIiLCJ1c2VySW5mbyI6eyJwYXNzd29yZCI6bnVsbCwidXNlcm5hbWUiOiJsY3Rlc3RlciIsImF1dGhvcml0aWVzIj',
-        NULL, NULL, NULL, NULL, NULL, NULL,
-        '{\n  \"type\": \"object\",\n  \"properties\": {\n    \"modelId\": {\n      \"type\": \"integer\",\n      \"description\": \"模型ID\"\n    },\n    \"files\": {\n      \"type\": \"string\",\n      \"format\": \"binary\",\n      \"description\": \"上传的文件\"\n    }\n  },\n  \"required\": [\n    \"modelId\",\n    \"files\"\n  ]\n}',
-        NULL, 1, 0, '小桐', 1, '2026-07-10 11:55:55', '小桐', 1, '2026-07-10 11:57:55', NULL);
-INSERT INTO `model_config`
-VALUES (9, NULL, 9, 'http://env.qiantong.tech:51899/prod-api/api/app/weeklyReportTestData', 'GET', 'application/json',
-        30, 'NONE', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
-        '{\n  \"type\": \"object\",\n  \"title\": \"搜索请求参数\",\n  \"description\": \"通用搜索入参结构\",\n  \"properties\": {\n    \"query\": {\n      \"type\": \"string\",\n      \"description\": \"搜索关键词、查询语句\",\n      \"minLength\": 0,\n      \"maxLength\": 500\n    }\n  }\n}',
-        NULL, 1, 0, 'qModel', 1, '2026-07-16 14:25:22', 'qModel', 1, '2026-07-16 14:25:33', NULL);
-INSERT INTO `model_config` VALUES (10, NULL, 11, 'http://demo.qmodel.tech/prod-api/model/mock/waterPredict', 'GET', 'application/json', 30, 'NONE', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '{\n  \"type\": \"object\",\n  \"title\": \"搜索请求参数\",\n  \"description\": \"通用搜索入参结构\",\n  \"properties\": {\n    \"query\": {\n      \"type\": \"string\",\n      \"description\": \"搜索关键词、查询语句\",\n      \"minLength\": 0,\n      \"maxLength\": 500\n    }\n  }\n}', NULL, 1, 0, '超级管理员', 1, '2026-08-05 11:20:28', '超级管理员', 1, '2026-08-05 11:51:50', NULL);
+INSERT INTO `model_config` VALUES (1, NULL, 1, 'V1.0', 'http://api.example.com/blade-vstec/call/log/call/model', 'POST', 'application/x-www-form-urlencoded', 30, 'DYNAMIC', 'apiKey', 'Header', 'Blade-Auth', 'bearer', NULL, 'POST', 'http://api.example.com/blade-auth/oauth/token', '{\n  \"Content-Type\": \"application/x-www-form-urlencoded\",\n  \"Tenant-Id\": \"595\",\n  \"Authorization\": \"Basic c3dvcmQ6c3dvcmRfc2VjcmV0\"\n}', NULL, '{\n  \"grant_type\": \"password\",\n  \"username\": \"admin\",\n  \"password\": \"21232f297a57a5a743894a0e4a801fc3\",\n  \"scope\": \"all\"\n}', 'access_token', '{\n  \"type\": \"object\",\n  \"properties\": {\n    \"modelId\": {\n      \"type\": \"integer\",\n      \"description\": \"模型ID\"\n    },\n    \"files\": {\n      \"type\": \"string\",\n      \"format\": \"binary\",\n      \"description\": \"上传的文件\"\n    }\n  },\n  \"required\": [\n    \"modelId\",\n    \"files\"\n  ]\n}', NULL, 1, 0, '小桐', 1, '2026-07-09 15:06:46', 'qModel', 1, '2026-07-14 10:07:30', '测试数据');
+INSERT INTO `model_config` VALUES (2, NULL, 2, 'V2.0', 'https://api.example.com/v1/predict', 'POST', 'application/json', 60, 'FIXED', 'apiKey', 'Header', 'Authorization', 'Bearer', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36', NULL, NULL, NULL, NULL, NULL, NULL, '{\n  \"type\": \"object\",\n  \"properties\": {\n    \"text\": {\n      \"type\": \"string\",\n      \"description\": \"待分析文本\"\n    },\n    \"top_k\": {\n      \"type\": \"integer\",\n      \"default\": 5\n    }\n  },\n  \"required\": [\"text\"]\n}', '{\n  \"type\": \"object\",\n  \"properties\": {\n    \"result\": {\n      \"type\": \"array\",\n      \"items\": {\n        \"type\": \"string\"\n      }\n    }\n  }\n}', 1, 0, '张三', 2, '2026-07-10 10:00:00', '小桐', 1, '2026-07-10 11:48:06', '固定Token示例');
+INSERT INTO `model_config` VALUES (3, NULL, 3, 'V1.5', 'https://api.openai.com/v1/chat/completions', 'POST', 'application/json', 120, 'FIXED', 'apiKey', 'Header', 'X-API-Key', NULL, 'sk-proj-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx', NULL, NULL, NULL, NULL, NULL, NULL, '{\n  \"type\": \"object\",\n  \"properties\": {\n    \"messages\": {\n      \"type\": \"array\",\n      \"items\": {\n        \"type\": \"object\",\n        \"properties\": {\n          \"role\": {\"type\": \"string\"},\n          \"content\": {\"type\": \"string\"}\n        }\n      }\n    },\n    \"temperature\": {\n      \"type\": \"number\",\n      \"default\": 0.7\n    }\n  },\n  \"required\": [\"messages\"]\n}', '{\n  \"type\": \"object\",\n  \"properties\": {\n    \"choices\": {\n      \"type\": \"array\",\n      \"items\": {\n        \"type\": \"object\",\n        \"properties\": {\n          \"message\": {\n            \"type\": \"object\",\n            \"properties\": {\n              \"content\": {\"type\": \"string\"}\n            }\n          }\n        }\n      }\n    }\n  }\n}', 1, 0, '王五', 3, '2026-07-10 09:00:00', '小桐', 1, '2026-07-10 11:49:14', 'APIKey固定鉴权示例');
+INSERT INTO `model_config` VALUES (4, NULL, 4, 'V1.0', 'http://api.example.com/image/recognize', 'POST', 'multipart/form-data', 45, 'NONE', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '{\n  \"type\": \"object\",\n  \"properties\": {\n    \"image\": {\n      \"type\": \"string\",\n      \"format\": \"binary\",\n      \"description\": \"待识别的图片文件\"\n    },\n    \"top_n\": {\n      \"type\": \"integer\",\n      \"default\": 3\n    }\n  },\n  \"required\": [\"image\"]\n}', '{\n  \"type\": \"object\",\n  \"properties\": {\n    \"labels\": {\n      \"type\": \"array\",\n      \"items\": {\n        \"type\": \"object\",\n        \"properties\": {\n          \"name\": {\"type\": \"string\"},\n          \"confidence\": {\"type\": \"number\"}\n        }\n      }\n    }\n  }\n}', 1, 0, '孙七', 4, '2026-07-10 08:00:00', '小桐', 1, '2026-07-10 13:33:41', '无鉴权示例');
+INSERT INTO `model_config` VALUES (5, NULL, 5, 'V2.3', 'https://api.enterprise.com/v1/qa', 'POST', 'application/json', 30, 'DYNAMIC', 'bearer', 'Header', 'Authorization', 'Bearer', NULL, 'GET', 'https://auth.enterprise.com/oauth/token', '{\n  \"Accept\": \"application/json\"\n}', NULL, '{\n  \"grant_type\": \"client_credentials\",\n  \"client_id\": \"svc_qa_bot\",\n  \"client_secret\": \"abc123def456ghi789\"\n}', 'access_token', '{\n  \"type\": \"object\",\n  \"properties\": {\n    \"question\": {\n      \"type\": \"string\",\n      \"description\": \"用户问题\"\n    },\n    \"context\": {\n      \"type\": \"string\",\n      \"description\": \"上下文信息\"\n    }\n  },\n  \"required\": [\"question\"]\n}', '{\n  \"type\": \"object\",\n  \"properties\": {\n    \"answer\": {\n      \"type\": \"string\"\n    },\n    \"confidence\": {\n      \"type\": \"number\"\n    }\n  }\n}', 1, 0, '周九', 5, '2026-07-10 07:30:00', '周九', 5, '2026-07-10 07:30:00', 'QA问答-动态Token-GET方式获取');
+INSERT INTO `model_config` VALUES (6, NULL, 6, 'V1.2', 'https://api.pipeline.com/v1/pipeline/update', 'PUT', 'application/json', 90, 'FIXED', 'apiKey', 'Query', 'api_key', NULL, 'pipe_live_9876543210abcdef', NULL, NULL, NULL, NULL, NULL, NULL, '{\n  \"type\": \"object\",\n  \"properties\": {\n    \"pipeline_id\": {\n      \"type\": \"string\",\n      \"description\": \"流水线ID\"\n    },\n    \"status\": {\n      \"type\": \"string\",\n      \"enum\": [\"running\", \"paused\", \"stopped\"]\n    }\n  },\n  \"required\": [\"pipeline_id\", \"status\"]\n}', '{\n  \"type\": \"object\",\n  \"properties\": {\n    \"success\": {\n      \"type\": \"boolean\"\n    },\n    \"message\": {\n      \"type\": \"string\"\n    }\n  }\n}', 1, 0, '郑十一', 6, '2026-07-10 06:00:00', '郑十一', 6, '2026-07-10 06:00:00', '流水线状态更新-APIKey注入Query');
+INSERT INTO `model_config` VALUES (7, NULL, 7, 'V3.0', 'https://api.multimodal.com/v1/generate', 'POST', 'application/json', 180, 'DYNAMIC', 'apiKey', 'Header', 'X-Auth-Token', 'Token', NULL, 'POST', 'https://auth.multimodal.com/v1/get_token', '{\n  \"Content-Type\": \"application/json\",\n  \"X-Client-Version\": \"1.0.0\"\n}', '{\n  \"app_id\": \"multimodal_app_001\",\n  \"app_secret\": \"sec_9876543210fedcba\"\n}', '{\n  \"grant_type\": \"password\",\n  \"username\": \"service_user\",\n  \"password\": \"srv_pass_2026!\"\n}', 'data.token', '{\n  \"type\": \"object\",\n  \"properties\": {\n    \"prompt\": {\n      \"type\": \"string\",\n      \"description\": \"生成提示词\"\n    },\n    \"modality\": {\n      \"type\": \"string\",\n      \"enum\": [\"text\", \"image\", \"audio\"],\n      \"description\": \"生成模态\"\n    },\n    \"size\": {\n      \"type\": \"string\",\n      \"default\": \"1024x1024\"\n    }\n  },\n  \"required\": [\"prompt\", \"modality\"]\n}', '{\n  \"type\": \"object\",\n  \"properties\": {\n    \"output\": {\n      \"type\": \"string\",\n      \"description\": \"生成的输出（文本或图片URL）\"\n    },\n    \"model_version\": {\n      \"type\": \"string\"\n    }\n  }\n}', 1, 0, '陈十三', 7, '2026-07-10 05:00:00', '陈十三', 7, '2026-07-10 05:00:00', '多模态生成-复杂动态Token');
+INSERT INTO `model_config` VALUES (8, NULL, 8, 'v1.0', 'http://api.example.com/blade-vstec/call/log/call/model', 'POST', 'application/x-www-form-urlencoded', 30, 'FIXED', 'bearer', 'Header', NULL, NULL, 'bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0ZW5hbnRfaWQiOiI1OTUxNTIiLCJ1c2VySW5mbyI6eyJwYXNzd29yZCI6bnVsbCwidXNlcm5hbWUiOiJsY3Rlc3RlciIsImF1dGhvcml0aWVzIj', NULL, NULL, NULL, NULL, NULL, NULL, '{\n  \"type\": \"object\",\n  \"properties\": {\n    \"modelId\": {\n      \"type\": \"integer\",\n      \"description\": \"模型ID\"\n    },\n    \"files\": {\n      \"type\": \"string\",\n      \"format\": \"binary\",\n      \"description\": \"上传的文件\"\n    }\n  },\n  \"required\": [\n    \"modelId\",\n    \"files\"\n  ]\n}', NULL, 1, 0, '小桐', 1, '2026-07-10 11:55:55', '小桐', 1, '2026-07-10 11:57:55', NULL);
+INSERT INTO `model_config` VALUES (9, NULL, 9, 'v1.0', 'http://env.qiantong.tech:51899/prod-api/api/app/weeklyReportTestData', 'GET', 'application/json', 30, 'NONE', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '{\n  \"type\": \"object\",\n  \"title\": \"搜索请求参数\",\n  \"description\": \"通用搜索入参结构\",\n  \"properties\": {\n    \"query\": {\n      \"type\": \"string\",\n      \"description\": \"搜索关键词、查询语句\",\n      \"minLength\": 0,\n      \"maxLength\": 500\n    }\n  }\n}', NULL, 1, 0, 'qModel', 1, '2026-07-16 14:25:22', 'qModel', 1, '2026-07-16 14:25:33', NULL);
+INSERT INTO `model_config` VALUES (10, NULL, 11, 'v1.0', 'http://demo.qmodel.tech/prod-api/model/mock/waterPredict', 'GET', 'application/json', 30, 'NONE', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '{\n  \"type\": \"object\",\n  \"title\": \"搜索请求参数\",\n  \"description\": \"通用搜索入参结构\",\n  \"properties\": {\n    \"query\": {\n      \"type\": \"string\",\n      \"description\": \"搜索关键词、查询语句\",\n      \"minLength\": 0,\n      \"maxLength\": 500\n    }\n  }\n}', NULL, 1, 0, '超级管理员', 1, '2026-08-05 11:20:28', '超级管理员', 1, '2026-08-05 11:51:50', NULL);
 
 -- ----------------------------
 -- Table structure for model_calc_widget
@@ -697,126 +638,115 @@ CREATE TABLE `model_compute`
 -- Table structure for model_file_resource
 -- ----------------------------
 DROP TABLE IF EXISTS `model_file_resource`;
-CREATE TABLE `model_file_resource`
-(
-    `id`                 bigint   NOT NULL AUTO_INCREMENT COMMENT 'ID',
-    `model_id`           bigint NULL DEFAULT NULL COMMENT '模型id',
-    `file_name`          varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '原始上传文件名',
-    `script_name`        varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '脚本名称(入口文件)',
-    `file_path`          varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '文件存储地址',
-    `deps_file_path`     varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '依赖文件路径',
-    `model_version`      int NULL DEFAULT NULL COMMENT '模型版本号',
-    `resource_type`      tinyint NULL DEFAULT NULL COMMENT '资源类型：1=模型文件(onnx/pth/safetensors)，2=Python算法脚本(.py)',
-    `file_size`          decimal(10, 2) NULL DEFAULT NULL COMMENT '文件大小MB',
-    `log_file_path`      varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '运行日志文件路径',
-    `exec_timeout`       int NULL DEFAULT NULL COMMENT '请求超时秒数',
-    `docker_file_path`   varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '自动生成dockerFile文件地址',
-    `image_tag`          varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '构建镜像标签',
-    `image_version`      varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '镜像版本',
-    `image_build_status` tinyint NULL DEFAULT 0 COMMENT '镜像构建状态（0 = 未构建、1 = 构建中、2 = 构建成功、3 = 构建失败）',
-    `image_build_time`   int NULL DEFAULT NULL COMMENT '镜像构建时间',
-    `image_build_log`    varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '镜像构建日志文件地址',
-    `resource_limit`     varchar(3072) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '容器硬件资源配额JSON，gpu_num/gpu_mem_gb/cpu_core/mem_gb',
-    `container_env`      varchar(3072) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '容器自定义环境变量，JSON数组格式',
-    `container_mounts`   varchar(3072) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '容器额外挂载目录配置，JSON数组格式',
-    `container_ports`    int NULL DEFAULT NULL COMMENT '容器暴露端口',
-    `mapped_host_port`   int NULL DEFAULT NULL COMMENT '宿主机端口',
-    `container_status`   tinyint NULL DEFAULT 0 COMMENT '容器运行状态(容器运行状态：0=待启动，1=运行中，2=运行成功，3=运行失败，4=手动停止，5=已销毁)',
-    `container_id`       varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '容器id',
-    `valid_flag`         tinyint  NOT NULL DEFAULT 1 COMMENT '是否有效;0：无效，1：有效',
-    `del_flag`           tinyint  NOT NULL DEFAULT 0 COMMENT '删除标志;1：已删除，0：未删除',
-    `create_by`          varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '创建人',
-    `creator_id`         bigint NULL DEFAULT NULL COMMENT '创建人id',
-    `create_time`        datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-    `update_by`          varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '更新人',
-    `updator_id`         bigint NULL DEFAULT NULL COMMENT '更新人id',
-    `update_time`        datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
-    `remark`             varchar(512) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '备注',
-    `input_schema`       text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL COMMENT '入参JSONSchema定义',
-    `output_schema`      text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL COMMENT '出参JSONSchema定义',
-    PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 5 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '模型文件部署表' ROW_FORMAT = DYNAMIC;
+CREATE TABLE `model_file_resource`  (
+                                        `id` bigint NOT NULL AUTO_INCREMENT COMMENT 'ID',
+                                        `model_id` bigint NULL DEFAULT NULL COMMENT '模型id',
+                                        `file_name` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '原始上传文件名',
+                                        `script_name` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '脚本名称(入口文件)',
+                                        `file_path` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '文件存储地址',
+                                        `deps_file_path` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '依赖文件路径',
+                                        `model_version` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '模型版本号',
+                                        `resource_type` tinyint NULL DEFAULT NULL COMMENT '资源类型：1=模型文件(onnx/pth/safetensors)，2=Python算法脚本(.py)',
+                                        `file_size` decimal(10, 2) NULL DEFAULT NULL COMMENT '文件大小MB',
+                                        `log_file_path` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '运行日志文件路径',
+                                        `exec_timeout` int NULL DEFAULT NULL COMMENT '请求超时秒数',
+                                        `docker_file_path` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '自动生成dockerFile文件地址',
+                                        `image_tag` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '构建镜像标签',
+                                        `image_version` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '镜像版本',
+                                        `image_build_status` tinyint NULL DEFAULT 0 COMMENT '镜像构建状态（0 = 未构建、1 = 构建中、2 = 构建成功、3 = 构建失败）',
+                                        `image_build_time` int NULL DEFAULT NULL COMMENT '镜像构建时间',
+                                        `image_build_log` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '镜像构建日志文件地址',
+                                        `resource_limit` varchar(3072) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '容器硬件资源配额JSON，gpu_num/gpu_mem_gb/cpu_core/mem_gb',
+                                        `container_env` varchar(3072) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '容器自定义环境变量，JSON数组格式',
+                                        `container_mounts` varchar(3072) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '容器额外挂载目录配置，JSON数组格式',
+                                        `container_ports` int NULL DEFAULT NULL COMMENT '容器暴露端口',
+                                        `mapped_host_port` int NULL DEFAULT NULL COMMENT '宿主机端口',
+                                        `container_status` tinyint NULL DEFAULT 0 COMMENT '容器运行状态(容器运行状态：0=待启动，1=运行中，2=运行成功，3=运行失败，4=手动停止，5=已销毁)',
+                                        `container_id` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '容器id',
+                                        `valid_flag` tinyint NOT NULL DEFAULT 1 COMMENT '是否有效;0：无效，1：有效',
+                                        `del_flag` tinyint NOT NULL DEFAULT 0 COMMENT '删除标志;1：已删除，0：未删除',
+                                        `create_by` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '创建人',
+                                        `creator_id` bigint NULL DEFAULT NULL COMMENT '创建人id',
+                                        `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+                                        `update_by` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '更新人',
+                                        `updator_id` bigint NULL DEFAULT NULL COMMENT '更新人id',
+                                        `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+                                        `remark` varchar(512) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '备注',
+                                        `input_schema` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL COMMENT '入参JSONSchema定义',
+                                        `output_schema` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL COMMENT '出参JSONSchema定义',
+                                        PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 6 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '模型文件部署表' ROW_FORMAT = DYNAMIC;
+
 -- ----------------------------
 -- Records of model_file_resource
 -- ----------------------------
-INSERT INTO `model_file_resource`
-VALUES (5, 10, '水位流量插值算法.zip', 'main.py', 'temp/2026/07/17/水位流量插值算法.zip',
-        '/usr/app/jar/upload/temp/extract/5/requirements.txt', 1, 2, NULL, NULL, NULL,
-        '/usr/app/jar/upload/temp/extract/5/main.py', NULL, NULL, 2, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, NULL,
-        1, 0, 'qModel', 1, '2026-07-16 15:49:49', 'system', 1, '2026-07-17 17:49:47', NULL,
-        '{\n  \"title\": \"runScript接口入参\",\n  \"type\": \"object\",\n  \"required\": [\"H\"],\n  \"properties\": {\n    \"H\": {\n      \"title\": \"参数H\",\n      \"description\": \"自定义数值参数\",\n      \"type\": \"integer\",\n      \"example\": 3\n    }\n  }\n}',
-        NULL);
+INSERT INTO `model_file_resource` VALUES (5, 10, '水位流量插值算法.zip', 'main.py', 'temp/2026/07/17/水位流量插值算法.zip', '/usr/app/jar/upload/temp/extract/5/requirements.txt', 'V1.0', 2, NULL, NULL, NULL, '/usr/app/jar/upload/temp/extract/5/main.py', NULL, NULL, 2, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, NULL, 1, 0, 'qModel', 1, '2026-07-16 15:49:49', 'system', 1, '2026-09-01 11:56:21', NULL, '{\n  \"title\": \"runScript接口入参\",\n  \"type\": \"object\",\n  \"required\": [\"H\"],\n  \"properties\": {\n    \"H\": {\n      \"title\": \"参数H\",\n      \"description\": \"自定义数值参数\",\n      \"type\": \"integer\",\n      \"example\": 3\n    }\n  }\n}', NULL);
 
 -- ----------------------------
 -- Table structure for model_build_log
 -- ----------------------------
-
 DROP TABLE IF EXISTS `model_build_log`;
-CREATE TABLE `model_build_log`
-(
-    `id`                 bigint   NOT NULL AUTO_INCREMENT COMMENT 'ID',
-    `resource_id`        bigint   NOT NULL COMMENT '模型文件id',
-    `model_id`           bigint NULL DEFAULT NULL COMMENT '模型id',
-    `model_name`         varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '模型名称',
-    `version_id`         bigint NULL DEFAULT NULL COMMENT '版本id',
-    `build_type`         tinyint UNSIGNED NULL DEFAULT 1 COMMENT '构建类型;构建类型：1=依赖安装，2=Docker镜像构建',
-    `status`             tinyint UNSIGNED NULL DEFAULT 0 COMMENT '构建状态;构建状态：0=待执行，1=执行中，2=成功，3=失败',
-    `start_time`         datetime NULL DEFAULT NULL COMMENT '开始时间',
-    `end_time`           datetime NULL DEFAULT NULL COMMENT '结束时间',
-    `duration`           int NULL DEFAULT NULL COMMENT '执行耗时',
+CREATE TABLE `model_build_log`  (
+    `id` bigint NOT NULL AUTO_INCREMENT COMMENT 'ID',
+    `resource_id` bigint NOT NULL COMMENT '模型文件id',
+    `model_version` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '模型版本',
+    `model_id` bigint NULL DEFAULT NULL COMMENT '模型id',
+    `model_name` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '模型名称',
+    `build_type` tinyint UNSIGNED NULL DEFAULT 1 COMMENT '构建类型;构建类型：1=依赖安装，2=Docker镜像构建',
+    `status` tinyint UNSIGNED NULL DEFAULT 0 COMMENT '构建状态;构建状态：0=待执行，1=执行中，2=成功，3=失败',
+    `start_time` datetime NULL DEFAULT NULL COMMENT '开始时间',
+    `end_time` datetime NULL DEFAULT NULL COMMENT '结束时间',
+    `duration` int NULL DEFAULT NULL COMMENT '执行耗时',
     `installed_packages` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL COMMENT '已存在的依赖包列表JSON',
-    `missing_packages`   text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL COMMENT '缺失失败的依赖包列表JSON',
-    `failed_packages`    text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL COMMENT '安装失败的依赖包列表JSON',
+    `missing_packages` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL COMMENT '缺失失败的依赖包列表JSON',
+    `failed_packages` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL COMMENT '安装失败的依赖包列表JSON',
     `dockerfile_content` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL COMMENT 'dockerFile内容',
-    `build_log`          text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL COMMENT '构建日志',
-    `error_message`      text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL COMMENT '错误日志',
-    `requirements`       text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL COMMENT 'requirements.txt 内容',
-    `valid_flag`         tinyint(1) NOT NULL DEFAULT 1 COMMENT '是否有效;0：无效，1：有效',
-    `del_flag`           tinyint(1) NOT NULL DEFAULT 0 COMMENT '删除标志;1：已删除，0：未删除',
-    `create_by`          varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '创建人',
-    `creator_id`         bigint NULL DEFAULT NULL COMMENT '创建人id',
-    `create_time`        datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-    `update_by`          varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '更新人',
-    `updator_id`         bigint NULL DEFAULT NULL COMMENT '更新人id',
-    `update_time`        datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '更新时间',
-    `remark`             varchar(512) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '备注',
+    `build_log` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL COMMENT '构建日志',
+    `error_message` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL COMMENT '错误日志',
+    `requirements` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL COMMENT 'requirements.txt 内容',
+    `valid_flag` tinyint(1) NOT NULL DEFAULT 1 COMMENT '是否有效;0：无效，1：有效',
+    `del_flag` tinyint(1) NOT NULL DEFAULT 0 COMMENT '删除标志;1：已删除，0：未删除',
+    `create_by` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '创建人',
+    `creator_id` bigint NULL DEFAULT NULL COMMENT '创建人id',
+    `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    `update_by` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '更新人',
+    `updator_id` bigint NULL DEFAULT NULL COMMENT '更新人id',
+    `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '更新时间',
+    `remark` varchar(512) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '备注',
     PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '构建日志表' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '构建日志表' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Table structure for model_invoke_history
 -- ----------------------------
-
 DROP TABLE IF EXISTS `model_invoke_history`;
-CREATE TABLE `model_invoke_history`
-(
-    `id`             bigint   NOT NULL AUTO_INCREMENT COMMENT 'ID',
-    `model_id`       bigint   NOT NULL COMMENT '模型id',
-    `model_name`     varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '模型名称',
-    `resource_id`    bigint NULL DEFAULT NULL COMMENT '模型配置资源id',
-    `version_id`     bigint NULL DEFAULT NULL COMMENT '模型版本id',
+CREATE TABLE `model_invoke_history`  (
+    `id` bigint NOT NULL AUTO_INCREMENT COMMENT 'ID',
+    `model_id` bigint NOT NULL COMMENT '模型id',
+    `model_name` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '模型名称',
+    `resource_id` bigint NULL DEFAULT NULL COMMENT '模型配置资源id',
+    `model_version` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '模型版本',
     `request_method` tinyint UNSIGNED NULL DEFAULT 1 COMMENT '请求方式;HTTP请求方式：0=GET，1=POST，2=PUT，3=DELETE',
-    `invoke_type`    tinyint UNSIGNED NULL DEFAULT 1 COMMENT '调用类型;1=在线测试，2=网关服务',
-    `input_params`   text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL COMMENT '输入参数（JSON格式）',
-    `output_result`  text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL COMMENT '输出结果（JSON格式）',
-    `start_time`     datetime NULL DEFAULT NULL COMMENT '开始时间',
-    `end_time`       datetime NULL DEFAULT NULL COMMENT '结束时间',
-    `duration`       int NULL DEFAULT NULL COMMENT '执行耗时（毫秒）',
-    `error_message`  text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL COMMENT '错误信息',
-    `status`         tinyint UNSIGNED NULL DEFAULT 0 COMMENT '调用状态;0=执行中，1=成功，2=失败，3=超时，4=参数校验阻塞',
-    `client_ip`      varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '客户端操作IP',
-    `valid_flag`     tinyint(1) NOT NULL DEFAULT 1 COMMENT '是否有效;0：无效，1：有效',
-    `del_flag`       tinyint(1) NOT NULL DEFAULT 0 COMMENT '删除标志;1：已删除，0：未删除',
-    `create_by`      varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '创建人',
-    `creator_id`     bigint NULL DEFAULT NULL COMMENT '创建人id',
-    `create_time`    datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-    `update_by`      varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '更新人',
-    `updator_id`     bigint NULL DEFAULT NULL COMMENT '更新人id',
-    `update_time`    datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '更新时间',
-    `remark`         varchar(512) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '备注',
+    `invoke_type` tinyint UNSIGNED NULL DEFAULT 1 COMMENT '调用类型;1=在线测试，2=网关服务',
+    `input_params` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL COMMENT '输入参数（JSON格式）',
+    `output_result` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL COMMENT '输出结果（JSON格式）',
+    `start_time` datetime NULL DEFAULT NULL COMMENT '开始时间',
+    `end_time` datetime NULL DEFAULT NULL COMMENT '结束时间',
+    `duration` int NULL DEFAULT NULL COMMENT '执行耗时（毫秒）',
+    `error_message` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL COMMENT '错误信息',
+    `status` tinyint UNSIGNED NULL DEFAULT 0 COMMENT '调用状态;0=执行中，1=成功，2=失败，3=超时，4=参数校验阻塞',
+    `client_ip` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '客户端操作IP',
+    `valid_flag` tinyint(1) NOT NULL DEFAULT 1 COMMENT '是否有效;0：无效，1：有效',
+    `del_flag` tinyint(1) NOT NULL DEFAULT 0 COMMENT '删除标志;1：已删除，0：未删除',
+    `create_by` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '创建人',
+    `creator_id` bigint NULL DEFAULT NULL COMMENT '创建人id',
+    `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    `update_by` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '更新人',
+    `updator_id` bigint NULL DEFAULT NULL COMMENT '更新人id',
+    `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '更新时间',
+    `remark` varchar(512) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '备注',
     PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 12 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '模型调用历史记录' ROW_FORMAT = Dynamic;
-
+) ENGINE = InnoDB AUTO_INCREMENT = 12 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '模型调用历史记录' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Table structure for model_history
@@ -1753,3 +1683,44 @@ CREATE TABLE `model_key`  (
 ) ENGINE = InnoDB AUTO_INCREMENT = 10 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '模型访问 key' ROW_FORMAT = DYNAMIC;
 SET
 FOREIGN_KEY_CHECKS = 1;
+
+-- ----------------------------
+-- Table structure for model_version
+-- ----------------------------
+DROP TABLE IF EXISTS `model_version`;
+CREATE TABLE `model_version`  (
+    `id` bigint NOT NULL AUTO_INCREMENT COMMENT 'ID',
+    `model_id` bigint NOT NULL COMMENT '模型id',
+    `model_version` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '版本号',
+    `description` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '描述',
+    `digest` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '版本摘要',
+    `base_version` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '基础版本',
+    `valid_flag` tinyint(1) NOT NULL DEFAULT 1 COMMENT '是否有效;0：无效，1：有效',
+    `del_flag` tinyint(1) NOT NULL DEFAULT 0 COMMENT '删除标志;1：已删除，0：未删除',
+    `create_by` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '创建人',
+    `creator_id` bigint NULL DEFAULT NULL COMMENT '创建人id',
+    `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    `update_by` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '更新人',
+    `updator_id` bigint NULL DEFAULT NULL COMMENT '更新人id',
+    `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '更新时间',
+    `remark` varchar(512) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '备注',
+    PRIMARY KEY (`id`) USING BTREE,
+    UNIQUE INDEX `model_version_un`(`model_id` ASC, `model_version` ASC) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 30 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '模型版本表' ROW_FORMAT = DYNAMIC;
+
+-- ----------------------------
+-- Records of model_version
+-- ----------------------------
+INSERT INTO `model_version` VALUES (1, 1, 'V1.0', NULL, NULL, NULL, 1, 0, NULL, NULL, '2026-09-01 11:38:10', NULL, NULL, '2026-09-01 11:38:10', NULL);
+INSERT INTO `model_version` VALUES (2, 2, 'V2.0', NULL, NULL, NULL, 1, 0, NULL, NULL, '2026-09-01 11:38:10', NULL, NULL, '2026-09-01 11:38:10', NULL);
+INSERT INTO `model_version` VALUES (3, 3, 'V1.5', NULL, NULL, NULL, 1, 0, NULL, NULL, '2026-09-01 11:38:10', NULL, NULL, '2026-09-01 11:38:10', NULL);
+INSERT INTO `model_version` VALUES (4, 4, 'V1.0', NULL, NULL, NULL, 1, 0, NULL, NULL, '2026-09-01 11:38:10', NULL, NULL, '2026-09-01 11:38:10', NULL);
+INSERT INTO `model_version` VALUES (5, 5, 'V2.3', NULL, NULL, NULL, 1, 0, NULL, NULL, '2026-09-01 11:38:10', NULL, NULL, '2026-09-01 11:38:10', NULL);
+INSERT INTO `model_version` VALUES (6, 6, 'V1.2', NULL, NULL, NULL, 1, 0, NULL, NULL, '2026-09-01 11:38:10', NULL, NULL, '2026-09-01 11:38:10', NULL);
+INSERT INTO `model_version` VALUES (7, 7, 'V3.0', NULL, NULL, NULL, 1, 0, NULL, NULL, '2026-09-01 11:38:10', NULL, NULL, '2026-09-01 11:38:10', NULL);
+INSERT INTO `model_version` VALUES (8, 8, 'v1.0', NULL, NULL, NULL, 1, 0, NULL, NULL, '2026-09-01 11:38:10', NULL, NULL, '2026-09-01 11:38:10', NULL);
+INSERT INTO `model_version` VALUES (9, 9, 'V1.0', NULL, NULL, NULL, 1, 0, NULL, NULL, '2026-09-01 11:38:10', NULL, NULL, '2026-09-01 11:38:10', NULL);
+INSERT INTO `model_version` VALUES (10, 10, 'V1.0', NULL, NULL, NULL, 1, 0, NULL, NULL, '2026-09-01 11:38:10', NULL, NULL, '2026-09-01 11:38:10', NULL);
+INSERT INTO `model_version` VALUES (11, 11, 'V1.0', NULL, NULL, NULL, 1, 0, NULL, NULL, '2026-09-01 11:38:10', NULL, NULL, '2026-09-01 11:38:10', NULL);
+
+SET FOREIGN_KEY_CHECKS = 1;
