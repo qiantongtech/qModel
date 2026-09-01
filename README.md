@@ -166,23 +166,24 @@ qModel 提供 **开源版** 与 **商业版** 双轨模式：
 - **开源版** 适合学习、评估与轻量级生产，遵循 Apache 2.0 协议（可商用，保留 Logo）；
 - **商业版** 面向政企客户，提供 **自动化容器化、模型融合、工作流编排、训练闭环、模型市场** 等高阶能力，并包含专属技术支持与私有仓库访问权限。
 
-[//]: # (👉 如需 **品牌定制授权** 或 **申请商业版试用**，请访问：[💼 了解授权详情]&#40;https://qmodel.qiantong.tech/business.html&#41;)
-👉 如需 **品牌定制授权** 或 **申请商业版试用**，请加入 QQ 交流群咨询
+👉 如需 **开源版品牌定制授权** 或 **咨询专业版**，请点击按钮查看详情：[💼 了解授权详情](https://community.qmodel.tech/business/policy.html)
 
 [![加入QQ群](https://img.shields.io/badge/QQ群-1064842367-blue.svg)](https://qm.qq.com/q/Ph8rhmZBQY)
 
 ## 🚀 快速开始
 
-[//]: # (👉 <a href="https://qmodel.qiantong.tech/discuss.html">点击查看快速部署手册</a>)
-👉 <a href="./QUICKSTART.md">点击查看快速部署手册</a>
+| 部署方式                                                                                        | 说明                                                                       | 适用场景                   |
+|---------------------------------------------------------------------------------------------|--------------------------------------------------------------------------|------------------------|
+| [Docker Compose 部署](https://community.qmodel.tech/docs/deploy/docker-compose-deployment.html) | 所有组件（DeepKE、Neo4j、Mysql、Nginx、Redis 等）以及 qKnow 源码都通过 Docker Compose 一键启动 | **初学者快速上手**、功能演示、测试环境  |
+| [自主部署（纯手工安装）](https://community.qmodel.tech/docs/deploy/manual-deployment/system.html)                   | 所有依赖组件及 qKnow 服务均需手工安装和配置                                                | **生产环境**、大规模部署、个性化定制场景 |
+
+> 首次体验推荐使用 Docker Compose 部署方式，可以更快完成环境启动和功能验证。
 
 ## 👥 QQ交流群
 
 欢迎加入 qModel 官方 QQ 交流群，获取最新动态、技术答疑与使用经验分享！
 
-[![加入QQ群](https://img.shields.io/badge/QQ群-1064842367-blue.svg)](https://qm.qq.com/q/Ph8rhmZBQY)
-
-[//]: # (👉 <a href="https://qmodel.qiantong.tech/discuss.html">点击加入 QQ 交流群</a>)
+👉 [点击加入 QQ 交流群](https://community.qmodel.tech/discuss.html)
 
 ## 🖼️ 系统配图
 <table>
