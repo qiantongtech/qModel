@@ -172,8 +172,8 @@ qModel 提供 **开源版** 与 **商业版** 双轨模式：
 
 | 部署方式                                                                                        | 说明                                                                       | 适用场景                   |
 |---------------------------------------------------------------------------------------------|--------------------------------------------------------------------------|------------------------|
-| [Docker Compose 部署](https://community.qmodel.tech/docs/deploy/docker-compose-deployment.html) | 所有组件（DeepKE、Neo4j、Mysql、Nginx、Redis 等）以及 qKnow 源码都通过 Docker Compose 一键启动 | **初学者快速上手**、功能演示、测试环境  |
-| [自主部署（纯手工安装）](https://community.qmodel.tech/docs/deploy/manual-deployment/system.html)                   | 所有依赖组件及 qKnow 服务均需手工安装和配置                                                | **生产环境**、大规模部署、个性化定制场景 |
+| [Docker Compose 部署](https://community.qmodel.tech/docs/deploy/docker-compose-deployment.html) | 所有组件（Mysql、Nginx、Redis 等）以及 qModel 源码都通过 Docker Compose 一键启动 | **初学者快速上手**、功能演示、测试环境  |
+| [自主部署（纯手工安装）](https://community.qmodel.tech/docs/deploy/manual-deployment/system.html)                   | 所有依赖组件及 qModel 服务均需手工安装和配置                                                | **生产环境**、大规模部署、个性化定制场景 |
 
 > 首次体验推荐使用 Docker Compose 部署方式，可以更快完成环境启动和功能验证。
 
