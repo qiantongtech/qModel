@@ -120,7 +120,9 @@ public class ApiExecutionEngine implements IExecutionEngine {
      * 4. null / 空                                 返回空 Map
      */
     public static Map<String, Object> parseInputParamsToMap(String raw) {
-        if (StringUtils.isBlank(raw)) return new HashMap<>();
+        if (StringUtils.isBlank(raw)) {
+            return new HashMap<>();
+        }
         String trimmed = raw.trim();
         try {
             Object obj = JSON.parse(trimmed);
@@ -133,7 +135,9 @@ public class ApiExecutionEngine implements IExecutionEngine {
 
     public static Map<String, Object> convertInputParamsObject(Object obj) {
         Map<String, Object> result = new LinkedHashMap<>();
-        if (obj == null) return result;
+        if (obj == null) {
+            return result;
+        }
 
         // 1. Map{params:[...]}
         if (obj instanceof JSONObject) {
@@ -176,13 +180,15 @@ public class ApiExecutionEngine implements IExecutionEngine {
                 continue;
             }
             JSONObject row = (JSONObject) item;
-            Object codeObj = row.get("paramCode") != null ? row.get("paramCode") : row.get("code");
+            // 前端计算任务参数使用 key 作为实际请求字段名；兼容历史格式 paramCode/code。
+            Object codeObj = row.get("key") != null ? row.get("key")
+                    : (row.get("paramCode") != null ? row.get("paramCode") : row.get("code"));
             Object valObj = row.get("value") != null ? row.get("value")
                     : (row.get("defaultValue") != null ? row.get("defaultValue") : row.get("default"));
             if (codeObj == null) {
                 continue;
             }
-            String code = String.valueOf(codeObj);
+            String code = String.valueOf(codeObj).trim();
             if (code.isEmpty()) {
                 continue;
             }
@@ -191,7 +197,9 @@ public class ApiExecutionEngine implements IExecutionEngine {
     }
 
     private static Object unwrapValue(Object v) {
-        if (v == null) return null;
+        if (v == null) {
+            return null;
+        }
         return v;
     }
 
