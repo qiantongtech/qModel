@@ -45,8 +45,20 @@
         sortable="custom"
         :sort-orders="['descending', 'ascending']"
       />
+
       <el-table-column
-        v-if="getColumnVisibility(1)"
+          v-if="getColumnVisibility(1)"
+          label="版本号"
+          align="center"
+          prop="modelVersion"
+      >
+        <template #default="scope">
+          {{ scope.row.modelVersion || "-" }}
+        </template>
+      </el-table-column>
+
+      <el-table-column
+        v-if="getColumnVisibility(2)"
         label="客户端IP"
         align="center"
         prop="clientIp"
@@ -81,7 +93,7 @@
         </template>
       </el-table-column>
       <el-table-column
-        v-if="getColumnVisibility(2)"
+        v-if="getColumnVisibility(5)"
         label="请求时间"
         align="center"
         prop="createTime"
@@ -96,7 +108,7 @@
         </template>
       </el-table-column>
       <el-table-column
-        v-if="getColumnVisibility(5)"
+        v-if="getColumnVisibility(6)"
         label="操作"
         align="center"
         class-name="small-padding fixed-width"
@@ -257,11 +269,12 @@ const openDetail = ref(false);
 
 const columns = ref([
   { key: 0, label: "编号", visible: true },
-  { key: 1, label: "客户端IP", visible: true },
-  { key: 2, label: "请求时间", visible: true },
+  { key: 1, label: "版本号", visible: true },
+  { key: 2, label: "客户端IP", visible: true },
   { key: 3, label: "耗时", visible: true },
   { key: 4, label: "调用状态", visible: true },
-  { key: 5, label: "操作", visible: true },
+  { key: 5, label: "请求时间", visible: true },
+  { key: 6, label: "操作", visible: true },
 ]);
 
 const getColumnVisibility = (key) => {

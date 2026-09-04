@@ -56,8 +56,8 @@ public class ModelInvokeHistoryRespVO implements Serializable {
     private Long resourceId;
 
     @Excel(name = "模型版本id")
-    @Schema(description = "模型版本id", example = "")
-    private Long versionId;
+    @Schema(description = "版本号", example = "")
+    private String modelVersion;
 
     @Excel(name = "请求方式")
     @Schema(description = "请求方式", example = "")

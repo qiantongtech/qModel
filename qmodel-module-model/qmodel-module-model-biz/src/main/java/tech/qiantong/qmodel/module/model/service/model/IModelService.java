@@ -21,10 +21,7 @@ package tech.qiantong.qmodel.module.model.service.model;
 import com.baomidou.mybatisplus.extension.service.IService;
 import tech.qiantong.qmodel.common.core.domain.model.LoginUser;
 import tech.qiantong.qmodel.common.core.page.PageResult;
-import tech.qiantong.qmodel.module.model.controller.admin.model.vo.ModelPageReqVO;
-import tech.qiantong.qmodel.module.model.controller.admin.model.vo.ModelRespVO;
-import tech.qiantong.qmodel.module.model.controller.admin.model.vo.ModelSaveReqVO;
-import tech.qiantong.qmodel.module.model.controller.admin.model.vo.ModelSaveWithConfigReqVO;
+import tech.qiantong.qmodel.module.model.controller.admin.model.vo.*;
 import tech.qiantong.qmodel.module.model.dal.dataobject.model.ModelDO;
 
 import java.util.Collection;
@@ -135,4 +132,54 @@ public interface IModelService extends IService<ModelDO> {
      * @return 是否成功
      */
     Boolean publishModel(Long id, String applyReason, LoginUser currentUser);
+
+    /**
+     * 获得模型详细信息
+     *
+     * @param id 模型基础信息编号
+     * @return 模型基础信息
+     */
+    ModelVO getModelVOById(Long id, String modelVersion);
+
+    /**
+     * 创建模型
+     *
+     * @param modelVO 模型VO
+     * @return 模型编号
+     */
+    Long createModelVO(ModelVO modelVO);
+
+    /**
+     * 修改模型
+     *
+     * @param modelVO 模型VO
+     * @return 是否成功
+     */
+    Boolean updateModelVO(ModelVO modelVO);
+
+    /**
+     * 创建模型版本
+     *
+     * @param modelVO 模型VO
+     * @return 模型编号
+     */
+    Long createModelVersionVO(ModelVO modelVO);
+
+    /**
+     * 修改模型版本
+     *
+     * @param modelVO 模型VO
+     * @return 是否成功
+     */
+    Boolean updateModelVersionVO(ModelVO modelVO);
+
+    /**
+     * 获得模型基础信息详情
+     *
+     * @param id           模型基础信息编号
+     * @param modelVersion 模型版本号
+     * @return 模型基础信息
+     */
+
+    ModelRespVO getModel(Long id, String modelVersion);
 }

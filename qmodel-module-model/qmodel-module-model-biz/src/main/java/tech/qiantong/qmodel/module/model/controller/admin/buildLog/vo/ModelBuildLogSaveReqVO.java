@@ -56,8 +56,8 @@ public class ModelBuildLogSaveReqVO extends BaseEntity {
     @Size(max = 128, message = "模型名称长度不能超过128个字符")
     private String modelName;
 
-    @Schema(description = "版本id", example = "")
-    private Long versionId;
+    @Schema(description = "版本号", example = "")
+    private String modelVersion;
 
     @Schema(description = "构建类型", example = "")
     @NotBlank(message = "构建类型不能为空")

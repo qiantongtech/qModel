@@ -38,14 +38,16 @@ import tech.qiantong.qmodel.module.model.controller.admin.interfaceAddress.vo.Mo
 import tech.qiantong.qmodel.module.model.controller.admin.interfaceAddress.vo.ModelInterfaceAddressSaveReqVO;
 import tech.qiantong.qmodel.module.model.convert.interfaceAddress.ModelInterfaceAddressConvert;
 import tech.qiantong.qmodel.module.model.dal.dataobject.interfaceAddress.ModelInterfaceAddressDO;
-import tech.qiantong.qmodel.module.model.dal.dataobject.version.ModelVersionDO;
+import tech.qiantong.qmodel.module.model.dal.dataobject.modelVersion.ModelVersionDO;
 import tech.qiantong.qmodel.module.model.service.history.IModelHistoryService;
 import tech.qiantong.qmodel.module.model.service.interfaceAddress.IModelInterfaceAddressService;
-import tech.qiantong.qmodel.module.model.service.version.IModelVersionService;
+import tech.qiantong.qmodel.module.model.service.modelVersion.IModelVersionService;
+
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
-import java.util.*;
+import java.util.Arrays;
+import java.util.List;
 
 
 /**
@@ -104,8 +106,8 @@ public class ModelInterfaceAddressController extends BaseController {
     @GetMapping(value = "/{id}")
     public CommonResult<ModelInterfaceAddressRespVO> getInfo(@PathVariable("id") Long id) {
         ModelInterfaceAddressDO modelInterfaceAddressDO = modelInterfaceAddressService.getModelInterfaceAddressById(id);
-        ModelVersionDO modelVersionReconstitution = modelVersionService.getModelVersionById(modelInterfaceAddressDO.getVersionId());
-        modelInterfaceAddressDO.setVersion(modelVersionReconstitution.getVersion());
+        ModelVersionDO modelVersionReconstitution = modelVersionService.getById(modelInterfaceAddressDO.getVersionId());
+        modelInterfaceAddressDO.setVersion(modelVersionReconstitution.getModelVersion());
         modelInterfaceAddressDO.setDescription(modelVersionReconstitution.getDescription());
         return CommonResult.success(BeanUtils.toBean(modelInterfaceAddressDO, ModelInterfaceAddressRespVO.class));
     }

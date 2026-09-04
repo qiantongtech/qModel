@@ -1,237 +1,234 @@
 <!--
-  Copyright © 2026-present Jiangsu Qiantong Technology Co., Ltd.
+  Copyright (c) 2026 Jiangsu Qiantong Technology Co., Ltd.
+   *
+  Software Name: qModel Algorithm Model Platform (Commercial Edition)
 
-  This file is part of qModel Module Platform (Open Source Edition).
-
-  qModel is licensed under Apache License 2.0 with additional qModel terms.
-  You may use qModel for commercial purposes, but you may not remove, hide,
-  modify, or replace the qModel logo, copyright notices, license notices,
-  or attribution information without a separate commercial license.
-
-  White-label use, OEM distribution, rebranding, or presenting qModel as
-  another product requires separate commercial authorization from
-  Jiangsu Qiantong Technology Co., Ltd.
-
-  Business License: `https://qmodel.tech/`
-  See the LICENSE file in the project root for full license information.
+   *
+  [RIGHTS AND LICENSE STATEMENT]
+  This file contains non-public commercial source code of which Jiangsu Qiantong
+  Technology Co., Ltd. lawfully possesses complete intellectual property rights.
+   *
+  Access and use are limited to entities or individuals who have signed a valid
+  commercial license agreement, within the scope stipulated in the agreement.
+  The "accessibility" of this source code is premised on lawful authorization
+  and does not constitute any form of transfer of intellectual property rights
+  or implied licensing.
+   *
+  [PROHIBITIONS]
+  Unless explicitly agreed in the license agreement, the following acts in any
+  form are strictly prohibited:
+  1. Copying, disseminating, disclosing, selling, renting, or redistributing
+  this source code;
+  2. Providing the software's functionality to third parties via SaaS, PaaS,
+  cloud hosting, or other means;
+  3. Using this software or its derivative versions to develop products that
+  compete with the Right Holder;
+  4. Providing or displaying this source code or related technical information
+  to unauthorized third parties;
+  5. Tampering with, circumventing, or destroying copyright notices, license
+  verifications, or other technical protection measures.
+   *
+  [LEGAL LIABILITY]
+  Any unauthorized use constitutes an infringement of trade secrets and
+  intellectual property rights.
+   *
+  The Right Holder will strictly pursue liability for breach of contract and
+  infringement in accordance with the commercial agreement and laws such as
+  the "Copyright Law of the People's Republic of China" and the "Anti-Unfair
+  Competition Law".
+   *
+  ============================================================================
+   *
+  Copyright (c) 2026 江苏千桐科技有限公司
+   *
+  软件名称：qModel 算法模型平台（商业版）
+   *
+  【权利与授权声明】
+  本文件属于江苏千桐科技有限公司依法享有完全知识产权的非公开商业源代码。
+  仅限已签署有效商业授权合同的单位或个人在约定范围内查阅和使用。
+  源代码的“可访问性”均以合法授权为前提，不构成任何形式的知识产权转让或默示授权。
+   *
+  【禁止事项】
+  除授权合同明确约定外，严禁任何形式的：
+  1. 复制、传播、披露、出售、出租或再分发本源代码；
+  2. 通过 SaaS、PaaS、云托管等方式向第三方提供本软件功能；
+  3. 将本软件或其衍生版本用于开发与权利人构成竞争的产品；
+  4. 向未授权第三方提供或展示本源代码或相关技术信息；
+  5. 篡改、规避或破坏版权标识、授权校验及其他技术保护措施。
+   *
+  【法律责任】
+  任何未经授权的利用行为，均构成对商业秘密及知识产权的侵害。
+  权利人将依据商业合同及《中华人民共和国著作权法》《反不正当竞争法》
+  等法律法规，严厉追究违约与侵权责任。
 -->
 
 <template>
   <div class="app-container">
     <div class="justify-between mb15">
+      <el-row :gutter="15" class="btn-style">
+        <el-col :span="1.5">
+          <div style="display: flex; align-items: center;">
+            <el-button
+                type="primary"
+                plain
+                @click="handleAdd"
+                v-hasPermi="['model:calc:calc:add']"
+                @mousedown="(e) => e.preventDefault()"
+            >
+              <i class="iconfont-mini icon-xinzeng mr5"></i>新增
+            </el-button>
+            <div class="info-tip" style="margin-top: 0">
+              <el-icon><InfoFilled /></el-icon><span>基于当前版本新增</span>
+            </div>
+          </div>
+        </el-col>
+      </el-row>
       <div class="justify-end top-right-btn">
         <right-toolbar
-          v-model:showSearch="showSearch"
-          @queryTable="getList"
-          :columns="columns"
-          :search="false"
+            @queryTable="getList"
+            :columns="columns"
+            :search="false"
         ></right-toolbar>
       </div>
     </div>
 
-    <el-table
-      stripe
-      v-loading="loading"
-      :data="versionList"
-      @selection-change="handleSelectionChange"
+    <el-table stripe v-loading="loading"
+              :data="versionList"
+              :default-sort="defaultSort"
+              @sort-change="handleSortChange"
     >
-      <el-table-column
-        v-if="getColumnVisibility(0)"
-        label="编号"
-        align="center"
-        width="80"
-        prop="id"
-        sortable
-      >
-        <template #default="scope"> 1 </template>
+      <el-table-column v-if="getColumnVisibility(0)" label="编号" align="center" width="80" prop="id" sortable>
+        <template #default="scope"> {{ scope.row.id }}</template>
       </el-table-column>
-      <el-table-column
-        v-if="getColumnVisibility(1)"
-        label="版本号"
-        align="center"
-        prop="version"
-        width="200px"
-        :show-overflow-tooltip="{ effect: 'light' }"
-      >
+      <el-table-column v-if="getColumnVisibility(1)" label="版本号" align="left" prop="modelVersion" width="200px"
+                       :show-overflow-tooltip="{ effect: 'light' }">
         <template #default="scope">
-          {{ scope.row.version }}
+          <span>{{ scope.row.modelVersion }}</span>
+          <el-tag v-if="props.model.version === scope.row.modelVersion" type="primary" style="margin-left: 5px">
+            当前版本
+          </el-tag>
         </template>
       </el-table-column>
-      <el-table-column
-        v-if="getColumnVisibility(2)"
-        label="版本描述"
-        align="left"
-        prop="description"
-        width="300"
-        :show-overflow-tooltip="{ effect: 'light' }"
-      >
+      <el-table-column v-if="getColumnVisibility(2)" label="版本描述" align="left" prop="description"
+                       :show-overflow-tooltip="{ effect: 'light' }">
         <template #default="scope">
           {{ scope.row.description || "-" }}
         </template>
       </el-table-column>
-      <el-table-column
-        v-if="getColumnVisibility(3)"
-        label="创建人"
-        align="center"
-        prop="updateBy"
-        :show-overflow-tooltip="{ effect: 'light' }"
-      >
+      <el-table-column v-if="getColumnVisibility(3)" label="版本摘要" align="left" prop="description" width="340">
+        <template #default="scope">
+          <div v-if="scope.row.baseVersion && scope.row.baseVersion !== '' ">
+            <div>基于 {{ scope.row.baseVersion }} 版本</div>
+            <div style="display: flex;flex-direction: row;gap: 3px;">
+              <dict-tag v-if="scope.row.digest"
+                  v-for="digest in scope.row.digest.split(',')" :key="digest"
+                  :options="model_version_digest"
+                  :value="digest.trim()"
+              />
+            </div>
+          </div>
+          <div v-else>
+            <el-tag type="primary">初始版本</el-tag>
+          </div>
+        </template>
+      </el-table-column>
+      <el-table-column v-if="getColumnVisibility(4)" label="创建人" align="center" prop="createBy" width="140"
+                       :show-overflow-tooltip="{ effect: 'light' }">
         <template #default="scope">
           <span>{{ scope.row.createBy }}</span>
         </template>
       </el-table-column>
-      <el-table-column
-        v-if="getColumnVisibility(4)"
-        label="创建时间"
-        align="center"
-        prop="createTime"
-        width="150"
-        sortable
-      >
+      <el-table-column v-if="getColumnVisibility(5)" label="创建时间" align="center" prop="createTime" width="160"
+                       sortable>
         <template #default="scope">
           <span>{{
-            parseTime(scope.row.createTime, "{y}-{m}-{d} {h}:{i}")
-          }}</span>
+              parseTime(scope.row.createTime, "{y}-{m}-{d} {h}:{i}")
+            }}</span>
         </template>
       </el-table-column>
 
-      <el-table-column
-        v-if="getColumnVisibility(5)"
-        label="操作"
-        align="center"
-        class-name="small-padding fixed-width"
-        fixed="right"
-        width="250"
-      >
+      <el-table-column v-if="getColumnVisibility(6)" label="操作" align="center" width="250"
+                       class-name="small-padding fixed-width"
+                       fixed="right">
         <template #default="scope">
           <el-button link type="primary" @click="handleCompare(scope.row)">
-            <svg-icon icon-class="meta-version" class="handle-svg-icon" />
+            <svg-icon icon-class="meta-version" class="handle-svg-icon"/>
             版本对比
           </el-button>
+          <el-button :disabled="props.model.version === scope.row.modelVersion"
+                     link type="primary" icon="Switch"
+                     @click="handleChange(scope.row)">
+            版本切换
+          </el-button>
+          <el-popover placement="bottom" :width="120" trigger="click">
+            <template #reference>
+              <el-button link type="primary" icon="ArrowDown">更多</el-button>
+            </template>
+            <div class="task-action-list">
+              <el-button
+                  v-if="scope.row.status === 1"
+                  link
+                  type="primary"
+                  icon="CircleClose"
+                  @click="handleStop(scope.row)"
+                  style="margin-left: 0;"
+              >复制
+              </el-button>
+              <el-button :disabled="props.model.version === scope.row.modelVersion"
+                         link
+                         type="primary"
+                         icon="Edit"
+                         @click="handleUpdate(scope.row)"
+                         v-hasPermi="['model:calc:calc:edit']"
+                         style="margin-left: 0;"
+              >修改
+              </el-button>
+              <el-button :disabled="props.model.version === scope.row.modelVersion"
+                         link
+                         type="danger"
+                         icon="Delete"
+                         @click="handleDelete(scope.row)"
+                         v-hasPermi="['model:calc:calc:remove']"
+                         style="margin-left: 0;"
+              >删除
+              </el-button>
+            </div>
+          </el-popover>
         </template>
       </el-table-column>
     </el-table>
 
     <pagination
-      v-show="total > 0"
-      :total="total"
-      v-model:page="queryParams.pageNum"
-      v-model:limit="queryParams.pageSize"
-      @pagination="getList"
+        v-show="total > 0"
+        :total="total"
+        v-model:page="queryParams.pageNum"
+        v-model:limit="queryParams.pageSize"
+        @pagination="getList"
     />
-
-    <!-- 添加或修改版本管理对话框 -->
-    <el-dialog
-      :title="title"
-      v-model="open"
-      width="750px"
-      :close-on-click-modal="false"
-      append-to-body
-    >
-      <el-form ref="formRef" :model="form" :rules="rules" label-width="180px">
-        <el-row>
-          <el-col :span="20">
-            <el-form-item label="模型名称：" prop="modelName">
-              <el-input
-                :disabled="true"
-                clearable
-                v-model="form.modelName"
-                placeholder="请输入模型名称"
-              />
-            </el-form-item>
-          </el-col>
-        </el-row>
-        <!--        <el-row v-if="isFormat == 1">
-          <el-col :span="20">
-            <el-form-item label="上传接口：" prop="interfaceAddress">
-              <el-input
-                clearable
-                v-model="form.interfaceAddress"
-                placeholder="请输入上传接口"
-              />
-            </el-form-item>
-          </el-col>
-        </el-row>-->
-        <el-row>
-          <el-col :span="20">
-            <el-form-item label="模型版本号：" prop="version">
-              <el-input
-                v-model="form.version"
-                :rows="3"
-                type="number"
-                :disabled="isEdit"
-              />
-            </el-form-item>
-          </el-col>
-        </el-row>
-        <el-row v-if="props.model.accessMode == 0">
-          <el-col :span="20">
-            <el-form-item label="上传文件：" prop="fileName">
-              <file-name-upload
-                :fileType="['zip']"
-                v-model="form.fileAddress"
-                :limit="1"
-                :fileSize="200"
-                :editName="form.fileName"
-                :style="'width: 540px'"
-              />
-              <!--              <FileUpload-->
-              <!--                v-model="form.fileAddress"-->
-              <!--                @fileModelName="fileModelName"-->
-              <!--                :fileStyle2="true"-->
-              <!--                :isModelOrImg="false"-->
-              <!--                :limit="1"-->
-              <!--                :fileType="['zip']"-->
-              <!--                :fileSize="200"-->
-              <!--              />-->
-            </el-form-item>
-          </el-col>
-        </el-row>
-        <el-row>
-          <el-col :span="20">
-            <el-form-item label="版本发布说明：" prop="description">
-              <el-input
-                v-model="form.description"
-                :rows="3"
-                type="textarea"
-                maxlength="200"
-                show-word-limit
-                placeholder="请输入版本发布说明"
-              />
-            </el-form-item>
-          </el-col>
-        </el-row>
-      </el-form>
-      <template #footer>
-        <div class="dialog-footer">
-          <el-button type="primary" @click="submitForm">确 定</el-button>
-          <el-button @click="cancel">取 消</el-button>
-        </div></template
-      >
-    </el-dialog>
   </div>
 </template>
 
 <script setup>
 import {
+  listVersion,
+  changeVersion,
   getVersion,
   delVersion,
   addVersion,
-  updateVersion,
-  getVersionList,
-  handoffVersion,
-} from "@/api/modelReconstitution/version";
-import { getModel } from "@/api/modelReconstitution/model";
-import { listClassify } from "@/api/modelReconstitution/classify";
+  updateVersion
+} from "@/api/model/version";
+import { getModel } from "@/api/model/model";
+import { listClassify } from "@/api/model/classify";
 import FileNameUpload from "@/components/FileNameUpload/index.vue";
+
 import RightToolbar from "@/components/RightToolbar/index.vue";
-import { ref, reactive, computed, onMounted, watch } from "vue";
-import { useRoute } from "vue-router";
-import { ElMessage, ElMessageBox } from "element-plus";
+import {ref, reactive, computed, onMounted, watch, getCurrentInstance} from "vue";
+import {useRoute} from "vue-router";
 
 const route = useRoute();
+const {proxy} = getCurrentInstance();
+const {model_version_digest} = proxy.useDict("model_version_digest");
 
-// Props
 const props = defineProps({
   model: {
     type: Object,
@@ -239,34 +236,23 @@ const props = defineProps({
   },
 });
 
-// Emits
-const emit = defineEmits(["refresh"]);
-
-// 响应式数据
-const classifyOptions = ref([]);
-const isEdit = ref(true);
-const isFormat = ref(null);
 const loading = ref(true);
 const ids = ref([]);
-const single = ref(true);
 const multiple = ref(true);
-const showSearch = ref(true);
 const total = ref(0);
 const versionList = ref([]);
 const title = ref("");
 const open = ref(false);
-const modelForm = ref({});
-const queryFormRef = ref();
-const formRef = ref();
-const versionData = ref([]);
+const defaultSort = ref({prop: "createTime", order: "descending"});
 
 const columns = ref([
-  { key: 0, label: "编号", visible: true },
-  { key: 1, label: "版本号", visible: true },
-  { key: 2, label: "版本描述", visible: true },
-  { key: 3, label: "创建人", visible: true },
-  { key: 4, label: "创建时间", visible: true },
-  { key: 5, label: "操作", visible: true },
+  {key: 0, label: "编号", visible: true},
+  {key: 1, label: "版本号", visible: true},
+  {key: 2, label: "版本描述", visible: true},
+  {key: 3, label: "版本摘要", visible: true},
+  {key: 4, label: "创建人", visible: true},
+  {key: 5, label: "创建时间", visible: true},
+  {key: 6, label: "操作", visible: true},
 ]);
 
 const getColumnVisibility = (key) => {
@@ -276,386 +262,114 @@ const getColumnVisibility = (key) => {
 };
 // 查询参数
 const queryParams = reactive({
-  classifyId: null,
   pageNum: 1,
   pageSize: 10,
-  companyId: null,
   modelId: null,
-  modelName: null,
-  version: null,
-  fileAddress: null,
-  interfaceAddress: null,
-  status: null,
-  description: null,
-  validFlag: null,
-  creatorId: null,
-  updatorId: null,
+  orderByColumn: defaultSort.value.prop,
+  isAsc: defaultSort.value.order
 });
 
 // 表单参数
 const form = reactive({});
 
-// 表单校验
-const rules = reactive({
-  validFlag: [
-    {
-      required: true,
-      message: "是否有效 0：无效，1：有效不能为空",
-      trigger: "blur",
-    },
-  ],
-  delFlag: [
-    {
-      required: true,
-      message: "删除标志 1：已删除，0：未删除不能为空",
-      trigger: "blur",
-    },
-  ],
-  createTime: [
-    { required: true, message: "创建时间不能为空", trigger: "blur" },
-  ],
-  updateTime: [
-    { required: true, message: "更新时间不能为空", trigger: "blur" },
-  ],
-  interfaceAddress: [
-    { required: true, message: "上传接口不能为空", trigger: "blur" },
-  ],
-  fileAddress: [
-    { required: true, message: "上传文件不能为空", trigger: "blur" },
-  ],
-});
-
-// 计算属性
-const modelId = computed(() => {
-  return route.query.modelId;
-});
-
 // 监听器
 watch(
-  () => props.model,
-  (newModel) => {
-    if (newModel && newModel.version) {
-      getList();
-    }
-  },
-  { deep: true }
+    () => props.model,
+    (newModel) => {
+      if (newModel && newModel.version) {
+        getList();
+      }
+    },
+    {deep: true}
 );
 
-// 方法
-const fileModelName = (res) => {
-  console.log(res);
-  form.fileName = res.originalFilename.substring(
-    0,
-    res.originalFilename.lastIndexOf(".")
-  );
-};
+/** 排序触发事件 */
+function handleSortChange(column) {
+  queryParams.value.orderByColumn = column.prop;
+  queryParams.value.isAsc = column.order;
+  getList();
+}
 
 /** 查询版本管理列表 */
 const getList = () => {
   loading.value = true;
-  const mid = route.query.modelId;
-  queryParams.modelId = mid;
-  let data = [];
-  if (data.length === 0 && props.model && props.model.version) {
-    data = [
-      {
-        id: null,
-        modelId: mid,
-        modelName: props.model.name,
-        version: props.model.version,
-        status: 1,
-        description:
-          "调整初始值、预处理参数  调整初始值、预处理参数调整初始值、预处理参数调整初始值、预处理参数调整初始值、预处理参数调整初始值、预处理参数调整初始值、预处理参数调整初始值、预处理参数",
-        createBy: props.model.createBy || "张三",
-        createTime: props.model.createTime || "2025-09-18 15:13",
-      },
-    ];
-  }
-  versionList.value = data;
-  total.value = data.length;
+  queryParams.modelId = props.model.id;
+  listVersion(queryParams).then((response) => {
+    versionList.value = response.data.list;
+    total.value = response.data.total;
+    loading.value = false;
+  });
   loading.value = false;
 };
 
-// 取消按钮
-const cancel = () => {
-  open.value = false;
-  reset();
-};
-
 /** 版本对比 */
-
 const handleCompare = (row) => {
-  ElMessage({
-    message: "功能正在开发中",
-    type: "warning",
+  proxy.$router.push({
+    path: "/model/modelManageView/modelVersionDiff",
+    query: {modelId: props.model.id, compareVersion: row.modelVersion, currentVersion: props.model.version},
   });
 };
 
-// 表单重置
-const reset = () => {
-  Object.assign(form, {
-    id: null,
-    companyId: null,
-    modelId: null,
-    modelName: null,
-    version: null,
-    fileAddress: null,
-    interfaceAddress: null,
-    status: 0,
-    description: null,
-    validFlag: null,
-    delFlag: null,
-    createBy: null,
-    creatorId: null,
-    createTime: null,
-    updateBy: null,
-    updatorId: null,
-    updateTime: null,
-    remark: null,
-  });
-  isEdit.value = false;
-  if (formRef.value) {
-    formRef.value.clearValidate();
+// 版本切换
+function handleChange(row) {
+  let param = {
+    modelId: props.model.id,
+    modelVersion: row.modelVersion
   }
-};
-
-/** 查询分类下拉树结构 */
-const getTreeselect = () => {
-  listClassify().then((res) => {
-    for (let i = 0; i < res.data.length; i++) {
-      let arrTemp = [];
-      for (let j = 0; j < res.data.length; j++) {
-        if (res.data[i].id == res.data[j].parentId) {
-          res.data[i].children = arrTemp;
-          arrTemp.push(res.data[j]);
-        }
-      }
-    }
-    const result = [];
-    for (let i = 0; i < res.data.length; i++) {
-      if (res.data[i].parentId == 0) {
-        result.push(res.data[i]);
-      }
-    }
-    classifyOptions.value = result;
-  });
-};
-
-/** 转换菜单数据结构 */
-const normalizer = (node) => {
-  if (node.children && !node.children.length) {
-    delete node.children;
+  if (props.model.status === '10'){
+    proxy.$modal.msgWarning("模型已上架模型市场，请先下架模型");
+    return;
   }
-  return {
-    id: node.id,
-    label: node.name,
-    children: node.children,
-  };
-};
-
-// 节点单击事件
-const handleNodeClick = (data) => {
-  queryParams.classifyId = data.id;
-  handleQuery();
-};
-
-// 是否启用
-const handleEnable = (row) => {
-  ElMessageBox.confirm("你确定要切换当前模型的版本吗？", "提示", {
-    confirmButtonText: "确定",
-    cancelButtonText: "取消",
-    type: "warning",
-  })
-    .then(() => {
-      let beforeVersionId = null;
-      let beforeVersionVersion = null;
-      versionList.value.forEach((item) => {
-        if (item.status == 1) {
-          beforeVersionId = item.id;
-          beforeVersionVersion = item.version;
+  proxy.$modal
+      .confirm('是否确认切换到版本【' + row.modelVersion + '】？')
+      .then(() => {
+        return changeVersion(param)
+      })
+      .then((response) => {
+        if (response && response.data) {
+          proxy.$router.push({
+            path: "/model/modelManageView",
+            query: {modelId: props.model.id, tab: "version"},
+          });
+          props.model.version = row.modelVersion;
+          proxy.$modal.msgSuccess("切换成功");
         }
-      });
-
-      let obj = {
-        modelId: modelForm.value.id,
-        modelName: modelForm.value.name,
-        beforeVersionId: beforeVersionId,
-        beforeVersion: beforeVersionVersion,
-        afterVersionId: row.id,
-        afterVersion: row.version,
-      };
-      handoffVersion(obj).then((res) => {
-        ElMessage({
-          type: "success",
-          message: "切换成功!",
-        });
-        getList();
-        emit("refresh", modelForm.value.id);
-      });
-    })
-    .catch(() => {});
-};
-
-/** 搜索按钮操作 */
-const handleQuery = () => {
-  queryParams.pageNum = 1;
-  getList();
-};
-
-/** 重置按钮操作 */
-const resetQuery = () => {
-  reset();
-  Object.keys(queryParams).forEach((key) => {
-    queryParams[key] = null;
-  });
-  queryParams.pageNum = 1;
-  queryParams.pageSize = 10;
-  handleQuery();
-};
-
-// 多选框选中数据
-const handleSelectionChange = (selection) => {
-  ids.value = selection.map((item) => item.id);
-  single.value = selection.length !== 1;
-  multiple.value = !selection.length;
-};
+      })
+}
 
 /** 新增按钮操作 */
 const handleAdd = () => {
-  reset();
-  open.value = true;
-  const mid = route.query.modelId;
-  form.modelId = mid;
-  getModel(mid).then((response) => {
-    form.modelName = response.data.name;
+  proxy.$router.push({
+    path: "/model/modelManageView/modelVersion/add",
+    query: { id: props.model.id ,version: props.model.version },
   });
-  title.value = "添加版本管理";
 };
 
 /** 修改按钮操作 */
 const handleUpdate = (row) => {
-  reset();
-  const id = row.id || ids.value;
-  const modelName = row.modelName;
-  const status = row.status;
-  if (status == 1) {
-    ElMessageBox.confirm(
-      "【" + modelName + "】模型已启用，请先切换到别的版本然后进行修改！"
-    ).catch(() => {});
-  } else {
-    getVersion(id).then((response) => {
-      Object.assign(form, response.data);
-      form.modelName = modelForm.value.name;
-      open.value = true;
-      title.value = "修改版本管理";
-      isEdit.value = true;
-    });
-  }
-};
-
-/** 提交按钮 */
-const submitForm = () => {
-  if (formRef.value) {
-    formRef.value.validate((valid) => {
-      if (valid) {
-        console.log(versionList.value, "shuju");
-
-        let versionListFiltered = versionList.value.filter((item) => {
-          if (item.version == form.version) {
-            return true;
-          }
-        });
-        // if (versionListFiltered.length == 0) {
-        form.modelId = modelForm.value.id;
-        form.modelName = modelForm.value.name;
-        if (form.fileAddress && form.fileAddress.length > 0) {
-          form.fileName = form.fileAddress[0].name;
-          form.fileAddress = form.fileAddress[0].url;
-        }
-        console.log(form);
-        if (form.id != null) {
-          updateVersion(form).then((response) => {
-            ElMessage.success("修改成功");
-            open.value = false;
-            getList();
-          });
-        } else {
-          addVersion(form).then((response) => {
-            ElMessage.success("新增成功");
-            open.value = false;
-            getList();
-          });
-        }
-        // } else {
-        //   ElMessage.error("已有此版本，请重新输入或者删除之前的版本！");
-        // }
-      }
-    });
-  }
+  proxy.$router.push({
+    path: "/model/modelManageView/modelVersion/edit",
+    query: { id: props.model.id ,version: row.modelVersion },
+  });
 };
 
 /** 删除按钮操作 */
 const handleDelete = (row) => {
   const idsToDelete = row.id || ids.value;
-  const modelName = modelForm.value.name;
-  const status = row.status;
-  if (status == 1) {
-    ElMessageBox.confirm(
-      "【" + modelName + "】该版本已启用，请先停用后在删除！"
-    ).catch(() => {});
-  } else {
-    ElMessageBox.confirm(
-      '是否确认删除版本管理编号为"' + idsToDelete + '"的数据项？'
-    )
-      .then(function () {
+  proxy.$modal
+      .confirm('是否确认删除编号为"' + idsToDelete + '"的数据项？')
+      .then(() => {
         return delVersion(idsToDelete);
       })
-      .then(() => {
+      .then((response) => {
         getList();
-        ElMessage.success("删除成功");
-      })
-      .catch(() => {});
-  }
-};
-
-// 下载
-const handleDownload = (row) => {
-  // location.href(row.fileAddress)
-  downloadFile(
-    modelForm.value.interfaceorfileAddress,
-    modelForm.value.name + "模型文件"
-  );
-};
-
-const downloadFile = (urls, name) => {
-  fetch(urls).then((res) => {
-    res.blob().then((blob) => {
-      const url = window.URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = url;
-      // 获取文件后缀
-      let fileNameAnd = getFileNameAnd(urls);
-      //   doc", "xls", "ppt", "txt", "pdf
-      a.download = name + fileNameAnd;
-
-      a.click();
-
-      window.URL.revokeObjectURL(url);
-    });
-  });
-};
-
-const getFileNameAnd = (url) => {
-  let filename = url.substring(url.lastIndexOf("/") + 1);
-  // 获取文件后缀，判断是文件还是图片
-  let subName = filename.substring(filename.length - 4, filename.length);
-  return subName;
+        proxy.$modal.msgSuccess("删除成功");
+      });
 };
 
 // 组件挂载时执行
 onMounted(() => {
   getList();
-  getTreeselect();
 });
 </script>
 
@@ -663,6 +377,7 @@ onMounted(() => {
 .app-container {
   min-height: 0;
   background: transparent;
+
   .icon-mini {
     width: 1em;
     height: 1em;
@@ -688,5 +403,29 @@ onMounted(() => {
 .top-right-btn {
   display: flex;
   align-items: center;
+}
+
+.task-action-list {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 0 auto;
+  gap: 8px;
+
+  :deep(.el-button) {
+    margin: 0 !important;
+  }
+}
+
+.info-tip {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  font-size: x-small;
+  color: #a8aaae;
+  margin-left: 5px;
+  margin-top: 5px;
+  justify-content: flex-start;
+  gap: 5px;
 }
 </style>

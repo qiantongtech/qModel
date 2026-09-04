@@ -179,7 +179,7 @@ public class Modelinvokehistoryserviceimpl extends ServiceImpl<ModelInvokeHistor
 
     @Async("threadPoolTaskExecutor")
     @Override
-    public void saveInvokeLogAsync(Long modelId, String modelName, String invokeType, String inputParams,
+    public void saveInvokeLogAsync(Long modelId, String modelName, String modelVersion, String invokeType, String inputParams,
                                    String outputResult, String status, String errorMessage, Long duration,
                                    Date startTime, Date endTime, String clientIp) {
         if (StringUtils.isNull(modelId) || StringUtils.isNull(modelName)) {
@@ -189,6 +189,7 @@ public class Modelinvokehistoryserviceimpl extends ServiceImpl<ModelInvokeHistor
             ModelInvokeHistoryDO invokeHistory = new ModelInvokeHistoryDO();
             invokeHistory.setModelId(modelId);
             invokeHistory.setModelName(modelName);
+            invokeHistory.setModelVersion(modelVersion);
             invokeHistory.setInvokeType(invokeType);
             invokeHistory.setInputParams(inputParams);
             invokeHistory.setOutputResult(outputResult);

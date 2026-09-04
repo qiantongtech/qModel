@@ -173,6 +173,21 @@ public class ModelConfigServiceImpl  extends ServiceImpl<ModelConfigMapper,Model
                 ));
     }
 
+
+    /**
+     * 根据模型ID查询模型配置详情
+     *
+     * @param modelId 模型ID
+     * @return 模型配置详情
+     */
+    @Override
+    public ModelConfigDO getByModelId(Long modelId,String modelVersion) {
+        LambdaQueryWrapper<ModelConfigDO> queryWrapper = Wrappers.lambdaQuery(ModelConfigDO.class)
+                .eq(ModelConfigDO::getModelId, modelId)
+                .eq(ModelConfigDO::getModelVersion, modelVersion);
+        return super.getOne(queryWrapper);
+    }
+
     /**
      * 根据模型ID查询模型配置详情
      *
@@ -183,7 +198,8 @@ public class ModelConfigServiceImpl  extends ServiceImpl<ModelConfigMapper,Model
     public ModelConfigDO getByModelId(Long modelId) {
         LambdaQueryWrapper<ModelConfigDO> queryWrapper = Wrappers.lambdaQuery(ModelConfigDO.class)
                 .eq(ModelConfigDO::getModelId, modelId);
-        return super.getOne(queryWrapper);
+        List<ModelConfigDO> list = super.list(queryWrapper);
+        return list.size() > 0 ? list.get(0) : null;
     }
 
 
@@ -245,6 +261,30 @@ public class ModelConfigServiceImpl  extends ServiceImpl<ModelConfigMapper,Model
             HttpEntity<?> entity;
 
             String testBodyStr = testReqVO.getTestBody();
+
+            // 特殊处理 GET 请求：将 Body 参数转换为 Query 参数
+            if (method == HttpMethod.GET && StringUtils.isNotBlank(testBodyStr)) {
+                try {
+                    JSONObject bodyJson = JSON.parseObject(testBodyStr);
+                    if (bodyJson != null && !bodyJson.isEmpty()) {
+                        StringBuilder urlBuilder = new StringBuilder(targetUrl);
+                        for (Map.Entry<String, Object> entry : bodyJson.entrySet()) {
+                            if (entry.getValue() != null) {
+                                String connector = urlBuilder.toString().contains("?") ? "&" : "?";
+                                urlBuilder.append(connector)
+                                        .append(entry.getKey())
+                                        .append("=")
+                                        .append(java.net.URLEncoder.encode(String.valueOf(entry.getValue()), "UTF-8"));
+                            }
+                        }
+                        targetUrl = urlBuilder.toString();
+                        logs.add("GET 请求参数已注入 URL：" + targetUrl);
+                    }
+                } catch (Exception e) {
+                    logs.add("GET 请求参数解析失败，尝试原样发送：" + e.getMessage());
+                }
+            }
+
             String inputSchema = testReqVO.getInputSchema();
             if (StringUtils.isNotBlank(testBodyStr) && StringUtils.isNotBlank(inputSchema)) {
                 try {
@@ -344,7 +384,10 @@ public class ModelConfigServiceImpl  extends ServiceImpl<ModelConfigMapper,Model
                 } else {
                     entity = new HttpEntity<>(headers);
                 }
-            }  else {
+            } else if (method == HttpMethod.GET) {
+                // GET 请求不发送 Body
+                entity = new HttpEntity<>(headers);
+            } else {
                 entity = new HttpEntity<>(testReqVO.getTestBody(), headers);
             }
 
@@ -358,8 +401,8 @@ public class ModelConfigServiceImpl  extends ServiceImpl<ModelConfigMapper,Model
             logs.add("请求成功，HTTP 状态码：" + response.getStatusCodeValue());
 
             Date endTime = new Date();
-            modelInvokeHistoryService.saveInvokeLogAsync(testReqVO.getModelId(), testReqVO.getModelName(), InvokeTypeEnum.API.getType(),
-                    testReqVO.getTestBody(), response.getBody(), InvokeStatusEnum.SUCCESS.getStatus(), null,
+            modelInvokeHistoryService.saveInvokeLogAsync(testReqVO.getModelId(), testReqVO.getModelName(),testReqVO.getModelVersion(),
+                    InvokeTypeEnum.API.getType(), testReqVO.getTestBody(), response.getBody(), InvokeStatusEnum.SUCCESS.getStatus(), null,
                     endTime.getTime() - startTime.getTime(), startTime, endTime, clientIp);
         } catch (RestClientResponseException e) {
             result.setStatusCode(e.getRawStatusCode());
@@ -368,7 +411,7 @@ public class ModelConfigServiceImpl  extends ServiceImpl<ModelConfigMapper,Model
             logs.add("请求返回异常状态：" + e.getRawStatusCode() + " " + e.getStatusText());
 
             Date endTime = new Date();
-            modelInvokeHistoryService.saveInvokeLogAsync(testReqVO.getModelId(), testReqVO.getModelName(), InvokeTypeEnum.API.getType(),
+            modelInvokeHistoryService.saveInvokeLogAsync(testReqVO.getModelId(), testReqVO.getModelName(),testReqVO.getModelVersion(), InvokeTypeEnum.API.getType(),
                     testReqVO.getTestBody(), e.getResponseBodyAsString(), InvokeStatusEnum.FAILED.getStatus(), e.getStatusText(),
                     endTime.getTime() - startTime.getTime(), startTime, endTime, clientIp);
         } catch (Exception e) {
@@ -377,7 +420,7 @@ public class ModelConfigServiceImpl  extends ServiceImpl<ModelConfigMapper,Model
             log.error("模型配置测试调用异常", e);
 
             Date endTime = new Date();
-            modelInvokeHistoryService.saveInvokeLogAsync(testReqVO.getModelId(), testReqVO.getModelName(), InvokeTypeEnum.API.getType(),
+            modelInvokeHistoryService.saveInvokeLogAsync(testReqVO.getModelId(), testReqVO.getModelName(),testReqVO.getModelVersion(), InvokeTypeEnum.API.getType(),
                     testReqVO.getTestBody(), null, InvokeStatusEnum.FAILED.getStatus(), e.getMessage(),
                     endTime.getTime() - startTime.getTime(), startTime, endTime, clientIp);
         }
@@ -397,6 +440,28 @@ public class ModelConfigServiceImpl  extends ServiceImpl<ModelConfigMapper,Model
 
         // 处理 Query 参数
         String tokenUrl = testReqVO.getAuthDynamicUrl();
+        String dynamicBody = testReqVO.getAuthDynamicBody();
+        if (method == HttpMethod.GET && StringUtils.isNotBlank(dynamicBody)) {
+            try {
+                JSONObject bodyJson = JSON.parseObject(dynamicBody);
+                if (bodyJson != null && !bodyJson.isEmpty()) {
+                    for (Map.Entry<String, Object> entry : bodyJson.entrySet()) {
+                        if (entry.getValue() != null) {
+                            String connector = urlBuilder.toString().contains("?") ? "&" : "?";
+                            urlBuilder.append(connector)
+                                    .append(entry.getKey())
+                                    .append("=")
+                                    .append(java.net.URLEncoder.encode(String.valueOf(entry.getValue()), "UTF-8"));
+                        }
+                    }
+                    tokenUrl = urlBuilder.toString();
+                    logs.add("Token 接口 GET 参数已注入 URL：" + tokenUrl);
+                }
+            } catch (Exception e) {
+                logs.add("Token 接口 GET 参数解析失败，尝试原样发送：" + e.getMessage());
+            }
+        }
+
         if (StringUtils.isNotBlank(testReqVO.getAuthDynamicParams())) {
             UriComponentsBuilder uriBuilder = UriComponentsBuilder.fromHttpUrl(tokenUrl);
             JSONObject paramObj = JSON.parseObject(testReqVO.getAuthDynamicParams());
@@ -405,7 +470,12 @@ public class ModelConfigServiceImpl  extends ServiceImpl<ModelConfigMapper,Model
             logs.add("Token 接口 Query 参数：" + testReqVO.getAuthDynamicParams());
         }
 
-        HttpEntity<String> entity = new HttpEntity<>(testReqVO.getAuthDynamicBody(), headers);
+        HttpEntity<String> entity;
+        if (method == HttpMethod.GET) {
+            entity = new HttpEntity<>(headers);
+        } else {
+            entity = new HttpEntity<>(testReqVO.getAuthDynamicBody(), headers);
+        }
 
         logs.add("请求 Token 接口：" + tokenUrl);
         ResponseEntity<String> response = restTemplate.exchange(tokenUrl, method, entity, String.class);

@@ -369,6 +369,10 @@ INSERT INTO `system_dict_data` VALUES (140, 5, '审批中', '4', 'model_status',
 INSERT INTO `system_dict_data` VALUES (141, 6, '已发布', '5', 'model_status', NULL, 'success', NULL, '0', '吴同', '2026-07-23 14:31:39', '吴同', '2026-07-23 14:36:02', NULL);
 INSERT INTO `system_dict_data` VALUES (142, 7, '审批拒绝', '6', 'model_status', NULL, 'danger', NULL, '0', '吴同', '2026-07-23 14:31:52', '吴同', '2026-07-24 17:39:55', NULL);
 INSERT INTO `system_dict_data` VALUES (143, 8, '已下线', '7', 'model_status', NULL, 'info', NULL, '0', '吴同', '2026-07-23 14:32:12', '吴同', '2026-07-23 14:38:45', NULL);
+INSERT INTO `system_dict_data` VALUES (144, 1, '文件修改', '1', 'model_version_digest', NULL, 'info', NULL, '0', '超级管理员', '2026-08-14 14:23:28', '超级管理员', '2026-08-14 14:25:59', NULL);
+INSERT INTO `system_dict_data` VALUES (145, 2, '参数修改', '2', 'model_version_digest', NULL, 'success', NULL, '0', '超级管理员', '2026-08-14 14:24:00', '超级管理员', '2026-08-14 14:26:07', NULL);
+INSERT INTO `system_dict_data` VALUES (146, 3, '鉴权修改', '3', 'model_version_digest', NULL, 'warning', NULL, '0', '超级管理员', '2026-08-14 14:24:25', '超级管理员', '2026-08-14 14:26:16', NULL);
+INSERT INTO `system_dict_data` VALUES (147, 4, '地址修改', '4', 'model_version_digest', NULL, 'danger', NULL, '0', '超级管理员', '2026-08-14 14:25:40', '超级管理员', '2026-08-14 14:26:20', NULL);
 
 -- ----------------------------
 -- Table structure for system_dict_type
@@ -423,7 +427,7 @@ INSERT INTO `system_dict_type` VALUES (38, '模型计算状态', 'model_calc_sta
 INSERT INTO `system_dict_type` VALUES (39, '模型计算优先级', 'model_calc_priority', '0', '超级管理员', '2026-07-23 15:21:17', NULL, NULL, '优先级:1-高,2-中,3-低');
 INSERT INTO `system_dict_type` VALUES (40, '模型审批状态', 'model_audit_status', '0', '吴同', '2026-07-23 14:13:44', NULL, NULL, NULL);
 INSERT INTO `system_dict_type` VALUES (41, '模型状态', 'model_status', '0', '吴同', '2026-07-23 14:29:10', NULL, NULL, NULL);
-
+INSERT INTO `system_dict_type` VALUES (42, '模型版本摘要', 'model_version_digest', '0', '超级管理员', '2026-08-14 14:22:46', NULL, NULL, NULL);
 
 -- ----------------------------
 -- Table structure for system_job

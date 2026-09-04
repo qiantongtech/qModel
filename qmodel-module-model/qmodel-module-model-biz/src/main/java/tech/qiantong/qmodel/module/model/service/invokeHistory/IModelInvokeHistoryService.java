@@ -114,7 +114,7 @@ public interface IModelInvokeHistoryService extends IService<ModelInvokeHistoryD
      * @param endTime 结束时间
      * @param clientIp 客户端IP
      */
-    void saveInvokeLogAsync(Long modelId, String modelName, String invokeType, String inputParams,
+    void saveInvokeLogAsync(Long modelId, String modelName, String modelVersion, String invokeType, String inputParams,
                             String outputResult, String status, String errorMessage, Long duration,
                             Date startTime, Date endTime, String clientIp);
 

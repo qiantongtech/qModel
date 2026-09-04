@@ -18,11 +18,6 @@
 
 package tech.qiantong.qmodel.module.model.controller.admin.modelReconstitution;
 
-import cn.hutool.core.io.FileUtil;
-import cn.hutool.core.util.StrUtil;
-import cn.hutool.core.util.ZipUtil;
-import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -30,8 +25,6 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import tech.qiantong.qmodel.common.annotation.Log;
-import tech.qiantong.qmodel.common.config.AniviaConfig;
-import tech.qiantong.qmodel.common.constant.Constants;
 import tech.qiantong.qmodel.common.core.controller.BaseController;
 import tech.qiantong.qmodel.common.core.domain.AjaxResult;
 import tech.qiantong.qmodel.common.core.domain.CommonResult;
@@ -39,29 +32,26 @@ import tech.qiantong.qmodel.common.core.page.PageParam;
 import tech.qiantong.qmodel.common.core.page.PageResult;
 import tech.qiantong.qmodel.common.enums.BusinessType;
 import tech.qiantong.qmodel.common.utils.DateUtils;
-import tech.qiantong.qmodel.common.utils.StringUtils;
 import tech.qiantong.qmodel.common.utils.object.BeanUtils;
 import tech.qiantong.qmodel.common.utils.poi.ExcelUtil;
 import tech.qiantong.qmodel.module.model.controller.admin.modelReconstitution.vo.ModelReconstitutionPageReqVO;
 import tech.qiantong.qmodel.module.model.controller.admin.modelReconstitution.vo.ModelReconstitutionRespVO;
 import tech.qiantong.qmodel.module.model.controller.admin.modelReconstitution.vo.ModelReconstitutionSaveReqVO;
-import tech.qiantong.qmodel.module.model.controller.admin.version.vo.ModelVersionSaveReqVO;
 import tech.qiantong.qmodel.module.model.convert.modelReconstitution.ModelReconstitutionConvert;
 import tech.qiantong.qmodel.module.model.dal.dataobject.classify.ModelClassifyDO;
 import tech.qiantong.qmodel.module.model.dal.dataobject.modelReconstitution.ModelReconstitutionDO;
-import tech.qiantong.qmodel.module.model.dal.dataobject.version.ModelVersionDO;
+import tech.qiantong.qmodel.module.model.dal.dataobject.modelVersion.ModelVersionDO;
 import tech.qiantong.qmodel.module.model.service.classify.IModelClassifyService;
 import tech.qiantong.qmodel.module.model.service.history.IModelHistoryService;
 import tech.qiantong.qmodel.module.model.service.modelReconstitution.IModelReconstitutionService;
-import tech.qiantong.qmodel.module.model.service.version.IModelVersionService;
-import tech.qiantong.qmodel.module.model.dal.dataobject.modelReconstitution.FileItemDO;
+import tech.qiantong.qmodel.module.model.service.modelVersion.IModelVersionService;
 import tech.qiantong.qmodel.module.modelReconstitution.domain.ModelReconstitution;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
-import java.io.File;
-import java.util.*;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * 模型库重构Controller
@@ -124,9 +114,9 @@ public class ModelReconstitutionController extends BaseController {
         ModelReconstitutionDO modelReconstitutionDO = modelReconstitutionService.getModelReconstitutionById(id);
         if (modelReconstitutionDO.getVersionId() != null) {
             ModelVersionDO version = modelVersionService.getModelVersionById(modelReconstitutionDO.getVersionId());
-            modelReconstitutionDO.setVersion(version.getVersion());
+            modelReconstitutionDO.setVersion(version.getModelVersion());
             modelReconstitutionDO.setDescription(version.getDescription());
-            modelReconstitutionDO.setRunnableFileAddress(version.getRunnableFileAddress());
+//            modelReconstitutionDO.setRunnableFileAddress(version.getRunnableFileAddress());
         }
         ModelClassifyDO modelClassify = modelClassifyService.getModelClassifyById(modelReconstitutionDO.getClassifyId());
         modelReconstitutionDO.setClassifyName(modelClassify.getName());
@@ -139,8 +129,8 @@ public class ModelReconstitutionController extends BaseController {
     @PostMapping
     public CommonResult<Long> add(@Valid @RequestBody ModelReconstitutionSaveReqVO model) {
         // 创建模型版本并设置属性
-        Long versionId = modelVersionService.createModelVersionWithAttributes(model, getUserId(), getNickName());
-        model.setVersionId(versionId);
+//        Long versionId = modelVersionService.createModelVersionWithAttributes(model, getUserId(), getNickName());
+//        model.setVersionId(versionId);
         Long modelReconstitution = modelReconstitutionService.createModelReconstitution(model);
         // 添加操作历史
         modelHistoryService.createModelHistory(model.getId(), model.getName(), "新增了"+model.getName(), model.getVersion(), getUserId(), getNickName());

@@ -45,7 +45,7 @@ public interface ModelInvokeHistoryMapper extends BaseMapperX<ModelInvokeHistory
                 .eqIfPresent(ModelInvokeHistoryDO::getModelId, reqVO.getModelId())
                 .likeIfPresent(ModelInvokeHistoryDO::getModelName, reqVO.getModelName())
                 .eqIfPresent(ModelInvokeHistoryDO::getResourceId, reqVO.getResourceId())
-                .eqIfPresent(ModelInvokeHistoryDO::getVersionId, reqVO.getVersionId())
+                .eqIfPresent(ModelInvokeHistoryDO::getModelVersion, reqVO.getModelVersion())
                 .eqIfPresent(ModelInvokeHistoryDO::getRequestMethod, reqVO.getRequestMethod())
                 .eqIfPresent(ModelInvokeHistoryDO::getInvokeType, reqVO.getInvokeType())
                 .eqIfPresent(ModelInvokeHistoryDO::getInputParams, reqVO.getInputParams())

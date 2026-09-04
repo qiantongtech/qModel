@@ -28,6 +28,7 @@
             :loading="testing"
             :icon="VideoPlay"
             @click="handleTest"
+            :disabled="!selectedVersion"
           >
             调用测试
           </el-button>
@@ -41,10 +42,10 @@
             style="width: 300px"
           >
             <el-option
-              v-for="ver in versionList"
-              :key="ver.version"
-              :label="ver.version"
-              :value="ver.version"
+              v-for="version in versionList"
+              :key="version.dictValue"
+              :label="version.dictLabel"
+              :value="version.dictValue"
             />
           </el-select>
         </div>
@@ -164,6 +165,7 @@ import {
   runModelScript,
   listModelFileResource,
 } from "@/api/model/modelFileResource";
+import {getModelVersionDict} from "@/api/model/version.js";
 
 const props = defineProps({
   modelId: {
@@ -194,13 +196,8 @@ const logs = ref([]);
 const logRef = ref(null);
 const formValues = reactive({});
 const fieldTypeMap = reactive({});
-const selectedVersion = ref("v1.0.0");
-const versionList = ref([
-  {
-    version: "v1.0.0",
-    description: "调整初始值、预处理参数",
-  },
-]);
+const selectedVersion = ref("");
+const versionList = ref([]);
 
 const configData = reactive({
   inputSchema: "",
@@ -286,16 +283,19 @@ const fetchConfig = async () => {
   if (!props.modelId) return;
 
   configLoading.value = true;
+  getModelVersionDict(props.modelId).then((res) => {
+    versionList.value = res.data;
+  })
   try {
     if (props.accessMode === 0) {
-      const res = await listModelFileResource({ modelId: props.modelId });
+      const res = await listModelFileResource({ modelId: props.modelId,modelVersion: selectedVersion.value  });
       const rows = res.data?.rows || [];
       if (rows.length > 0) {
         const fileResource = rows[0];
         configData.inputSchema = fileResource.inputSchema || "";
       }
     } else {
-      const res = await getModelConfigByModelId(props.modelId);
+      const res = await getModelConfigByModelId(props.modelId,selectedVersion.value);
       const rows = res.data?.rows || [];
       if (rows.length > 0) {
         const config = rows[0];
@@ -325,9 +325,17 @@ const fetchConfig = async () => {
   }
 };
 
-watch([() => props.modelId, () => props.accessMode], () => {
-  fetchConfig();
-});
+watch([() => props.modelId, () => props.accessMode, () => selectedVersion.value],
+    () => {
+      fetchConfig();
+    });
+watch(
+    () => props.modelVersion,
+    (newVal) => {
+      if (!newVal) return;
+      selectedVersion.value = newVal;
+    }
+);
 
 onMounted(() => {
   fetchConfig();
@@ -469,7 +477,7 @@ const handleTest = async () => {
       addLog(`执行 Python 脚本，模型ID：${props.modelId}`);
       addLog("正在执行脚本...");
 
-      const res = await runModelScript(props.modelId, body);
+      const res = await runModelScript(props.modelId,selectedVersion.value, body);
       if (res.code === 200) {
         const result = res.data || {};
         addLog("脚本执行成功", "success");
@@ -489,6 +497,7 @@ const handleTest = async () => {
       const data = {
         modelId: props.modelId,
         modelName: props.modelName,
+        modelVersion: selectedVersion.value,
         inputSchema: configData.inputSchema,
         apiUrl: configData.apiUrl,
         requestMethod: configData.requestMethod,

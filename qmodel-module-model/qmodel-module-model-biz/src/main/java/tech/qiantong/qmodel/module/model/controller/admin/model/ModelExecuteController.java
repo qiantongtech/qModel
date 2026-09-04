@@ -90,7 +90,7 @@ public class ModelExecuteController {
             testReqVO.setTestBody(JSON.toJSONString(modelExecuteVO.getParam()));
             return CommonResult.success(modelConfigService.testModelConfig(testReqVO));
         } else {
-            return CommonResult.success(modelFileResourceService.runModelScript(modelRespVO.getId(), modelExecuteVO.getParam()));
+            return CommonResult.success(modelFileResourceService.runModelScript(modelRespVO.getId(),modelRespVO.getVersion(), modelExecuteVO.getParam()));
         }
     }
 

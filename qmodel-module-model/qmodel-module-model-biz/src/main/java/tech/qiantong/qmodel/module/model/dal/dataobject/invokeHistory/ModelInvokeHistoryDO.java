@@ -57,8 +57,8 @@ public class ModelInvokeHistoryDO extends BaseEntity {
     /** 模型配置资源id */
     private Long resourceId;
 
-    /** 模型版本id */
-    private Long versionId;
+    /** 模型版本 */
+    private String modelVersion;
 
     /** 请求方式 */
     private String requestMethod;
