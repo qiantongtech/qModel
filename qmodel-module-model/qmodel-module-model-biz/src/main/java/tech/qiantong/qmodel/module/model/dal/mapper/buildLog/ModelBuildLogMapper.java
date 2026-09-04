@@ -47,7 +47,7 @@ public interface ModelBuildLogMapper extends BaseMapperX<ModelBuildLogDO> {
                 .eqIfPresent(ModelBuildLogDO::getResourceId, reqVO.getResourceId())
                 .eqIfPresent(ModelBuildLogDO::getModelId, reqVO.getModelId())
                 .likeIfPresent(ModelBuildLogDO::getModelName, reqVO.getModelName())
-                .eqIfPresent(ModelBuildLogDO::getVersionId, reqVO.getVersionId())
+                .eqIfPresent(ModelBuildLogDO::getModelVersion, reqVO.getModelVersion())
                 .eqIfPresent(ModelBuildLogDO::getBuildType, reqVO.getBuildType())
                 .eqIfPresent(ModelBuildLogDO::getStatus, reqVO.getStatus())
                 .eqIfPresent(ModelBuildLogDO::getStartTime, reqVO.getStartTime())

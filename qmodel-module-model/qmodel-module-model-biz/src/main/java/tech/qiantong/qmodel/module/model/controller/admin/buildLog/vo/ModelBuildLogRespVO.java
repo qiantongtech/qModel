@@ -55,9 +55,8 @@ public class ModelBuildLogRespVO implements Serializable {
     @Schema(description = "模型名称", example = "")
     private String modelName;
 
-    @Excel(name = "版本id")
-    @Schema(description = "版本id", example = "")
-    private Long versionId;
+    @Schema(description = "版本号", example = "")
+    private String modelVersion;
 
     @Excel(name = "构建类型")
     @Schema(description = "构建类型", example = "")

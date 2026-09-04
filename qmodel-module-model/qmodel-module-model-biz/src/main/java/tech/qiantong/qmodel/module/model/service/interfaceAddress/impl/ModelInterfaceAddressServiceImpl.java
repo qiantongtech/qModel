@@ -31,17 +31,13 @@ import tech.qiantong.qmodel.module.model.controller.admin.interfaceAddress.vo.Mo
 import tech.qiantong.qmodel.module.model.controller.admin.interfaceAddress.vo.ModelInterfaceAddressRespVO;
 import tech.qiantong.qmodel.module.model.controller.admin.interfaceAddress.vo.ModelInterfaceAddressSaveReqVO;
 import tech.qiantong.qmodel.module.model.dal.dataobject.interfaceAddress.ModelInterfaceAddressDO;
-import tech.qiantong.qmodel.module.model.dal.dataobject.version.ModelVersionDO;
+import tech.qiantong.qmodel.module.model.dal.dataobject.modelVersion.ModelVersionDO;
 import tech.qiantong.qmodel.module.model.dal.mapper.interfaceAddress.ModelInterfaceAddressMapper;
 import tech.qiantong.qmodel.module.model.service.interfaceAddress.IModelInterfaceAddressService;
-import tech.qiantong.qmodel.module.model.service.version.IModelVersionService;
+import tech.qiantong.qmodel.module.model.service.modelVersion.IModelVersionService;
 
 import javax.annotation.Resource;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 /**
  * 接口地址Service业务层处理
@@ -77,11 +73,11 @@ public class ModelInterfaceAddressServiceImpl  extends ServiceImpl<ModelInterfac
         Map<String, Object> params = new HashMap<>();
         params.put("ids", ids);
         modelVersionReconstitution.setParams(params);
-        List<ModelVersionDO> modelVersionReconstitutions = modelVersionService.selectModelVersionList(modelVersionReconstitution);
+        List<ModelVersionDO> modelVersionReconstitutions = modelVersionService.list();
         for (ModelInterfaceAddressDO interfaceAddress : list) {
             for (ModelVersionDO versionReconstitution : modelVersionReconstitutions) {
                 if (interfaceAddress.getVersionId().equals(versionReconstitution.getId())) {
-                    interfaceAddress.setVersion(versionReconstitution.getVersion());
+                    interfaceAddress.setVersion(versionReconstitution.getModelVersion());
                     interfaceAddress.setDescription(versionReconstitution.getDescription());
                 }
             }

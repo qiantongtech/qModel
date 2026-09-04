@@ -62,9 +62,9 @@ export function delModelFileResource(id) {
 }
 
 // 执行模型脚本
-export function runModelScript(modelId, inputParam) {
+export function runModelScript(modelId,modelVersion, inputParam) {
   return request({
-    url: '/model/modelFileResource/runScript/' + modelId,
+    url: '/model/modelFileResource/runScript/' + modelId+"/"+modelVersion,
     method: 'post',
     data: inputParam
   })

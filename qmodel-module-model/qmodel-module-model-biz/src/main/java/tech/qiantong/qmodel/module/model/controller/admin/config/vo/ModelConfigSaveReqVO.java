@@ -48,6 +48,9 @@ public class ModelConfigSaveReqVO extends BaseEntity {
     @Schema(description = "关联模型ID", example = "")
     private Long modelId;
 
+    @Schema(description = "模型版本号", example = "")
+    private String modelVersion;
+
     @Schema(description = "业务接口地址", example = "")
     @NotBlank(message = "业务接口地址不能为空")
     private String apiUrl;

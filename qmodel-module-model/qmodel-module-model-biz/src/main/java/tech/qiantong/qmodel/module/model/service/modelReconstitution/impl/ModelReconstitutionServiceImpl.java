@@ -38,14 +38,13 @@ import tech.qiantong.qmodel.common.utils.object.BeanUtils;
 import tech.qiantong.qmodel.module.model.controller.admin.modelReconstitution.vo.ModelReconstitutionPageReqVO;
 import tech.qiantong.qmodel.module.model.controller.admin.modelReconstitution.vo.ModelReconstitutionRespVO;
 import tech.qiantong.qmodel.module.model.controller.admin.modelReconstitution.vo.ModelReconstitutionSaveReqVO;
-import tech.qiantong.qmodel.module.model.dal.dataobject.classify.ModelClassifyDO;
+import tech.qiantong.qmodel.module.model.dal.dataobject.modelReconstitution.FileItemDO;
 import tech.qiantong.qmodel.module.model.dal.dataobject.modelReconstitution.ModelReconstitutionDO;
-import tech.qiantong.qmodel.module.model.dal.dataobject.version.ModelVersionDO;
+import tech.qiantong.qmodel.module.model.dal.dataobject.modelVersion.ModelVersionDO;
 import tech.qiantong.qmodel.module.model.dal.mapper.modelReconstitution.ModelReconstitutionMapper;
 import tech.qiantong.qmodel.module.model.service.classify.IModelClassifyService;
 import tech.qiantong.qmodel.module.model.service.modelReconstitution.IModelReconstitutionService;
-import tech.qiantong.qmodel.module.model.service.version.IModelVersionService;
-import tech.qiantong.qmodel.module.model.dal.dataobject.modelReconstitution.FileItemDO;
+import tech.qiantong.qmodel.module.model.service.modelVersion.IModelVersionService;
 import tech.qiantong.qmodel.module.modelReconstitution.domain.ModelReconstitution;
 
 import javax.annotation.Resource;
@@ -92,14 +91,14 @@ public class ModelReconstitutionServiceImpl  extends ServiceImpl<ModelReconstitu
         Map<String,Object> params = new HashMap<>();
         params.put("ids",ids);
         modelVersionReconstitution.setParams(params);
-        List<ModelVersionDO> modelVersions = modelVersionService.selectModelVersionList(modelVersionReconstitution);
+        List<ModelVersionDO> modelVersions = modelVersionService.list();
         for (ModelReconstitutionDO reconstitution : list) {
             if (reconstitution.getVersionId() == null) {
                 continue;
             }
             for (ModelVersionDO versionReconstitution : modelVersions) {
                 if (reconstitution.getVersionId().equals(versionReconstitution.getId())){
-                    reconstitution.setVersion(versionReconstitution.getVersion());
+                    reconstitution.setVersion(versionReconstitution.getModelVersion());
                     reconstitution.setDescription(versionReconstitution.getDescription());
                 }
             }

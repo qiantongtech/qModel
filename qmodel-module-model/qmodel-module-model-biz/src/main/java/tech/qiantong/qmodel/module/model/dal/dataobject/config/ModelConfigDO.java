@@ -54,6 +54,9 @@ public class ModelConfigDO extends BaseEntity {
     /** 关联模型ID */
     private Long modelId;
 
+    /** 模型版本号 */
+    private String modelVersion;
+
     /** 业务接口地址 */
     private String apiUrl;
 

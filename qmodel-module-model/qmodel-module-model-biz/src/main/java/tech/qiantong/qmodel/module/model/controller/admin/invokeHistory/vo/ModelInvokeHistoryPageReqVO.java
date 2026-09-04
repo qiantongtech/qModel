@@ -46,8 +46,8 @@ public class ModelInvokeHistoryPageReqVO extends PageParam {
     @Schema(description = "模型配置资源id", example = "")
     private Long resourceId;
 
-    @Schema(description = "模型版本id", example = "")
-    private Long versionId;
+    @Schema(description = "版本号", example = "")
+    private String modelVersion;
 
     @Schema(description = "请求方式", example = "")
     private String requestMethod;

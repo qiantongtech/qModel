@@ -139,9 +139,11 @@ public class ModelFileResourceController extends BaseController {
 
     @Operation(summary = "执行模型脚本")
     @PreAuthorize("@ss.hasPermi('model:fileResource:fileresource:query')")
-    @PostMapping("/runScript/{modelId}")
-    public CommonResult<Object> runScript(@PathVariable("modelId") Long modelId, @RequestBody(required = false) Map<String, Object> inputParam) {
-        return CommonResult.success(modelFileResourceService.runModelScript(modelId, inputParam));
+    @PostMapping("/runScript/{modelId}/{modelVersion}")
+    public CommonResult<Object> runScript(@PathVariable("modelId") Long modelId,
+                                          @PathVariable("modelVersion") String modelVersion,
+                                          @RequestBody(required = false) Map<String, Object> inputParam) {
+        return CommonResult.success(modelFileResourceService.runModelScript(modelId,modelVersion, inputParam));
     }
 
     @Operation(summary = "调用模型参数文件上传")

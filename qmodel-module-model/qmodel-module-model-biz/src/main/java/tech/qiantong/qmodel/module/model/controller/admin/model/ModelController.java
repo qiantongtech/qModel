@@ -39,10 +39,7 @@ import tech.qiantong.qmodel.common.enums.BusinessType;
 import tech.qiantong.qmodel.common.utils.object.BeanUtils;
 import tech.qiantong.qmodel.common.utils.poi.ExcelUtil;
 import tech.qiantong.qmodel.common.exception.enums.GlobalErrorCodeConstants;
-import tech.qiantong.qmodel.module.model.controller.admin.model.vo.ModelPageReqVO;
-import tech.qiantong.qmodel.module.model.controller.admin.model.vo.ModelRespVO;
-import tech.qiantong.qmodel.module.model.controller.admin.model.vo.ModelSaveReqVO;
-import tech.qiantong.qmodel.module.model.controller.admin.model.vo.ModelSaveWithConfigReqVO;
+import tech.qiantong.qmodel.module.model.controller.admin.model.vo.*;
 import tech.qiantong.qmodel.module.model.convert.model.ModelConvert;
 import tech.qiantong.qmodel.module.model.dal.dataobject.model.ModelDO;
 import tech.qiantong.qmodel.module.model.service.model.IModelService;
@@ -91,6 +88,31 @@ public class ModelController extends BaseController {
         String message = modelService.importModel(importExcelList, updateSupport, operName);
         return success(message);
     }
+
+    @Operation(summary = "获取模型基础信息详细信息")
+    @PreAuthorize("@ss.hasPermi('model:model:query')")
+    @GetMapping(value = "/getModelVO")
+    public CommonResult<ModelVO> getModelVO(Long id, String version) {
+        ModelVO modelVO = modelService.getModelVOById(id, version);
+        return CommonResult.success(modelVO);
+    }
+
+    @Operation(summary = "新增模型")
+    @PreAuthorize("@ss.hasPermi('model:model:add')")
+    @Log(title = "模型基础信息", businessType = BusinessType.INSERT)
+    @PostMapping("addModel")
+    public CommonResult<Long> addModel(@Valid @RequestBody ModelVO modelVO) {
+        return CommonResult.success(modelService.createModelVO(modelVO));
+    }
+
+    @Operation(summary = "获取模型基础信息详细信息")
+    @PreAuthorize("@ss.hasPermi('model:model:query')")
+    @GetMapping(value = "/getInfo/{id}")
+    public CommonResult<ModelRespVO> getInfo(@PathVariable("id") Long id, String modelVersion) {
+        ModelRespVO modelRespVO = modelService.getModel(id, modelVersion);
+        return CommonResult.success(modelRespVO);
+    }
+
 
     @Operation(summary = "获取模型基础信息详细信息")
     @PreAuthorize("@ss.hasPermi('model:model:query')")
@@ -148,6 +170,30 @@ public class ModelController extends BaseController {
     public CommonResult<Boolean> publishModel(@RequestParam("id") Long id,
                                               @RequestParam("applyReason") String applyReason) {
         return CommonResult.success(modelService.publishModel(id, applyReason,super.getLoginUser()));
+    }
+
+    @Operation(summary = "修改模型")
+    @PreAuthorize("@ss.hasPermi('model:model:edit')")
+    @Log(title = "模型基础信息", businessType = BusinessType.UPDATE)
+    @PostMapping("updateModel")
+    public CommonResult<Boolean> updateModel(@Valid @RequestBody ModelVO modelVO) {
+        return CommonResult.success(modelService.updateModelVO(modelVO));
+    }
+
+    @Operation(summary = "新增模型版本")
+    @PreAuthorize("@ss.hasPermi('model:model:add')")
+    @Log(title = "模型基础信息", businessType = BusinessType.INSERT)
+    @PostMapping("addModelVersion")
+    public CommonResult<Long> addModelVersionVO(@Valid @RequestBody ModelVO modelVO) {
+        return CommonResult.success(modelService.createModelVersionVO(modelVO));
+    }
+
+    @Operation(summary = "修改模型版本")
+    @PreAuthorize("@ss.hasPermi('model:model:edit')")
+    @Log(title = "模型基础信息", businessType = BusinessType.UPDATE)
+    @PostMapping("updateModelVersion")
+    public CommonResult<Boolean> updateModelVersion(@Valid @RequestBody ModelVO modelVO) {
+        return CommonResult.success(modelService.updateModelVersionVO(modelVO));
     }
 
 }

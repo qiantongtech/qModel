@@ -94,6 +94,9 @@ public class ModelConfigTestReqVO {
     @TableField(exist = false)
     private Long modelId;
 
+    @Schema(description = "模型版本", example = "")
+    private String modelVersion;
+
     @TableField(exist = false)
     private String modelName;
 

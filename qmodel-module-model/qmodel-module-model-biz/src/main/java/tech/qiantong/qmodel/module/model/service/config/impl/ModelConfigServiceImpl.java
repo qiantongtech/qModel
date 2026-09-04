@@ -173,6 +173,21 @@ public class ModelConfigServiceImpl  extends ServiceImpl<ModelConfigMapper,Model
                 ));
     }
 
+
+    /**
+     * 根据模型ID查询模型配置详情
+     *
+     * @param modelId 模型ID
+     * @return 模型配置详情
+     */
+    @Override
+    public ModelConfigDO getByModelId(Long modelId,String modelVersion) {
+        LambdaQueryWrapper<ModelConfigDO> queryWrapper = Wrappers.lambdaQuery(ModelConfigDO.class)
+                .eq(ModelConfigDO::getModelId, modelId)
+                .eq(ModelConfigDO::getModelVersion, modelVersion);
+        return super.getOne(queryWrapper);
+    }
+
     /**
      * 根据模型ID查询模型配置详情
      *
@@ -183,7 +198,8 @@ public class ModelConfigServiceImpl  extends ServiceImpl<ModelConfigMapper,Model
     public ModelConfigDO getByModelId(Long modelId) {
         LambdaQueryWrapper<ModelConfigDO> queryWrapper = Wrappers.lambdaQuery(ModelConfigDO.class)
                 .eq(ModelConfigDO::getModelId, modelId);
-        return super.getOne(queryWrapper);
+        List<ModelConfigDO> list = super.list(queryWrapper);
+        return list.size() > 0 ? list.get(0) : null;
     }
 
 
@@ -358,8 +374,8 @@ public class ModelConfigServiceImpl  extends ServiceImpl<ModelConfigMapper,Model
             logs.add("请求成功，HTTP 状态码：" + response.getStatusCodeValue());
 
             Date endTime = new Date();
-            modelInvokeHistoryService.saveInvokeLogAsync(testReqVO.getModelId(), testReqVO.getModelName(), InvokeTypeEnum.API.getType(),
-                    testReqVO.getTestBody(), response.getBody(), InvokeStatusEnum.SUCCESS.getStatus(), null,
+            modelInvokeHistoryService.saveInvokeLogAsync(testReqVO.getModelId(), testReqVO.getModelName(),testReqVO.getModelVersion(),
+                    InvokeTypeEnum.API.getType(), testReqVO.getTestBody(), response.getBody(), InvokeStatusEnum.SUCCESS.getStatus(), null,
                     endTime.getTime() - startTime.getTime(), startTime, endTime, clientIp);
         } catch (RestClientResponseException e) {
             result.setStatusCode(e.getRawStatusCode());
@@ -368,7 +384,7 @@ public class ModelConfigServiceImpl  extends ServiceImpl<ModelConfigMapper,Model
             logs.add("请求返回异常状态：" + e.getRawStatusCode() + " " + e.getStatusText());
 
             Date endTime = new Date();
-            modelInvokeHistoryService.saveInvokeLogAsync(testReqVO.getModelId(), testReqVO.getModelName(), InvokeTypeEnum.API.getType(),
+            modelInvokeHistoryService.saveInvokeLogAsync(testReqVO.getModelId(), testReqVO.getModelName(),testReqVO.getModelVersion(), InvokeTypeEnum.API.getType(),
                     testReqVO.getTestBody(), e.getResponseBodyAsString(), InvokeStatusEnum.FAILED.getStatus(), e.getStatusText(),
                     endTime.getTime() - startTime.getTime(), startTime, endTime, clientIp);
         } catch (Exception e) {
@@ -377,7 +393,7 @@ public class ModelConfigServiceImpl  extends ServiceImpl<ModelConfigMapper,Model
             log.error("模型配置测试调用异常", e);
 
             Date endTime = new Date();
-            modelInvokeHistoryService.saveInvokeLogAsync(testReqVO.getModelId(), testReqVO.getModelName(), InvokeTypeEnum.API.getType(),
+            modelInvokeHistoryService.saveInvokeLogAsync(testReqVO.getModelId(), testReqVO.getModelName(),testReqVO.getModelVersion(), InvokeTypeEnum.API.getType(),
                     testReqVO.getTestBody(), null, InvokeStatusEnum.FAILED.getStatus(), e.getMessage(),
                     endTime.getTime() - startTime.getTime(), startTime, endTime, clientIp);
         }
