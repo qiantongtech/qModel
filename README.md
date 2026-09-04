@@ -7,6 +7,9 @@
  <img src="https://img.shields.io/badge/qModel-v1.0.0-blue.svg" alt="qModel"/>
  <img src="https://gitee.com/qiantongtech/qModel/badge/star.svg" alt="Gitee Stars"/>
  <img src="https://img.shields.io/github/stars/qiantongtech/qModel?label=Github%20Stars" alt="GitHub Stars"/>
+<a href="https://atomgit.com/qiantongtech/qModel">
+  <img src="https://atomgit.com/qiantongtech/qModel/star/badge.svg" alt="AtomGit Star"/>
+</a>
 </p>
 
 <p align="center">
