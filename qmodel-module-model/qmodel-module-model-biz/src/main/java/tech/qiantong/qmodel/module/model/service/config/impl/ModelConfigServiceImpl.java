@@ -309,7 +309,7 @@ public class ModelConfigServiceImpl  extends ServiceImpl<ModelConfigMapper,Model
                                 } else {
                                     type = prop.getString("type");
                                 }
-                                
+
                                 Object val = bodyJson.get(key);
                                 if ("array".equals(type) && val instanceof String) {
                                     try {
@@ -445,6 +445,7 @@ public class ModelConfigServiceImpl  extends ServiceImpl<ModelConfigMapper,Model
             try {
                 JSONObject bodyJson = JSON.parseObject(dynamicBody);
                 if (bodyJson != null && !bodyJson.isEmpty()) {
+                    StringBuilder urlBuilder = new StringBuilder(tokenUrl);
                     for (Map.Entry<String, Object> entry : bodyJson.entrySet()) {
                         if (entry.getValue() != null) {
                             String connector = urlBuilder.toString().contains("?") ? "&" : "?";
