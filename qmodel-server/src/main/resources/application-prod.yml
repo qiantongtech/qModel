@@ -1,16 +1,16 @@
 # Copyright © 2026-present Jiangsu Qiantong Technology Co., Ltd.
-#  
+#
 # This file is part of qModel Module Platform (Open Source Edition).
-#  
+#
 # qModel is licensed under Apache License 2.0 with additional qModel terms.
 # You may use qModel for commercial purposes, but you may not remove, hide,
 # modify, or replace the qModel logo, copyright notices, license notices,
 # or attribution information without a separate commercial license.
-#  
+#
 # White-label use, OEM distribution, rebranding, or presenting qModel as
 # another product requires separate commercial authorization from
 # Jiangsu Qiantong Technology Co., Ltd.
-#  
+#
 # Business License: `https://qmodel.tech/`
 # See the LICENSE file in the project root for full license information.
 
@@ -148,16 +148,3 @@ oracle:
 flow:
   enable: false
   url: http://127.0.0.1:26859/
-
-
-
-#模型
-modelUrl: "http://192.168.200.206:8000"
-modelUrl2: "http://192.168.200.182:8821"
-
-model:
-  hydrodynamicModel: D:\model\chengxuhuizong11.5
-  newHydrodynamicModel: C:\Users\yuexin\Downloads\1.31exe\1.31exe
-  filePath: D:\nami\data\model
-  location: D:\nami\data\modelFile\
-  accessUrl: D:/nami/data/modelFile

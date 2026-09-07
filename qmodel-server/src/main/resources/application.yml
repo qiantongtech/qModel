@@ -66,7 +66,7 @@ user:
     # 密码锁定时间（默认10分钟）
     lockTime: 10
     #万能密码 配置为空则不生效
-    universalPassword: gfh78h23789#$gfdy845
+    universalPassword:
 
 # Spring配置
 spring:
@@ -88,13 +88,10 @@ spring:
   config:
     import:
       - "application-${spring.profiles.active}.yml"
-      # - "classpath:application-auth-${spring.profiles.active}.yml"
       - "classpath:application-es-${spring.profiles.active}.yml"
       - "classpath:application-file-${spring.profiles.active}.yml"
-      # - "classpath:application-pay-${spring.profiles.active}.yml"
       # 示意：引入业务模块配置文件（请按照项目情况调整）
       - "classpath:application-system-${spring.profiles.active}.yml"
-      - "classpath:application-example-${spring.profiles.active}.yml"
   # 文件上传
   servlet:
     multipart:
@@ -192,12 +189,9 @@ springdoc:
     - group: 'system'
       paths-to-match: '/**'
       packages-to-scan: tech.qiantong.qmodel.module.system.controller
-    - group: 'example'
+    - group: 'model'
       paths-to-match: '/**'
-      packages-to-scan: tech.qiantong.qmodel.module.example.controller
-    - group: 'ai'
-      paths-to-match: '/**'
-      packages-to-scan: tech.qiantong.qmodel.module.ai.controller
+      packages-to-scan: tech.qiantong.qmodel.module.model.controller
 # Swagger 增强配置
 knife4j:
   enable: true

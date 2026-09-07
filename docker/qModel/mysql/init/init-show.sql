@@ -1145,147 +1145,6 @@ INSERT INTO `model_reconstitution`
 VALUES (22, NULL, '测试模型', 8, 0, 0, NULL, NULL, 28, 0, NULL, 1, 'qModel', 1, '2026-07-01 13:35:34', 'qModel', 1,
         '2026-07-01 13:35:34', NULL, NULL, NULL, NULL);
 
--- ----------------------------
--- Table structure for model_version
--- ----------------------------
-DROP TABLE IF EXISTS `model_version`;
-CREATE TABLE `model_version`
-(
-    `id`                    int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID',
-    `company_id`            int(11) NULL DEFAULT NULL COMMENT '企业id',
-    `model_id`              int(11) NULL DEFAULT NULL COMMENT '所属模型id',
-    `model_name`            varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '所属模型名称',
-    `version`               varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '模型版本号',
-    `file_address`          varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '文件地址',
-    `interface_address`     varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '接口地址',
-    `status`                int(11) NULL DEFAULT NULL COMMENT '版本状态',
-    `description`           varchar(1024) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '描述',
-    `valid_flag`            int(11) NOT NULL COMMENT '是否有效 0：无效，1：有效',
-    `del_flag`              int(11) NOT NULL COMMENT '删除标志 1：已删除，0：未删除',
-    `create_by`             varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '创建人',
-    `creator_id`            int(11) NULL DEFAULT NULL COMMENT '创建人id 创建者的sys_user_id',
-    `create_time`           datetime NOT NULL COMMENT '创建时间',
-    `update_by`             varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '更新人',
-    `updator_id`            int(11) NULL DEFAULT NULL COMMENT '更新人id 更新者的sys_user_id',
-    `update_time`           datetime NOT NULL COMMENT '更新时间',
-    `remark`                varchar(1024) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '备注',
-    `file_name`             varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '文件的名称',
-    `runnable_file_address` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '可执行文件地址',
-    PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 29 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '版本管理' ROW_FORMAT = DYNAMIC;
-
--- ----------------------------
--- Records of model_version
--- ----------------------------
-INSERT INTO `model_version`
-VALUES (1, NULL, 1, '产汇流模型', NULL, NULL, NULL, 1, '产汇流模型', 1, 0, 'admin', 1, '2025-11-14 18:34:04', NULL,
-        NULL, '2025-11-14 18:34:04', NULL, NULL, NULL);
-INSERT INTO `model_version`
-VALUES (2, NULL, 2, '123', '123', NULL, NULL, 1, '123', 1, 0, 'admin', 1, '2025-11-14 19:38:17', NULL, NULL,
-        '2025-11-14 19:38:17', NULL, NULL, NULL);
-INSERT INTO `model_version`
-VALUES (3, NULL, 3, 'test', '1',
-        'http://localhost:8080/profile/upload/2025/11/16/YL_DP_USER-MODEL etc_20251116153741A009.zip',
-        'http://localhost:8080/profile/upload/2025/11/16/YL_DP_USER-MODEL etc_20251116153741A009.zip', 1, '1', 1, 0,
-        'admin', 1, '2025-11-16 15:38:06', NULL, NULL, '2025-11-16 15:38:07', NULL, NULL, '\\MODEL_OUTPUT.sql');
-INSERT INTO `model_version`
-VALUES (4, NULL, 4, '123123', '1',
-        'http://localhost:8080/profile/upload/2025/11/16/YL_DP_USER-MODEL etc_20251116153827A010.zip',
-        'http://localhost:8080/profile/upload/2025/11/16/YL_DP_USER-MODEL etc_20251116153827A010.zip', 1, '1', 1, 0,
-        'admin', 1, '2025-11-16 15:40:03', NULL, NULL, '2025-11-16 15:40:03', NULL, NULL, '\\MODEL_OUTPUT.sql');
-INSERT INTO `model_version`
-VALUES (5, NULL, 5, '测试', '1',
-        'http://110.42.38.62:52000/profile/upload/2025/11/17/YL_DP_USER-MODEL etc_20251117062018A001.zip',
-        'http://110.42.38.62:52000/profile/upload/2025/11/17/YL_DP_USER-MODEL etc_20251117062018A001.zip', 1, '1', 1, 0,
-        'admin', 1, '2025-11-17 06:20:22', NULL, NULL, '2025-11-17 06:20:23', NULL, NULL, 'MODEL_COMPUTE.sql');
-INSERT INTO `model_version`
-VALUES (6, NULL, 6, 'ceshi ', '1', NULL, NULL, 1, '1', 1, 0, 'admin', 1, '2025-11-18 10:45:41', NULL, NULL,
-        '2025-11-18 10:45:41', NULL, NULL, NULL);
-INSERT INTO `model_version`
-VALUES (7, NULL, 7, '来水预测模型', 'v1.0', NULL, NULL, 0, '测试', 1, 1, 'admin', 1, '2025-12-11 10:38:28', '小桐', 1,
-        '2026-01-20 11:56:59', NULL, NULL, NULL);
-INSERT INTO `model_version`
-VALUES (8, NULL, 8, '综合水利集成模型', '1.0', NULL, NULL, 1, '综合水利集成模型演算', 1, 0, '小桐', 1,
-        '2025-12-31 15:40:23', NULL, NULL, '2025-12-31 15:40:23', NULL, NULL, NULL);
-INSERT INTO `model_version`
-VALUES (9, NULL, 9, '水土保持模型', '1.0', NULL, NULL, 1, '水土保持模型', 1, 0, '小桐', 1, '2025-12-31 15:40:54', NULL,
-        NULL, '2025-12-31 15:40:55', NULL, NULL, NULL);
-INSERT INTO `model_version`
-VALUES (10, NULL, 10, '水土保持模型', '1.0',
-        'http://localhost:8090/profile/upload/2025/12/31/jgst.chaoshen.20250113_20251231181715A001.zip',
-        'http://localhost:8090/profile/upload/2025/12/31/jgst.chaoshen.20250113_20251231181715A001.zip', 1,
-        '水土保持模型', 1, 0, '小桐', 1, '2025-12-31 18:17:47', NULL, NULL, '2025-12-31 18:17:47', NULL, NULL,
-        '\\jgst.chaoshen.20250113\\chaoshen.20250113.py');
-INSERT INTO `model_version`
-VALUES (11, NULL, 11, 'AI水位预测', '1.2',
-        'http://localhost:8090/profile/upload/2025/12/31/jgst.chaoshen.20250113_20251231182507A002.zip',
-        'http://localhost:8090/profile/upload/2025/12/31/jgst.chaoshen.20250113_20251231182507A002.zip', 1,
-        'AI水位预测', 1, 0, '小桐', 1, '2025-12-31 18:25:19', NULL, NULL, '2025-12-31 18:25:19', NULL, NULL,
-        '\\jgst.chaoshen.20250113\\chaoshen.20250113.py');
-INSERT INTO `model_version`
-VALUES (12, NULL, 7, '来水预测模型', '2', NULL, NULL, 1, '测试', 1, 0, '小桐', 1, '2026-01-14 15:26:32', '小桐', 1,
-        '2026-01-20 13:18:54', NULL, NULL, NULL);
-INSERT INTO `model_version`
-VALUES (13, NULL, NULL, '流量是计算', '1',
-        'http://localhost:8090/profile/upload/2026/01/14/jgst.chaoshen.20250113_20260114161110A002.zip',
-        'http://localhost:8090/profile/upload/2026/01/14/jgst.chaoshen.20250113_20260114161110A002.zip', 1, '不能为空',
-        1, 0, '小桐', 1, '2026-01-14 16:22:52', '小桐', 1, '2026-01-14 16:22:52', NULL, NULL,
-        '\\jgst.chaoshen.20250113\\data.json');
-INSERT INTO `model_version`
-VALUES (14, NULL, 12, '流量是计算', '2', NULL, NULL, 1, NULL, 1, 0, '小桐', 1, '2026-01-14 16:51:33', '小桐', 1,
-        '2026-01-20 11:41:22', NULL, NULL, NULL);
-INSERT INTO `model_version`
-VALUES (15, NULL, NULL, '接口服务类', '1', NULL, NULL, 1, '接口服务类', 1, 0, '小桐', 1, '2026-01-20 09:17:24', '小桐',
-        1, '2026-01-20 09:17:24', NULL, NULL, NULL);
-INSERT INTO `model_version`
-VALUES (16, NULL, 12, '流量是计算', '3', NULL, NULL, 0, NULL, 1, 1, '小桐', 1, '2026-01-20 09:22:58', '小桐', 1,
-        '2026-01-20 10:52:29', NULL, NULL, NULL);
-INSERT INTO `model_version`
-VALUES (17, NULL, 7, '来水预测模型', '3', NULL, NULL, 0, NULL, 1, 0, '小桐', 1, '2026-01-20 11:56:45', '小桐', 1,
-        '2026-01-20 13:18:54', NULL, NULL, NULL);
-INSERT INTO `model_version`
-VALUES (18, NULL, 13, '接口服务类', '1', NULL, NULL, 0, 'version1', 1, 0, '小桐', 1, '2026-01-20 13:19:31', 'qModel', 1,
-        '2026-07-01 17:47:50', NULL, NULL, NULL);
-INSERT INTO `model_version`
-VALUES (19, NULL, NULL, 'base64图片获取', '1', NULL, NULL, 1, '测试', 1, 0, '小桐', 1, '2026-01-21 14:41:41', '小桐', 1,
-        '2026-01-21 14:41:41', NULL, NULL, NULL);
-INSERT INTO `model_version`
-VALUES (20, NULL, NULL, '测试', '1', NULL, NULL, 1, '测试', 1, 0, '小桐', 1, '2026-01-21 14:47:58', '小桐', 1,
-        '2026-01-21 14:47:58', NULL, NULL, NULL);
-INSERT INTO `model_version`
-VALUES (21, NULL, NULL, '测试', '1', 'http:192.1623', 'http:192.1623', 1, '1', 1, 0, '小桐', 1, '2026-01-21 15:27:03',
-        '小桐', 1, '2026-01-21 15:27:03', NULL, NULL, NULL);
-INSERT INTO `model_version`
-VALUES (22, NULL, 13, '接口服务类', '2', NULL, NULL, 1, 'version22', 1, 0, '小桐', 1, '2026-01-21 16:30:20', 'qModel',
-        1, '2026-07-01 17:47:51', NULL, NULL, NULL);
-INSERT INTO `model_version`
-VALUES (23, NULL, NULL, '测试一下', '1',
-        'http://localhost:8090/profile/upload/2026/03/06/test1111.py_20260306154644A001.zip',
-        'http://localhost:8090/profile/upload/2026/03/06/test1111.py_20260306154644A001.zip', 1, '1111', 1, 0, '小桐2',
-        1, '2026-03-06 15:49:45', '小桐2', 1, '2026-03-06 15:49:45', NULL, NULL, 'test1111.py');
-INSERT INTO `model_version`
-VALUES (24, NULL, NULL, '来水预测', '1',
-        'http://localhost:8090/profile/upload/2026/04/09/6729ab66-56e6-43fa-820a-745ca7b85037_20260409154627A004.zip',
-        'http://localhost:8090/profile/upload/2026/04/09/6729ab66-56e6-43fa-820a-745ca7b85037_20260409154627A004.zip',
-        1, '来水预测', 1, 0, 'qModel', 1, '2026-04-09 15:46:38', 'qModel', 1, '2026-04-09 15:46:38', NULL, NULL, NULL);
-INSERT INTO `model_version`
-VALUES (25, NULL, NULL, '转发三方信息', '1', NULL, NULL, 1, '取得完全的', 1, 0, 'qModel', 1, '2026-04-09 15:50:22',
-        'qModel', 1, '2026-04-09 15:50:22', NULL, NULL, NULL);
-INSERT INTO `model_version`
-VALUES (26, NULL, NULL, '测试', '1',
-        'http://localhost:8090/profile/upload/2026/04/09/6729ab66-56e6-43fa-820a-745ca7b85037_20260409155539A005.zip',
-        'http://localhost:8090/profile/upload/2026/04/09/6729ab66-56e6-43fa-820a-745ca7b85037_20260409155539A005.zip',
-        1, '权威的', 1, 0, 'qModel', 1, '2026-04-09 15:55:43', 'qModel', 1, '2026-04-09 15:55:43', NULL, NULL, NULL);
-INSERT INTO `model_version`
-VALUES (27, NULL, NULL, 'model', '1',
-        'http://localhost:8090/profile/upload/2026/04/09/6729ab66-56e6-43fa-820a-745ca7b85037_20260409155629A006.zip',
-        'http://localhost:8090/profile/upload/2026/04/09/6729ab66-56e6-43fa-820a-745ca7b85037_20260409155629A006.zip',
-        1, 'qwdq ', 1, 0, 'qModel', 1, '2026-04-09 15:56:32', 'qModel', 1, '2026-04-09 15:56:32', NULL, NULL, NULL);
-INSERT INTO `model_version`
-VALUES (28, NULL, NULL, '测试模型', NULL, NULL, NULL, 1, NULL, 1, 0, 'qModel', 1, '2026-07-01 13:35:33', 'qModel', 1,
-        '2026-07-01 13:35:33', NULL, NULL, NULL);
-
-
 DROP TABLE IF EXISTS `model_calc`;
 CREATE TABLE `model_calc`
 (
@@ -1689,24 +1548,24 @@ FOREIGN_KEY_CHECKS = 1;
 -- ----------------------------
 DROP TABLE IF EXISTS `model_version`;
 CREATE TABLE `model_version`  (
-    `id` bigint NOT NULL AUTO_INCREMENT COMMENT 'ID',
-    `model_id` bigint NOT NULL COMMENT '模型id',
-    `model_version` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '版本号',
-    `description` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '描述',
-    `digest` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '版本摘要',
-    `base_version` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '基础版本',
-    `valid_flag` tinyint(1) NOT NULL DEFAULT 1 COMMENT '是否有效;0：无效，1：有效',
-    `del_flag` tinyint(1) NOT NULL DEFAULT 0 COMMENT '删除标志;1：已删除，0：未删除',
-    `create_by` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '创建人',
-    `creator_id` bigint NULL DEFAULT NULL COMMENT '创建人id',
-    `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-    `update_by` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '更新人',
-    `updator_id` bigint NULL DEFAULT NULL COMMENT '更新人id',
-    `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '更新时间',
-    `remark` varchar(512) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '备注',
-    PRIMARY KEY (`id`) USING BTREE,
-    UNIQUE INDEX `model_version_un`(`model_id` ASC, `model_version` ASC) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 30 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '模型版本表' ROW_FORMAT = DYNAMIC;
+                                  `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT 'ID',
+                                  `model_id` bigint(20) NOT NULL COMMENT '模型id',
+                                  `model_version` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '版本号',
+                                  `description` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '描述',
+                                  `digest` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '版本摘要',
+                                  `base_version` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '基础版本',
+                                  `valid_flag` tinyint(1) NOT NULL DEFAULT 1 COMMENT '是否有效;0：无效，1：有效',
+                                  `del_flag` tinyint(1) NOT NULL DEFAULT 0 COMMENT '删除标志;1：已删除，0：未删除',
+                                  `create_by` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '创建人',
+                                  `creator_id` bigint(20) NULL DEFAULT NULL COMMENT '创建人id',
+                                  `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+                                  `update_by` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '更新人',
+                                  `updator_id` bigint(20) NULL DEFAULT NULL COMMENT '更新人id',
+                                  `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '更新时间',
+                                  `remark` varchar(512) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '备注',
+                                  PRIMARY KEY (`id`) USING BTREE,
+                                  UNIQUE INDEX `model_version_un`(`model_id`, `model_version`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 30 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '模型版本表' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of model_version
