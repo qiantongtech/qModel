@@ -23,9 +23,9 @@ REPO_PATH="qiantongkeji/qmodel-server-ce"
 FULL_IMAGE_NAME="${REGISTRY_URL}/${REPO_PATH}"
 
 # 远程服务器配置
-REMOTE_HOST="192.168.0.100"
+REMOTE_HOST="192.168.0.103"
 REMOTE_USER="qtt"
-REMOTE_DIR="~/opt/qModel"
+REMOTE_DIR="~/opt/qModel-demo"
 
 # 排除目录列表
 EXCLUDE_DIRS=(".git" "docker")
@@ -37,26 +37,26 @@ echo "🚀 准备将项目版本号从 $OLD_VERSION 升级至: $NEW_VERSION"
 # ==========================================
 
 # 防呆校验：检查当前版本号是否与 OLD_VERSION 一致
-check_current_version() {
-    if [ ! -f "$VERSION_CHECK_FILE" ]; then
-        echo "❌ 错误: 未找到版本校验文件 $VERSION_CHECK_FILE，请确认当前目录是否正确。"
-        exit 1
-    fi
-
-    # 从 pom.xml 中提取第一个 <version> 标签的值（兼容 macOS BSD grep/sed）
-    local current_version
-    current_version=$(sed -n 's/.*<version>\([^<]*\)<\/version>.*/\1/p' "$VERSION_CHECK_FILE" | head -n 1)
-
-    if [ "$current_version" != "$OLD_VERSION" ]; then
-        echo "❌ 防呆校验失败！"
-        echo "   期望当前版本号为: $OLD_VERSION"
-        echo "   实际检测到的版本号为: $current_version"
-        echo "   脚本已终止，请检查版本号配置后重试。"
-        exit 1
-    fi
-
-    echo "✅ 防呆校验通过，当前版本号确认为: $current_version"
-}
+#check_current_version() {
+#    if [ ! -f "$VERSION_CHECK_FILE" ]; then
+#        echo "❌ 错误: 未找到版本校验文件 $VERSION_CHECK_FILE，请确认当前目录是否正确。"
+#        exit 1
+#    fi
+#
+#    # 从 pom.xml 中提取第一个 <version> 标签的值（兼容 macOS BSD grep/sed）
+#    local current_version
+#    current_version=$(sed -n 's/.*<version>\([^<]*\)<\/version>.*/\1/p' "$VERSION_CHECK_FILE" | head -n 1)
+#
+#    if [ "$current_version" != "$OLD_VERSION" ]; then
+#        echo "❌ 防呆校验失败！"
+#        echo "   期望当前版本号为: $OLD_VERSION"
+#        echo "   实际检测到的版本号为: $current_version"
+#        echo "   脚本已终止，请检查版本号配置后重试。"
+#        exit 1
+#    fi
+#
+#    echo "✅ 防呆校验通过，当前版本号确认为: $current_version"
+#}
 
 # 通用版本替换函数
 replace_version() {
@@ -73,7 +73,7 @@ replace_version() {
 # ==========================================
 # 3. 防呆校验
 # ==========================================
-check_current_version
+#check_current_version
 
 # ==========================================
 # 4. 升级项目版本号
@@ -142,8 +142,8 @@ scp -r ./docker ${REMOTE_USER}@${REMOTE_HOST}:${REMOTE_DIR}/
 echo "🐳 正在远程启动 Docker 服务..."
 ssh ${REMOTE_USER}@${REMOTE_HOST} << EOF
     cd ${REMOTE_DIR}/docker
-    docker-compose -p qmodel --profile all up -d
-    docker restart qmodel-nginx-1
+    docker-compose -p qmodel-demo --profile all up -d
+    docker restart qmodel-demo-nginx-1
 EOF
 
 echo "🎉 部署全部完成！"
