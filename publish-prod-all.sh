@@ -37,26 +37,26 @@ echo "🚀 准备将项目版本号从 $OLD_VERSION 升级至: $NEW_VERSION"
 # ==========================================
 
 # 防呆校验：检查当前版本号是否与 OLD_VERSION 一致
-#check_current_version() {
-#    if [ ! -f "$VERSION_CHECK_FILE" ]; then
-#        echo "❌ 错误: 未找到版本校验文件 $VERSION_CHECK_FILE，请确认当前目录是否正确。"
-#        exit 1
-#    fi
-#
-#    # 从 pom.xml 中提取第一个 <version> 标签的值（兼容 macOS BSD grep/sed）
-#    local current_version
-#    current_version=$(sed -n 's/.*<version>\([^<]*\)<\/version>.*/\1/p' "$VERSION_CHECK_FILE" | head -n 1)
-#
-#    if [ "$current_version" != "$OLD_VERSION" ]; then
-#        echo "❌ 防呆校验失败！"
-#        echo "   期望当前版本号为: $OLD_VERSION"
-#        echo "   实际检测到的版本号为: $current_version"
-#        echo "   脚本已终止，请检查版本号配置后重试。"
-#        exit 1
-#    fi
-#
-#    echo "✅ 防呆校验通过，当前版本号确认为: $current_version"
-#}
+check_current_version() {
+    if [ ! -f "$VERSION_CHECK_FILE" ]; then
+        echo "❌ 错误: 未找到版本校验文件 $VERSION_CHECK_FILE，请确认当前目录是否正确。"
+        exit 1
+    fi
+
+    # 从 pom.xml 中提取第一个 <version> 标签的值（兼容 macOS BSD grep/sed）
+    local current_version
+    current_version=$(sed -n 's/.*<version>\([^<]*\)<\/version>.*/\1/p' "$VERSION_CHECK_FILE" | head -n 1)
+
+    if [ "$current_version" != "$OLD_VERSION" ]; then
+        echo "❌ 防呆校验失败！"
+        echo "   期望当前版本号为: $OLD_VERSION"
+        echo "   实际检测到的版本号为: $current_version"
+        echo "   脚本已终止，请检查版本号配置后重试。"
+        exit 1
+    fi
+
+    echo "✅ 防呆校验通过，当前版本号确认为: $current_version"
+}
 
 # 通用版本替换函数
 replace_version() {
