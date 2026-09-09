@@ -44,7 +44,10 @@
               <el-col :span="12">
                 <div class="infotop-row border-top">
                   <div class="infotop-row-lable">创建时间</div>
-                  <div class="infotop-row-value">{{ parseTime(currentVersionData.createTime, "{y}-{m}-{d} {h}:{i}") }}</div>
+                  <div class="infotop-row-value">{{
+                      parseTime(currentVersionData.createTime, "{y}-{m}-{d} {h}:{i}")
+                    }}
+                  </div>
                 </div>
               </el-col>
             </el-row>
@@ -93,7 +96,10 @@
               <el-col :span="12">
                 <div class="infotop-row border-top">
                   <div class="infotop-row-lable">创建时间</div>
-                  <div class="infotop-row-value">{{ parseTime(compareVersionData.createTime, "{y}-{m}-{d} {h}:{i}") }}</div>
+                  <div class="infotop-row-value">{{
+                      parseTime(compareVersionData.createTime, "{y}-{m}-{d} {h}:{i}")
+                    }}
+                  </div>
                 </div>
               </el-col>
             </el-row>
@@ -120,11 +126,13 @@
       </div>
     </div>
 
-    <div v-if="modelAccessType === 'PYTHON'">
-      <div class="border-item" style="margin-bottom: 16px">
+    <!-- 文件配置 -->
+    <div class="version-info" v-if="modelAccessType === 'PYTHON'">
+      <!-- 左边：基准版本 -->
+      <div class="border-item">
         <div class="border-item-head">
           <div class="head-left">
-            <span class="h2-titles">请求配置</span>
+            <span class="h2-titles">文件配置</span>
             <span class="info-tip">红色代表删除，绿色代表新增，黄色代表修改</span>
           </div>
         </div>
@@ -144,14 +152,25 @@
                               :options="getDictOptions(scope.row.dict)"
                               :value="scope.row.fieldValue">
                     </dict-tag>
-                    <pre v-else-if="scope.row.type === 'json'" >{{ scope.row.fieldValue }}</pre>
+                    <pre v-else-if="scope.row.type === 'json'">{{ scope.row.fieldValue }}</pre>
                     <span v-else>{{ scope.row.fieldValue }}</span>
                   </template>
                 </el-table-column>
               </el-table>
             </div>
-
-            <!-- 右边：对比版本 -->
+          </div>
+        </div>
+      </div>
+      <!-- 右边：对比版本 -->
+      <div class="border-item">
+        <div class="border-item-head">
+          <div class="head-left">
+            <span class="h2-titles">文件配置</span>
+            <span class="info-tip">红色代表删除，绿色代表新增，黄色代表修改</span>
+          </div>
+        </div>
+        <div class="border-item-body">
+          <div class="version-compare">
             <div class="table-wrap">
               <el-table :data="diffResult.compare.fileResource" :row-class-name="tableRowClassName">
                 <el-table-column prop="date" label="字段名">
@@ -165,7 +184,7 @@
                               :options="getDictOptions(scope.row.dict)"
                               :value="scope.row.fieldValue">
                     </dict-tag>
-                    <pre v-else-if="scope.row.type === 'json'" >{{ scope.row.fieldValue }}</pre>
+                    <pre v-else-if="scope.row.type === 'json'">{{ scope.row.fieldValue }}</pre>
                     <span v-else>{{ scope.row.fieldValue }}</span>
                   </template>
                 </el-table-column>
@@ -176,8 +195,10 @@
       </div>
     </div>
 
-    <div v-if="modelAccessType === 'API'">
-      <div class="border-item" style="margin-bottom: 16px">
+    <!-- 请求配置 -->
+    <div class="version-info" v-if="modelAccessType === 'API'">
+      <!-- 左边：基准版本 -->
+      <div class="border-item">
         <div class="border-item-head">
           <div class="head-left">
             <span class="h2-titles">请求配置</span>
@@ -186,7 +207,6 @@
         </div>
         <div class="border-item-body">
           <div class="version-compare">
-            <!-- 左边：基准版本 -->
             <div class="table-wrap">
               <el-table :data="diffResult.current.apiConfig" :row-class-name="tableRowClassName">
                 <el-table-column prop="date" label="字段名">
@@ -205,8 +225,19 @@
                 </el-table-column>
               </el-table>
             </div>
-
-            <!-- 右边：对比版本 -->
+          </div>
+        </div>
+      </div>
+      <!-- 右边：对比版本 -->
+      <div class="border-item">
+        <div class="border-item-head">
+          <div class="head-left">
+            <span class="h2-titles">请求配置</span>
+            <span class="info-tip">红色代表删除，绿色代表新增，黄色代表修改</span>
+          </div>
+        </div>
+        <div class="border-item-body">
+          <div class="version-compare">
             <div class="table-wrap">
               <el-table :data="diffResult.compare.apiConfig" :row-class-name="tableRowClassName">
                 <el-table-column prop="date" label="字段名">
@@ -230,8 +261,10 @@
       </div>
     </div>
 
-    <div v-if="modelAccessType === 'API'">
-      <div class="border-item" style="margin-bottom: 16px">
+    <!-- 鉴权配置 -->
+    <div class="version-info" v-if="modelAccessType === 'API'">
+      <!-- 左边：基准版本 -->
+      <div class="border-item">
         <div class="border-item-head">
           <div class="head-left">
             <span class="h2-titles">鉴权配置</span>
@@ -240,7 +273,6 @@
         </div>
         <div class="border-item-body">
           <div class="version-compare">
-            <!-- 左边：基准版本 -->
             <div class="table-wrap">
               <el-table :data="diffResult.current.authConfig" :row-class-name="tableRowClassName">
                 <el-table-column prop="date" label="字段名">
@@ -259,7 +291,19 @@
                 </el-table-column>
               </el-table>
             </div>
-
+          </div>
+        </div>
+      </div>
+      <!-- 右边：对比版本 -->
+      <div class="border-item">
+        <div class="border-item-head">
+          <div class="head-left">
+            <span class="h2-titles">鉴权配置</span>
+            <span class="info-tip">红色代表删除，绿色代表新增，黄色代表修改</span>
+          </div>
+        </div>
+        <div class="border-item-body">
+          <div class="version-compare">
             <!-- 右边：对比版本 -->
             <div class="table-wrap">
               <el-table :data="diffResult.compare.authConfig" :row-class-name="tableRowClassName">
@@ -284,8 +328,10 @@
       </div>
     </div>
 
-    <div>
-      <div class="border-item" style="margin-bottom: 16px">
+    <!-- 参数定义 -->
+    <div class="version-info">
+      <!-- 左边：基准版本 -->
+      <div class="border-item">
         <div class="border-item-head">
           <div class="head-left">
             <span class="h2-titles">参数定义</span>
@@ -294,7 +340,6 @@
         </div>
         <div class="border-item-body">
           <div class="version-compare">
-            <!-- 左边：基准版本 -->
             <div class="table-wrap">
               <el-table :data="diffResult.current.paramConfig" :row-class-name="tableRowClassName">
                 <el-table-column prop="date" label="字段名">
@@ -308,14 +353,25 @@
                               :options="getDictOptions(scope.row.dict)"
                               :value="scope.row.fieldValue">
                     </dict-tag>
-                    <pre v-else-if="scope.row.type === 'json'" >{{ scope.row.fieldValue }}</pre>
+                    <pre v-else-if="scope.row.type === 'json'">{{ scope.row.fieldValue }}</pre>
                     <span v-else>{{ scope.row.fieldValue }}</span>
                   </template>
                 </el-table-column>
               </el-table>
             </div>
-
-            <!-- 右边：对比版本 -->
+          </div>
+        </div>
+      </div>
+      <!-- 右边：对比版本 -->
+      <div class="border-item">
+        <div class="border-item-head">
+          <div class="head-left">
+            <span class="h2-titles">参数定义</span>
+            <span class="info-tip">红色代表删除，绿色代表新增，黄色代表修改</span>
+          </div>
+        </div>
+        <div class="border-item-body">
+          <div class="version-compare">
             <div class="table-wrap">
               <el-table :data="diffResult.compare.paramConfig" :row-class-name="tableRowClassName">
                 <el-table-column prop="date" label="字段名">
@@ -329,7 +385,7 @@
                               :options="getDictOptions(scope.row.dict)"
                               :value="scope.row.fieldValue">
                     </dict-tag>
-                    <pre v-else-if="scope.row.type === 'json'" >{{ scope.row.fieldValue }}</pre>
+                    <pre v-else-if="scope.row.type === 'json'">{{ scope.row.fieldValue }}</pre>
                     <span v-else>{{ scope.row.fieldValue }}</span>
                   </template>
                 </el-table-column>
@@ -570,6 +626,17 @@ onMounted(() => {
       align-items: center;
       gap: 16px;
     }
+    .info-tip {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      font-size: x-small;
+      color: #a8aaae;
+      margin-left: 5px;
+      margin-top: 5px;
+      justify-content: flex-start;
+      gap: 5px;
+    }
   }
 
   .border-item-body {
@@ -581,6 +648,25 @@ onMounted(() => {
 .version-select {
   width: 200px;
 }
+.h2-titles {
+  font-size: 16px;
+  color: rgba(0, 0, 0, 0.85);
+  display: flex;
+  align-items: center;
+  font-weight: 500;
+  margin: 8px 0;
+
+  &::before {
+    display: inline-block;
+    content: "";
+    width: 6px;
+    height: 16px;
+    border-radius: 3px;
+    background: var(--el-color-primary);
+    margin-right: 8px;
+  }
+}
+
 
 .version-info {
   width: 100%;
