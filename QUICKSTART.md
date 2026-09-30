@@ -10,10 +10,11 @@
 |:---------------------------------------------------------------------------------------------------------------------:|:--------:|:------:|
 |              <img src="https://img.icons8.com/color/48/000000/java-coffee-cup-logo.png" width="24"/> JDK              |  >= 1.8  |  1.8   |
 |                  <img src="https://img.icons8.com/color/48/000000/mysql-logo.png" width="24"/> MySQL                  | >= 5.7.0 |  5.7   |
-| <img src="https://dist.neo4j.com/wp-content/uploads/20230926084108/Logo_FullColor_RGB_TransBG.svg" width="24"/> Neo4j |    4.x   | 4.4.40 |
 |                    <img src="https://img.icons8.com/color/48/000000/redis.png" width="24"/> Redis                     |  >= 5.0  |  5.0   |
 |               <img src="https://img.icons8.com/?size=100&id=jfjmkTUFX5Vf&format=png" width="24"/> Maven               |  >= 3.6  |  3.6   |
 |                   <img src="https://img.icons8.com/color/48/000000/nodejs.png" width="24"/> Node.js                   |  >= 16   |   16   |
+| <img src="https://img.icons8.com/color/48/000000/python.png" width="24"/> Python                    | >= 3.8   |  3.13.13 |
+|            <img src="https://img.icons8.com/color/48/000000/python.png" width="24"/> pip            | >= 21.0  |  26.0.1  |
 
 > **提示**: 前端安装完 `Node.js` 后，建议设置淘宝镜像源以提升依赖包下载速度。不推荐使用 `cnpm`，可能会引入一些不可预知的问题。
 >
@@ -70,7 +71,6 @@
 ├─   |  ├─store                 # 状态管理
 ├─   |  ├─utils                 # 工具类
 ├─   |  ├─views                     # 页面视图
-├─   |  |   ├─example               # 示例模块（未使用）
 ├─   |  |   ├─flyflow               # 工作流模块（未使用）
 ├─   |  |   ├─model                 # 模型管理模块
 ├─   |  |   ├─system                # 系统管理模块
@@ -83,27 +83,23 @@
 
 ## 四、必要配置 <small>（数据库与服务配置）</small>
 
-### 1. 创建达梦数据库并导入数据
+### 1. 创建MySQL数据库并导入数据
 
-- 创建 达梦 数据库：`QMODEL_DEV`
-- 导入数据脚本：`qModel-2025-12-30.sql`
+- 创建 MySQL 数据库：`qmodel_dev`
+- 导入数据脚本：`latest初始化.sql`
 
-### 2. 修改达梦数据库连接配置
+### 2. 修改MySQL数据库连接配置
 
 路径：`qModel/qmodel-server/src/main/resources/application-dev.yml`
 
 ```yaml
 datasource:
-  type: dm8
+  type: mysql
 
-dm8:
-  # JDBC驱动类名
-  driver-class-name: dm.jdbc.driver.DmDriver
-  # 主库JDBC连接URL
+mysql:
+  driver-class-name: com.mysql.cj.jdbc.Driver
   url: 数据库地址
-  # 主库用户名
   username: 数据库账号
-  # 主库密码
   password: 数据库密码
 ```
 
@@ -128,13 +124,15 @@ server:
 4. 出现以下提示，表示后端服务启动成功：
 
 ```
-(♥◠‿◠)ﾉﾞ  千知平台启动成功   ლ(´ڡ`ლ)ﾞ  
-        _  __                    
-   __ _| |/ /_ __   _____      __
-  / _` | ' /| '_ \ / _ \ \ /\ / /
- | (_| | . \| | | | (_) \ V  V / 
-  \__, |_|\_\_| |_|\___/ \_/\_/  
-     |_|                         
+(♥◠‿◠)ﾉﾞ  qModel 算法模型平台启动成功   ლ(´ڡ`ლ)ﾞ  
+        __  __           _      _ 
+       |  \/  |         | |    | |
+   __ _| \  / | ___   __| | ___| |
+  / _` | |\/| |/ _ \ / _` |/ _ \ |
+ | (_| | |  | | (_) | (_| |  __/ |
+  \__, |_|  |_|\___/ \__,_|\___|_|
+     | |                          
+     |_|                          
 ```
 
 > **注意**: 仅启动后端服务不会显示静态页面，请继续部署前端服务。
