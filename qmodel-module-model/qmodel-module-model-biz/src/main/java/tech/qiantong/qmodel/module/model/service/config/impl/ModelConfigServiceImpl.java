@@ -54,6 +54,7 @@ import tech.qiantong.qmodel.common.core.page.PageResult;
 import tech.qiantong.qmodel.common.exception.ServiceException;
 import tech.qiantong.qmodel.common.utils.ip.IpUtils;
 import tech.qiantong.qmodel.common.utils.StringUtils;
+import tech.qiantong.qmodel.common.utils.SecurityUtils;
 import tech.qiantong.qmodel.common.utils.object.BeanUtils;
 import tech.qiantong.qmodel.module.model.controller.admin.config.vo.ModelConfigPageReqVO;
 import tech.qiantong.qmodel.module.model.controller.admin.config.vo.ModelConfigRespVO;
@@ -207,6 +208,14 @@ public class ModelConfigServiceImpl  extends ServiceImpl<ModelConfigMapper,Model
     public ModelConfigTestRespVO testModelConfig(ModelConfigTestReqVO testReqVO) {
         Date startTime = new Date();
         String clientIp = IpUtils.getIpAddr();
+        Long userId = 1L;
+        String username = "system";
+        try {
+            userId = SecurityUtils.getUserId();
+            username = SecurityUtils.getUsername();
+        } catch (Exception e) {
+            // ignore, fallback to system
+        }
         ModelConfigTestRespVO result = new ModelConfigTestRespVO();
         List<String> logs = new ArrayList<>();
         result.setLogs(logs);
@@ -403,7 +412,7 @@ public class ModelConfigServiceImpl  extends ServiceImpl<ModelConfigMapper,Model
             Date endTime = new Date();
             modelInvokeHistoryService.saveInvokeLogAsync(testReqVO.getModelId(), testReqVO.getModelName(),testReqVO.getModelVersion(),
                     InvokeTypeEnum.API.getType(), testReqVO.getTestBody(), response.getBody(), InvokeStatusEnum.SUCCESS.getStatus(), null,
-                    endTime.getTime() - startTime.getTime(), startTime, endTime, clientIp);
+                    endTime.getTime() - startTime.getTime(), startTime, endTime, clientIp, userId, username);
         } catch (RestClientResponseException e) {
             result.setStatusCode(e.getRawStatusCode());
             result.setResponseBody(e.getResponseBodyAsString());
@@ -413,7 +422,7 @@ public class ModelConfigServiceImpl  extends ServiceImpl<ModelConfigMapper,Model
             Date endTime = new Date();
             modelInvokeHistoryService.saveInvokeLogAsync(testReqVO.getModelId(), testReqVO.getModelName(),testReqVO.getModelVersion(), InvokeTypeEnum.API.getType(),
                     testReqVO.getTestBody(), e.getResponseBodyAsString(), InvokeStatusEnum.FAILED.getStatus(), e.getStatusText(),
-                    endTime.getTime() - startTime.getTime(), startTime, endTime, clientIp);
+                    endTime.getTime() - startTime.getTime(), startTime, endTime, clientIp, userId, username);
         } catch (Exception e) {
             result.setErrorMsg(e.getMessage());
             logs.add("请求异常：" + e.getMessage());
@@ -422,7 +431,7 @@ public class ModelConfigServiceImpl  extends ServiceImpl<ModelConfigMapper,Model
             Date endTime = new Date();
             modelInvokeHistoryService.saveInvokeLogAsync(testReqVO.getModelId(), testReqVO.getModelName(),testReqVO.getModelVersion(), InvokeTypeEnum.API.getType(),
                     testReqVO.getTestBody(), null, InvokeStatusEnum.FAILED.getStatus(), e.getMessage(),
-                    endTime.getTime() - startTime.getTime(), startTime, endTime, clientIp);
+                    endTime.getTime() - startTime.getTime(), startTime, endTime, clientIp, userId, username);
         }
         return result;
     }

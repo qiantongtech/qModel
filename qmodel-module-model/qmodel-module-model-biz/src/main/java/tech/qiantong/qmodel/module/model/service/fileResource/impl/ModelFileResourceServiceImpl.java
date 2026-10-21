@@ -45,6 +45,7 @@ import tech.qiantong.qmodel.common.core.page.PageResult;
 import tech.qiantong.qmodel.common.utils.ip.IpUtils;
 import tech.qiantong.qmodel.common.utils.object.BeanUtils;
 import tech.qiantong.qmodel.common.utils.StringUtils;
+import tech.qiantong.qmodel.common.utils.SecurityUtils;
 import tech.qiantong.qmodel.common.exception.ServiceException;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import org.springframework.stereotype.Service;
@@ -463,6 +464,14 @@ public class ModelFileResourceServiceImpl extends ServiceImpl<ModelFileResourceM
     public Object runModelScript(Long modelId, String modelVersion, Map<String, Object> inputParam) {
         Date startTime = new Date();
         String clientIp = getSafeClientIp();
+        Long userId = 1L;
+        String username = "system";
+        try {
+            userId = SecurityUtils.getUserId();
+            username = SecurityUtils.getUsername();
+        } catch (Exception e) {
+            // ignore, fallback to system
+        }
         if (inputParam == null) {
             inputParam = new HashMap<>();
         }
@@ -606,7 +615,7 @@ public class ModelFileResourceServiceImpl extends ServiceImpl<ModelFileResourceM
             Date endTime = new Date();
             modelInvokeHistoryService.saveInvokeLogAsync(modelId, modelInfo.getName(),modelVersion, InvokeTypeEnum.PYTHON.getType(),
                     paramJson, JSON.toJSONString(result), InvokeStatusEnum.SUCCESS.getStatus(), null,
-                    endTime.getTime() - startTime.getTime(), startTime, endTime, clientIp);
+                    endTime.getTime() - startTime.getTime(), startTime, endTime, clientIp, userId, username);
 
             return result;
         } catch (ServiceException e) {
@@ -626,7 +635,7 @@ public class ModelFileResourceServiceImpl extends ServiceImpl<ModelFileResourceM
             Date endTime = new Date();
             modelInvokeHistoryService.saveInvokeLogAsync(modelId, modelInfo.getName(), modelVersion, InvokeTypeEnum.PYTHON.getType(),
                     paramJson, null, InvokeStatusEnum.FAILED.getStatus(), e.getMessage(),
-                    endTime.getTime() - startTime.getTime(), startTime, endTime, clientIp);
+                    endTime.getTime() - startTime.getTime(), startTime, endTime, clientIp, userId, username);
             throw e;
         } catch (Exception e) {
             // ========== 修正：先停止监控，再取数据 ==========
@@ -645,7 +654,7 @@ public class ModelFileResourceServiceImpl extends ServiceImpl<ModelFileResourceM
             Date endTime = new Date();
             modelInvokeHistoryService.saveInvokeLogAsync(modelId, modelInfo.getName(), modelVersion, InvokeTypeEnum.PYTHON.getType(),
                     paramJson, null, InvokeStatusEnum.FAILED.getStatus(), e.getMessage(),
-                    endTime.getTime() - startTime.getTime(), startTime, endTime, clientIp);
+                    endTime.getTime() - startTime.getTime(), startTime, endTime, clientIp, userId, username);
             log.error("执行模型脚本失败，modelId: {}", modelId, e);
             throw new ServiceException("执行模型脚本失败：" + e.getMessage());
         } finally {

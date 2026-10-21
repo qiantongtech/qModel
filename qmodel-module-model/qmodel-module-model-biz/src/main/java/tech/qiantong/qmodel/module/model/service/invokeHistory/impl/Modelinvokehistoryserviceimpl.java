@@ -181,7 +181,7 @@ public class Modelinvokehistoryserviceimpl extends ServiceImpl<ModelInvokeHistor
     @Override
     public void saveInvokeLogAsync(Long modelId, String modelName, String modelVersion, String invokeType, String inputParams,
                                    String outputResult, String status, String errorMessage, Long duration,
-                                   Date startTime, Date endTime, String clientIp) {
+                                   Date startTime, Date endTime, String clientIp, Long userId, String username) {
         if (StringUtils.isNull(modelId) || StringUtils.isNull(modelName)) {
             return;
         }
@@ -199,11 +199,11 @@ public class Modelinvokehistoryserviceimpl extends ServiceImpl<ModelInvokeHistor
             invokeHistory.setStartTime(startTime);
             invokeHistory.setEndTime(endTime);
             invokeHistory.setClientIp(clientIp);
-            invokeHistory.setCreateBy("system");
-            invokeHistory.setCreatorId(1L);
+            invokeHistory.setCreateBy(username != null ? username : "system");
+            invokeHistory.setCreatorId(userId != null ? userId : 1L);
             invokeHistory.setCreateTime(new Date());
-            invokeHistory.setUpdateBy("system");
-            invokeHistory.setUpdatorId(1L);
+            invokeHistory.setUpdateBy(username != null ? username : "system");
+            invokeHistory.setUpdatorId(userId != null ? userId : 1L);
             invokeHistory.setUpdateTime(new Date());
             invokeHistory.setValidFlag(true);
             invokeHistory.setDelFlag(false);

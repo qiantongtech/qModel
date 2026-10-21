@@ -444,6 +444,8 @@ const data = reactive({
     status: null,
     clientIp: null,
     createTime: null,
+    orderByColumn: "createTime",
+    isAsc: "descending",
   },
   rules: {
     modelId: [{ required: true, message: "模型id不能为空", trigger: "blur" }],
