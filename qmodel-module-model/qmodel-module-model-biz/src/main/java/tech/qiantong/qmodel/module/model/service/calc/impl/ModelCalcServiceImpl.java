@@ -18,11 +18,7 @@
 
 package tech.qiantong.qmodel.module.model.service.calc.impl;
 
-import java.util.Collection;
-import java.util.List;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import com.alibaba.fastjson2.JSON;
@@ -50,6 +46,10 @@ import tech.qiantong.qmodel.module.model.service.calc.dto.CalcExecuteResultDTO;
 import tech.qiantong.qmodel.module.model.service.calc.dto.CalcQueueStatusDTO;
 import tech.qiantong.qmodel.module.model.service.calc.dto.QueueTask;
 import tech.qiantong.qmodel.module.model.service.calcExecution.IModelCalcExecutionService;
+import tech.qiantong.qmodel.module.model.service.config.IModelConfigService;
+import tech.qiantong.qmodel.module.model.service.modelData.IModelDataApiService;
+import tech.qiantong.qmodel.module.model.dal.dataobject.modelData.ModelDataApiDO;
+import tech.qiantong.qmodel.module.model.dal.dataobject.config.ModelConfigDO;
 /**
  * 模型计算任务Service业务层处理
  *
@@ -69,9 +69,17 @@ public class ModelCalcServiceImpl  extends ServiceImpl<ModelCalcMapper,ModelCalc
     @Resource
     private IModelCalcExecutionService executionService;
 
+    @Resource
+    private IModelDataApiService modelDataApiService;
+
+    @Resource
+    private IModelConfigService modelConfigService;
+
     @Override
     public PageResult<ModelCalcDO> getModelCalcPage(ModelCalcPageReqVO pageReqVO) {
-        return modelCalcMapper.selectPage(pageReqVO);
+        PageResult<ModelCalcDO> page = modelCalcMapper.selectPage(pageReqVO);
+        fillResourceInfo(page.getList());
+        return page;
     }
 
     @Override
@@ -116,7 +124,35 @@ public class ModelCalcServiceImpl  extends ServiceImpl<ModelCalcMapper,ModelCalc
 
     @Override
     public ModelCalcDO getModelCalcById(Long id) {
-        return modelCalcMapper.selectById(id);
+        ModelCalcDO calc = modelCalcMapper.selectById(id);
+        // 关联查询模型配置的输出定义
+        if (calc != null && calc.getModelId() != null && calc.getModelVersion() != null) {
+            ModelConfigDO config = modelConfigService.getByModelId(calc.getModelId());
+            if (config != null) {
+                calc.setOutputSchema(config.getOutputSchema());
+            }
+        }
+        fillResourceInfo(calc == null ? Collections.emptyList() : Collections.singletonList(calc));
+        return calc;
+    }
+
+    private void fillResourceInfo(List<ModelCalcDO> rows) {
+        if (rows == null || rows.isEmpty()) {
+            return;
+        }
+        Map<Long, ModelDataApiDO> apiMap = modelDataApiService.getModelDataApiMap();
+        rows.stream().filter(row -> row != null && row.getCalcType() != null && row.getCalcType().intValue() == 0
+                        && row.getResourceId() != null)
+                .forEach(row -> {
+                    ModelDataApiDO api = apiMap.get(row.getResourceId());
+                    if (api != null) {
+                        row.setResourceName(api.getName());
+                        row.setResourceUrl(api.getApiUrl());
+                        row.setResourceMethod(api.getRequestMethod());
+                        row.setResourceType(api.getApiType());
+                    }
+
+                });
     }
 
     @Override

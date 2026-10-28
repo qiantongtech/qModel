@@ -26,6 +26,7 @@ import tech.qiantong.qmodel.common.utils.StringUtils;
 import tech.qiantong.qmodel.module.model.service.calc.dto.CalcExecuteContext;
 import tech.qiantong.qmodel.module.model.service.calc.dto.ExecutionResult;
 import tech.qiantong.qmodel.module.model.service.calc.engine.IExecutionEngine;
+import tech.qiantong.qmodel.module.model.service.calc.engine.DataApiParameterResolver;
 import tech.qiantong.qmodel.module.model.service.calc.monitor.ProcessResourceMonitor;
 import tech.qiantong.qmodel.module.model.service.calc.monitor.ProcessResourceStatsContext;
 import tech.qiantong.qmodel.module.model.service.fileResource.IModelFileResourceService;
@@ -47,12 +48,17 @@ public class PythonExecutionEngine implements IExecutionEngine {
     @Resource
     private IModelFileResourceService modelFileResourceService;
 
+    @Resource
+    private DataApiParameterResolver dataApiParameterResolver;
+
     @Override
     public void doExecute(CalcExecuteContext ctx, List<String> logBuffer, ExecutionResult result) throws Exception {
         log.info("Python执行引擎开始执行: calcId={}, modelId={}, executionNo={}",
                 ctx.getCalcId(), ctx.getModelId(), ctx.getExecutionNo());
 
         Map<String, Object> inputParam = ApiExecutionEngine.parseInputParamsToMap(ctx.getInputParamsJson());
+        // 若任务绑定了数据 API，先调用它并按同名字段覆盖入参（未绑定时原样返回）
+        inputParam = dataApiParameterResolver.resolve(ctx.getCalc(), inputParam, logBuffer);
         logBuffer.add("输入参数解析完成，共 " + inputParam.size() + " 个字段：" + JSON.toJSONString(inputParam));
 
         long overallStart = System.currentTimeMillis();
@@ -62,7 +68,7 @@ public class PythonExecutionEngine implements IExecutionEngine {
 
             // 调用 runModelScript —— 内部已包含：脚本路径检查、构建状态校验、
 
-            Object scriptResult = modelFileResourceService.runModelScript(ctx.getModelId(),null, inputParam);
+            Object scriptResult = modelFileResourceService.runModelScript(ctx.getModelId(), null, inputParam);
 
             ProcessResourceMonitor.ProcessStats stats = ProcessResourceStatsContext.getAndClear();
             if (stats != null || ProcessResourceStatsContext.isEnableMonitor()) {
@@ -141,7 +147,7 @@ public class PythonExecutionEngine implements IExecutionEngine {
         }
 
         // 日志中不再输出资源监控信息
-        
+
         StringBuilder sb = new StringBuilder(256);
         sb.append("进程资源监控：PID=").append(stats.getPid() > 0 ? stats.getPid() : "N/A")
                 .append("，采样次数=").append(stats.getSampleCount())
@@ -152,7 +158,7 @@ public class PythonExecutionEngine implements IExecutionEngine {
                 .append("，峰值内存=").append(formatKbToHuman(stats.getMaxMemoryKb()))
                 .append("，完成状态=").append(stats.isCompletedNormally() ? "正常" : "异常");
         logBuffer.add(sb.toString());
-        
+
     }
 
     /**

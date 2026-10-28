@@ -113,16 +113,54 @@
       </div>
     </div>
 
-    <div class="result-card">
-      <div class="h2-titles h3-titles">执行结果及日志</div>
-      <div ref="logRef" class="log-body">
-        <div v-for="(line, index) in logs" :key="index" :class="['log-line', line.type]">
-          <span class="log-time">{{ line.time }}</span>
-          <span class="log-content">{{ line.content }}</span>
+    <!-- 执行结果与结果定义 -->
+    <div class="compare-info">
+      <!-- 左侧：执行日志 -->
+      <div class="border-item log-card">
+        <div class="border-item-head">
+          <span class="h2-titles">执行结果及日志</span>
         </div>
-        <div v-if="logs.length === 0" class="log-empty">
-          > 等待发起测试<br/>
-          > 返回结果将展示在此处
+        <div class="border-item-body">
+          <div ref="logRef" class="log-body">
+            <div v-for="(line, index) in logs" :key="index" :class="['log-line', line.type]">
+              <span class="log-time">{{ line.time }}</span>
+              <span class="log-content">{{ line.content }}</span>
+            </div>
+            <div v-if="logs.length === 0" class="log-empty">
+              > 等待发起测试<br/>
+              > 返回结果将展示在此处
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 右侧：结果定义 -->
+      <div class="border-item definition-card">
+        <div class="border-item-head">
+          <span class="h2-titles">结果定义</span>
+        </div>
+        <div class="border-item-body">
+          <el-table :data="outputFields" stripe style="width: 100%" height="300">
+            <el-table-column prop="field" label="字段" min-width="150" :show-overflow-tooltip="{ effect: 'light' }" />
+            <el-table-column label="名称" min-width="120">
+              <template #default="scope">
+                <el-input v-model="scope.row.name" placeholder="请输入名称" />
+              </template>
+            </el-table-column>
+            <el-table-column label="示例" min-width="120">
+              <template #default="scope">
+                <el-input v-model="scope.row.example" placeholder="请输入示例" />
+              </template>
+            </el-table-column>
+            <el-table-column label="说明" min-width="150">
+              <template #default="scope">
+                <el-input v-model="scope.row.description" placeholder="请输入字段说明" />
+              </template>
+            </el-table-column>
+            <template #empty>
+              <el-empty :image-size="60" description="暂无返回结果，请先发起测试" />
+            </template>
+          </el-table>
         </div>
       </div>
     </div>
@@ -130,11 +168,41 @@
 </template>
 
 <script setup name="TestSaveStep">
-import { ref, reactive, computed, watch, nextTick } from 'vue'
+import { ref, reactive, computed, watch, nextTick, getCurrentInstance } from 'vue'
 import { VideoPlay, Warning } from '@element-plus/icons-vue'
 import Ajv from 'ajv'
 import FileUpload from '@/components/FileUpload2'
 import { testModelConfig } from '@/api/model/config'
+
+const { proxy } = getCurrentInstance()
+
+const {
+  model_access_mode
+} = proxy.useDict(
+  'model_access_mode'
+)
+
+// 请求方式转换
+const requestMethodOptions = computed(() => {
+  if (model_access_mode.value?.length) return model_access_mode.value;
+  return [
+    { label: 'GET', value: 'GET' },
+    { label: 'POST', value: 'POST' },
+    { label: 'PUT', value: 'PUT' },
+    { label: 'DELETE', value: 'DELETE' }
+  ];
+});
+
+/** 获取请求方式的展示文本（大写） */
+const getRequestMethodLabel = (value) => {
+  if (!value) return '';
+  // 如果已经是 GET/POST 等，直接返回
+  if (['GET', 'POST', 'PUT', 'DELETE'].includes(String(value).toUpperCase())) {
+    return String(value).toUpperCase();
+  }
+  const option = requestMethodOptions.value.find(opt => String(opt.value) === String(value));
+  return option ? option.label.toUpperCase() : String(value).toUpperCase();
+};
 
 const formData = defineModel('formData', {
   type: Object,
@@ -149,6 +217,78 @@ const logs = ref([])
 const logRef = ref(null)
 const formValues = reactive({})
 const fieldTypeMap = reactive({})
+const outputFields = ref([])
+
+/** 扁平化响应结果并提取字段 */
+const updateOutputFields = (responseBody) => {
+  try {
+    const obj = JSON.parse(responseBody)
+    const fields = []
+
+    const flatten = (data, path = '') => {
+      if (data === null || data === undefined) return
+
+      if (Array.isArray(data)) {
+        // 如果数组不为空且是对象数组，解析第一个元素
+        if (data.length > 0 && typeof data[0] === 'object') {
+          flatten(data[0], path)
+        } else {
+          // 如果是基础类型数组，记录路径
+          if (path && !fields.find(f => f.field === path)) {
+            fields.push({ field: path, name: '', example: '', description: '' })
+          }
+        }
+      } else if (typeof data === 'object') {
+        Object.keys(data).forEach(key => {
+          const currentPath = path ? `${path}.${key}` : key
+          const val = data[key]
+
+          if (!fields.find(f => f.field === currentPath)) {
+            fields.push({ field: currentPath, name: '', example: '', description: '' })
+          }
+
+          flatten(val, currentPath)
+        })
+      }
+    }
+
+    flatten(obj)
+
+    // 合并现有数据（保留已填写的名称、示例和说明）
+    const existingFields = []
+    try {
+      if (formData.value.outputSchema) {
+        const parsed = JSON.parse(formData.value.outputSchema)
+        if (Array.isArray(parsed)) existingFields.push(...parsed)
+      }
+    } catch (e) {}
+
+    outputFields.value = fields.map(f => {
+      const exist = existingFields.find(ef => ef.field === f.field)
+      return exist ? { ...f, ...exist } : f
+    })
+
+  } catch (e) {
+    console.error('解析响应体失败', e)
+  }
+}
+
+// 监听输出字段变化，同步回 formData
+watch(outputFields, (val) => {
+  formData.value.outputSchema = JSON.stringify(val)
+}, { deep: true })
+
+// 初始化时，如果已有 outputSchema 则恢复
+watch(() => formData.value.outputSchema, (val) => {
+  if (val && outputFields.value.length === 0) {
+    try {
+      const parsed = JSON.parse(val)
+      if (Array.isArray(parsed)) {
+        outputFields.value = parsed
+      }
+    } catch (e) {}
+  }
+}, { immediate: true })
 
 const typeOptions = [
   { label: 'String', value: 'string' },
@@ -346,7 +486,7 @@ const handleTest = async () => {
     const data = {
       inputSchema: formData.value.inputSchema,
       apiUrl: formData.value.apiUrl,
-      requestMethod: formData.value.requestMethod,
+      requestMethod: getRequestMethodLabel(formData.value.requestMethod),
       contentType: formData.value.contentType,
       timeoutSeconds: formData.value.timeoutSeconds,
       authType: formData.value.authType,
@@ -381,6 +521,8 @@ const handleTest = async () => {
       if (result.responseBody) {
         addLog('响应内容：')
         addLog(formatJson(result.responseBody), 'code')
+        // 自动解析响应结果生成字段定义
+        updateOutputFields(result.responseBody)
       }
     } else {
       addLog(res.msg || '测试请求失败', 'error')
@@ -491,24 +633,81 @@ defineExpose({
   gap: 6px;
 }
 
-.result-card {
+.compare-info {
   display: flex;
-  flex-direction: column;
-  flex: 1;
-  min-height: 0;
-}
+  gap: 20px;
+  height: 340px;
+  margin-top: 10px;
 
-.log-body {
-  background-color: #1e1e1e;
-  color: #d4d4d4;
-  padding: 15px;
-  font-family: 'Consolas', 'Monaco', monospace;
-  font-size: 13px;
-  line-height: 1.6;
-  border-radius: 4px;
-  overflow-y: auto;
-  min-height: 400px;
-  height: 400px;
+  .border-item {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+
+    .border-item-head {
+      padding: 0;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 32px;
+      box-sizing: border-box;
+
+      .h2-titles {
+        margin: 0;
+        font-size: 16px;
+      }
+    }
+
+    .border-item-body {
+      flex: 1;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+  }
+
+  .log-card {
+    .log-body {
+      height: 300px;
+      min-height: 300px;
+      border: 1px solid #e4e7ed;
+      border-radius: 4px;
+      background-color: #1e1e1e;
+      color: #d4d4d4;
+      padding: 15px;
+      font-family: 'Consolas', 'Monaco', monospace;
+      font-size: 13px;
+      line-height: 1.6;
+      overflow-y: auto;
+    }
+    .log-line .log-time {
+      color: #858585;
+    }
+    .log-line .log-content {
+      color: #d4d4d4;
+    }
+    .log-line.success .log-content {
+      color: #7ee787;
+    }
+    .log-line.error .log-content {
+      color: #f85149;
+    }
+    .log-line.warn .log-content {
+      color: #ffa657;
+    }
+    .log-line.code .log-content {
+      color: #79c0ff;
+    }
+  }
+
+  .definition-card {
+    :deep(.el-table) {
+      border: 1px solid #e4e7ed;
+      border-radius: 4px;
+    }
+  }
 }
 
 .log-line {
@@ -544,5 +743,8 @@ defineExpose({
 
 .log-empty {
   color: #7ee787;
+}
+.el-empty {
+  --el-empty-padding: 0px !important;
 }
 </style>

@@ -1,0 +1,227 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+  Copyright © 2026-present Jiangsu Qiantong Technology Co., Ltd.
+
+  This file is part of qModel Module Platform (Open Source Edition).
+
+  qModel is licensed under Apache License 2.0 with additional qModel terms.
+  You may use qModel for commercial purposes, but you may not remove, hide,
+  modify, or replace the qModel logo, copyright notices, license notices,
+  or attribution information without a separate commercial license.
+
+  White-label use, OEM distribution, rebranding, or presenting qModel as
+  another product requires separate commercial authorization from
+  Jiangsu Qiantong Technology Co., Ltd.
+
+  Business License: `https://qmodel.tech/`
+  See the LICENSE file in the project root for full license information.
+-->
+
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="tech.qiantong.qmodel.module.model.dal.mapper.modelData.ModelDataApiMapper">
+
+    <resultMap type="ModelDataApiDO" id="ModelDataApiResult">
+        <result property="id"    column="id"    />
+        <result property="name"    column="name"    />
+        <result property="modelId"    column="model_id"    />
+        <result property="apiType"    column="api_type"    />
+        <result property="apiUrl"    column="api_url"    />
+        <result property="requestMethod"    column="request_method"    />
+        <result property="contentType"    column="content_type"    />
+        <result property="timeoutSeconds"    column="timeout_seconds"    />
+        <result property="authType"    column="auth_type"    />
+        <result property="authMethod"    column="auth_method"    />
+        <result property="authInjectPos"    column="auth_inject_pos"    />
+        <result property="authKeyName"    column="auth_key_name"    />
+        <result property="authTokenPrefix"    column="auth_token_prefix"    />
+        <result property="authTokenValue"    column="auth_token_value"    />
+        <result property="authDynMethod"    column="auth_dyn_method"    />
+        <result property="authDynUrl"    column="auth_dyn_url"    />
+        <result property="authDynHeaders"    column="auth_dyn_headers"    />
+        <result property="authDynParams"    column="auth_dyn_params"    />
+        <result property="authDynBody"    column="auth_dyn_body"    />
+        <result property="authExtractPath"    column="auth_extract_path"    />
+        <result property="requestTemplate"    column="request_template"    />
+        <result property="batchParams"    column="batch_params"    />
+        <result property="inputSchema"    column="input_schema"    />
+        <result property="outputSchema"    column="output_schema"    />
+        <result property="description"    column="description"    />
+        <result property="validFlag"    column="valid_flag"    />
+        <result property="delFlag"    column="del_flag"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="creatorId"    column="creator_id"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updaterId"    column="updater_id"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="remark"    column="remark"    />
+    </resultMap>
+
+    <sql id="selectModelDataApiVo">
+        select id, name, model_id, api_type, api_url, request_method, content_type, timeout_seconds, auth_type, auth_method, auth_inject_pos, auth_key_name, auth_token_prefix, auth_token_value, auth_dyn_method, auth_dyn_url, auth_dyn_headers, auth_dyn_params, auth_dyn_body, auth_extract_path, request_template, batch_params, input_schema, output_schema, description, valid_flag, del_flag, create_by, creator_id, create_time, update_by, updater_id, update_time, remark from model_data_api
+    </sql>
+
+    <select id="selectModelDataApiList" parameterType="ModelDataApiDO" resultMap="ModelDataApiResult">
+        <include refid="selectModelDataApiVo"/>
+        <where>
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+            <if test="modelId != null "> and model_id = #{modelId}</if>
+            <if test="apiType != null  and apiType != ''"> and api_type = #{apiType}</if>
+            <if test="apiUrl != null  and apiUrl != ''"> and api_url = #{apiUrl}</if>
+            <if test="requestMethod != null  and requestMethod != ''"> and request_method = #{requestMethod}</if>
+            <if test="contentType != null  and contentType != ''"> and content_type = #{contentType}</if>
+            <if test="timeoutSeconds != null "> and timeout_seconds = #{timeoutSeconds}</if>
+            <if test="authType != null  and authType != ''"> and auth_type = #{authType}</if>
+            <if test="authMethod != null  and authMethod != ''"> and auth_method = #{authMethod}</if>
+            <if test="authInjectPos != null  and authInjectPos != ''"> and auth_inject_pos = #{authInjectPos}</if>
+            <if test="authKeyName != null  and authKeyName != ''"> and auth_key_name like concat('%', #{authKeyName}, '%')</if>
+            <if test="authTokenPrefix != null  and authTokenPrefix != ''"> and auth_token_prefix = #{authTokenPrefix}</if>
+            <if test="authTokenValue != null  and authTokenValue != ''"> and auth_token_value = #{authTokenValue}</if>
+            <if test="authDynMethod != null  and authDynMethod != ''"> and auth_dyn_method = #{authDynMethod}</if>
+            <if test="authDynUrl != null  and authDynUrl != ''"> and auth_dyn_url = #{authDynUrl}</if>
+            <if test="authDynHeaders != null  and authDynHeaders != ''"> and auth_dyn_headers = #{authDynHeaders}</if>
+            <if test="authDynParams != null  and authDynParams != ''"> and auth_dyn_params = #{authDynParams}</if>
+            <if test="authDynBody != null  and authDynBody != ''"> and auth_dyn_body = #{authDynBody}</if>
+            <if test="authExtractPath != null  and authExtractPath != ''"> and auth_extract_path = #{authExtractPath}</if>
+            <if test="requestTemplate != null  and requestTemplate != ''"> and request_template = #{requestTemplate}</if>
+            <if test="batchParams != null  and batchParams != ''"> and batch_params = #{batchParams}</if>
+            <if test="inputSchema != null  and inputSchema != ''"> and input_schema = #{inputSchema}</if>
+            <if test="outputSchema != null  and outputSchema != ''"> and output_schema = #{outputSchema}</if>
+            <if test="description != null  and description != ''"> and description = #{description}</if>
+            <if test="createTime != null "> and create_time = #{createTime}</if>
+            <if test="updaterId != null "> and updater_id = #{updaterId}</if>
+        </where>
+    </select>
+
+    <select id="selectModelDataApiById" parameterType="Long" resultMap="ModelDataApiResult">
+        <include refid="selectModelDataApiVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertModelDataApi" parameterType="ModelDataApiDO" useGeneratedKeys="true" keyProperty="id">
+        insert into model_data_api
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="name != null and name != ''">name,</if>
+            <if test="modelId != null">model_id,</if>
+            <if test="apiType != null">api_type,</if>
+            <if test="apiUrl != null and apiUrl != ''">api_url,</if>
+            <if test="requestMethod != null and requestMethod != ''">request_method,</if>
+            <if test="contentType != null and contentType != ''">content_type,</if>
+            <if test="timeoutSeconds != null">timeout_seconds,</if>
+            <if test="authType != null">auth_type,</if>
+            <if test="authMethod != null">auth_method,</if>
+            <if test="authInjectPos != null">auth_inject_pos,</if>
+            <if test="authKeyName != null">auth_key_name,</if>
+            <if test="authTokenPrefix != null">auth_token_prefix,</if>
+            <if test="authTokenValue != null">auth_token_value,</if>
+            <if test="authDynMethod != null">auth_dyn_method,</if>
+            <if test="authDynUrl != null">auth_dyn_url,</if>
+            <if test="authDynHeaders != null">auth_dyn_headers,</if>
+            <if test="authDynParams != null">auth_dyn_params,</if>
+            <if test="authDynBody != null">auth_dyn_body,</if>
+            <if test="authExtractPath != null">auth_extract_path,</if>
+            <if test="requestTemplate != null">request_template,</if>
+            <if test="batchParams != null">batch_params,</if>
+            <if test="inputSchema != null">input_schema,</if>
+            <if test="outputSchema != null">output_schema,</if>
+            <if test="description != null">description,</if>
+            <if test="validFlag != null">valid_flag,</if>
+            <if test="delFlag != null">del_flag,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="creatorId != null">creator_id,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updaterId != null">updater_id,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="remark != null">remark,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="name != null and name != ''">#{name},</if>
+            <if test="modelId != null">#{modelId},</if>
+            <if test="apiType != null">#{apiType},</if>
+            <if test="apiUrl != null and apiUrl != ''">#{apiUrl},</if>
+            <if test="requestMethod != null and requestMethod != ''">#{requestMethod},</if>
+            <if test="contentType != null and contentType != ''">#{contentType},</if>
+            <if test="timeoutSeconds != null">#{timeoutSeconds},</if>
+            <if test="authType != null">#{authType},</if>
+            <if test="authMethod != null">#{authMethod},</if>
+            <if test="authInjectPos != null">#{authInjectPos},</if>
+            <if test="authKeyName != null">#{authKeyName},</if>
+            <if test="authTokenPrefix != null">#{authTokenPrefix},</if>
+            <if test="authTokenValue != null">#{authTokenValue},</if>
+            <if test="authDynMethod != null">#{authDynMethod},</if>
+            <if test="authDynUrl != null">#{authDynUrl},</if>
+            <if test="authDynHeaders != null">#{authDynHeaders},</if>
+            <if test="authDynParams != null">#{authDynParams},</if>
+            <if test="authDynBody != null">#{authDynBody},</if>
+            <if test="authExtractPath != null">#{authExtractPath},</if>
+            <if test="requestTemplate != null">#{requestTemplate},</if>
+            <if test="batchParams != null">#{batchParams},</if>
+            <if test="inputSchema != null">#{inputSchema},</if>
+            <if test="outputSchema != null">#{outputSchema},</if>
+            <if test="description != null">#{description},</if>
+            <if test="validFlag != null">#{validFlag},</if>
+            <if test="delFlag != null">#{delFlag},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="creatorId != null">#{creatorId},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updaterId != null">#{updaterId},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null">#{remark},</if>
+         </trim>
+    </insert>
+
+    <update id="updateModelDataApi" parameterType="ModelDataApiDO">
+        update model_data_api
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="name != null and name != ''">name = #{name},</if>
+            <if test="modelId != null">model_id = #{modelId},</if>
+            <if test="apiType != null">api_type = #{apiType},</if>
+            <if test="apiUrl != null and apiUrl != ''">api_url = #{apiUrl},</if>
+            <if test="requestMethod != null and requestMethod != ''">request_method = #{requestMethod},</if>
+            <if test="contentType != null and contentType != ''">content_type = #{contentType},</if>
+            <if test="timeoutSeconds != null">timeout_seconds = #{timeoutSeconds},</if>
+            <if test="authType != null">auth_type = #{authType},</if>
+            <if test="authMethod != null">auth_method = #{authMethod},</if>
+            <if test="authInjectPos != null">auth_inject_pos = #{authInjectPos},</if>
+            <if test="authKeyName != null">auth_key_name = #{authKeyName},</if>
+            <if test="authTokenPrefix != null">auth_token_prefix = #{authTokenPrefix},</if>
+            <if test="authTokenValue != null">auth_token_value = #{authTokenValue},</if>
+            <if test="authDynMethod != null">auth_dyn_method = #{authDynMethod},</if>
+            <if test="authDynUrl != null">auth_dyn_url = #{authDynUrl},</if>
+            <if test="authDynHeaders != null">auth_dyn_headers = #{authDynHeaders},</if>
+            <if test="authDynParams != null">auth_dyn_params = #{authDynParams},</if>
+            <if test="authDynBody != null">auth_dyn_body = #{authDynBody},</if>
+            <if test="authExtractPath != null">auth_extract_path = #{authExtractPath},</if>
+            <if test="requestTemplate != null">request_template = #{requestTemplate},</if>
+            <if test="batchParams != null">batch_params = #{batchParams},</if>
+            <if test="inputSchema != null">input_schema = #{inputSchema},</if>
+            <if test="outputSchema != null">output_schema = #{outputSchema},</if>
+            <if test="description != null">description = #{description},</if>
+            <if test="validFlag != null">valid_flag = #{validFlag},</if>
+            <if test="delFlag != null">del_flag = #{delFlag},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="creatorId != null">creator_id = #{creatorId},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updaterId != null">updater_id = #{updaterId},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteModelDataApiById" parameterType="Long">
+        delete from model_data_api where id = #{id}
+    </delete>
+
+    <delete id="deleteModelDataApiByIds" parameterType="String">
+        delete from model_data_api where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

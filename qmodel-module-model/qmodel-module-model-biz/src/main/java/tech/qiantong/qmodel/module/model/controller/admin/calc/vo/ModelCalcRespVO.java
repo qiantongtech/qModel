@@ -137,6 +137,21 @@ public class ModelCalcRespVO implements Serializable {
     @Schema(description = "接入方式: 0-API接口, 1-Python本地", example = "")
     private Integer calcType;
 
+    @Schema(description = "结果定义(JSON格式)")
+    private String outputSchema;
+
+    @Schema(description = "绑定的数据 API 名称")
+    private String resourceName;
+
+    @Schema(description = "绑定的数据 API 地址")
+    private String resourceUrl;
+
+    @Schema(description = "绑定的数据 API 请求方式")
+    private String resourceMethod;
+
+    @Schema(description = "绑定的数据 API 类型")
+    private String resourceType;
+
     @Excel(name = "是否有效")
     @Schema(description = "是否有效", example = "")
     private Boolean validFlag;

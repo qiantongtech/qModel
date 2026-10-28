@@ -125,6 +125,21 @@ public class ModelCalcSaveReqVO extends BaseEntity {
     @Schema(description = "接入方式: 0-API接口, 1-Python本地", example = "")
     private Integer calcType;
 
+    @Schema(description = "结果定义(JSON格式)")
+    private String outputSchema;
+
+    @Schema(description = "绑定的数据 API 名称")
+    private String resourceName;
+
+    @Schema(description = "绑定的数据 API 地址")
+    private String resourceUrl;
+
+    @Schema(description = "绑定的数据 API 请求方式")
+    private String resourceMethod;
+
+    @Schema(description = "绑定的数据 API 类型")
+    private String resourceType;
+
     @Schema(description = "备注", example = "")
     @Size(max = 512, message = "备注长度不能超过512个字符")
     private String remark;

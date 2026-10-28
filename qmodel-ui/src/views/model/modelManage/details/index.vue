@@ -279,6 +279,7 @@
               :model-id="viewInfo.id"
               :model-name="viewInfo.name"
               :access-mode="viewInfo.accessType === 'API' ? 1 : 0"
+              :access-type="viewInfo.accessType"
               :model-version="viewInfo.version"
               style="margin: 0; padding: 0"
           />

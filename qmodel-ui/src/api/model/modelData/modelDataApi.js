@@ -1,0 +1,62 @@
+/*
+ * Copyright © 2026-present Jiangsu Qiantong Technology Co., Ltd.
+ *
+ * This file is part of qModel Module Platform (Open Source Edition).
+ *
+ * qModel is licensed under Apache License 2.0 with additional qModel terms.
+ * You may use qModel for commercial purposes, but you may not remove, hide,
+ * modify, or replace the qModel logo, copyright notices, license notices,
+ * or attribution information without a separate commercial license.
+ *
+ * White-label use, OEM distribution, rebranding, or presenting qModel as
+ * another product requires separate commercial authorization from
+ * Jiangsu Qiantong Technology Co., Ltd.
+ *
+ * Business License: `https://qmodel.tech/`
+ * See the LICENSE file in the project root for full license information.
+ */
+
+import request from '@/utils/request'
+
+// 查询模型数据API接入列表
+export function listModelDataApi(query) {
+  return request({
+    url: '/model/modelDataApi/list',
+    method: 'get',
+    params: query
+  })
+}
+
+// 查询模型数据API接入详细
+export function getModelDataApi(id) {
+  return request({
+    url: '/model/modelDataApi/' + id,
+    method: 'get'
+  })
+}
+
+// 新增模型数据API接入
+export function addModelDataApi(data) {
+  return request({
+    url: '/model/modelDataApi',
+    method: 'post',
+    data: data
+  })
+}
+
+// 修改模型数据API接入
+export function updateModelDataApi(data) {
+  return request({
+    url: '/model/modelDataApi',
+    method: 'put',
+    data: data
+  })
+}
+
+// 删除模型数据API接入
+export function delModelDataApi(id) {
+  return request({
+    url: '/model/modelDataApi/' + id,
+    method: 'delete'
+  })
+}

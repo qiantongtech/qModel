@@ -320,10 +320,10 @@ INSERT INTO `system_dict_data` VALUES (94, 1, '多列数值', '1', 'model_input_
 INSERT INTO `system_dict_data` VALUES (95, 2, '文件', '2', 'model_input_param_type', NULL, 'default', 'N', '0', 'admin', '2025-11-17 04:24:35', 'admin', '2025-11-17 04:27:59', NULL);
 INSERT INTO `system_dict_data` VALUES (96, 0, '成功', '1', 'calculation_status', NULL, 'success', 'N', '0', '小桐', '2025-12-31 15:24:38', '小桐2', '2026-01-26 09:35:30', NULL);
 INSERT INTO `system_dict_data` VALUES (97, 0, '失败', '0', 'calculation_status', NULL, 'danger', 'N', '0', '小桐', '2025-12-31 15:24:46', '小桐2', '2026-01-26 09:35:37', NULL);
-INSERT INTO `system_dict_data` VALUES (98, 0, 'get', '0', 'model_access_mode', NULL, 'primary', 'N', '0', '小桐', '2026-01-20 15:35:38', '小桐', '2026-01-21 14:23:31', NULL);
-INSERT INTO `system_dict_data` VALUES (99, 1, 'post', '1', 'model_access_mode', NULL, 'warning', 'N', '0', '小桐', '2026-01-20 15:35:56', '小桐', '2026-01-21 14:23:42', NULL);
-INSERT INTO `system_dict_data` VALUES (100, 2, 'put', '2', 'model_access_mode', NULL, 'warning', 'N', '0', '小桐', '2026-01-20 15:36:08', '小桐', '2026-01-21 14:24:40', NULL);
-INSERT INTO `system_dict_data` VALUES (101, 3, 'delete', '3', 'model_access_mode', NULL, 'danger', 'N', '0', '小桐', '2026-01-20 15:36:20', '小桐', '2026-01-21 14:23:52', NULL);
+INSERT INTO `system_dict_data` VALUES (98, 0, 'GET', '0', 'model_access_mode', NULL, 'primary', 'N', '0', '小桐', '2026-01-20 15:35:38', '小桐', '2026-01-21 14:23:31', NULL);
+INSERT INTO `system_dict_data` VALUES (99, 1, 'POST', '1', 'model_access_mode', NULL, 'warning', 'N', '0', '小桐', '2026-01-20 15:35:56', '小桐', '2026-01-21 14:23:42', NULL);
+INSERT INTO `system_dict_data` VALUES (100, 2, 'PUT', '2', 'model_access_mode', NULL, 'warning', 'N', '0', '小桐', '2026-01-20 15:36:08', '小桐', '2026-01-21 14:24:40', NULL);
+INSERT INTO `system_dict_data` VALUES (101, 3, 'DELETE', '3', 'model_access_mode', NULL, 'danger', 'N', '0', '小桐', '2026-01-20 15:36:20', '小桐', '2026-01-21 14:23:52', NULL);
 INSERT INTO `system_dict_data` VALUES (102, 0, 'API', 'API', 'model_access_type', NULL, 'warning', 'Y', '0', 'admin', '2026-07-07 14:14:33', 'qModel', '2026-07-16 09:42:13', 'API接口接入');
 INSERT INTO `system_dict_data` VALUES (103, 1, 'Python', 'PYTHON', 'model_access_type', NULL, 'info', 'N', '0', 'admin', '2026-07-07 14:14:33', '小桐', '2026-07-09 19:03:47', 'Python本地接入');
 INSERT INTO `system_dict_data` VALUES (104, 0, 'application/json', 'application/json', 'content_type', NULL, 'primary', 'Y', '0', 'admin', '2026-07-07 14:14:33', NULL, NULL, 'application/json');
@@ -729,6 +729,16 @@ INSERT INTO `system_menu` VALUES (2335, '密钥管理新增', 2333, 2, '#', '', 
 INSERT INTO `system_menu` VALUES (2336, '密钥管理删除', 2333, 4, '#', '', NULL, 1, 0, NULL, 'F', '0', '0', 'model:modelKey:key:remove', '#', 'admin', '2026-07-31 17:09:49', '', NULL, '');
 INSERT INTO `system_menu` VALUES (2337, '模型计算', 0, 60, 'calc', NULL, NULL, 1, 0, NULL, 'M', '0', '0', NULL, 'model-calculation', '吴同', '2024-05-06 06:12:17', '吴同', '2025-12-31 10:03:45', '系统管理目录');
 
+-- V1.4.3 数据管理 - API 接入菜单
+INSERT INTO `system_menu` VALUES (2343, '数据管理', 0, 80, 'data', NULL, NULL, 1, 0, NULL, 'M', '0', '0', '', 'date-range', '超级管理员', '2026-08-18 15:43:41', '超级管理员', '2026-09-22 14:25:28', NULL);
+INSERT INTO `system_menu` VALUES (2444, 'API接入', 2343, 1, 'api', 'model/modelData/api/index', NULL, 1, 0, NULL, 'C', '0', '0', 'model:modelData:dataapi:list', '#', 'admin', '2026-08-19 15:09:29', '超级管理员', '2026-08-21 09:09:14', '模型数据API接入菜单');
+INSERT INTO `system_menu` VALUES (2445, 'API接入查询', 2444, 1, '#', '', NULL, 1, 0, NULL, 'F', '0', '0', 'model:modelData:dataapi:query', '#', 'admin', '2026-08-19 15:09:29', '', NULL, '');
+INSERT INTO `system_menu` VALUES (2446, 'API接入新增', 2444, 2, '#', '', NULL, 1, 0, NULL, 'F', '0', '0', 'model:modelData:dataapi:add', '#', 'admin', '2026-08-19 15:09:30', '', NULL, '');
+INSERT INTO `system_menu` VALUES (2447, 'API接入修改', 2444, 3, '#', '', NULL, 1, 0, NULL, 'F', '0', '0', 'model:modelData:dataapi:edit', '#', 'admin', '2026-08-19 15:09:30', '', NULL, '');
+INSERT INTO `system_menu` VALUES (2448, 'API接入删除', 2444, 4, '#', '', NULL, 1, 0, NULL, 'F', '0', '0', 'model:modelData:dataapi:remove', '#', 'admin', '2026-08-19 15:09:30', '', NULL, '');
+INSERT INTO `system_menu` VALUES (2449, 'API接入导出', 2444, 5, '#', '', NULL, 1, 0, NULL, 'F', '0', '0', 'model:modelData:dataapi:export', '#', 'admin', '2026-08-19 15:09:30', '', NULL, '');
+INSERT INTO `system_menu` VALUES (2350, 'API接入导入', 2444, 6, '#', '', NULL, 1, 0, NULL, 'F', '0', '0', 'model:modelData:dataapi:import', '#', 'admin', '2026-08-19 15:09:30', '', NULL, '');
+
 -- ----------------------------
 -- Table structure for system_notice
 -- ----------------------------
@@ -1086,6 +1096,16 @@ INSERT INTO `system_role_menu` VALUES (4, 2334);
 INSERT INTO `system_role_menu` VALUES (4, 2335);
 INSERT INTO `system_role_menu` VALUES (4, 2336);
 INSERT INTO `system_role_menu` VALUES (4, 2337);
+
+-- V1.4.3 数据管理 - API 接入角色授权（系统管理员 role_id=4）
+INSERT INTO `system_role_menu` VALUES (4, 2343);
+INSERT INTO `system_role_menu` VALUES (4, 2350);
+INSERT INTO `system_role_menu` VALUES (4, 2444);
+INSERT INTO `system_role_menu` VALUES (4, 2445);
+INSERT INTO `system_role_menu` VALUES (4, 2446);
+INSERT INTO `system_role_menu` VALUES (4, 2447);
+INSERT INTO `system_role_menu` VALUES (4, 2448);
+INSERT INTO `system_role_menu` VALUES (4, 2449);
 
 -- ----------------------------
 -- Table structure for system_user

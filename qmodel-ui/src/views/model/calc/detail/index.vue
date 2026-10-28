@@ -151,9 +151,16 @@
     <div class="pagecont-bottom">
       <el-tabs v-model="activeName" class="demo-tabs" @tab-click="handleClick">
         <el-tab-pane name="outputResult">
-          <template #label>输出结果</template>
+          <template #label>结果可视化</template>
           <div v-if="activeName === 'outputResult'" class="tab-content output-result-tab">
             <OutputResult :calc-detail="calcDetail" />
+          </div>
+        </el-tab-pane>
+
+        <el-tab-pane name="outputSchema">
+          <template #label>输出结果</template>
+          <div v-if="activeName === 'outputSchema'" class="tab-content output-result-tab">
+            <OutputSchema :calc-detail="calcDetail" />
           </div>
         </el-tab-pane>
 
@@ -541,6 +548,7 @@ import { getCalc } from "@/api/model/calc/calc";
 import { listCalcExecution, getCalcExecution } from "@/api/model/calcExecution/calcExecution";
 import RightToolbar from "@/components/RightToolbar/index.vue";
 import OutputResult from "./OutputResult.vue";
+import OutputSchema from "./OutputSchema.vue";
 
 const { proxy } = getCurrentInstance();
 const router = useRouter();

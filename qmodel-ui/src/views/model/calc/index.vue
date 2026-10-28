@@ -92,6 +92,17 @@
               <i class="iconfont-mini icon-xinzeng mr5"></i>新增
             </el-button>
           </el-col>
+          <el-col :span="1.5">
+            <el-button
+              type="danger"
+              plain
+              icon="Delete"
+              :disabled="multiple"
+              @click="handleDelete"
+              v-hasPermi="['model:calc:calc:remove']"
+              @mousedown="(e) => e.preventDefault()"
+            >删除</el-button>
+          </el-col>
         </el-row>
         <div class="justify-end top-right-btn">
           <right-toolbar
@@ -104,13 +115,13 @@
 
       <el-table
         stripe
-        height="58vh"
         v-loading="loading"
         :data="calcList"
         @selection-change="handleSelectionChange"
         :default-sort="defaultSort"
         @sort-change="handleSortChange"
       >
+        <el-table-column type="selection" width="55" align="center" />
         <el-table-column
           v-if="getColumnVisibility(0)"
           label="编号"
@@ -304,8 +315,8 @@
       v-model="open"
       draggable
       destroy-on-close
-      width="60%"
-      class="dialog"
+      width="900px"
+      class="dialog calc-dialog"
       :append-to="$refs['app-container']"
       @open="handleDialogOpen"
     >
@@ -314,6 +325,7 @@
           {{ title }}
         </span>
       </template>
+      <div v-loading="apiExecuting">
       <el-form ref="calcRef" :model="form" :rules="rules" label-width="146px" @submit.prevent>
         <!-- 模型选择 -->
         <div class="h2-title">模型选择</div>
@@ -351,7 +363,7 @@
                   :disabled="item.status != 5"
                 >
                   <span>{{ item.name }}</span>
-                  <span v-if="item.status != 5" style="color: #999; font-size: 12px; margin-left: 5px;">(已下线)</span>
+                  <span v-if="item.status != 5" style="color: #999; font-size: 12px; margin-left: 5px;">(未启用)</span>
                 </el-option>
               </el-select>
             </el-form-item>
@@ -364,7 +376,7 @@
                 v-model="form.modelVersion"
                 placeholder="请选择版本"
                 style="width: 100%"
-                :disabled="!form.modelId"
+                :disabled="true"
               >
                 <el-option
                   v-for="item in versionOptions"
@@ -437,11 +449,17 @@
           </el-col>
         </el-row>
       </el-form>
-      <div class="h2-title">数据绑定</div>
-      <el-table :data="form.inputParams" border size="small" style="margin-bottom: 12px" max-height="200">
+      <div class="calc-input-header">
+        <div class="h2-title">数据绑定</div>
+        <el-button type="primary" class="header-action-btn" @click="openApiSelector">
+          <svg-icon icon-class="apigl" class="mr5" style="width: 14px; height: 14px;" />
+          选择API
+        </el-button>
+      </div>
+      <el-table :data="form.inputParams" border size="small" style="margin-bottom: 12px">
         <el-table-column label="参数名" width="140">
           <template #default="scope">
-            <el-input :model-value="scope.row.title || scope.row.name" disabled placeholder="自动填充" />
+            <el-input :model-value="scope.row.name" disabled placeholder="自动填充" />
           </template>
         </el-table-column>
         <el-table-column label="是否必填" width="90" align="center">
@@ -494,13 +512,103 @@
           </template>
         </el-table-column>
       </el-table>
+      <div v-if="selectedApi" class="selected-api-card">
+        <div class="selected-api-icon">API</div>
+        <div class="selected-api-info">
+          <div class="selected-api-name">
+            {{ selectedApi.name }}
+            <span v-if="selectedApi.code" style="color: #999; font-weight: normal; margin-left: 8px;">({{ selectedApi.code }})</span>
+          </div>
+          <div class="selected-api-meta">
+            <dict-tag :options="requestMethodOptions" :value="selectedApi.requestMethod" style="display: inline-block; vertical-align: middle; margin-right: 5px;" />
+            {{ selectedApi.apiUrl || '-' }}
+            <span v-if="selectedApi.apiType"> · <dict-tag :options="model_data_api_type" :value="selectedApi.apiType" style="display: inline-block; vertical-align: middle;" /></span>
+          </div>
+        </div>
+        <el-button link type="danger" icon="Close" @click="clearApiSelection" />
+      </div>
       <div v-if="validateError" class="error-msg" style="margin-bottom: 20px;">
         <el-icon><Warning /></el-icon> {{ validateError }}
       </div>
+      </div>
       <template #footer>
-        <div style="text-align: right">
-          <el-button @click="cancel">取 消</el-button>
-          <el-button type="primary" @click="submitForm">提交计算</el-button>
+        <div class="dialog-footer">
+          <el-button size="mini" @click="cancel">取 消</el-button>
+          <el-button type="primary" size="mini" @click="submitForm">提交计算</el-button>
+        </div>
+      </template>
+    </el-dialog>
+
+    <!-- 数据 API 选择 -->
+    <el-dialog
+      v-model="apiSelectorOpen"
+      width="800px"
+      class="dialog"
+      :append-to="$refs['app-container']"
+      destroy-on-close
+    >
+      <template #header="{ close, titleId, titleClass }">
+        <span role="heading" aria-level="2" class="el-dialog__title">
+          选择数据 API
+        </span>
+      </template>
+      <el-form :inline="true" :model="apiQuery" class="api-selector-form btn-style" @submit.prevent>
+        <el-form-item label="API 名称">
+          <el-input v-model="apiQuery.name" clearable placeholder="请输入 API 名称" class="el-form-input-width" @keyup.enter="loadApiOptions" />
+        </el-form-item>
+        <el-form-item>
+          <el-button type="primary" plain @click="loadApiOptions">
+            <i class="iconfont-mini icon-a-zu22377 mr5"></i>查询
+          </el-button>
+        </el-form-item>
+      </el-form>
+      <el-table
+        ref="apiTableRef"
+        v-loading="apiLoading"
+        :data="apiOptions"
+        highlight-current-row
+        row-key="id"
+        stripe
+        @row-click="handleApiSelect"
+      >
+      <el-table-column
+          label="编号"
+          align="center"
+          prop="id"
+          width="80"
+          :show-overflow-tooltip="{ effect: 'light' }"
+          sortable="custom"
+          :sort-orders="['descending', 'ascending']"
+        />
+        <el-table-column label="API 名称" prop="name" min-width="170" :show-overflow-tooltip="{ effect: 'light' }" />
+        <el-table-column label="用途" prop="description" min-width="220" :show-overflow-tooltip="{ effect: 'light' }">
+          <template #default="scope">{{ scope.row.description || scope.row.remark || '-' }}</template>
+        </el-table-column>
+        <el-table-column label="请求地址" prop="apiUrl" min-width="230" :show-overflow-tooltip="{ effect: 'light' }" />
+        <el-table-column label="请求方式" prop="requestMethod" width="110" align="center">
+          <template #default="scope">
+            <dict-tag :options="requestMethodOptions" :value="scope.row.requestMethod" />
+          </template>
+        </el-table-column>
+
+        <template #empty>
+          <div class="emptyBg">
+            <img src="@/assets/system/images/no_data/noData.png" alt="" />
+            <p>暂无可用 API</p>
+          </div>
+        </template>
+      </el-table>
+      <pagination
+        v-show="apiTotal > 0"
+        :total="apiTotal"
+        v-model:page="apiQuery.pageNum"
+        v-model:limit="apiQuery.pageSize"
+        @pagination="loadApiOptions"
+      />
+      <template #footer>
+        <div class="dialog-footer">
+          <el-button size="mini" @click="apiSelectorOpen = false">取 消</el-button>
+          <el-button type="primary" size="mini" @click="confirmApiSelection" :disabled="!apiSelectedRow" :loading="apiExecuting">确 认</el-button>
         </div>
       </template>
     </el-dialog>
@@ -603,8 +711,8 @@
         </el-row>
       </el-form>
       <template #footer>
-        <div style="text-align: right">
-          <el-button @click="openDetail = false">关 闭</el-button>
+        <div class="dialog-footer">
+          <el-button size="mini" @click="openDetail = false">关 闭</el-button>
         </div>
       </template>
     </el-dialog>
@@ -616,15 +724,50 @@ import { useRouter } from 'vue-router';
 import { Warning } from '@element-plus/icons-vue'
 import { listCalc, getCalc, delCalc, addCalc, updateCalc, executeCalc, cancelCalc } from '@/api/model/calc/calc'
 import { listModel } from '@/api/model/model'
-import { listClassify } from '@/api/modelReconstitution/classify'
-import { getModelConfigByModelId } from '@/api/model/config'
+import { listClassify } from '@/api/model/classify'
+import { getModelConfigByModelId, testModelConfig } from '@/api/model/config'
 import { listModelFileResource } from '@/api/model/modelFileResource'
+import { listModelDataApi, getModelDataApi } from '@/api/model/modelData/modelDataApi'
 import FileUpload from '@/components/FileUpload2'
 
 const { proxy } = getCurrentInstance()
 const router = useRouter()
 
-const { model_calc_status, model_calc_priority, model_access_type } = proxy.useDict('model_calc_status', 'model_calc_priority', 'model_access_type')
+const {
+  model_calc_status,
+  model_calc_priority,
+  model_access_type,
+  model_access_mode,
+  model_data_api_type
+} = proxy.useDict(
+  'model_calc_status',
+  'model_calc_priority',
+  'model_access_type',
+  'model_access_mode',
+  'model_data_api_type'
+)
+
+// 请求方式转换
+const requestMethodOptions = computed(() => {
+  if (model_access_mode.value?.length) return model_access_mode.value;
+  return [
+    { label: 'GET', value: 'GET' },
+    { label: 'POST', value: 'POST' },
+    { label: 'PUT', value: 'PUT' },
+    { label: 'DELETE', value: 'DELETE' }
+  ];
+});
+
+/** 获取请求方式的展示文本（大写） */
+const getRequestMethodLabel = (value) => {
+  if (!value) return '';
+  // 如果已经是 GET/POST 等，直接返回
+  if (['GET', 'POST', 'PUT', 'DELETE'].includes(String(value).toUpperCase())) {
+    return String(value).toUpperCase();
+  }
+  const option = requestMethodOptions.value.find(opt => String(opt.value) === String(value));
+  return option ? option.label.toUpperCase() : String(value).toUpperCase();
+};
 
 // ========== 数据 ==========
 const calcList = ref([])
@@ -666,7 +809,7 @@ const single = ref(true)
 const multiple = ref(true)
 const total = ref(0)
 const loading = ref(true)
-const defaultSort = ref({ prop: 'createTime', order: 'desc' })
+const defaultSort = ref({ prop: 'createTime', order: 'descending' })
 
 const open = ref(false)
 const openDetail = ref(false)
@@ -674,6 +817,18 @@ const title = ref('')
 const detailTitle = ref('计算任务详情')
 const activeTab = ref('output')
 const validateError = ref('')
+const apiSelectorOpen = ref(false)
+const apiLoading = ref(false)
+const apiOptions = ref([])
+const apiSelectedRow = ref(null)
+const apiTotal = ref(0)
+const apiQuery = ref({
+  name: '',
+  pageNum: 1,
+  pageSize: 10
+})
+const apiTableRef = ref(null)
+const apiExecuting = ref(false)
 
 const data = reactive({
   queryParams: {
@@ -681,7 +836,9 @@ const data = reactive({
     pageSize: 10,
     name: null,
     modelName: null,
-    status: null
+    status: null,
+    orderByColumn: 'createTime',
+    isAsc: 'desc'
   },
   form: {
     id: null,
@@ -701,7 +858,13 @@ const data = reactive({
     retryCount: 0,
     maxRetryCount: 3,
     priority: 2,
-    errorMessage: ''
+    errorMessage: '',
+    resourceId: null,
+    resourceCode: '',
+    resourceName: '',
+    resourceUrl: '',
+    resourceMethod: '',
+    resourceType: ''
   },
   rules: {
     name: [{ required: true, message: '任务名称不能为空', trigger: 'blur' }],
@@ -713,6 +876,18 @@ const data = reactive({
 })
 
 const { queryParams, form, rules } = toRefs(data)
+
+const selectedApi = computed(() => {
+  if (!form.value.resourceId) return null
+  return apiOptions.value.find((item) => item.id === form.value.resourceId) || {
+    id: form.value.resourceId,
+    code: form.value.resourceCode || '',
+    name: form.value.resourceName || '已绑定数据 API',
+    apiUrl: form.value.resourceUrl || '',
+    requestMethod: form.value.resourceMethod || '',
+    apiType: form.value.resourceType || ''
+  }
+})
 
 // ========== 方法 ==========
 
@@ -787,7 +962,7 @@ function handleSelectionChange(selection) {
 /** 排序 */
 function handleSortChange({ prop, order }) {
   queryParams.value.orderByColumn = prop
-  queryParams.value.isAsc = order === 'ascending'
+  queryParams.value.isAsc = order === 'ascending' ? 'asc' : 'desc'
   getList()
 }
 
@@ -820,7 +995,13 @@ function reset() {
     retryCount: 0,
     maxRetryCount: 3,
     priority: 2,
-    errorMessage: ''
+    errorMessage: '',
+    resourceId: null,
+    resourceCode: '',
+    resourceName: '',
+    resourceUrl: '',
+    resourceMethod: '',
+    resourceType: ''
   }
   proxy.resetForm('calcRef')
 }
@@ -829,6 +1010,137 @@ function reset() {
 function handleDialogOpen() {
   loadModelOptions()
   loadClassifyOptions()
+  loadApiOptions()
+}
+
+/** 打开 API 选择器，选择后立即绑定，不增加确认页 */
+function openApiSelector() {
+  apiSelectedRow.value = selectedApi.value || null
+  apiSelectorOpen.value = true
+  loadApiOptions()
+}
+
+function loadApiOptions() {
+  apiLoading.value = true
+  listModelDataApi({
+    pageNum: apiQuery.value.pageNum,
+    pageSize: apiQuery.value.pageSize,
+    name: apiQuery.value.name || undefined
+  }).then((res) => {
+    apiOptions.value = (res.data?.rows || []).filter((item) => item.validFlag !== false && item.delFlag !== true)
+    apiTotal.value = res.data?.total || 0
+    // 如果有已选中的，回显高亮
+    if (apiSelectedRow.value) {
+      nextTick(() => {
+        const row = apiOptions.value.find(item => item.id === apiSelectedRow.value.id)
+        if (row && apiTableRef.value) {
+          apiTableRef.value.setCurrentRow(row)
+        }
+      })
+    }
+  }).finally(() => {
+    apiLoading.value = false
+  })
+}
+
+function handleApiSelect(row) {
+  if (!row) return
+  apiSelectedRow.value = row
+}
+
+async function confirmApiSelection() {
+  if (!apiSelectedRow.value) return
+  const apiId = apiSelectedRow.value.id
+
+  apiSelectorOpen.value = false
+  apiExecuting.value = true
+  try {
+    // 1. 获取 API 完整详情以获取调用配置
+    const apiDetailRes = await getModelDataApi(apiId)
+    const apiData = apiDetailRes.data
+
+    // 2. 构造测试请求参数
+    const testPayload = {
+      apiUrl: apiData.apiUrl,
+      requestMethod: getRequestMethodLabel(apiData.requestMethod),
+      contentType: apiData.contentType,
+      timeoutSeconds: apiData.timeoutSeconds,
+      authType: apiData.authType,
+      authMethod: apiData.authMethod,
+      authInjectPosition: apiData.authInjectPos,
+      authKeyName: apiData.authKeyName,
+      authTokenPrefix: apiData.authTokenPrefix,
+      authTokenValue: apiData.authTokenValue,
+      authDynamicMethod: apiData.authDynMethod,
+      authDynamicUrl: apiData.authDynUrl,
+      authDynamicHeaders: apiData.authDynHeaders,
+      authDynamicParams: apiData.authDynParams,
+      authDynamicBody: apiData.authDynBody,
+      authExtractPath: apiData.authExtractPath,
+      testBody: "{}" // 默认空 Body
+    }
+
+    const testRes = await testModelConfig(testPayload)
+
+    if (testRes.code === 200 && testRes.data && testRes.data.success) {
+      let responseObj = {}
+      try {
+        responseObj = JSON.parse(testRes.data.responseBody)
+      } catch (e) {
+        responseObj = { result: testRes.data.responseBody }
+      }
+
+      // 4. 扁平化数据并匹配
+      const flatData = flattenJson(responseObj)
+      let matchCount = 0
+
+      if (form.value.inputParams && form.value.inputParams.length > 0) {
+        form.value.inputParams.forEach(param => {
+          if (flatData[param.name] !== undefined) {
+            const val = flatData[param.name]
+            param.value = (val === null || val === undefined) ? '' : String(val)
+            matchCount++
+          }
+        })
+      }
+
+      // 5. 绑定 API 信息
+      form.value.resourceId = apiData.id
+      form.value.resourceCode = apiData.code || ''
+      form.value.resourceName = apiData.name
+      form.value.resourceUrl = apiData.apiUrl || ''
+      form.value.resourceMethod = apiData.requestMethod || ''
+      form.value.resourceType = apiData.apiType || ''
+
+      proxy.$modal.msgSuccess(`API 调用成功，已自动匹配填充 ${matchCount} 个参数`)
+    } else {
+      proxy.$modal.msgError(`API 调用失败: ${testRes.data?.errorMsg || '未知错误'}`)
+    }
+  } catch (error) {
+    console.error('API 绑定并调用失败', error)
+    proxy.$modal.msgError('API 绑定失败，请检查网络或配置')
+  } finally {
+    apiExecuting.value = false
+  }
+}
+
+/** 取消绑定 API */
+function clearApiSelection() {
+  form.value.resourceId = null
+  form.value.resourceCode = ''
+  form.value.resourceName = ''
+  form.value.resourceUrl = ''
+  form.value.resourceMethod = ''
+  form.value.resourceType = ''
+
+  // 清空已匹配的参数值
+  if (form.value.inputParams && form.value.inputParams.length > 0) {
+    form.value.inputParams.forEach(param => {
+      param.value = ''
+    })
+  }
+
+  proxy.$modal.msgSuccess('已取消 API 绑定，并重置参数值')
 }
 
 /** 加载模型选项 */
@@ -877,6 +1189,9 @@ function handleClassifyChange(classifyId) {
   form.value.accessType = ''
   form.value.calcType = null
   form.value.inputParams = []
+  form.value.resourceId = null
+  form.value.resourceName = ''
+  apiOptions.value = []
 }
 
 /** 处理模型选择 - 选择模型后自动回填版本号 */
@@ -888,6 +1203,8 @@ function handleModelChange(modelId) {
     form.value.accessType = ''
     form.value.calcType = null
     form.value.inputParams = []
+    form.value.resourceId = null
+    form.value.resourceName = ''
     return
   }
 
@@ -1027,7 +1344,8 @@ function handleUpdate(row) {
       modelId: data.modelId,
       modelName: data.modelName || '',
       modelVersion: data.modelVersion || '',
-      accessType: data.accessType || '',
+      // 优先从后端返回的 calcType 映射回 accessType，如果后端没返回则保持空
+      accessType: data.accessType || calcTypeToAccessType(data.calcType),
       // 优先用后端已经存的 calcType，没有的话再按 accessType 推断一次（兼容历史数据）
       calcType: (data.calcType != null && data.calcType !== '')
         ? data.calcType
@@ -1039,6 +1357,12 @@ function handleUpdate(row) {
       maxRetryCount: data.maxRetryCount ?? 3,
       priority: data.priority ?? 2,
       errorMessage: data.errorMessage || '',
+      resourceId: data.resourceId || null,
+      resourceCode: data.resourceCode || '',
+      resourceName: data.resourceName || '',
+      resourceUrl: data.resourceUrl || '',
+      resourceMethod: data.resourceMethod || '',
+      resourceType: data.resourceType || '',
       outputResult: data.outputResult || null,
       // inputParams 解析：字符串的 JSON 格式统一转 params 数组
       inputParams: parseInputParams(data.inputParams)
@@ -1055,6 +1379,32 @@ function accessTypeToCalcType(accessType) {
   if (s === 'API') return 0
   if (s === 'PYTHON') return 1
   return null
+}
+
+/** 计算类型(Integer) -> 接入方式(字符串) 映射 */
+function calcTypeToAccessType(calcType) {
+  if (calcType === 0 || calcType === '0') return 'API'
+  if (calcType === 1 || calcType === '1') return 'PYTHON'
+  return ''
+}
+
+/** 扁平化 JSON 对象，方便匹配参数名 */
+function flattenJson(obj, result = {}) {
+  if (!obj || typeof obj !== 'object') return result
+  for (const key in obj) {
+    if (Object.prototype.hasOwnProperty.call(obj, key)) {
+      const value = obj[key]
+      // 始终保留当前层级的 key，方便短名称匹配
+      if (result[key] === undefined) {
+        result[key] = value
+      }
+      // 如果是对象且不是数组，递归处理
+      if (value !== null && typeof value === 'object' && !Array.isArray(value)) {
+        flattenJson(value, result)
+      }
+    }
+  }
+  return result
 }
 
 /** 解析 inputParams：兼容字符串 JSON / 对象两种格式 */
@@ -1095,8 +1445,9 @@ async function submitForm() {
   }
 
   // 2. 校验参数表格
+  const hasBoundApi = Number(form.value.calcType) === 0 && !!form.value.resourceId
   const errors = []
-  if (form.value.inputParams && form.value.inputParams.length > 0) {
+  if (!hasBoundApi && form.value.inputParams && form.value.inputParams.length > 0) {
     form.value.inputParams.forEach(param => {
       if (param.required) {
         const value = param.value
@@ -1254,6 +1605,95 @@ getList()
   align-items: center;
   gap: 6px;
 }
+
+.calc-input-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  margin-top: 14px;
+  margin-bottom: 10px;
+}
+
+.calc-input-header .h2-title {
+  margin: 8px 0;
+}
+
+.header-action-btn {
+  width: 104px;
+  padding: 0;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.selected-api-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 14px;
+  margin-bottom: 12px;
+  border: 1px solid #dbe8fa;
+  background: #f7faff;
+}
+
+.selected-api-icon {
+  width: 34px;
+  height: 34px;
+  display: grid;
+  place-items: center;
+  color: var(--el-color-primary);
+  background: #e6f0ff;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.selected-api-info {
+  min-width: 0;
+  flex: 1;
+}
+
+.selected-api-name {
+  color: #26364b;
+  font-weight: 600;
+}
+
+.selected-api-meta {
+  margin-top: 4px;
+  color: #7d8b9c;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.api-selector-form {
+  margin-bottom: 14px;
+}
+
+:deep(.calc-dialog.el-dialog) {
+  max-height: 90vh;
+  margin-top: 5vh !important;
+  margin-bottom: 5vh !important;
+  display: flex;
+  flex-direction: column;
+}
+
+:deep(.calc-dialog .el-dialog__header) {
+  flex: 0 0 auto;
+}
+
+:deep(.calc-dialog .el-dialog__body) {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 0 20px 20px;
+}
+
+:deep(.calc-dialog .el-dialog__footer) {
+  flex: 0 0 auto;
+  background: #fff;
+  border-top: 1px solid #ebeef5;
+  padding: 14px 20px;
+}
 </style>
-
-

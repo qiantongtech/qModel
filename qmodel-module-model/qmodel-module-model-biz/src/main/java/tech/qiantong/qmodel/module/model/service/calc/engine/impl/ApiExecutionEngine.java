@@ -32,6 +32,7 @@ import tech.qiantong.qmodel.module.model.dal.dataobject.config.ModelConfigDO;
 import tech.qiantong.qmodel.module.model.service.calc.dto.CalcExecuteContext;
 import tech.qiantong.qmodel.module.model.service.calc.dto.ExecutionResult;
 import tech.qiantong.qmodel.module.model.service.calc.engine.IExecutionEngine;
+import tech.qiantong.qmodel.module.model.service.calc.engine.DataApiParameterResolver;
 import tech.qiantong.qmodel.module.model.service.config.IModelConfigService;
 
 import javax.annotation.Resource;
@@ -50,6 +51,9 @@ public class ApiExecutionEngine implements IExecutionEngine {
     @Resource
     private IModelConfigService modelConfigService;
 
+    @Resource
+    private DataApiParameterResolver dataApiParameterResolver;
+
     @Override
     public void doExecute(CalcExecuteContext ctx, List<String> logBuffer, ExecutionResult result) throws Exception {
         log.info("API执行引擎开始执行: calcId={}, modelId={}, executionNo={}",
@@ -64,6 +68,8 @@ public class ApiExecutionEngine implements IExecutionEngine {
 
         // 2. 解析 ctx.inputParamsJson → Map{paramCode: value} → JSON 字符串做请求体
         Map<String, Object> inputParam = parseInputParamsToMap(ctx.getInputParamsJson());
+        // 若任务绑定了数据 API，先调用它并按同名字段覆盖入参（未绑定时原样返回）
+        inputParam = dataApiParameterResolver.resolve(ctx.getCalc(), inputParam, logBuffer);
         String testBody = JSON.toJSONString(inputParam);
         logBuffer.add("请求参数：" + testBody);
 

@@ -117,6 +117,26 @@ public class ModelCalcDO extends BaseEntity {
     /** 接入方式: 0-API接口, 1-Python本地 */
     private Integer calcType;
 
+    /** 结果定义(JSON格式)（查询展示字段，非数据库列） */
+    @TableField(exist = false)
+    private String outputSchema;
+
+    /** 绑定的数据 API 名称（查询展示字段，非数据库列） */
+    @TableField(exist = false)
+    private String resourceName;
+
+    /** 绑定的数据 API 地址（查询展示字段，非数据库列） */
+    @TableField(exist = false)
+    private String resourceUrl;
+
+    /** 绑定的数据 API 请求方式（查询展示字段，非数据库列） */
+    @TableField(exist = false)
+    private String resourceMethod;
+
+    /** 绑定的数据 API 类型（查询展示字段，非数据库列） */
+    @TableField(exist = false)
+    private String resourceType;
+
     /** 是否有效 */
     private Boolean validFlag;
 

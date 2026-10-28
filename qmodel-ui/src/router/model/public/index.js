@@ -117,5 +117,43 @@ export default [
                 }
             }
         ]
+    },
+    // 数据管理 - API 接入（本次迁移新增的隐藏路由）
+    {
+        path: '/data',
+        component: Layout,
+        hidden: true,
+        children: [
+            {
+                path: 'api/add',
+                component: () => import('@/views/model/modelData/api/add/index.vue'),
+                name: 'ModelDataApiAdd',
+                meta: {
+                    title: '新增API接入',
+                    noCache: true,
+                    activeMenu: '/data/api'
+                }
+            },
+            {
+                path: 'api/edit',
+                component: () => import('@/views/model/modelData/api/add/index.vue'),
+                name: 'ModelDataApiEdit',
+                meta: {
+                    title: '修改API接入',
+                    noCache: true,
+                    activeMenu: '/data/api'
+                }
+            },
+            {
+                path: 'api/detail',
+                component: () => import('@/views/model/modelData/api/detail/index.vue'),
+                name: 'ModelDataApiDetail',
+                meta: {
+                    title: 'API接入详情',
+                    noCache: true,
+                    activeMenu: '/data/api'
+                }
+            }
+        ]
     }
 ];
