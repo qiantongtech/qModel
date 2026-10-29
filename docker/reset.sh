@@ -10,7 +10,7 @@
 set -e  # 遇错立即退出
 
 # docker-compose 项目的路径
-COMPOSE_DIR="/home/qtt/opt/qModel-demo/docker"
+COMPOSE_DIR="/home/qtt/opt/qModel/docker"
 
 cd "$COMPOSE_DIR"
 
@@ -60,7 +60,7 @@ echo "----------------------------------------"
 docker start qmodel-qmodel-api-1
 
 # 启动 qModel nginx 容器（忽略已停止的情况）
-docker start qmodel-qmodel-nginx-1
+docker start qmodel-nginx-1
 # ==================================================================
 # 完成提示
 # ==================================================================

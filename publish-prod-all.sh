@@ -134,7 +134,7 @@ cp -r ./qmodel-ui/dist ./docker/qModel/nginx/
 # ==========================================
 echo "🚀 正在部署到远程服务器 $REMOTE_HOST..."
 
-ssh ${REMOTE_USER}@${REMOTE_HOST} "sudo rm -rf ${REMOTE_DIR}/docker"
+ssh -t ${REMOTE_USER}@${REMOTE_HOST} "sudo rm -rf ${REMOTE_DIR}/docker"
 
 echo "📤 正在上传 docker 文件..."
 scp -r ./docker ${REMOTE_USER}@${REMOTE_HOST}:${REMOTE_DIR}/

@@ -63,7 +63,7 @@ echo "✅ 后端更新完成。"
 # 上传前端 dist 并重启 nginx
 # ==========================================
 echo "📤 正在上传前端 dist 文件至服务器..."
-ssh ${REMOTE_USER}@${REMOTE_HOST} "sudo rm -rf ${NGINX_DIST_DIR}/dist"
+ssh -t ${REMOTE_USER}@${REMOTE_HOST} "sudo rm -rf ${NGINX_DIST_DIR}/dist"
 scp -r ${LOCAL_UI_DIR}/dist ${REMOTE_USER}@${REMOTE_HOST}:${NGINX_DIST_DIR}/
 
 echo "🔁 正在重启前端服务 ${NGINX_CONTAINER}..."

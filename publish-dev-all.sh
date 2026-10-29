@@ -11,8 +11,8 @@ set -e
 # ==========================================
 # 1. 配置与变量定义
 # ==========================================
-OLD_VERSION="1.4.1"
-NEW_VERSION="1.4.2"
+OLD_VERSION="1.4.2"
+NEW_VERSION="1.4.3"
 
 # 用于校验版本号的基准 pom.xml 文件（通常是根目录的）
 VERSION_CHECK_FILE="pom.xml"
@@ -134,7 +134,7 @@ cp -r ./qmodel-ui/dist ./docker/qModel/nginx/
 # ==========================================
 echo "🚀 正在部署到远程服务器 $REMOTE_HOST..."
 
-ssh ${REMOTE_USER}@${REMOTE_HOST} "sudo rm -rf ${REMOTE_DIR}/docker"
+ssh -t ${REMOTE_USER}@${REMOTE_HOST} "sudo rm -rf ${REMOTE_DIR}/docker"
 
 echo "📤 正在上传 docker 文件..."
 scp -r ./docker ${REMOTE_USER}@${REMOTE_HOST}:${REMOTE_DIR}/
