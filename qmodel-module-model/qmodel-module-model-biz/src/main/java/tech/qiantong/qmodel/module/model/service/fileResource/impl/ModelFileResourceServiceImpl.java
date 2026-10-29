@@ -415,17 +415,33 @@ public class ModelFileResourceServiceImpl extends ServiceImpl<ModelFileResourceM
         fileResourceDO.setImageBuildStatus(ImageBuildStatusEnum.CHECKING.getStatus());
         fileResourceDO.setValidFlag(true);
 
-        modelFileResourceMapper.insert(fileResourceDO);
-        Long fileResourceId = fileResourceDO.getId();
-        log.info("创建文件资源成功，fileResourceId: {}", fileResourceId);
+        if (saveReqVO.getId() != null) {
+            // 传入了 id：视为更新已有文件资源
+            fileResourceDO.setId(saveReqVO.getId());
+            modelFileResourceMapper.updateById(fileResourceDO);
+            log.info("更新文件资源成功，fileResourceId: {}", saveReqVO.getId());
 
-        final Long finalFileResourceId = fileResourceId;
-        TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronization() {
-            @Override
-            public void afterCommit() {
-                depsCheckHandler.checkDependencies(finalFileResourceId);
-            }
-        });
+            final Long fileResourceId = saveReqVO.getId();
+            TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronization() {
+                @Override
+                public void afterCommit() {
+                    depsCheckHandler.checkDependencies(fileResourceId);
+                }
+            });
+        } else {
+            // 未传 id：新建文件资源
+            modelFileResourceMapper.insert(fileResourceDO);
+            Long fileResourceId = fileResourceDO.getId();
+            log.info("创建文件资源成功，fileResourceId: {}", fileResourceId);
+
+            final Long finalFileResourceId = fileResourceId;
+            TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronization() {
+                @Override
+                public void afterCommit() {
+                    depsCheckHandler.checkDependencies(finalFileResourceId);
+                }
+            });
+        }
     }
 
     // 文件路径解析方法

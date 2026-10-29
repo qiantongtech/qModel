@@ -96,4 +96,158 @@ public class ModelCalcMockController {
 
         return result;
     }
+
+    // ================== 以下为 API管理（数据接入）演示数据接口 ==================
+    // 说明：演示站 qModel 的「API管理」会调用以下接口，按返回 JSON 的字段名
+    //       自动匹配并覆盖模型在线调试 / 模型计算的入参。每个接口返回的字段名
+    //       即为可被模型使用的参数名，对应 model_data_api.output_schema。
+
+    @Anonymous
+    @Operation(summary = "水文站实时水位监测")
+    @GetMapping("/waterLevel")
+    public JSONObject waterLevelMockData() {
+        JSONObject data = new JSONObject();
+        data.put("station_code", "HT-6201");
+        data.put("water_level", 8.52);
+        data.put("flow", 1265.4);
+        data.put("warn_level", 9.20);
+        data.put("rainfall", 12.6);
+        data.put("monitor_time", "2026-10-20 08:00:00");
+        return data;
+    }
+
+    @Anonymous
+    @Operation(summary = "气象观测数据获取")
+    @GetMapping("/weather")
+    public JSONObject weatherMockData() {
+        JSONObject data = new JSONObject();
+        data.put("city", "南京");
+        data.put("temperature", 26.4);
+        data.put("humidity", 68.5);
+        data.put("rainfall", 8.2);
+        data.put("wind_speed", 3.6);
+        data.put("pressure", 1008.7);
+        return data;
+    }
+
+    @Anonymous
+    @Operation(summary = "设备健康度评估")
+    @GetMapping("/deviceHealth")
+    public JSONObject deviceHealthMockData() {
+        JSONObject data = new JSONObject();
+        data.put("device_id", "PUMP-03");
+        data.put("health_score", 87.5);
+        data.put("vibration", 2.13);
+        data.put("bearing_temp", 62.8);
+        data.put("runtime_hours", 15230);
+        data.put("fault_prob", 0.08);
+        return data;
+    }
+
+    @Anonymous
+    @Operation(summary = "电力负荷预测")
+    @GetMapping("/powerLoad")
+    public JSONObject powerLoadMockData() {
+        JSONObject data = new JSONObject();
+        data.put("region", "工业园区-A");
+        data.put("load_value", 4820.5);
+        data.put("peak_load", 5310.0);
+        data.put("voltage", 220.4);
+        data.put("current", 386.2);
+        data.put("power_factor", 0.95);
+        return data;
+    }
+
+    @Anonymous
+    @Operation(summary = "交通流量监测")
+    @GetMapping("/trafficFlow")
+    public JSONObject trafficFlowMockData() {
+        JSONObject data = new JSONObject();
+        data.put("road_id", "G42-108");
+        data.put("vehicle_count", 3860);
+        data.put("avg_speed", 52.7);
+        data.put("congestion_index", 1.85);
+        data.put("lane_occupancy", 0.42);
+        return data;
+    }
+
+    @Anonymous
+    @Operation(summary = "空气质量监测")
+    @GetMapping("/airQuality")
+    public JSONObject airQualityMockData() {
+        JSONObject data = new JSONObject();
+        data.put("station_name", "城南监测点");
+        data.put("aqi", 62);
+        data.put("pm25", 28.5);
+        data.put("pm10", 46.3);
+        data.put("so2", 9.2);
+        data.put("no2", 32.7);
+        data.put("o3", 88.4);
+        return data;
+    }
+
+    @Anonymous
+    @Operation(summary = "信贷风险评估")
+    @GetMapping("/creditRisk")
+    public JSONObject creditRiskMockData() {
+        JSONObject data = new JSONObject();
+        data.put("applicant_id", "USR-20886");
+        data.put("credit_score", 712);
+        data.put("risk_level", "LOW");
+        data.put("debt_ratio", 0.28);
+        data.put("overdue_count", 0);
+        return data;
+    }
+
+    @Anonymous
+    @Operation(summary = "零售销量预测")
+    @GetMapping("/salesForecast")
+    public JSONObject salesForecastMockData() {
+        JSONObject data = new JSONObject();
+        data.put("sku_code", "RM-30821");
+        data.put("sales_volume", 1860);
+        data.put("growth_rate", 0.14);
+        data.put("stock_qty", 4320);
+        data.put("unit_price", 39.9);
+        return data;
+    }
+
+    @Anonymous
+    @Operation(summary = "作物长势监测")
+    @GetMapping("/cropGrowth")
+    public JSONObject cropGrowthMockData() {
+        JSONObject data = new JSONObject();
+        data.put("field_id", "FARM-N07");
+        data.put("ndvi", 0.72);
+        data.put("soil_moisture", 41.6);
+        data.put("growth_stage", "抽穗期");
+        data.put("yield_est", 618.5);
+        return data;
+    }
+
+    @Anonymous
+    @Operation(summary = "物流时效预测")
+    @GetMapping("/logisticsEta")
+    public JSONObject logisticsEtaMockData() {
+        JSONObject data = new JSONObject();
+        data.put("order_id", "SO-771205");
+        data.put("eta_hours", 18.5);
+        data.put("distance", 428.0);
+        data.put("traffic_factor", 1.12);
+        data.put("weather_factor", 1.05);
+        return data;
+    }
+
+    @Anonymous
+    @Operation(summary = "水质监测")
+    @GetMapping("/waterQuality")
+    public JSONObject waterQualityMockData() {
+        JSONObject data = new JSONObject();
+        data.put("section_code", "WQ-1180");
+        data.put("ph", 7.25);
+        data.put("dissolved_oxygen", 8.6);
+        data.put("turbidity", 12.3);
+        data.put("ammonia_nitrogen", 0.38);
+        return data;
+    }
 }
