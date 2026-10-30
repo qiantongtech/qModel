@@ -16,7 +16,7 @@
  * See the LICENSE file in the project root for full license information.
  */
 
-INSERT INTO `system_menu` (`menu_id`, `menu_name`, `parent_id`, `order_num`, `path`, `component`, `query`, `is_frame`, `is_cache`, `route_name`, `menu_type`, `visible`, `status`, `perms`, `icon`, `create_by`, `create_time`, `update_by`, `update_time`, `remark`) VALUES (2339, 'API管理', 0, 9, 'data/api', 'model/modelData/api/index', NULL, 1, 0, NULL, 'C', '0', '0', 'model:modelData:dataapi:list', '#', 'admin', '2026-08-19 15:09:29', '超级管理员', '2026-08-21 09:09:14', 'API管理菜单');
+INSERT INTO `system_menu` (`menu_id`, `menu_name`, `parent_id`, `order_num`, `path`, `component`, `query`, `is_frame`, `is_cache`, `route_name`, `menu_type`, `visible`, `status`, `perms`, `icon`, `create_by`, `create_time`, `update_by`, `update_time`, `remark`) VALUES (2339, 'API管理', 0, 80, 'data/api', 'model/modelData/api/index', NULL, 1, 0, NULL, 'C', '0', '0', 'model:modelData:dataapi:list', 'apigl', 'admin', '2026-08-19 15:09:29', '超级管理员', '2026-08-21 09:09:14', 'API管理菜单');
 INSERT INTO `system_menu` (`menu_id`, `menu_name`, `parent_id`, `order_num`, `path`, `component`, `query`, `is_frame`, `is_cache`, `route_name`, `menu_type`, `visible`, `status`, `perms`, `icon`, `create_by`, `create_time`, `update_by`, `update_time`, `remark`) VALUES (2340, 'API管理查询', 2339, 1, '#', '', NULL, 1, 0, NULL, 'F', '0', '0', 'model:modelData:dataapi:query', '#', 'admin', '2026-08-19 15:09:29', '', NULL, '');
 INSERT INTO `system_menu` (`menu_id`, `menu_name`, `parent_id`, `order_num`, `path`, `component`, `query`, `is_frame`, `is_cache`, `route_name`, `menu_type`, `visible`, `status`, `perms`, `icon`, `create_by`, `create_time`, `update_by`, `update_time`, `remark`) VALUES (2341, 'API管理新增', 2339, 2, '#', '', NULL, 1, 0, NULL, 'F', '0', '0', 'model:modelData:dataapi:add', '#', 'admin', '2026-08-19 15:09:30', '', NULL, '');
 INSERT INTO `system_menu` (`menu_id`, `menu_name`, `parent_id`, `order_num`, `path`, `component`, `query`, `is_frame`, `is_cache`, `route_name`, `menu_type`, `visible`, `status`, `perms`, `icon`, `create_by`, `create_time`, `update_by`, `update_time`, `remark`) VALUES (2342, 'API管理修改', 2339, 3, '#', '', NULL, 1, 0, NULL, 'F', '0', '0', 'model:modelData:dataapi:edit', '#', 'admin', '2026-08-19 15:09:30', '', NULL, '');
@@ -29,4 +29,3 @@ UPDATE `system_dict_data` SET `dict_label` = 'GET' WHERE `dict_type` = 'model_ac
 UPDATE `system_dict_data` SET `dict_label` = 'POST' WHERE `dict_type` = 'model_access_mode' AND `dict_value` = '1';
 UPDATE `system_dict_data` SET `dict_label` = 'PUT' WHERE `dict_type` = 'model_access_mode' AND `dict_value` = '2' ;
 UPDATE `system_dict_data` SET `dict_label` = 'DELETE' WHERE `dict_type` = 'model_access_mode' AND `dict_value` = '3';
-

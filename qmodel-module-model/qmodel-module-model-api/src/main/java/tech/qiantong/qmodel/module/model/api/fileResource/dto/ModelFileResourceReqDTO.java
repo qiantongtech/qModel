@@ -50,7 +50,7 @@ public class ModelFileResourceReqDTO {
     private String depsFilePath;
 
     /** 模型版本号 */
-    private Long modelVersion;
+    private String modelVersion;
 
     /** 资源类型：1=模型文件(onnx/pth/safetensors)，2=Python算法脚本(.py) */
     private String resourceType;

@@ -102,7 +102,7 @@ public class ModelSaveReqVO extends BaseEntity {
     private String resourceType;
 
     @Schema(description = "模型版本号(PYTHON类型专用)", example = "")
-    private Long modelVersion;
+    private String modelVersion;
 
     @Schema(description = "输入参数Schema(PYTHON类型专用)", example = "")
     @Size(max = 3072, message = "输入参数Schema长度不能超过3072个字符")

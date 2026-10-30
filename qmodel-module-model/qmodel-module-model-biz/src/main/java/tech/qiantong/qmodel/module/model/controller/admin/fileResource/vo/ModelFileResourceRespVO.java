@@ -64,7 +64,7 @@ public class ModelFileResourceRespVO implements Serializable {
 
     @Excel(name = "模型版本号")
     @Schema(description = "模型版本号", example = "")
-    private Long modelVersion;
+    private String modelVersion;
 
     @Excel(name = "资源类型：1=模型文件(onnx/pth/safetensors)，2=Python算法脚本(.py)")
     @Schema(description = "资源类型：1=模型文件(onnx/pth/safetensors)，2=Python算法脚本(.py)", example = "")
