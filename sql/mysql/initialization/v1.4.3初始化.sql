@@ -48,19 +48,6 @@ CREATE TABLE `gen_table` (
                              PRIMARY KEY (`table_id`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 137 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '代码生成业务表' ROW_FORMAT = Dynamic;
 
--- ----------------------------
--- Records of gen_table
--- ----------------------------
-INSERT INTO `gen_table` VALUES (121, 'MODEL', '模型管理', NULL, NULL, 'Model', 'crud', 'element-plus', 'tech.qiantong.qmodel.module.model', 'model', 'model', '模型管理', 'qModel', '0', '/', '{\"parentMenuId\":\"2243\"}', 'qModel', '2026-01-06 16:08:28', NULL, '2026-01-07 08:53:26', NULL);
-INSERT INTO `gen_table` VALUES (123, 'MODEL_CLASSIFY', '模型分类', NULL, NULL, 'ModelClassify', 'crud', 'element-plus', 'tech.qiantong.qmodel.module.model', 'classify', 'Classify', '模型分类', 'qModel', '0', '/', '{\"parentMenuId\":\"2244\"}', 'qModel', '2026-01-07 10:12:55', NULL, '2026-01-07 10:25:22', NULL);
-INSERT INTO `gen_table` VALUES (127, 'MODEL_HISTORY', '模型历史', NULL, NULL, 'ModelHistory', 'crud', 'element-plus', 'tech.qiantong.qmodel.module.model', 'history', 'Hhistory', '模型历史', 'qModel', '0', '/', '{\"parentMenuId\":2245}', 'qModel', '2026-01-09 13:22:19', NULL, '2026-01-09 13:23:22', NULL);
-INSERT INTO `gen_table` VALUES (129, 'MODEL_INPUT', '模型输入管理', NULL, NULL, 'ModelInput', 'crud', 'element-plus', 'tech.qiantong.qmodel.module.model', 'input', 'Input', '模型输入管理', 'qModel', '0', '/', '{\"parentMenuId\":2246}', 'qModel', '2026-01-09 13:54:01', NULL, '2026-01-09 13:56:29', NULL);
-INSERT INTO `gen_table` VALUES (130, 'MODEL_OUTPUT', '模型输入管理', NULL, NULL, 'ModelOutput', 'crud', 'element-plus', 'tech.qiantong.qmodel.module.model', 'output', 'Output', '模型输出管理', 'qModel', '0', '/', '{\"parentMenuId\":\"2247\"}', 'qModel', '2026-01-09 13:54:04', NULL, '2026-01-09 13:59:54', NULL);
-INSERT INTO `gen_table` VALUES (131, 'MODEL_OPERATE', '模型历史管理', NULL, NULL, 'ModelOperate', 'crud', 'element-plus', 'tech.qiantong.qmodel.module.model', 'operate', 'Operate', '模型历史管理', 'qModel', '0', '/', '{\"parentMenuId\":2249}', 'qModel', '2026-01-09 16:43:44', NULL, '2026-01-09 16:45:07', NULL);
-INSERT INTO `gen_table` VALUES (132, 'MODEL_INTERFACE_ADDRESS', '接口地址', NULL, NULL, 'ModelInterfaceAddress', 'crud', 'element-plus', 'tech.qiantong.qmodel.module.model', 'interfaceAddress', 'interfaceAddress', '接口地址', 'qModel', '0', '/', '{\"parentMenuId\":\"2248\"}', 'qModel', '2026-01-09 17:20:25', NULL, '2026-01-09 17:26:02', NULL);
-INSERT INTO `gen_table` VALUES (133, 'MODEL_VERSION', '版本管理', NULL, NULL, 'ModelVersion', 'crud', 'element-plus', 'tech.qiantong.qmodel.module.model', 'version', 'version', '版本管理', 'qModel', '0', '/', '{\"parentMenuId\":2248}', 'qModel', '2026-01-09 17:20:55', NULL, '2026-01-09 17:26:46', NULL);
-INSERT INTO `gen_table` VALUES (135, 'MODEL_RECONSTITUTION', '模型库重构表', NULL, NULL, 'ModelReconstitution', 'crud', 'element-plus', 'tech.qiantong.qmodel.module.model', 'modelReconstitution', 'modelReconstitution', '模型库重构', 'qModel', '0', '/', '{\"parentMenuId\":2245}', 'qModel', '2026-01-12 11:59:18', NULL, '2026-01-12 12:04:33', NULL);
-INSERT INTO `gen_table` VALUES (136, 'MODEL_CACL_RECONSTITUTION', '模型计算重构表', NULL, NULL, 'ModelCacl', 'crud', 'element-plus', 'tech.qiantong.qmodel.module.model', 'modelCacl', 'modelCacl', '模型计算重构', 'qModel', '0', '/', '{\"parentMenuId\":2248}', 'qModel', '2026-01-12 13:34:59', NULL, '2026-01-12 13:38:49', NULL);
 
 -- ----------------------------
 -- Table structure for gen_table_column
@@ -91,34 +78,6 @@ CREATE TABLE `gen_table_column` (
                                     `update_time` datetime NULL DEFAULT NULL COMMENT '更新时间',
                                     PRIMARY KEY (`column_id`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 2206 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '代码生成业务表字段' ROW_FORMAT = Dynamic;
-
--- ----------------------------
--- Records of gen_table_column
--- ----------------------------
-INSERT INTO `gen_table_column` VALUES (2182, 136, 'ID', '主键id', 'INTEGER', 'Long', 'ID', '1', '0', '0', '1', NULL, NULL, NULL, 'EQ', 'input', NULL, 1, 'qModel', '2026-01-12 13:35:00', NULL, '2026-01-12 13:38:49');
-INSERT INTO `gen_table_column` VALUES (2183, 136, 'COMPANY_ID', '企业id', 'INTEGER', 'Long', 'companyId', '0', '0', '0', '1', '1', '1', '1', 'EQ', 'input', NULL, 2, 'qModel', '2026-01-12 13:35:00', NULL, '2026-01-12 13:38:49');
-INSERT INTO `gen_table_column` VALUES (2184, 136, 'CODE', '计算编码', 'VARCHAR2', 'String', 'CODE', '0', '0', '0', '1', '1', '1', '1', 'EQ', 'input', NULL, 3, 'qModel', '2026-01-12 13:35:00', NULL, '2026-01-12 13:38:49');
-INSERT INTO `gen_table_column` VALUES (2185, 136, 'NAME', '计算名称', 'VARCHAR2', 'String', 'NAME', '0', '0', '0', '1', '1', '1', '1', 'LIKE', 'input', NULL, 4, 'qModel', '2026-01-12 13:35:00', NULL, '2026-01-12 13:38:49');
-INSERT INTO `gen_table_column` VALUES (2186, 136, 'MODEL_ID', '模型id', 'INTEGER', 'Long', 'modelId', '0', '0', '0', '1', '1', '1', '1', 'EQ', 'input', NULL, 5, 'qModel', '2026-01-12 13:35:00', NULL, '2026-01-12 13:38:50');
-INSERT INTO `gen_table_column` VALUES (2187, 136, 'MODEL_NAME', '模型名称', 'VARCHAR2', 'String', 'modelName', '0', '0', '0', '1', '1', '1', '1', 'LIKE', 'input', NULL, 6, 'qModel', '2026-01-12 13:35:00', NULL, '2026-01-12 13:38:50');
-INSERT INTO `gen_table_column` VALUES (2188, 136, 'MODEL_VERSION', '模型版本', 'VARCHAR2', 'String', 'modelVersion', '0', '0', '0', '1', '1', '1', '1', 'EQ', 'input', NULL, 7, 'qModel', '2026-01-12 13:35:00', NULL, '2026-01-12 13:38:50');
-INSERT INTO `gen_table_column` VALUES (2189, 136, 'START_TIME', '开始时间', 'DATETIME', 'Date', 'startTime', '0', '0', '0', '1', '1', '1', '1', 'EQ', 'datetime', NULL, 8, 'qModel', '2026-01-12 13:35:00', NULL, '2026-01-12 13:38:50');
-INSERT INTO `gen_table_column` VALUES (2190, 136, 'END_TIME', '结束时间', 'DATETIME', 'Date', 'endTime', '0', '0', '0', '1', '1', '1', '1', 'EQ', 'datetime', NULL, 9, 'qModel', '2026-01-12 13:35:00', NULL, '2026-01-12 13:38:50');
-INSERT INTO `gen_table_column` VALUES (2191, 136, 'STATUS', '计算状态', 'INTEGER', 'Long', 'STATUS', '0', '0', '0', '1', '1', '1', '1', 'EQ', 'radio', NULL, 10, 'qModel', '2026-01-12 13:35:01', NULL, '2026-01-12 13:38:50');
-INSERT INTO `gen_table_column` VALUES (2192, 136, 'INPUT_CONTENT', '模型输入内容', 'VARCHAR2', 'String', 'inputContent', '0', '0', '0', '1', '1', '1', '1', 'EQ', 'editor', NULL, 11, 'qModel', '2026-01-12 13:35:01', NULL, '2026-01-12 13:38:50');
-INSERT INTO `gen_table_column` VALUES (2193, 136, 'OUTPUT_CONTENT', '模型输出内容', 'VARCHAR2', 'String', 'outputContent', '0', '0', '0', '1', '1', '1', '1', 'EQ', 'editor', NULL, 12, 'qModel', '2026-01-12 13:35:01', NULL, '2026-01-12 13:38:50');
-INSERT INTO `gen_table_column` VALUES (2194, 136, 'VALID_FLAG', '是否有效 0：无效，1：有效', 'INTEGER', 'Boolean', 'validFlag', '0', '0', '0', '1', NULL, NULL, NULL, 'EQ', 'input', NULL, 13, 'qModel', '2026-01-12 13:35:01', NULL, '2026-01-12 13:38:50');
-INSERT INTO `gen_table_column` VALUES (2195, 136, 'DEL_FLAG', '删除标志 1：已删除，0：未删除', 'INTEGER', 'Boolean', 'delFlag', '0', '0', '0', '1', NULL, NULL, NULL, 'EQ', 'input', NULL, 14, 'qModel', '2026-01-12 13:35:01', NULL, '2026-01-12 13:38:50');
-INSERT INTO `gen_table_column` VALUES (2196, 136, 'CREATE_BY', '创建人', 'VARCHAR2', 'String', 'createBy', '0', '0', '0', '1', NULL, '1', NULL, 'EQ', 'input', NULL, 15, 'qModel', '2026-01-12 13:35:01', NULL, '2026-01-12 13:38:51');
-INSERT INTO `gen_table_column` VALUES (2197, 136, 'CREATOR_ID', '创建人id', 'INTEGER', 'Long', 'creatorId', '0', '0', '0', '1', NULL, NULL, NULL, 'EQ', 'input', NULL, 16, 'qModel', '2026-01-12 13:35:01', NULL, '2026-01-12 13:38:51');
-INSERT INTO `gen_table_column` VALUES (2198, 136, 'CREATE_TIME', '创建时间', 'DATETIME', 'Date', 'createTime', '0', '0', '0', '1', NULL, '1', '1', 'EQ', 'datetime', NULL, 17, 'qModel', '2026-01-12 13:35:01', NULL, '2026-01-12 13:38:51');
-INSERT INTO `gen_table_column` VALUES (2199, 136, 'UPDATE_BY', '更新人', 'VARCHAR2', 'String', 'updateBy', '0', '0', '0', '1', NULL, NULL, NULL, 'EQ', 'input', NULL, 18, 'qModel', '2026-01-12 13:35:02', NULL, '2026-01-12 13:38:51');
-INSERT INTO `gen_table_column` VALUES (2200, 136, 'UPDATOR_ID', '更新人id', 'INTEGER', 'Long', 'updatorId', '0', '0', '0', '1', NULL, NULL, NULL, 'EQ', 'input', NULL, 19, 'qModel', '2026-01-12 13:35:02', NULL, '2026-01-12 13:38:51');
-INSERT INTO `gen_table_column` VALUES (2201, 136, 'UPDATE_TIME', '更新时间', 'DATETIME', 'Date', 'updateTime', '0', '0', '0', '1', NULL, NULL, NULL, 'EQ', 'datetime', NULL, 20, 'qModel', '2026-01-12 13:35:02', NULL, '2026-01-12 13:38:51');
-INSERT INTO `gen_table_column` VALUES (2202, 136, 'REMARK', '备注', 'VARCHAR2', 'String', 'REMARK', '0', '0', '0', '1', '1', '1', NULL, 'EQ', 'input', NULL, 21, 'qModel', '2026-01-12 13:35:02', NULL, '2026-01-12 13:38:51');
-INSERT INTO `gen_table_column` VALUES (2203, 136, 'ADDRESS_ID', '文件或接口地址id', 'INTEGER', 'Long', 'addressId', '0', '0', '0', '1', '1', '1', '1', 'EQ', 'input', NULL, 22, 'qModel', '2026-01-12 13:35:02', NULL, '2026-01-12 13:38:51');
-INSERT INTO `gen_table_column` VALUES (2204, 136, 'ADDRESS_TYPE', '判断是文件的id还是地址的id，0:文件，1：接口', 'INTEGER', 'Long', 'addressType', '0', '0', '0', '1', '1', '1', '1', 'EQ', 'select', NULL, 23, 'qModel', '2026-01-12 13:35:02', NULL, '2026-01-12 13:38:52');
-INSERT INTO `gen_table_column` VALUES (2205, 136, 'MP_PROGRAMME_ID', '文件计算的历史方案id', 'INTEGER', 'Long', 'mpProgrammeId', '0', '0', '0', '1', '1', '1', '1', 'EQ', 'input', NULL, 24, 'qModel', '2026-01-12 13:35:02', NULL, '2026-01-12 13:38:52');
 
 
 -- ----------------------------
@@ -472,15 +431,6 @@ CREATE TABLE `system_logininfor` (
                                      PRIMARY KEY (`info_id`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 1505 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '系统访问记录' ROW_FORMAT = Dynamic;
 
--- ----------------------------
--- Records of system_logininfor
--- ----------------------------
-INSERT INTO `system_logininfor` VALUES (1499, 'qModel', '127.0.0.1', '内网IP', 'Chrome 15', 'Windows 10', '0', '登录成功', '2026-07-06 17:32:11');
-INSERT INTO `system_logininfor` VALUES (1500, 'qModel', '127.0.0.1', '内网IP', 'Chrome 15', 'Windows 10', '0', '登录成功', '2026-07-07 09:25:49');
-INSERT INTO `system_logininfor` VALUES (1501, 'qModel', '127.0.0.1', '内网IP', 'Chrome 14', 'Windows 10', '0', '登录成功', '2026-07-07 09:44:16');
-INSERT INTO `system_logininfor` VALUES (1502, 'qModel', '127.0.0.1', '内网IP', 'Chrome 14', 'Windows 10', '0', '登录成功', '2026-07-07 13:46:01');
-INSERT INTO `system_logininfor` VALUES (1503, 'qModel', '127.0.0.1', '内网IP', 'Chrome 14', 'Windows 10', '0', '登录成功', '2026-07-07 14:34:47');
-INSERT INTO `system_logininfor` VALUES (1504, 'qModel', '127.0.0.1', '内网IP', 'Chrome 14', 'Windows 10', '0', '登录成功', '2026-07-07 17:17:25');
 
 -- ----------------------------
 -- Table structure for system_menu
