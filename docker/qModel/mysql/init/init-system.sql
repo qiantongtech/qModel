@@ -67,7 +67,7 @@ CREATE TABLE `gen_table` (
   `update_time` datetime NULL DEFAULT NULL COMMENT '更新时间',
   `remark` varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '备注',
   PRIMARY KEY (`table_id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 137 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '代码生成业务表' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '代码生成业务表' ROW_FORMAT = Dynamic;
 
 
 -- ----------------------------
@@ -98,7 +98,7 @@ CREATE TABLE `gen_table_column` (
   `update_by` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '更新者',
   `update_time` datetime NULL DEFAULT NULL COMMENT '更新时间',
   PRIMARY KEY (`column_id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 2206 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '代码生成业务表字段' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '代码生成业务表字段' ROW_FORMAT = Dynamic;
 
 
 -- ----------------------------
@@ -117,7 +117,7 @@ CREATE TABLE `system_config` (
   `update_time` datetime NULL DEFAULT NULL COMMENT '更新时间',
   `remark` varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '备注',
   PRIMARY KEY (`config_id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 7 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '系统配置信息' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '系统配置信息' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of system_config
@@ -180,22 +180,37 @@ CREATE TABLE `system_dept` (
   `update_by` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '更新者',
   `update_time` datetime NULL DEFAULT NULL COMMENT '更新时间',
   PRIMARY KEY (`dept_id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 110 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '部门表' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 100 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '部门表' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of system_dept
 -- ----------------------------
-INSERT INTO `system_dept` VALUES (100, 0, '0', '千桐科技', 0, '千桐', '15888888888', 'bf@qq.com', '0', '0', 'admin', '2024-05-06 06:12:17', 'admin', '2024-10-29 16:51:32');
-INSERT INTO `system_dept` VALUES (101, 100, '0,100', '南京总公司', 1, '冰凤', '15888888888', 'bf@qq.com', '0', '0', 'admin', '2024-05-06 06:12:17', 'admin', '2024-11-19 13:46:24');
-INSERT INTO `system_dept` VALUES (102, 100, '0,100', '郑州分公司', 2, '冰凤', '15888888888', 'bf@qq.com', '0', '0', 'admin', '2024-05-06 06:12:17', 'admin', '2024-11-19 13:46:44');
-INSERT INTO `system_dept` VALUES (103, 101, '0,100,101', '研发部门', 1, '冰凤', '15888888888', 'bf@qq.com', '0', '0', 'admin', '2024-05-06 06:12:17', NULL, NULL);
-INSERT INTO `system_dept` VALUES (104, 101, '0,100,101', '市场部门', 2, '冰凤', '15888888888', 'bf@qq.com', '0', '0', 'admin', '2024-05-06 06:12:17', NULL, NULL);
-INSERT INTO `system_dept` VALUES (105, 101, '0,100,101', '测试部门', 3, '冰凤', '15888888888', 'bf@qq.com', '0', '0', 'admin', '2024-05-06 06:12:17', NULL, NULL);
-INSERT INTO `system_dept` VALUES (106, 101, '0,100,101', '财务部门', 4, '冰凤', '15888888888', 'bf@qq.com', '0', '0', 'admin', '2024-05-06 06:12:17', NULL, NULL);
-INSERT INTO `system_dept` VALUES (107, 101, '0,100,101', '运维部门', 5, '冰凤', '15888888888', 'bf@qq.com', '0', '0', 'admin', '2024-05-06 06:12:17', 'admin', '2024-11-26 15:50:19');
-INSERT INTO `system_dept` VALUES (108, 102, '0,100,102', '市场部门', 1, '冰凤', '15888888888', 'bf@qq.com', '0', '0', 'admin', '2024-05-06 06:12:17', NULL, NULL);
-INSERT INTO `system_dept` VALUES (109, 102, '0,100,102', '财务部门', 2, '冰凤', '15888888888', 'bf@qq.com', '0', '0', 'admin', '2024-05-06 06:12:17', NULL, NULL);
+-- 一级部门
+insert into system_dept values(100, 0, '0', '江苏千桐科技有限公司', 0, NULL, NULL, NULL, '0', '0', '吴同', sysdate(), '', null);
 
+-- 二级部门
+insert into system_dept values(101, 100, '0,100', '南京总公司', 1, NULL, NULL, NULL, '0', '0', '吴同', sysdate(), '', NULL);
+insert into system_dept values(102, 100, '0,100', '郑州分公司', 2, NULL, NULL, NULL, '0', '0', '吴同', sysdate(), '', NULL);
+insert into system_dept values(103, 100, '0,100', '合作伙伴', 3, NULL, NULL, NULL, '0', '0', '吴同', sysdate(), '', NULL);
+
+-- 三级部门 - 南京总公司
+insert into system_dept values(104, 101, '0,100,101', '研发部门', 1, NULL, NULL, NULL, '0', '0', '吴同', sysdate(), '', NULL);
+insert into system_dept values(105, 101, '0,100,101', '市场部门', 2, NULL, NULL, NULL, '0', '0', '吴同', sysdate(), '', NULL);
+insert into system_dept values(106, 101, '0,100,101', '测试部门', 3, NULL, NULL, NULL, '0', '0', '吴同', sysdate(), '', NULL);
+insert into system_dept values(107, 101, '0,100,101', '财务部门', 4, NULL, NULL, NULL, '0', '0', '吴同', sysdate(), '', NULL);
+insert into system_dept values(108, 101, '0,100,101', '运维部门', 5, NULL, NULL, NULL, '0', '0', '吴同', sysdate(), '', NULL);
+
+-- 三级部门 - 郑州分公司
+insert into system_dept values(109, 102, '0,100,102', '研发部门', 1, NULL, NULL, NULL, '0', '0', '吴同', sysdate(), '', NULL);
+insert into system_dept values(110, 102, '0,100,102', '市场部门', 2, NULL, NULL, NULL, '0', '0', '吴同', sysdate(), '', NULL);
+insert into system_dept values(111, 102, '0,100,102', '测试部门', 3, NULL, NULL, NULL, '0', '0', '吴同', sysdate(), '', NULL);
+insert into system_dept values(112, 102, '0,100,102', '财务部门', 4, NULL, NULL, NULL, '0', '0', '吴同', sysdate(), '', NULL);
+insert into system_dept values(113, 102, '0,100,102', '运维部门', 5, NULL, NULL, NULL, '0', '0', '吴同', sysdate(), '', NULL);
+
+-- 三级部门 - 合作伙伴
+insert into system_dept values(114, 103, '0,100,103', '研发部门', 1, NULL, NULL, NULL, '0', '0', '吴同', sysdate(), '', NULL);
+insert into system_dept values(115, 103, '0,100,103', '市场部门', 2, NULL, NULL, NULL, '0', '0', '吴同', sysdate(), '', NULL);
+insert into system_dept values(116, 103, '0,100,103', '测试部门', 3, NULL, NULL, NULL, '0', '0', '吴同', sysdate(), '', NULL);
 -- ----------------------------
 -- Table structure for system_dict_data
 -- ----------------------------
@@ -216,121 +231,12 @@ CREATE TABLE `system_dict_data` (
   `update_time` datetime NULL DEFAULT NULL COMMENT '更新时间',
   `remark` varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '备注',
   PRIMARY KEY (`dict_code`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 102 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '字典数据表' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '字典数据表' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of system_dict_data
 -- ----------------------------
-INSERT INTO `system_dict_data` VALUES (1, 1, '男', '0', 'sys_user_sex', NULL, NULL, 'Y', '0', 'admin', '2024-05-06 06:12:18', NULL, NULL, '性别男');
-INSERT INTO `system_dict_data` VALUES (2, 2, '女', '1', 'sys_user_sex', NULL, NULL, 'N', '0', 'admin', '2024-05-06 06:12:18', NULL, NULL, '性别女');
-INSERT INTO `system_dict_data` VALUES (3, 3, '未知', '2', 'sys_user_sex', NULL, NULL, 'N', '0', 'admin', '2024-05-06 06:12:18', NULL, NULL, '性别未知');
-INSERT INTO `system_dict_data` VALUES (4, 1, '显示', '0', 'sys_show_hide', NULL, 'primary', 'Y', '0', 'admin', '2024-05-06 06:12:18', NULL, NULL, '显示菜单');
-INSERT INTO `system_dict_data` VALUES (5, 2, '隐藏', '1', 'sys_show_hide', NULL, 'danger', 'N', '0', 'admin', '2024-05-06 06:12:18', NULL, NULL, '隐藏菜单');
-INSERT INTO `system_dict_data` VALUES (6, 1, '正常', '0', 'sys_normal_disable', NULL, 'primary', 'Y', '0', 'admin', '2024-05-06 06:12:18', NULL, NULL, '正常状态');
-INSERT INTO `system_dict_data` VALUES (7, 2, '停用', '1', 'sys_normal_disable', NULL, 'danger', 'N', '0', 'admin', '2024-05-06 06:12:18', NULL, NULL, '停用状态');
-INSERT INTO `system_dict_data` VALUES (8, 1, '正常', '0', 'sys_job_status', NULL, 'primary', 'Y', '0', 'admin', '2024-05-06 06:12:18', NULL, NULL, '正常状态');
-INSERT INTO `system_dict_data` VALUES (9, 2, '暂停', '1', 'sys_job_status', NULL, 'danger', 'N', '0', 'admin', '2024-05-06 06:12:18', NULL, NULL, '停用状态');
-INSERT INTO `system_dict_data` VALUES (10, 1, '默认', 'DEFAULT', 'sys_job_group', NULL, NULL, 'Y', '0', 'admin', '2024-05-06 06:12:18', NULL, NULL, '默认分组');
-INSERT INTO `system_dict_data` VALUES (11, 2, '系统', 'SYSTEM', 'sys_job_group', NULL, NULL, 'N', '0', 'admin', '2024-05-06 06:12:18', NULL, NULL, '系统分组');
-INSERT INTO `system_dict_data` VALUES (12, 1, '是', 'Y', 'sys_yes_no', NULL, 'primary', 'Y', '0', 'admin', '2024-05-06 06:12:18', NULL, NULL, '系统默认是');
-INSERT INTO `system_dict_data` VALUES (13, 2, '否', 'N', 'sys_yes_no', NULL, 'danger', 'N', '0', 'admin', '2024-05-06 06:12:18', NULL, NULL, '系统默认否');
-INSERT INTO `system_dict_data` VALUES (14, 1, '通知', '1', 'sys_notice_type', NULL, 'warning', 'Y', '0', 'admin', '2024-05-06 06:12:18', NULL, NULL, '通知');
-INSERT INTO `system_dict_data` VALUES (15, 2, '公告', '2', 'sys_notice_type', NULL, 'success', 'N', '0', 'admin', '2024-05-06 06:12:18', NULL, NULL, '公告');
-INSERT INTO `system_dict_data` VALUES (16, 1, '正常', '0', 'sys_notice_status', NULL, 'primary', 'Y', '0', 'admin', '2024-05-06 06:12:18', NULL, NULL, '正常状态');
-INSERT INTO `system_dict_data` VALUES (17, 2, '关闭', '1', 'sys_notice_status', NULL, 'danger', 'N', '0', 'admin', '2024-05-06 06:12:18', NULL, NULL, '关闭状态');
-INSERT INTO `system_dict_data` VALUES (18, 99, '其他', '0', 'sys_oper_type', NULL, 'info', 'N', '0', 'admin', '2024-05-06 06:12:18', NULL, NULL, '其他操作');
-INSERT INTO `system_dict_data` VALUES (19, 1, '新增', '1', 'sys_oper_type', NULL, 'info', 'N', '0', 'admin', '2024-05-06 06:12:18', NULL, NULL, '新增操作');
-INSERT INTO `system_dict_data` VALUES (20, 2, '修改', '2', 'sys_oper_type', NULL, 'info', 'N', '0', 'admin', '2024-05-06 06:12:18', NULL, NULL, '修改操作');
-INSERT INTO `system_dict_data` VALUES (21, 3, '删除', '3', 'sys_oper_type', NULL, 'danger', 'N', '0', 'admin', '2024-05-06 06:12:18', NULL, NULL, '删除操作');
-INSERT INTO `system_dict_data` VALUES (22, 4, '授权', '4', 'sys_oper_type', NULL, 'primary', 'N', '0', 'admin', '2024-05-06 06:12:18', NULL, NULL, '授权操作');
-INSERT INTO `system_dict_data` VALUES (23, 5, '导出', '5', 'sys_oper_type', NULL, 'warning', 'N', '0', 'admin', '2024-05-06 06:12:18', NULL, NULL, '导出操作');
-INSERT INTO `system_dict_data` VALUES (24, 6, '导入', '6', 'sys_oper_type', NULL, 'warning', 'N', '0', 'admin', '2024-05-06 06:12:18', NULL, NULL, '导入操作');
-INSERT INTO `system_dict_data` VALUES (25, 7, '强退', '7', 'sys_oper_type', NULL, 'danger', 'N', '0', 'admin', '2024-05-06 06:12:18', NULL, NULL, '强退操作');
-INSERT INTO `system_dict_data` VALUES (26, 8, '生成代码', '8', 'sys_oper_type', NULL, 'warning', 'N', '0', 'admin', '2024-05-06 06:12:18', NULL, NULL, '生成操作');
-INSERT INTO `system_dict_data` VALUES (27, 9, '清空数据', '9', 'sys_oper_type', NULL, 'danger', 'N', '0', 'admin', '2024-05-06 06:12:18', NULL, NULL, '清空操作');
-INSERT INTO `system_dict_data` VALUES (28, 1, '成功', '0', 'sys_common_status', NULL, 'primary', 'N', '0', 'admin', '2024-05-06 06:12:18', NULL, NULL, '正常状态');
-INSERT INTO `system_dict_data` VALUES (29, 2, '失败', '1', 'sys_common_status', NULL, 'danger', 'N', '0', 'admin', '2024-05-06 06:12:18', NULL, NULL, '停用状态');
-INSERT INTO `system_dict_data` VALUES (30, 0, 'Web', '0', 'auth_app_type', NULL, 'primary', 'N', '0', 'admin', '2024-08-31 14:27:22', 'admin', '2024-08-31 14:27:31', NULL);
-INSERT INTO `system_dict_data` VALUES (31, 1, 'App', '1', 'auth_app_type', NULL, 'info', 'N', '0', 'admin', '2024-08-31 14:27:47', NULL, NULL, NULL);
-INSERT INTO `system_dict_data` VALUES (32, 2, '小程序', '2', 'auth_app_type', NULL, 'warning', 'N', '0', 'admin', '2024-08-31 14:28:06', NULL, NULL, NULL);
-INSERT INTO `system_dict_data` VALUES (33, 1, '有效', '1', 'sys_valid', NULL, 'success', 'N', '0', 'admin', '2024-08-31 15:33:49', 'admin', '2024-08-31 15:34:08', NULL);
-INSERT INTO `system_dict_data` VALUES (34, 0, '无效', '0', 'sys_valid', NULL, 'danger', 'N', '0', 'admin', '2024-08-31 15:34:21', NULL, NULL, NULL);
-INSERT INTO `system_dict_data` VALUES (35, 0, '非公开', '0', 'auth_public', NULL, 'warning', 'N', '0', 'admin', '2024-08-31 15:36:48', NULL, NULL, NULL);
-INSERT INTO `system_dict_data` VALUES (36, 1, '公开', '1', 'auth_public', NULL, 'success', 'N', '0', 'admin', '2024-08-31 15:36:59', NULL, NULL, NULL);
-INSERT INTO `system_dict_data` VALUES (37, 0, '通知', '0', 'message_category', NULL, 'success', 'N', '0', 'admin', '2024-11-07 14:28:29', 'admin', '2024-12-19 14:19:58', NULL);
-INSERT INTO `system_dict_data` VALUES (38, 0, '重要', '0', 'message_level', NULL, 'default', 'N', '0', 'admin', '2024-11-07 14:28:42', NULL, NULL, NULL);
-INSERT INTO `system_dict_data` VALUES (39, 2, '审批', '2', 'message_category', NULL, 'warning', 'N', '0', 'admin', '2024-11-19 14:20:42', 'admin', '2024-11-19 16:55:16', NULL);
-INSERT INTO `system_dict_data` VALUES (41, 3, '其他', '3', 'message_category', NULL, 'info', 'N', '0', 'admin', '2024-11-19 14:21:12', 'admin', '2024-12-19 14:19:31', NULL);
-INSERT INTO `system_dict_data` VALUES (42, 1, '公告', '1', 'message_category', NULL, 'primary', 'N', '0', 'admin', '2024-11-19 16:54:18', 'admin', '2024-11-19 16:55:05', NULL);
-INSERT INTO `system_dict_data` VALUES (43, 0, '是', 'true', 'sys_boolean', NULL, 'success', 'N', '0', 'admin', '2024-12-03 15:46:40', NULL, NULL, NULL);
-INSERT INTO `system_dict_data` VALUES (44, 0, '否', 'false', 'sys_boolean', NULL, 'danger', 'N', '0', 'admin', '2024-12-03 15:46:57', NULL, NULL, NULL);
-INSERT INTO `system_dict_data` VALUES (45, 1, '一般', '1', 'message_level', NULL, 'info', 'N', '0', 'admin', '2024-12-25 16:21:09', NULL, NULL, NULL);
-INSERT INTO `system_dict_data` VALUES (46, 2, '警告', '2', 'message_level', NULL, 'warning', 'N', '0', 'admin', '2024-12-25 16:21:30', NULL, NULL, NULL);
-INSERT INTO `system_dict_data` VALUES (54, 1, '无关紧要(0-60)', '1', 'project_priority', NULL, 'info', 'N', '0', 'admin', '2025-01-03 13:20:35', 'admin', '2025-01-16 11:38:15', NULL);
-INSERT INTO `system_dict_data` VALUES (55, 2, '低(60-80)', '2', 'project_priority', NULL, 'info', 'N', '0', 'admin', '2025-01-03 13:20:56', 'bf2', '2025-01-21 10:50:59', NULL);
-INSERT INTO `system_dict_data` VALUES (56, 3, '中(80-90)', '3', 'project_priority', NULL, 'primary', 'N', '0', 'admin', '2025-01-03 13:21:11', 'bf2', '2025-01-21 10:51:35', NULL);
-INSERT INTO `system_dict_data` VALUES (57, 4, '高(90-100)', '4', 'project_priority', NULL, 'success', 'N', '0', 'admin', '2025-01-03 13:21:25', 'bf2', '2025-01-21 10:51:38', NULL);
-INSERT INTO `system_dict_data` VALUES (90, 0, '水量调度', '1', 'model_type', NULL, 'default', 'N', '0', 'admin', '2025-11-14 17:04:57', NULL, NULL, NULL);
-INSERT INTO `system_dict_data` VALUES (91, 1, '水动力', '2', 'model_type', NULL, 'default', 'N', '0', 'admin', '2025-11-14 17:05:06', NULL, NULL, NULL);
-INSERT INTO `system_dict_data` VALUES (92, 2, '设备安全', '3', 'model_type', NULL, 'default', 'N', '0', 'admin', '2025-11-14 17:05:13', NULL, NULL, NULL);
-INSERT INTO `system_dict_data` VALUES (93, 0, '单值', '0', 'model_input_param_type', NULL, 'default', 'N', '0', 'admin', '2025-11-17 04:24:22', 'admin', '2025-11-17 04:27:48', NULL);
-INSERT INTO `system_dict_data` VALUES (94, 1, '多列数值', '1', 'model_input_param_type', NULL, 'default', 'N', '0', 'admin', '2025-11-17 04:24:29', 'admin', '2025-11-17 04:27:53', NULL);
-INSERT INTO `system_dict_data` VALUES (95, 2, '文件', '2', 'model_input_param_type', NULL, 'default', 'N', '0', 'admin', '2025-11-17 04:24:35', 'admin', '2025-11-17 04:27:59', NULL);
-INSERT INTO `system_dict_data` VALUES (96, 0, '成功', '1', 'calculation_status', NULL, 'success', 'N', '0', '小桐', '2025-12-31 15:24:38', '小桐2', '2026-01-26 09:35:30', NULL);
-INSERT INTO `system_dict_data` VALUES (97, 0, '失败', '0', 'calculation_status', NULL, 'danger', 'N', '0', '小桐', '2025-12-31 15:24:46', '小桐2', '2026-01-26 09:35:37', NULL);
-INSERT INTO `system_dict_data` VALUES (98, 0, 'GET', '0', 'model_access_mode', NULL, 'primary', 'N', '0', '小桐', '2026-01-20 15:35:38', '超级管理员', '2026-10-27 00:00:00', NULL);
-INSERT INTO `system_dict_data` VALUES (99, 1, 'POST', '1', 'model_access_mode', NULL, 'warning', 'N', '0', '小桐', '2026-01-20 15:35:56', '超级管理员', '2026-10-27 00:00:00', NULL);
-INSERT INTO `system_dict_data` VALUES (100, 2, 'PUT', '2', 'model_access_mode', NULL, 'warning', 'N', '0', '小桐', '2026-01-20 15:36:08', '超级管理员', '2026-10-27 00:00:00', NULL);
-INSERT INTO `system_dict_data` VALUES (101, 3, 'DELETE', '3', 'model_access_mode', NULL, 'danger', 'N', '0', '小桐', '2026-01-20 15:36:20', '超级管理员', '2026-10-27 00:00:00', NULL);
-INSERT INTO `system_dict_data` VALUES (102, 0, 'API', 'API', 'model_access_type', NULL, 'warning', 'Y', '0', 'admin', '2026-07-07 14:14:33', 'qModel', '2026-07-16 09:42:13', 'API接口接入');
-INSERT INTO `system_dict_data` VALUES (103, 1, 'Python', 'PYTHON', 'model_access_type', NULL, 'info', 'N', '0', 'admin', '2026-07-07 14:14:33', '小桐', '2026-07-09 19:03:47', 'Python本地接入');
-INSERT INTO `system_dict_data` VALUES (104, 0, 'application/json', 'application/json', 'content_type', NULL, 'primary', 'Y', '0', 'admin', '2026-07-07 14:14:33', NULL, NULL, 'application/json');
-INSERT INTO `system_dict_data` VALUES (105, 1, 'application/x-www-form-urlencoded', 'application/x-www-form-urlencoded', 'content_type', NULL, 'warning', 'N', '0', 'admin', '2026-07-07 14:14:33', NULL, NULL, 'application/x-www-form-urlencoded');
-INSERT INTO `system_dict_data` VALUES (106, 2, 'multipart/form-data', 'multipart/form-data', 'content_type', NULL, 'info', 'N', '0', 'admin', '2026-07-07 14:14:33', NULL, NULL, 'multipart/form-data');
-INSERT INTO `system_dict_data` VALUES (107, 3, 'text/plain', 'text/plain', 'content_type', NULL, 'info', 'N', '0', 'admin', '2026-07-07 14:14:33', NULL, NULL, 'text/plain');
-INSERT INTO `system_dict_data` VALUES (108, 0, '无', 'NONE', 'auth_type', NULL, 'info', 'Y', '0', 'admin', '2026-07-07 14:14:33', NULL, NULL, '无鉴权');
-INSERT INTO `system_dict_data` VALUES (109, 1, '固定Token', 'FIXED', 'auth_type', NULL, 'primary', 'N', '0', 'admin', '2026-07-07 14:14:33', NULL, NULL, '固定Token/APIKey');
-INSERT INTO `system_dict_data` VALUES (110, 2, '动态Token', 'DYNAMIC', 'auth_type', NULL, 'warning', 'N', '0', 'admin', '2026-07-07 14:14:33', NULL, NULL, '动态Token API');
-INSERT INTO `system_dict_data` VALUES (111, 0, 'Header', 'Header', 'auth_inject_position', NULL, 'primary', 'Y', '0', 'admin', '2026-07-07 14:14:33', '小桐', '2026-07-10 11:08:03', '注入请求头');
-INSERT INTO `system_dict_data` VALUES (112, 1, 'Query', 'Query', 'auth_inject_position', NULL, 'warning', 'N', '0', 'admin', '2026-07-07 14:14:33', NULL, NULL, '注入URL参数');
-
-INSERT INTO `system_dict_data` VALUES (113, 0, '执行中', '0', 'invoke_history_status', NULL, 'primary', NULL, '0', 'qModel', '2026-07-15 13:52:58', 'qModel', '2026-07-15 13:54:15', NULL);
-INSERT INTO `system_dict_data` VALUES (114, 0, '成功', '1', 'invoke_history_status', NULL, 'success', NULL, '0', 'qModel', '2026-07-15 13:53:05', 'qModel', '2026-07-15 13:53:11', NULL);
-INSERT INTO `system_dict_data` VALUES (115, 0, '失败', '2', 'invoke_history_status', NULL, 'danger', NULL, '0', 'qModel', '2026-07-15 13:53:26', NULL, NULL, NULL);
-INSERT INTO `system_dict_data` VALUES (116, 3, '超时', '3', 'invoke_history_status', NULL, 'warning', NULL, '0', 'qModel', '2026-07-15 13:53:37', NULL, NULL, NULL);
-INSERT INTO `system_dict_data` VALUES (117, 4, '参数校验阻塞', '4', 'invoke_history_status', NULL, 'info', NULL, '0', 'qModel', '2026-07-15 13:53:59', NULL, NULL, NULL);
-INSERT INTO `system_dict_data` VALUES (118, 0, '在线测试', '1', 'invoke_type', NULL, 'primary', NULL, '0', 'qModel', '2026-07-15 13:56:42', 'qModel', '2026-07-15 13:56:48', NULL);
-INSERT INTO `system_dict_data` VALUES (119, 0, '网关服务', '2', 'invoke_type', NULL, 'info', NULL, '0', 'qModel', '2026-07-15 13:57:00', NULL, NULL, NULL);
-INSERT INTO `system_dict_data` VALUES (120, 0, '待执行', '0', 'build_status', NULL, 'primary', NULL, '0', 'qModel', '2026-07-15 14:32:14', NULL, NULL, NULL);
-INSERT INTO `system_dict_data` VALUES (121, 1, '执行中', '1', 'build_status', NULL, 'info', NULL, '0', 'qModel', '2026-07-15 14:32:30', NULL, NULL, NULL);
-INSERT INTO `system_dict_data` VALUES (122, 2, '成功', '2', 'build_status', NULL, 'success', NULL, '0', 'qModel', '2026-07-15 14:32:47', NULL, NULL, NULL);
-INSERT INTO `system_dict_data` VALUES (123, 3, '失败', '3', 'build_status', NULL, 'danger', NULL, '0', 'qModel', '2026-07-15 14:32:57', NULL, NULL, NULL);
-
-INSERT INTO `system_dict_data` VALUES (124, 0, '待执行', '0', 'model_calc_status', NULL, 'primary', NULL, '0', '超级管理员', '2026-07-23 15:18:55', '超级管理员', '2026-07-23 15:19:08', NULL);
-INSERT INTO `system_dict_data` VALUES (125, 1, '运行中', '1', 'model_calc_status', NULL, 'info', NULL, '0', '超级管理员', '2026-07-23 15:19:20', NULL, NULL, NULL);
-INSERT INTO `system_dict_data` VALUES (126, 2, '运行成功', '2', 'model_calc_status', NULL, 'success', NULL, '0', '超级管理员', '2026-07-23 15:19:30', '超级管理员', '2026-07-23 15:19:57', NULL);
-INSERT INTO `system_dict_data` VALUES (127, 3, '运行失败', '3', 'model_calc_status', NULL, 'danger', NULL, '0', '超级管理员', '2026-07-23 15:20:10', NULL, NULL, NULL);
-INSERT INTO `system_dict_data` VALUES (128, 4, '已终止', '4', 'model_calc_status', NULL, 'warning', NULL, '0', '超级管理员', '2026-07-23 15:20:24', NULL, NULL, NULL);
-INSERT INTO `system_dict_data` VALUES (129, 5, '排队中', '5', 'model_calc_status', NULL, 'primary', NULL, '0', '超级管理员', '2026-07-23 15:20:38', NULL, NULL, NULL);
-INSERT INTO `system_dict_data` VALUES (130, 0, '高', '1', 'model_calc_priority', NULL, 'primary', NULL, '0', '超级管理员', '2026-07-23 15:21:41', NULL, NULL, NULL);
-INSERT INTO `system_dict_data` VALUES (131, 2, '中', '2', 'model_calc_priority', NULL, 'info', NULL, '0', '超级管理员', '2026-07-23 15:21:53', NULL, NULL, NULL);
-INSERT INTO `system_dict_data` VALUES (132, 3, '低', '3', 'model_calc_priority', NULL, 'danger', NULL, '0', '超级管理员', '2026-07-23 15:22:06', NULL, NULL, NULL);
-
-INSERT INTO `system_dict_data` VALUES (133, 1, '待审批', '0', 'model_audit_status', NULL, 'primary', NULL, '0', '吴同', '2026-07-23 14:20:34', '吴同', '2026-07-23 14:21:07', NULL);
-INSERT INTO `system_dict_data` VALUES (134, 2, '审批通过', '1', 'model_audit_status', NULL, 'success', NULL, '0', '吴同', '2026-07-23 14:21:02', NULL, NULL, NULL);
-INSERT INTO `system_dict_data` VALUES (135, 3, '审批拒绝', '2', 'model_audit_status', NULL, 'danger', NULL, '0', '吴同', '2026-07-23 14:21:28', NULL, NULL, NULL);
-INSERT INTO `system_dict_data` VALUES (136, 1, '构建中', '0', 'model_status', NULL, 'primary', NULL, '0', '吴同', '2026-07-23 14:30:35', '吴同', '2026-07-24 17:40:09', NULL);
-INSERT INTO `system_dict_data` VALUES (137, 2, '构建成功', '1', 'model_status', NULL, 'default', NULL, '1', '吴同', '2026-07-23 14:30:51', '吴同', '2026-07-24 17:39:25', NULL);
-INSERT INTO `system_dict_data` VALUES (138, 3, '构建失败', '2', 'model_status', NULL, 'danger', NULL, '0', '吴同', '2026-07-23 14:31:05', '吴同', '2026-07-23 14:35:14', NULL);
-INSERT INTO `system_dict_data` VALUES (139, 4, '已接入', '3', 'model_status', NULL, 'primary', NULL, '0', '吴同', '2026-07-23 14:31:17', '吴同', '2026-07-23 14:37:06', NULL);
-INSERT INTO `system_dict_data` VALUES (140, 5, '审批中', '4', 'model_status', NULL, 'warning', NULL, '0', '吴同', '2026-07-23 14:31:27', '吴同', '2026-07-24 17:39:46', NULL);
-INSERT INTO `system_dict_data` VALUES (141, 6, '已发布', '5', 'model_status', NULL, 'success', NULL, '0', '吴同', '2026-07-23 14:31:39', '吴同', '2026-07-23 14:36:02', NULL);
-INSERT INTO `system_dict_data` VALUES (142, 7, '审批拒绝', '6', 'model_status', NULL, 'danger', NULL, '0', '吴同', '2026-07-23 14:31:52', '吴同', '2026-07-24 17:39:55', NULL);
-INSERT INTO `system_dict_data` VALUES (143, 8, '已下线', '7', 'model_status', NULL, 'info', NULL, '0', '吴同', '2026-07-23 14:32:12', '吴同', '2026-07-23 14:38:45', NULL);
-INSERT INTO `system_dict_data` VALUES (144, 1, '文件修改', '1', 'model_version_digest', NULL, 'info', NULL, '0', '超级管理员', '2026-08-14 14:23:28', '超级管理员', '2026-08-14 14:25:59', NULL);
-INSERT INTO `system_dict_data` VALUES (145, 2, '参数修改', '2', 'model_version_digest', NULL, 'success', NULL, '0', '超级管理员', '2026-08-14 14:24:00', '超级管理员', '2026-08-14 14:26:07', NULL);
-INSERT INTO `system_dict_data` VALUES (146, 3, '鉴权修改', '3', 'model_version_digest', NULL, 'warning', NULL, '0', '超级管理员', '2026-08-14 14:24:25', '超级管理员', '2026-08-14 14:26:16', NULL);
-INSERT INTO `system_dict_data` VALUES (147, 4, '地址修改', '4', 'model_version_digest', NULL, 'danger', NULL, '0', '超级管理员', '2026-08-14 14:25:40', '超级管理员', '2026-08-14 14:26:20', NULL);
+-- TODO 字典数据请从Latest拷贝
 
 -- ----------------------------
 -- Table structure for system_dict_type
@@ -348,44 +254,12 @@ CREATE TABLE `system_dict_type` (
   `remark` varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '备注',
   PRIMARY KEY (`dict_id`) USING BTREE,
   UNIQUE INDEX `dict_type`(`dict_type` ASC) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 31 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '字典类型表' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '字典类型表' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of system_dict_type
 -- ----------------------------
-INSERT INTO `system_dict_type` VALUES (1, '用户性别', 'sys_user_sex', '0', 'admin', '2024-05-06 06:12:18', 'admin', '2024-11-26 15:51:04', '用户性别列表');
-INSERT INTO `system_dict_type` VALUES (2, '菜单状态', 'sys_show_hide', '0', 'admin', '2024-05-06 06:12:18', NULL, NULL, '菜单状态列表');
-INSERT INTO `system_dict_type` VALUES (3, '系统开关', 'sys_normal_disable', '0', 'admin', '2024-05-06 06:12:18', NULL, NULL, '系统开关列表');
-INSERT INTO `system_dict_type` VALUES (4, '任务状态', 'sys_job_status', '0', 'admin', '2024-05-06 06:12:18', NULL, NULL, '任务状态列表');
-INSERT INTO `system_dict_type` VALUES (5, '任务分组', 'sys_job_group', '0', 'admin', '2024-05-06 06:12:18', NULL, NULL, '任务分组列表');
-INSERT INTO `system_dict_type` VALUES (6, '系统是否', 'sys_yes_no', '0', 'admin', '2024-05-06 06:12:18', NULL, NULL, '系统是否列表');
-INSERT INTO `system_dict_type` VALUES (7, '通知类型', 'sys_notice_type', '0', 'admin', '2024-05-06 06:12:18', NULL, NULL, '通知类型列表');
-INSERT INTO `system_dict_type` VALUES (8, '通知状态', 'sys_notice_status', '0', 'admin', '2024-05-06 06:12:18', NULL, NULL, '通知状态列表');
-INSERT INTO `system_dict_type` VALUES (9, '操作类型', 'sys_oper_type', '0', 'admin', '2024-05-06 06:12:18', NULL, NULL, '操作类型列表');
-INSERT INTO `system_dict_type` VALUES (10, '系统状态', 'sys_common_status', '0', 'admin', '2024-05-06 06:12:18', NULL, NULL, '登录状态列表');
-INSERT INTO `system_dict_type` VALUES (11, '应用类型', 'auth_app_type', '0', 'admin', '2024-08-31 14:27:03', NULL, NULL, '应用类型列表');
-INSERT INTO `system_dict_type` VALUES (12, '是否有效', 'sys_valid', '0', 'admin', '2024-08-31 15:33:08', 'admin', '2024-08-31 15:36:13', '系统有效列表');
-INSERT INTO `system_dict_type` VALUES (13, '是否公开', 'auth_public', '0', 'admin', '2024-08-31 15:35:49', 'admin', '2024-08-31 15:36:00', '应用是否公开');
-INSERT INTO `system_dict_type` VALUES (14, '消息类型', 'message_category', '0', 'admin', '2024-11-07 14:27:58', NULL, NULL, NULL);
-INSERT INTO `system_dict_type` VALUES (15, '消息等级', 'message_level', '0', 'admin', '2024-11-07 14:28:09', NULL, NULL, NULL);
-INSERT INTO `system_dict_type` VALUES (16, '布尔值字典', 'sys_boolean', '0', 'admin', '2024-12-03 15:46:14', NULL, NULL, NULL);
-INSERT INTO `system_dict_type` VALUES (19, '优先级', 'project_priority', '0', 'admin', '2025-01-03 13:20:13', NULL, NULL, NULL);
-INSERT INTO `system_dict_type` VALUES (27, '模型类型', 'model_type', '0', 'admin', '2025-11-14 17:04:22', NULL, NULL, NULL);
-INSERT INTO `system_dict_type` VALUES (28, '模型输入类型', 'model_input_param_type', '0', 'admin', '2025-11-17 04:24:11', NULL, NULL, NULL);
-INSERT INTO `system_dict_type` VALUES (29, '模型计算状态', 'calculation_status', '0', '小桐', '2025-12-31 15:24:22', NULL, NULL, NULL);
-INSERT INTO `system_dict_type` VALUES (30, '请求方式', 'model_access_mode', '0', '小桐', '2026-01-20 15:35:11', NULL, NULL, '模型API接口请求方式');
-INSERT INTO `system_dict_type` VALUES (31, '模型接入方式', 'model_access_type', '0', 'admin', '2026-07-07 14:14:22', NULL, NULL, '模型接入方式');
-INSERT INTO `system_dict_type` VALUES (32, '请求内容类型', 'content_type', '0', 'admin', '2026-07-07 14:14:22', NULL, NULL, '模型API请求内容类型');
-INSERT INTO `system_dict_type` VALUES (33, '鉴权类型', 'auth_type', '0', 'admin', '2026-07-07 14:14:22', NULL, NULL, '模型API鉴权类型');
-INSERT INTO `system_dict_type` VALUES (34, '鉴权注入位置', 'auth_inject_position', '0', 'admin', '2026-07-07 14:14:22', NULL, NULL, '鉴权Token注入位置');
-INSERT INTO `system_dict_type` VALUES (35, '模型调用历史状态', 'invoke_history_status', '0', 'qModel', '2026-07-15 13:52:32', NULL, NULL, '0=执行中，1=成功，2=失败，3=超时，4=参数校验阻塞');
-INSERT INTO `system_dict_type` VALUES (36, '模型调用方式', 'invoke_type', '0', 'qModel', '2026-07-15 13:56:22', NULL, NULL, '调用类型;1=在线测试，2=网关服务');
-INSERT INTO `system_dict_type` VALUES (37, '依赖、容器构建状态', 'build_status', '0', 'qModel', '2026-07-15 14:31:50', NULL, NULL, '构建状态;构建状态：0=待执行，1=执行中，2=成功，3=失败');
-INSERT INTO `system_dict_type` VALUES (38, '模型计算状态', 'model_calc_status', '0', '超级管理员', '2026-07-23 15:18:37', NULL, NULL, '计算状态:0-待执行,1-运行中,2-计算成功,3-计算失败,4-已终止,5-排队中');
-INSERT INTO `system_dict_type` VALUES (39, '模型计算优先级', 'model_calc_priority', '0', '超级管理员', '2026-07-23 15:21:17', NULL, NULL, '优先级:1-高,2-中,3-低');
-INSERT INTO `system_dict_type` VALUES (40, '模型审批状态', 'model_audit_status', '0', '吴同', '2026-07-23 14:13:44', NULL, NULL, NULL);
-INSERT INTO `system_dict_type` VALUES (41, '模型状态', 'model_status', '0', '吴同', '2026-07-23 14:29:10', NULL, NULL, NULL);
-INSERT INTO `system_dict_type` VALUES (42, '模型版本摘要', 'model_version_digest', '0', '超级管理员', '2026-08-14 14:22:46', NULL, NULL, NULL);
+-- TODO 字典数据请从Latest拷贝
 
 -- ----------------------------
 -- Table structure for system_job
@@ -406,7 +280,7 @@ CREATE TABLE `system_job` (
   `update_time` datetime NULL DEFAULT NULL COMMENT '更新时间',
   `remark` varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '备注信息',
   PRIMARY KEY (`job_id`, `job_name`, `job_group`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 4 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '定时任务调度表' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '定时任务调度表' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of system_job
@@ -429,7 +303,7 @@ CREATE TABLE `system_job_log` (
   `exception_info` varchar(2000) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '异常信息',
   `create_time` datetime NULL DEFAULT NULL COMMENT '创建时间',
   PRIMARY KEY (`job_log_id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 168 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '定时任务调度日志表' ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '定时任务调度日志表' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of system_job_log
@@ -450,7 +324,7 @@ CREATE TABLE `system_logininfor` (
   `msg` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '提示消息',
   `login_time` datetime NULL DEFAULT NULL COMMENT '访问时间',
   PRIMARY KEY (`info_id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 1505 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '系统访问记录' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '系统访问记录' ROW_FORMAT = Dynamic;
 
 
 -- ----------------------------
@@ -479,213 +353,12 @@ CREATE TABLE `system_menu`  (
                                 `update_time` datetime NULL DEFAULT NULL COMMENT '更新时间',
                                 `remark` varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '备注',
                                 PRIMARY KEY (`menu_id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 2317 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '菜单权限表' ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 2000 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '菜单权限表' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of system_menu
 -- ----------------------------
-INSERT INTO `system_menu` VALUES (1, '系统管理', 0, 400, 'system', NULL, NULL, 1, 0, NULL, 'M', '0', '0', NULL, 'system-m', '吴同', '2024-05-06 06:12:17', '吴同', '2025-12-31 10:03:45', '系统管理目录');
-INSERT INTO `system_menu` VALUES (2, '系统监控', 0, 700, 'monitor', NULL, NULL, 1, 0, NULL, 'M', '0', '0', NULL, 'system-watch', '吴同', '2024-05-06 06:12:17', '吴同', '2025-12-31 10:04:15', '系统监控目录');
-INSERT INTO `system_menu` VALUES (3, '系统工具', 0, 600, 'tool', NULL, NULL, 1, 0, NULL, 'M', '0', '0', '', 'system-tool', '吴同', '2024-05-06 06:12:17', '吴同', '2026-07-17 11:58:09', '系统工具目录');
-INSERT INTO `system_menu` VALUES (100, '用户管理', 1, 1, 'user', 'system/system/user/index', NULL, 1, 0, NULL, 'C', '0', '0', 'system:user:list', 'user', 'admin', '2024-05-06 06:12:17', 'admin', '2025-02-27 11:18:13', '用户管理菜单');
-INSERT INTO `system_menu` VALUES (101, '角色管理', 1, 2, 'role', 'system/system/role/index', NULL, 1, 0, NULL, 'C', '0', '0', 'system:role:list', 'peoples', 'admin', '2024-05-06 06:12:17', 'admin', '2025-02-27 11:18:36', '角色管理菜单');
-INSERT INTO `system_menu` VALUES (102, '菜单管理', 1, 3, 'menu', 'system/system/menu/index', NULL, 1, 0, NULL, 'C', '0', '0', 'system:menu:list', 'tree-table', 'admin', '2024-05-06 06:12:17', 'qModel', '2026-03-16 15:44:30', '菜单管理菜单');
-INSERT INTO `system_menu` VALUES (103, '部门管理', 1, 4, 'dept', 'system/system/dept/index', NULL, 1, 0, NULL, 'C', '0', '0', 'system:dept:list', 'tree', 'admin', '2024-05-06 06:12:17', 'admin', '2025-02-27 11:18:49', '部门管理菜单');
-INSERT INTO `system_menu` VALUES (104, '岗位管理', 1, 5, 'post', 'system/system/post/index', NULL, 1, 0, NULL, 'C', '0', '0', 'system:post:list', 'post', 'admin', '2024-05-06 06:12:17', NULL, NULL, '岗位管理菜单');
-INSERT INTO `system_menu` VALUES (105, '字典管理', 1, 6, 'dict', 'system/system/dict/index', NULL, 1, 0, NULL, 'C', '0', '0', 'system:dict:list', 'dict', 'admin', '2024-05-06 06:12:17', 'qModel', '2026-07-15 13:51:02', '字典管理菜单');
-INSERT INTO `system_menu` VALUES (106, '参数设置', 1, 7, 'config', 'system/system/config/index', NULL, 1, 0, NULL, 'C', '0', '0', 'system:config:list', 'edit', 'admin', '2024-05-06 06:12:17', '超级管理员', '2026-07-21 10:22:19', '参数设置菜单');
-INSERT INTO `system_menu` VALUES (107, '通知公告', 1, 8, 'notice', 'system/system/notice/index', NULL, 1, 0, NULL, 'C', '0', '0', 'system:notice:list', 'message', 'admin', '2024-05-06 06:12:17', NULL, NULL, '通知公告菜单');
-INSERT INTO `system_menu` VALUES (108, '日志管理', 1, 9, 'log', NULL, NULL, 1, 0, NULL, 'M', '0', '0', NULL, 'log', 'admin', '2024-05-06 06:12:17', NULL, NULL, '日志管理菜单');
-INSERT INTO `system_menu` VALUES (109, '在线用户', 2, 1, 'online', 'system/monitor/online/index', NULL, 1, 0, NULL, 'C', '0', '0', 'monitor:online:list', 'online', 'admin', '2024-05-06 06:12:17', NULL, NULL, '在线用户菜单');
-INSERT INTO `system_menu` VALUES (110, '定时任务', 2, 2, 'job', 'system/monitor/job/index', NULL, 1, 0, NULL, 'C', '0', '0', 'monitor:job:list', 'job', 'admin', '2024-05-06 06:12:17', 'qModel', '2026-07-07 17:23:25', '定时任务菜单');
-INSERT INTO `system_menu` VALUES (111, '数据监控', 2, 3, 'druid', 'system/monitor/druid/index', NULL, 1, 0, NULL, 'C', '0', '0', 'monitor:druid:list', 'druid', 'admin', '2024-05-06 06:12:17', 'qModel', '2026-07-20 15:12:49', '数据监控菜单');
-INSERT INTO `system_menu` VALUES (112, '服务监控', 2, 4, 'server', 'system/monitor/server/index', NULL, 1, 0, NULL, 'C', '0', '0', 'monitor:server:list', 'server', 'admin', '2024-05-06 06:12:17', NULL, NULL, '服务监控菜单');
-INSERT INTO `system_menu` VALUES (113, '缓存监控', 2, 5, 'cache', 'system/monitor/cache/index', NULL, 1, 0, NULL, 'C', '0', '0', 'monitor:cache:list', 'redis', 'admin', '2024-05-06 06:12:17', NULL, NULL, '缓存监控菜单');
-INSERT INTO `system_menu` VALUES (114, '缓存列表', 2, 6, 'cacheList', 'system/monitor/cache/list', NULL, 1, 0, NULL, 'C', '0', '0', 'monitor:cache:list', 'redis-list', 'admin', '2024-05-06 06:12:17', NULL, NULL, '缓存列表菜单');
-INSERT INTO `system_menu` VALUES (115, '表单构建', 3, 1, 'build', 'system/tool/build/index', NULL, 1, 0, NULL, 'C', '1', '1', 'tool:build:list', 'build', 'admin', '2024-05-06 06:12:17', 'qModel', '2026-03-16 13:34:05', '表单构建菜单');
-INSERT INTO `system_menu` VALUES (116, '代码生成', 3, 2, 'gen', 'system/tool/gen/index', NULL, 1, 0, NULL, 'C', '0', '0', 'tool:gen:list', 'code', 'admin', '2024-05-06 06:12:17', 'qModel', '2026-07-17 11:58:30', '代码生成菜单');
-INSERT INTO `system_menu` VALUES (117, '系统接口', 3, 3, 'swagger', 'system/tool/swagger/index', NULL, 1, 0, NULL, 'C', '1', '0', 'tool:swagger:list', 'swagger', 'admin', '2024-05-06 06:12:17', 'qModel', '2026-03-16 13:34:54', '系统接口菜单');
-INSERT INTO `system_menu` VALUES (500, '操作日志', 108, 1, 'operlog', 'system/monitor/operlog/index', NULL, 1, 0, NULL, 'C', '0', '0', 'monitor:operlog:list', 'form', 'admin', '2024-05-06 06:12:17', NULL, NULL, '操作日志菜单');
-INSERT INTO `system_menu` VALUES (501, '登录日志', 108, 2, 'logininfor', 'system/monitor/logininfor/index', NULL, 1, 0, NULL, 'C', '0', '0', 'monitor:logininfor:list', 'logininfor', 'admin', '2024-05-06 06:12:17', NULL, NULL, '登录日志菜单');
-INSERT INTO `system_menu` VALUES (1000, '用户查询', 100, 1, NULL, NULL, NULL, 1, 0, NULL, 'F', '0', '0', 'system:user:query', '#', 'admin', '2024-05-06 06:12:17', NULL, NULL, NULL);
-INSERT INTO `system_menu` VALUES (1001, '用户新增', 100, 2, NULL, NULL, NULL, 1, 0, NULL, 'F', '0', '0', 'system:user:add', '#', 'admin', '2024-05-06 06:12:17', NULL, NULL, NULL);
-INSERT INTO `system_menu` VALUES (1002, '用户修改', 100, 3, NULL, NULL, NULL, 1, 0, NULL, 'F', '0', '0', 'system:user:edit', '#', 'admin', '2024-05-06 06:12:17', NULL, NULL, NULL);
-INSERT INTO `system_menu` VALUES (1003, '用户删除', 100, 4, NULL, NULL, NULL, 1, 0, NULL, 'F', '0', '0', 'system:user:remove', '#', 'admin', '2024-05-06 06:12:17', NULL, NULL, NULL);
-INSERT INTO `system_menu` VALUES (1004, '用户导出', 100, 5, NULL, NULL, NULL, 1, 0, NULL, 'F', '0', '0', 'system:user:export', '#', 'admin', '2024-05-06 06:12:17', NULL, NULL, NULL);
-INSERT INTO `system_menu` VALUES (1005, '用户导入', 100, 6, NULL, NULL, NULL, 1, 0, NULL, 'F', '0', '0', 'system:user:import', '#', 'admin', '2024-05-06 06:12:17', NULL, NULL, NULL);
-INSERT INTO `system_menu` VALUES (1006, '重置密码', 100, 7, NULL, NULL, NULL, 1, 0, NULL, 'F', '0', '0', 'system:user:resetPwd', '#', 'admin', '2024-05-06 06:12:17', NULL, NULL, NULL);
-INSERT INTO `system_menu` VALUES (1007, '角色查询', 101, 1, NULL, NULL, NULL, 1, 0, NULL, 'F', '0', '0', 'system:role:query', '#', 'admin', '2024-05-06 06:12:17', NULL, NULL, NULL);
-INSERT INTO `system_menu` VALUES (1008, '角色新增', 101, 2, NULL, NULL, NULL, 1, 0, NULL, 'F', '0', '0', 'system:role:add', '#', 'admin', '2024-05-06 06:12:17', NULL, NULL, NULL);
-INSERT INTO `system_menu` VALUES (1009, '角色修改', 101, 3, NULL, NULL, NULL, 1, 0, NULL, 'F', '0', '0', 'system:role:edit', '#', 'admin', '2024-05-06 06:12:17', NULL, NULL, NULL);
-INSERT INTO `system_menu` VALUES (1010, '角色删除', 101, 4, NULL, NULL, NULL, 1, 0, NULL, 'F', '0', '0', 'system:role:remove', '#', 'admin', '2024-05-06 06:12:17', NULL, NULL, NULL);
-INSERT INTO `system_menu` VALUES (1011, '角色导出', 101, 5, NULL, NULL, NULL, 1, 0, NULL, 'F', '0', '0', 'system:role:export', '#', 'admin', '2024-05-06 06:12:17', NULL, NULL, NULL);
-INSERT INTO `system_menu` VALUES (1012, '菜单查询', 102, 1, NULL, NULL, NULL, 1, 0, NULL, 'F', '0', '0', 'system:menu:query', '#', 'admin', '2024-05-06 06:12:17', NULL, NULL, NULL);
-INSERT INTO `system_menu` VALUES (1013, '菜单新增', 102, 2, NULL, NULL, NULL, 1, 0, NULL, 'F', '0', '0', 'system:menu:add', '#', 'admin', '2024-05-06 06:12:17', NULL, NULL, NULL);
-INSERT INTO `system_menu` VALUES (1014, '菜单修改', 102, 3, NULL, NULL, NULL, 1, 0, NULL, 'F', '0', '0', 'system:menu:edit', '#', 'admin', '2024-05-06 06:12:17', NULL, NULL, NULL);
-INSERT INTO `system_menu` VALUES (1015, '菜单删除', 102, 4, NULL, NULL, NULL, 1, 0, NULL, 'F', '0', '0', 'system:menu:remove', '#', 'admin', '2024-05-06 06:12:17', NULL, NULL, NULL);
-INSERT INTO `system_menu` VALUES (1016, '部门查询', 103, 1, NULL, NULL, NULL, 1, 0, NULL, 'F', '0', '0', 'system:dept:query', '#', 'admin', '2024-05-06 06:12:17', NULL, NULL, NULL);
-INSERT INTO `system_menu` VALUES (1017, '部门新增', 103, 2, NULL, NULL, NULL, 1, 0, NULL, 'F', '0', '0', 'system:dept:add', '#', 'admin', '2024-05-06 06:12:17', NULL, NULL, NULL);
-INSERT INTO `system_menu` VALUES (1018, '部门修改', 103, 3, NULL, NULL, NULL, 1, 0, NULL, 'F', '0', '0', 'system:dept:edit', '#', 'admin', '2024-05-06 06:12:17', NULL, NULL, NULL);
-INSERT INTO `system_menu` VALUES (1019, '部门删除', 103, 4, NULL, NULL, NULL, 1, 0, NULL, 'F', '0', '0', 'system:dept:remove', '#', 'admin', '2024-05-06 06:12:17', NULL, NULL, NULL);
-INSERT INTO `system_menu` VALUES (1020, '岗位查询', 104, 1, NULL, NULL, NULL, 1, 0, NULL, 'F', '0', '0', 'system:post:query', '#', 'admin', '2024-05-06 06:12:17', NULL, NULL, NULL);
-INSERT INTO `system_menu` VALUES (1021, '岗位新增', 104, 2, NULL, NULL, NULL, 1, 0, NULL, 'F', '0', '0', 'system:post:add', '#', 'admin', '2024-05-06 06:12:17', NULL, NULL, NULL);
-INSERT INTO `system_menu` VALUES (1022, '岗位修改', 104, 3, NULL, NULL, NULL, 1, 0, NULL, 'F', '0', '0', 'system:post:edit', '#', 'admin', '2024-05-06 06:12:17', NULL, NULL, NULL);
-INSERT INTO `system_menu` VALUES (1023, '岗位删除', 104, 4, NULL, NULL, NULL, 1, 0, NULL, 'F', '0', '0', 'system:post:remove', '#', 'admin', '2024-05-06 06:12:17', NULL, NULL, NULL);
-INSERT INTO `system_menu` VALUES (1024, '岗位导出', 104, 5, NULL, NULL, NULL, 1, 0, NULL, 'F', '0', '0', 'system:post:export', '#', 'admin', '2024-05-06 06:12:17', NULL, NULL, NULL);
-INSERT INTO `system_menu` VALUES (1025, '字典查询', 105, 1, '#', NULL, NULL, 1, 0, NULL, 'F', '0', '0', 'system:dict:query', '#', 'admin', '2024-05-06 06:12:17', NULL, NULL, NULL);
-INSERT INTO `system_menu` VALUES (1026, '字典新增', 105, 2, '#', NULL, NULL, 1, 0, NULL, 'F', '0', '0', 'system:dict:add', '#', 'admin', '2024-05-06 06:12:17', NULL, NULL, NULL);
-INSERT INTO `system_menu` VALUES (1027, '字典修改', 105, 3, '#', NULL, NULL, 1, 0, NULL, 'F', '0', '0', 'system:dict:edit', '#', 'admin', '2024-05-06 06:12:17', NULL, NULL, NULL);
-INSERT INTO `system_menu` VALUES (1028, '字典删除', 105, 4, '#', NULL, NULL, 1, 0, NULL, 'F', '0', '0', 'system:dict:remove', '#', 'admin', '2024-05-06 06:12:17', NULL, NULL, NULL);
-INSERT INTO `system_menu` VALUES (1029, '字典导出', 105, 5, '#', NULL, NULL, 1, 0, NULL, 'F', '0', '0', 'system:dict:export', '#', 'admin', '2024-05-06 06:12:17', NULL, NULL, NULL);
-INSERT INTO `system_menu` VALUES (1030, '参数查询', 106, 1, '#', NULL, NULL, 1, 0, NULL, 'F', '0', '0', 'system:config:query', '#', 'admin', '2024-05-06 06:12:17', NULL, NULL, NULL);
-INSERT INTO `system_menu` VALUES (1031, '参数新增', 106, 2, '#', NULL, NULL, 1, 0, NULL, 'F', '0', '0', 'system:config:add', '#', 'admin', '2024-05-06 06:12:17', NULL, NULL, NULL);
-INSERT INTO `system_menu` VALUES (1032, '参数修改', 106, 3, '#', NULL, NULL, 1, 0, NULL, 'F', '0', '0', 'system:config:edit', '#', 'admin', '2024-05-06 06:12:17', NULL, NULL, NULL);
-INSERT INTO `system_menu` VALUES (1033, '参数删除', 106, 4, '#', NULL, NULL, 1, 0, NULL, 'F', '0', '0', 'system:config:remove', '#', 'admin', '2024-05-06 06:12:17', NULL, NULL, NULL);
-INSERT INTO `system_menu` VALUES (1034, '参数导出', 106, 5, '#', NULL, NULL, 1, 0, NULL, 'F', '0', '0', 'system:config:export', '#', 'admin', '2024-05-06 06:12:17', NULL, NULL, NULL);
-INSERT INTO `system_menu` VALUES (1035, '公告查询', 107, 1, '#', NULL, NULL, 1, 0, NULL, 'F', '0', '0', 'system:notice:query', '#', 'admin', '2024-05-06 06:12:17', NULL, NULL, NULL);
-INSERT INTO `system_menu` VALUES (1036, '公告新增', 107, 2, '#', NULL, NULL, 1, 0, NULL, 'F', '0', '0', 'system:notice:add', '#', 'admin', '2024-05-06 06:12:17', NULL, NULL, NULL);
-INSERT INTO `system_menu` VALUES (1037, '公告修改', 107, 3, '#', NULL, NULL, 1, 0, NULL, 'F', '0', '0', 'system:notice:edit', '#', 'admin', '2024-05-06 06:12:17', NULL, NULL, NULL);
-INSERT INTO `system_menu` VALUES (1038, '公告删除', 107, 4, '#', NULL, NULL, 1, 0, NULL, 'F', '0', '0', 'system:notice:remove', '#', 'admin', '2024-05-06 06:12:17', NULL, NULL, NULL);
-INSERT INTO `system_menu` VALUES (1039, '操作查询', 500, 1, '#', NULL, NULL, 1, 0, NULL, 'F', '0', '0', 'monitor:operlog:query', '#', 'admin', '2024-05-06 06:12:17', NULL, NULL, NULL);
-INSERT INTO `system_menu` VALUES (1040, '操作删除', 500, 2, '#', NULL, NULL, 1, 0, NULL, 'F', '0', '0', 'monitor:operlog:remove', '#', 'admin', '2024-05-06 06:12:17', NULL, NULL, NULL);
-INSERT INTO `system_menu` VALUES (1041, '日志导出', 500, 3, '#', NULL, NULL, 1, 0, NULL, 'F', '0', '0', 'monitor:operlog:export', '#', 'admin', '2024-05-06 06:12:17', NULL, NULL, NULL);
-INSERT INTO `system_menu` VALUES (1042, '登录查询', 501, 1, '#', NULL, NULL, 1, 0, NULL, 'F', '0', '0', 'monitor:logininfor:query', '#', 'admin', '2024-05-06 06:12:17', NULL, NULL, NULL);
-INSERT INTO `system_menu` VALUES (1043, '登录删除', 501, 2, '#', NULL, NULL, 1, 0, NULL, 'F', '0', '0', 'monitor:logininfor:remove', '#', 'admin', '2024-05-06 06:12:17', NULL, NULL, NULL);
-INSERT INTO `system_menu` VALUES (1044, '日志导出', 501, 3, '#', NULL, NULL, 1, 0, NULL, 'F', '0', '0', 'monitor:logininfor:export', '#', 'admin', '2024-05-06 06:12:17', NULL, NULL, NULL);
-INSERT INTO `system_menu` VALUES (1045, '账户解锁', 501, 4, '#', NULL, NULL, 1, 0, NULL, 'F', '0', '0', 'monitor:logininfor:unlock', '#', 'admin', '2024-05-06 06:12:17', NULL, NULL, NULL);
-INSERT INTO `system_menu` VALUES (1046, '在线查询', 109, 1, '#', NULL, NULL, 1, 0, NULL, 'F', '0', '0', 'monitor:online:query', '#', 'admin', '2024-05-06 06:12:17', NULL, NULL, NULL);
-INSERT INTO `system_menu` VALUES (1047, '批量强退', 109, 2, '#', NULL, NULL, 1, 0, NULL, 'F', '0', '0', 'monitor:online:batchLogout', '#', 'admin', '2024-05-06 06:12:17', NULL, NULL, NULL);
-INSERT INTO `system_menu` VALUES (1048, '单条强退', 109, 3, '#', NULL, NULL, 1, 0, NULL, 'F', '0', '0', 'monitor:online:forceLogout', '#', 'admin', '2024-05-06 06:12:17', NULL, NULL, NULL);
-INSERT INTO `system_menu` VALUES (1049, '任务查询', 110, 1, '#', NULL, NULL, 1, 0, NULL, 'F', '0', '0', 'monitor:job:query', '#', 'admin', '2024-05-06 06:12:17', NULL, NULL, NULL);
-INSERT INTO `system_menu` VALUES (1050, '任务新增', 110, 2, '#', NULL, NULL, 1, 0, NULL, 'F', '0', '0', 'monitor:job:add', '#', 'admin', '2024-05-06 06:12:17', NULL, NULL, NULL);
-INSERT INTO `system_menu` VALUES (1051, '任务修改', 110, 3, '#', NULL, NULL, 1, 0, NULL, 'F', '0', '0', 'monitor:job:edit', '#', 'admin', '2024-05-06 06:12:17', NULL, NULL, NULL);
-INSERT INTO `system_menu` VALUES (1052, '任务删除', 110, 4, '#', NULL, NULL, 1, 0, NULL, 'F', '0', '0', 'monitor:job:remove', '#', 'admin', '2024-05-06 06:12:17', NULL, NULL, NULL);
-INSERT INTO `system_menu` VALUES (1053, '状态修改', 110, 5, '#', NULL, NULL, 1, 0, NULL, 'F', '0', '0', 'monitor:job:changeStatus', '#', 'admin', '2024-05-06 06:12:17', NULL, NULL, NULL);
-INSERT INTO `system_menu` VALUES (1054, '任务导出', 110, 6, '#', NULL, NULL, 1, 0, NULL, 'F', '0', '0', 'monitor:job:export', '#', 'admin', '2024-05-06 06:12:17', NULL, NULL, NULL);
-INSERT INTO `system_menu` VALUES (1055, '生成查询', 116, 1, '#', NULL, NULL, 1, 0, NULL, 'F', '0', '0', 'tool:gen:query', '#', 'admin', '2024-05-06 06:12:17', NULL, NULL, NULL);
-INSERT INTO `system_menu` VALUES (1056, '生成修改', 116, 2, '#', NULL, NULL, 1, 0, NULL, 'F', '0', '0', 'tool:gen:edit', '#', 'admin', '2024-05-06 06:12:17', NULL, NULL, NULL);
-INSERT INTO `system_menu` VALUES (1057, '生成删除', 116, 3, '#', NULL, NULL, 1, 0, NULL, 'F', '0', '0', 'tool:gen:remove', '#', 'admin', '2024-05-06 06:12:17', NULL, NULL, NULL);
-INSERT INTO `system_menu` VALUES (1058, '导入代码', 116, 4, '#', NULL, NULL, 1, 0, NULL, 'F', '0', '0', 'tool:gen:import', '#', 'admin', '2024-05-06 06:12:17', NULL, NULL, NULL);
-INSERT INTO `system_menu` VALUES (1059, '预览代码', 116, 5, '#', NULL, NULL, 1, 0, NULL, 'F', '0', '0', 'tool:gen:preview', '#', 'admin', '2024-05-06 06:12:17', NULL, NULL, NULL);
-INSERT INTO `system_menu` VALUES (1060, '生成代码', 116, 6, '#', NULL, NULL, 1, 0, NULL, 'F', '0', '0', 'tool:gen:code', '#', 'admin', '2024-05-06 06:12:17', NULL, NULL, NULL);
-INSERT INTO `system_menu` VALUES (2000, '流程管理', 0, 50, 'flyflow', NULL, NULL, 1, 0, NULL, 'M', '1', '1', NULL, 'example_new_icon', 'admin', '2024-05-06 06:17:26', '小桐', '2026-01-12 17:47:30', NULL);
-INSERT INTO `system_menu` VALUES (2001, '流程组', 2002, 1, 'group', 'flyflow/flow/group', NULL, 1, 1, NULL, 'C', '0', '0', 'flyflow:flow:group', 'button', 'admin', '2024-05-06 08:28:25', 'admin', '2024-05-06 12:03:39', NULL);
-INSERT INTO `system_menu` VALUES (2002, '流程', 2000, 1, 'flow', NULL, NULL, 1, 0, NULL, 'M', '0', '0', NULL, 'component', 'admin', '2024-05-06 08:29:31', 'admin', '2024-05-06 11:59:48', NULL);
-INSERT INTO `system_menu` VALUES (2003, '流程列表', 2002, 2, 'list', 'flyflow/flow/list', NULL, 1, 1, NULL, 'C', '0', '0', 'flyflow:flow:list', 'date_new_icon', 'admin', '2024-05-06 08:34:14', 'admin', '2025-02-27 10:59:43', NULL);
-INSERT INTO `system_menu` VALUES (2004, '创建流程', 2002, 1, 'create', 'flyflow/flow/create', NULL, 1, 1, NULL, 'C', '1', '0', 'flyflow:flow:create', 'component', 'admin', '2024-05-06 12:56:35', NULL, NULL, NULL);
-INSERT INTO `system_menu` VALUES (2005, '任务管理', 2000, 3, 'task', NULL, NULL, 1, 0, NULL, 'M', '0', '0', NULL, 'date', 'admin', '2024-05-06 13:29:59', 'admin', '2025-02-27 11:19:29', NULL);
-INSERT INTO `system_menu` VALUES (2006, '待办任务', 2005, 1, 'todo', 'flyflow/task/pending', NULL, 1, 1, NULL, 'C', '0', '0', 'flyflow:task:pending', 'date_new_icon', 'admin', '2024-05-06 13:30:36', 'admin', '2025-02-27 10:57:08', NULL);
-INSERT INTO `system_menu` VALUES (2007, '我的发起', 2005, 2, 'started', 'flyflow/task/started', NULL, 1, 1, NULL, 'C', '0', '0', 'flyflow:task:started', 'button', 'admin', '2024-05-06 13:32:07', NULL, NULL, NULL);
-INSERT INTO `system_menu` VALUES (2008, '我的已办', 2005, 3, 'completed', 'flyflow/task/completed', NULL, 1, 1, NULL, 'C', '0', '0', 'flyflow:task:completed', 'download', 'admin', '2024-05-06 13:33:44', NULL, NULL, NULL);
-INSERT INTO `system_menu` VALUES (2009, '抄送我的', 2005, 4, 'cc', 'flyflow/task/cc', NULL, 1, 1, NULL, 'C', '0', '0', 'flyflow:task:cc', 'example', 'admin', '2024-05-06 13:35:08', 'admin', '2024-05-06 13:35:51', NULL);
-INSERT INTO `system_menu` VALUES (2010, '数字证书', 1, 10, 'ca', NULL, NULL, 1, 0, NULL, 'M', '1', '1', NULL, 'password', 'admin', NULL, '小桐', '2025-12-30 13:12:47', NULL);
-INSERT INTO `system_menu` VALUES (2011, '证书管理', 2010, 1, 'cert', 'system/ca/cert/index', NULL, 1, 0, NULL, 'C', '0', '0', 'ca:cert:list', '#', 'admin', '2024-08-18 01:49:14', NULL, NULL, '证书管理菜单');
-INSERT INTO `system_menu` VALUES (2012, '证书管理查询', 2010, 1, '#', NULL, NULL, 1, 0, NULL, 'F', '0', '0', 'ca:cert:query', '#', 'admin', '2024-08-18 01:49:14', NULL, NULL, NULL);
-INSERT INTO `system_menu` VALUES (2013, '证书管理新增', 2010, 2, '#', NULL, NULL, 1, 0, NULL, 'F', '0', '0', 'ca:cert:add', '#', 'admin', '2024-08-18 01:49:14', NULL, NULL, NULL);
-INSERT INTO `system_menu` VALUES (2014, '证书管理修改', 2010, 3, '#', NULL, NULL, 1, 0, NULL, 'F', '0', '0', 'ca:cert:edit', '#', 'admin', '2024-08-18 01:49:15', NULL, NULL, NULL);
-INSERT INTO `system_menu` VALUES (2015, '证书管理删除', 2010, 4, '#', NULL, NULL, 1, 0, NULL, 'F', '0', '0', 'ca:cert:remove', '#', 'admin', '2024-08-18 01:49:15', NULL, NULL, NULL);
-INSERT INTO `system_menu` VALUES (2016, '证书管理导出', 2010, 5, '#', NULL, NULL, 1, 0, NULL, 'F', '0', '0', 'ca:cert:export', '#', 'admin', '2024-08-18 01:49:15', NULL, NULL, NULL);
-INSERT INTO `system_menu` VALUES (2017, '主体管理', 2010, 0, 'subject', 'system/ca/subject/index', NULL, 1, 0, NULL, 'C', '0', '0', 'ca:subject:list', '#', 'admin', '2024-08-18 01:49:32', 'admin', '2024-08-18 01:49:49', '主体管理菜单');
-INSERT INTO `system_menu` VALUES (2018, '主体管理查询', 2017, 1, '#', NULL, NULL, 1, 0, NULL, 'F', '0', '0', 'ca:subject:query', '#', 'admin', '2024-08-18 01:49:32', NULL, NULL, NULL);
-INSERT INTO `system_menu` VALUES (2019, '主体管理新增', 2017, 2, '#', NULL, NULL, 1, 0, NULL, 'F', '0', '0', 'ca:subject:add', '#', 'admin', '2024-08-18 01:49:32', NULL, NULL, NULL);
-INSERT INTO `system_menu` VALUES (2020, '主体管理修改', 2017, 3, '#', NULL, NULL, 1, 0, NULL, 'F', '0', '0', 'ca:subject:edit', '#', 'admin', '2024-08-18 01:49:32', NULL, NULL, NULL);
-INSERT INTO `system_menu` VALUES (2021, '主体管理删除', 2017, 4, '#', NULL, NULL, 1, 0, NULL, 'F', '0', '0', 'ca:subject:remove', '#', 'admin', '2024-08-18 01:49:32', NULL, NULL, NULL);
-INSERT INTO `system_menu` VALUES (2022, '主体管理导出', 2017, 5, '#', NULL, NULL, 1, 0, NULL, 'F', '0', '0', 'ca:subject:export', '#', 'admin', '2024-08-18 01:49:32', NULL, NULL, NULL);
-INSERT INTO `system_menu` VALUES (2026, '应用管理', 1, 1, 'client', 'system/auth/client/index', NULL, 1, 0, NULL, 'C', '1', '1', 'auth:client:list', 'github', 'admin', '2024-08-31 14:33:05', '小桐', '2025-12-31 15:38:56', '应用管理菜单');
-INSERT INTO `system_menu` VALUES (2027, '应用管理查询', 2026, 1, '#', NULL, NULL, 1, 0, NULL, 'F', '0', '0', 'auth:client:query', '#', 'admin', '2024-08-31 14:33:05', NULL, NULL, NULL);
-INSERT INTO `system_menu` VALUES (2028, '应用管理新增', 2026, 2, '#', NULL, NULL, 1, 0, NULL, 'F', '0', '0', 'auth:client:add', '#', 'admin', '2024-08-31 14:33:05', NULL, NULL, NULL);
-INSERT INTO `system_menu` VALUES (2029, '应用管理修改', 2026, 3, '#', NULL, NULL, 1, 0, NULL, 'F', '0', '0', 'auth:client:edit', '#', 'admin', '2024-08-31 14:33:05', NULL, NULL, NULL);
-INSERT INTO `system_menu` VALUES (2030, '应用管理删除', 2026, 4, '#', NULL, NULL, 1, 0, NULL, 'F', '0', '0', 'auth:client:remove', '#', 'admin', '2024-08-31 14:33:05', NULL, NULL, NULL);
-INSERT INTO `system_menu` VALUES (2031, '应用管理导出', 2026, 5, '#', NULL, NULL, 1, 0, NULL, 'F', '0', '0', 'auth:client:export', '#', 'admin', '2024-08-31 14:33:05', NULL, NULL, NULL);
-INSERT INTO `system_menu` VALUES (2068, '消息模板', 1, 0, 'messageTemplate', 'system/system/messageTemplate/index', NULL, 1, 0, NULL, 'C', '1', '1', 'system:message:messageTemplate:list', 'email', 'admin', '2024-11-01 09:52:03', '小桐', '2025-12-31 15:38:50', '消息模板菜单');
-INSERT INTO `system_menu` VALUES (2069, '消息模板查询', 2068, 1, '#', NULL, NULL, 1, 0, NULL, 'F', '0', '0', 'system:message:messageTemplate:query', '#', 'admin', '2024-11-01 09:52:03', NULL, NULL, NULL);
-INSERT INTO `system_menu` VALUES (2070, '消息模板新增', 2068, 2, '#', NULL, NULL, 1, 0, NULL, 'F', '0', '0', 'system:message:messageTemplate:add', '#', 'admin', '2024-11-01 09:52:03', NULL, NULL, NULL);
-INSERT INTO `system_menu` VALUES (2071, '消息模板修改', 2068, 3, '#', NULL, NULL, 1, 0, NULL, 'F', '0', '0', 'system:message:messageTemplate:edit', '#', 'admin', '2024-11-01 09:52:03', NULL, NULL, NULL);
-INSERT INTO `system_menu` VALUES (2072, '消息模板删除', 2068, 4, '#', NULL, NULL, 1, 0, NULL, 'F', '0', '0', 'system:message:messageTemplate:remove', '#', 'admin', '2024-11-01 09:52:03', NULL, NULL, NULL);
-INSERT INTO `system_menu` VALUES (2073, '消息模板导出', 2068, 5, '#', NULL, NULL, 1, 0, NULL, 'F', '0', '0', 'system:message:messageTemplate:export', '#', 'admin', '2024-11-01 09:52:03', NULL, NULL, NULL);
-INSERT INTO `system_menu` VALUES (2190, '系统配置', 1, 11, 'sysContent', 'system/system/content/index', NULL, 1, 0, NULL, 'C', '1', '1', 'system:system:content:query', 'build', 'admin', '2024-12-31 11:16:14', '小桐', '2025-12-31 15:39:08', NULL);
-INSERT INTO `system_menu` VALUES (2245, '模型中心', 0, 10, 'model/manage', 'model/modelManage/index', NULL, 1, 0, NULL, 'C', '0', '0', 'model:model:list', 'model-administration', '吴同', '2025-11-14 15:32:43', '吴同', '2026-07-20 14:19:25', NULL);
-INSERT INTO `system_menu` VALUES (2253, '模型审批', 0, 50, 'model/audit', 'model/modelAudit/index', NULL, 1, 0, NULL, 'C', '0', '0', 'model:modelAudit:audit:list', 'model-approve', '吴同', '2026-07-14 15:49:56', '吴同', '2026-07-20 14:14:23', NULL);
-INSERT INTO `system_menu` VALUES (2254, '模型文件部署', 2245, 10, 'model/fileResource', 'model/fileResource/index', NULL, 1, 0, NULL, 'C', '1', '0', 'model:fileResource:fileresource:list', '#', 'admin', '2026-07-17 13:38:23', 'qModel', '2026-07-20 11:50:27', '模型文件部署菜单');
-INSERT INTO `system_menu` VALUES (2255, '模型文件部署查询', 2254, 1, '#', '', NULL, 1, 0, NULL, 'F', '0', '0', 'model:fileResource:fileresource:query', '#', 'admin', '2026-07-17 13:38:23', '', NULL, '');
-INSERT INTO `system_menu` VALUES (2256, '模型文件部署新增', 2254, 2, '#', '', NULL, 1, 0, NULL, 'F', '0', '0', 'model:fileResource:fileresource:add', '#', 'admin', '2026-07-17 13:38:23', '', NULL, '');
-INSERT INTO `system_menu` VALUES (2257, '模型文件部署修改', 2254, 3, '#', '', NULL, 1, 0, NULL, 'F', '0', '0', 'model:fileResource:fileresource:edit', '#', 'admin', '2026-07-17 13:38:23', '', NULL, '');
-INSERT INTO `system_menu` VALUES (2258, '模型文件部署删除', 2254, 4, '#', '', NULL, 1, 0, NULL, 'F', '0', '0', 'model:fileResource:fileresource:remove', '#', 'admin', '2026-07-17 13:38:23', '', NULL, '');
-INSERT INTO `system_menu` VALUES (2259, '模型文件部署导出', 2254, 5, '#', '', NULL, 1, 0, NULL, 'F', '0', '0', 'model:fileResource:fileresource:export', '#', 'admin', '2026-07-17 13:38:23', '', NULL, '');
-INSERT INTO `system_menu` VALUES (2260, '模型文件部署导入', 2254, 6, '#', '', NULL, 1, 0, NULL, 'F', '0', '0', 'model:fileResource:fileresource:import', '#', 'admin', '2026-07-17 13:38:23', '', NULL, '');
-INSERT INTO `system_menu` VALUES (2261, '构建日志', 0, 40, 'model/buildLog', 'model/buildLog/index', NULL, 1, 0, NULL, 'C', '0', '0', 'model:buildLog:buildlog:list', 'build-log', '吴同', '2026-07-17 13:39:16', '吴同', '2026-07-20 14:14:10', '构建日志菜单');
-INSERT INTO `system_menu` VALUES (2262, '构建日志查询', 2261, 1, '#', '', NULL, 1, 0, NULL, 'F', '0', '0', 'model:buildLog:buildlog:query', '#', 'admin', '2026-07-17 13:39:16', '', NULL, '');
-INSERT INTO `system_menu` VALUES (2263, '构建日志新增', 2261, 2, '#', '', NULL, 1, 0, NULL, 'F', '0', '0', 'model:buildLog:buildlog:add', '#', 'admin', '2026-07-17 13:39:16', '', NULL, '');
-INSERT INTO `system_menu` VALUES (2264, '构建日志修改', 2261, 3, '#', '', NULL, 1, 0, NULL, 'F', '0', '0', 'model:buildLog:buildlog:edit', '#', 'admin', '2026-07-17 13:39:16', '', NULL, '');
-INSERT INTO `system_menu` VALUES (2265, '构建日志删除', 2261, 4, '#', '', NULL, 1, 0, NULL, 'F', '0', '0', 'model:buildLog:buildlog:remove', '#', 'admin', '2026-07-17 13:39:16', '', NULL, '');
-INSERT INTO `system_menu` VALUES (2266, '构建日志导出', 2261, 5, '#', '', NULL, 1, 0, NULL, 'F', '0', '0', 'model:buildLog:buildlog:export', '#', 'admin', '2026-07-17 13:39:16', '', NULL, '');
-INSERT INTO `system_menu` VALUES (2267, '构建日志导入', 2261, 6, '#', '', NULL, 1, 0, NULL, 'F', '0', '0', 'model:buildLog:buildlog:import', '#', 'admin', '2026-07-17 13:39:16', '', NULL, '');
-INSERT INTO `system_menu` VALUES (2268, '调用记录', 0, 30, 'model/invokeHistory', 'model/invokeHistory/index', NULL, 1, 0, NULL, 'C', '0', '0', 'model:invokeHistory:invokehistory:list', 'call-record', '吴同', '2026-07-17 13:39:50', '吴同', '2026-07-20 14:13:58', '模型调用历史记录菜单');
-INSERT INTO `system_menu` VALUES (2269, '模型调用历史记录查询', 2268, 1, '#', '', NULL, 1, 0, NULL, 'F', '0', '0', 'model:invokeHistory:invokehistory:query', '#', 'admin', '2026-07-17 13:39:50', '', NULL, '');
-INSERT INTO `system_menu` VALUES (2270, '模型调用历史记录新增', 2268, 2, '#', '', NULL, 1, 0, NULL, 'F', '0', '0', 'model:invokeHistory:invokehistory:add', '#', 'admin', '2026-07-17 13:39:50', '', NULL, '');
-INSERT INTO `system_menu` VALUES (2271, '模型调用历史记录修改', 2268, 3, '#', '', NULL, 1, 0, NULL, 'F', '0', '0', 'model:invokeHistory:invokehistory:edit', '#', 'admin', '2026-07-17 13:39:50', '', NULL, '');
-INSERT INTO `system_menu` VALUES (2272, '模型调用历史记录删除', 2268, 4, '#', '', NULL, 1, 0, NULL, 'F', '0', '0', 'model:invokeHistory:invokehistory:remove', '#', 'admin', '2026-07-17 13:39:50', '', NULL, '');
-INSERT INTO `system_menu` VALUES (2273, '模型调用历史记录导出', 2268, 5, '#', '', NULL, 1, 0, NULL, 'F', '0', '0', 'model:invokeHistory:invokehistory:export', '#', 'admin', '2026-07-17 13:39:50', '', NULL, '');
-INSERT INTO `system_menu` VALUES (2274, '模型调用历史记录导入', 2268, 6, '#', '', NULL, 1, 0, NULL, 'F', '0', '0', 'model:invokeHistory:invokehistory:import', '#', 'admin', '2026-07-17 13:39:50', '', NULL, '');
-INSERT INTO `system_menu` VALUES (2276, '模型管理查询', 2245, 1, '#', '', NULL, 1, 0, NULL, 'F', '0', '0', 'model:model:query', '#', 'admin', '2026-07-20 10:53:27', 'qModel', '2026-07-20 11:31:48', '');
-INSERT INTO `system_menu` VALUES (2277, '模型管理新增', 2245, 2, '#', '', NULL, 1, 0, NULL, 'F', '0', '0', 'model:model:add', '#', 'admin', '2026-07-20 10:53:27', 'qModel', '2026-07-20 11:31:52', '');
-INSERT INTO `system_menu` VALUES (2278, '模型管理修改', 2245, 3, '#', '', NULL, 1, 0, NULL, 'F', '0', '0', 'model:model:edit', '#', 'admin', '2026-07-20 10:53:27', 'qModel', '2026-07-20 11:32:03', '');
-INSERT INTO `system_menu` VALUES (2279, '模型管理删除', 2245, 4, '#', '', NULL, 1, 0, NULL, 'F', '0', '0', 'model:model:remove', '#', 'admin', '2026-07-20 10:53:27', 'qModel', '2026-07-20 11:32:08', '');
-INSERT INTO `system_menu` VALUES (2280, '模型管理导出', 2245, 5, '#', '', NULL, 1, 0, NULL, 'F', '0', '0', 'model:model:export', '#', 'admin', '2026-07-20 10:53:27', 'qModel', '2026-07-20 11:32:13', '');
-INSERT INTO `system_menu` VALUES (2281, '模型管理导入', 2245, 6, '#', '', NULL, 1, 0, NULL, 'F', '0', '0', 'model:model:import', '#', 'admin', '2026-07-20 10:53:27', 'qModel', '2026-07-20 11:32:18', '');
-INSERT INTO `system_menu` VALUES (2282, '模型配置详情', 2245, 20, 'config', 'model/model/index', NULL, 1, 0, NULL, 'C', '1', '0', 'model:config:config:list', '#', 'admin', '2026-07-20 10:53:47', 'qModel', '2026-07-20 11:59:11', '模型配置详情菜单');
-INSERT INTO `system_menu` VALUES (2283, '模型配置详情查询', 2282, 1, '#', '', NULL, 1, 0, NULL, 'F', '0', '0', 'model:config:config:query', '#', 'admin', '2026-07-20 10:53:47', '', NULL, '');
-INSERT INTO `system_menu` VALUES (2284, '模型配置详情新增', 2282, 2, '#', '', NULL, 1, 0, NULL, 'F', '0', '0', 'model:config:config:add', '#', 'admin', '2026-07-20 10:53:47', '', NULL, '');
-INSERT INTO `system_menu` VALUES (2285, '模型配置详情修改', 2282, 3, '#', '', NULL, 1, 0, NULL, 'F', '0', '0', 'model:config:config:edit', '#', 'admin', '2026-07-20 10:53:47', '', NULL, '');
-INSERT INTO `system_menu` VALUES (2286, '模型配置详情删除', 2282, 4, '#', '', NULL, 1, 0, NULL, 'F', '0', '0', 'model:config:config:remove', '#', 'admin', '2026-07-20 10:53:47', '', NULL, '');
-INSERT INTO `system_menu` VALUES (2287, '模型配置详情导出', 2282, 5, '#', '', NULL, 1, 0, NULL, 'F', '0', '0', 'model:config:config:export', '#', 'admin', '2026-07-20 10:53:47', '', NULL, '');
-INSERT INTO `system_menu` VALUES (2288, '模型配置详情导入', 2282, 6, '#', '', NULL, 1, 0, NULL, 'F', '0', '0', 'model:config:config:import', '#', 'admin', '2026-07-20 10:53:47', '', NULL, '');
-INSERT INTO `system_menu` VALUES (2296, '模型分类', 0, 20, 'model/classify', 'model/modelClassify/index', NULL, 1, 0, NULL, 'C', '0', '0', 'model:classify:classify:list', 'category-management', '吴同', '2026-07-20 11:21:25', '吴同', '2026-07-20 13:42:46', '模型分类菜单');
-INSERT INTO `system_menu` VALUES (2297, '模型分类查询', 2296, 1, '#', '', NULL, 1, 0, NULL, 'F', '0', '0', 'model:classify:classify:query', '#', 'admin', '2026-07-20 11:21:25', '', NULL, '');
-INSERT INTO `system_menu` VALUES (2298, '模型分类新增', 2296, 2, '#', '', NULL, 1, 0, NULL, 'F', '0', '0', 'model:classify:classify:add', '#', 'admin', '2026-07-20 11:21:25', '', NULL, '');
-INSERT INTO `system_menu` VALUES (2299, '模型分类修改', 2296, 3, '#', '', NULL, 1, 0, NULL, 'F', '0', '0', 'model:classify:classify:edit', '#', 'admin', '2026-07-20 11:21:25', '', NULL, '');
-INSERT INTO `system_menu` VALUES (2300, '模型分类删除', 2296, 4, '#', '', NULL, 1, 0, NULL, 'F', '0', '0', 'model:classify:classify:remove', '#', 'admin', '2026-07-20 11:21:25', '', NULL, '');
-INSERT INTO `system_menu` VALUES (2301, '模型分类导出', 2296, 5, '#', '', NULL, 1, 0, NULL, 'F', '0', '0', 'model:classify:classify:export', '#', 'admin', '2026-07-20 11:21:25', '', NULL, '');
-INSERT INTO `system_menu` VALUES (2302, '模型分类导入', 2296, 6, '#', '', NULL, 1, 0, NULL, 'F', '0', '0', 'model:classify:classify:import', '#', 'admin', '2026-07-20 11:21:25', '', NULL, '');
-INSERT INTO `system_menu` VALUES (2303, '计算历史', 2337, 2, 'model/operate', 'model/operateList/index', NULL, 1, 0, NULL, 'C', '0', '0', 'model:operate:operate:list', 'calculate-history', '吴同', '2026-07-20 14:23:04', '吴同', '2026-07-20 15:16:31', '模型历史管理菜单');
-INSERT INTO `system_menu` VALUES (2304, '模型历史管理查询', 2303, 1, '#', '', NULL, 1, 0, NULL, 'F', '0', '0', 'model:operate:operate:query', '#', 'admin', '2026-07-20 14:23:04', '', NULL, '');
-INSERT INTO `system_menu` VALUES (2305, '模型历史管理新增', 2303, 2, '#', '', NULL, 1, 0, NULL, 'F', '0', '0', 'model:operate:operate:add', '#', 'admin', '2026-07-20 14:23:04', '', NULL, '');
-INSERT INTO `system_menu` VALUES (2306, '模型历史管理修改', 2303, 3, '#', '', NULL, 1, 0, NULL, 'F', '0', '0', 'model:operate:operate:edit', '#', 'admin', '2026-07-20 14:23:04', '', NULL, '');
-INSERT INTO `system_menu` VALUES (2307, '模型历史管理删除', 2303, 4, '#', '', NULL, 1, 0, NULL, 'F', '0', '0', 'model:operate:operate:remove', '#', 'admin', '2026-07-20 14:23:04', '', NULL, '');
-INSERT INTO `system_menu` VALUES (2308, '模型历史管理导出', 2303, 5, '#', '', NULL, 1, 0, NULL, 'F', '0', '0', 'model:operate:operate:export', '#', 'admin', '2026-07-20 14:23:04', '', NULL, '');
-INSERT INTO `system_menu` VALUES (2309, '模型历史管理导入', 2303, 6, '#', '', NULL, 1, 0, NULL, 'F', '0', '0', 'model:operate:operate:import', '#', 'admin', '2026-07-20 14:23:04', '', NULL, '');
-INSERT INTO `system_menu` VALUES (2317, '模型审批修改', 2253, 3, '#', '', NULL, 1, 0, NULL, 'F', '0', '0', 'model:modelAudit:audit:edit', '#', '	\r\n吴同', '2026-07-23 13:51:31', '', NULL, '');
-INSERT INTO `system_menu` VALUES (2318, '模型审批查询', 2253, 1, '#', '', NULL, 1, 0, NULL, 'F', '0', '0', 'model:modelAudit:audit:query', '#', '吴同', '2026-07-23 13:51:31', '', NULL, '');
-
-INSERT INTO `system_menu` VALUES (2319, '计算任务', 2337, 1, 'model/calc', 'model/calc/index', NULL, 1, 0, NULL, 'C', '0', '0', 'model:calc:calc:list', 'model-calculation', '吴同', '2026-07-27 14:31:18', '吴同', NULL, '模型计算任务菜单');
-INSERT INTO `system_menu` VALUES (2320, '模型计算任务查询', 2319, 1, '#', '', NULL, 1, 0, NULL, 'F', '0', '0', 'model:calc:calc:query', '#', 'admin', '2026-07-27 14:31:18', '', NULL, '');
-INSERT INTO `system_menu` VALUES (2321, '模型计算任务新增', 2319, 2, '#', '', NULL, 1, 0, NULL, 'F', '0', '0', 'model:calc:calc:add', '#', 'admin', '2026-07-27 14:31:18', '', NULL, '');
-INSERT INTO `system_menu` VALUES (2322, '模型计算任务修改', 2319, 3, '#', '', NULL, 1, 0, NULL, 'F', '0', '0', 'model:calc:calc:edit', '#', 'admin', '2026-07-27 14:31:18', '', NULL, '');
-INSERT INTO `system_menu` VALUES (2323, '模型计算任务删除', 2319, 4, '#', '', NULL, 1, 0, NULL, 'F', '0', '0', 'model:calc:calc:remove', '#', 'admin', '2026-07-27 14:31:18', '', NULL, '');
-INSERT INTO `system_menu` VALUES (2324, '模型计算任务导出', 2319, 5, '#', '', NULL, 1, 0, NULL, 'F', '0', '0', 'model:calc:calc:export', '#', 'admin', '2026-07-27 14:31:18', '', NULL, '');
-INSERT INTO `system_menu` VALUES (2325, '模型计算任务导入', 2319, 6, '#', '', NULL, 1, 0, NULL, 'F', '0', '0', 'model:calc:calc:import', '#', 'admin', '2026-07-27 14:31:18', '', NULL, '');
-
-INSERT INTO `system_menu` VALUES (2326, '模型计算执行记录', 2319, 1, 'calcExecution', 'model/calcExecution/index', NULL, 1, 0, NULL, 'C', '0', '0', 'model:calcExecution:calcexecution:list', '#', 'admin', '2026-08-05 14:38:43', '', NULL, '模型计算执行记录菜单');
-INSERT INTO `system_menu` VALUES (2327, '模型计算执行记录查询', 2326, 1, '#', '', NULL, 1, 0, NULL, 'F', '0', '0', 'model:calcExecution:calcexecution:query', '#', 'admin', '2026-08-05 14:38:43', '', NULL, '');
-INSERT INTO `system_menu` VALUES (2328, '模型计算执行记录新增', 2326, 2, '#', '', NULL, 1, 0, NULL, 'F', '0', '0', 'model:calcExecution:calcexecution:add', '#', 'admin', '2026-08-05 14:38:43', '', NULL, '');
-INSERT INTO `system_menu` VALUES (2329, '模型计算执行记录修改', 2326, 3, '#', '', NULL, 1, 0, NULL, 'F', '0', '0', 'model:calcExecution:calcexecution:edit', '#', 'admin', '2026-08-05 14:38:43', '', NULL, '');
-INSERT INTO `system_menu` VALUES (2330, '模型计算执行记录删除', 2326, 4, '#', '', NULL, 1, 0, NULL, 'F', '0', '0', 'model:calcExecution:calcexecution:remove', '#', 'admin', '2026-08-05 14:38:43', '', NULL, '');
-INSERT INTO `system_menu` VALUES (2331, '模型计算执行记录导出', 2326, 5, '#', '', NULL, 1, 0, NULL, 'F', '0', '0', 'model:calcExecution:calcexecution:export', '#', 'admin', '2026-08-05 14:38:43', '', NULL, '');
-INSERT INTO `system_menu` VALUES (2332, '模型计算执行记录导入', 2326, 6, '#', '', NULL, 1, 0, NULL, 'F', '0', '0', 'model:calcExecution:calcexecution:import', '#', 'admin', '2026-08-05 14:38:43', '', NULL, '');
-INSERT INTO `system_menu` VALUES (2333, '密钥管理', 0, 70, 'model/key', 'model/modelKey/index', NULL, 1, 0, NULL, 'C', '0', '0', 'model:modelKey:key:list', 'password', '吴同', '2026-07-31 17:09:48', '吴同', '2026-07-31 17:14:15', '模型访问 key菜单');
-INSERT INTO `system_menu` VALUES (2334, '密钥管理复制', 2333, 1, '#', '', NULL, 1, 0, NULL, 'F', '0', '0', 'model:modelKey:key:copy', '#', 'admin', '2026-07-31 17:09:48', '', NULL, '');
-INSERT INTO `system_menu` VALUES (2335, '密钥管理新增', 2333, 2, '#', '', NULL, 1, 0, NULL, 'F', '0', '0', 'model:modelKey:key:add', '#', 'admin', '2026-07-31 17:09:49', '', NULL, '');
-INSERT INTO `system_menu` VALUES (2336, '密钥管理删除', 2333, 4, '#', '', NULL, 1, 0, NULL, 'F', '0', '0', 'model:modelKey:key:remove', '#', 'admin', '2026-07-31 17:09:49', '', NULL, '');
-INSERT INTO `system_menu` VALUES (2337, '模型计算', 0, 60, 'calc', NULL, NULL, 1, 0, NULL, 'M', '0', '0', NULL, 'model-calculation', '吴同', '2024-05-06 06:12:17', '吴同', '2025-12-31 10:03:45', '系统管理目录');
-
--- V1.4.3 新增：API管理 一级菜单
-INSERT INTO `system_menu` VALUES (2444, 'API管理', 0, 80, 'data/api', 'model/modelData/api/index', NULL, 1, 0, NULL, 'C', '0', '0', 'model:modelData:dataapi:list', 'apigl', 'admin', '2026-08-19 15:09:29', '超级管理员', '2026-08-21 09:09:14', 'API管理菜单');
-INSERT INTO `system_menu` VALUES (2445, 'API管理查询', 2444, 1, '#', '', NULL, 1, 0, NULL, 'F', '0', '0', 'model:modelData:dataapi:query', '#', 'admin', '2026-08-19 15:09:29', '', NULL, '');
-INSERT INTO `system_menu` VALUES (2446, 'API管理新增', 2444, 2, '#', '', NULL, 1, 0, NULL, 'F', '0', '0', 'model:modelData:dataapi:add', '#', 'admin', '2026-08-19 15:09:30', '', NULL, '');
-INSERT INTO `system_menu` VALUES (2447, 'API管理修改', 2444, 3, '#', '', NULL, 1, 0, NULL, 'F', '0', '0', 'model:modelData:dataapi:edit', '#', 'admin', '2026-08-19 15:09:30', '', NULL, '');
-INSERT INTO `system_menu` VALUES (2448, 'API管理删除', 2444, 4, '#', '', NULL, 1, 0, NULL, 'F', '0', '0', 'model:modelData:dataapi:remove', '#', 'admin', '2026-08-19 15:09:30', '', NULL, '');
-INSERT INTO `system_menu` VALUES (2449, 'API管理导出', 2444, 5, '#', '', NULL, 1, 0, NULL, 'F', '0', '0', 'model:modelData:dataapi:export', '#', 'admin', '2026-08-19 15:09:30', '', NULL, '');
-INSERT INTO `system_menu` VALUES (2350, 'API管理导入', 2444, 6, '#', '', NULL, 1, 0, NULL, 'F', '0', '0', 'model:modelData:dataapi:import', '#', 'admin', '2026-08-19 15:09:30', '', NULL, '');
+-- TODO 注意：菜单数据请从Latest中拷贝
 
 -- ----------------------------
 -- Table structure for system_notice
@@ -703,7 +376,7 @@ CREATE TABLE `system_notice` (
   `update_time` datetime NULL DEFAULT NULL COMMENT '更新时间',
   `remark` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '备注',
   PRIMARY KEY (`notice_id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 19 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '通知公告表' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '通知公告表' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of system_notice
@@ -738,7 +411,7 @@ CREATE TABLE `system_oper_log` (
   `oper_time` datetime NULL DEFAULT NULL COMMENT '操作时间',
   `cost_time` bigint(20) NULL DEFAULT NULL COMMENT '消耗时间',
   PRIMARY KEY (`oper_id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 2895 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '操作日志记录' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '操作日志记录' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Table structure for system_post
@@ -756,15 +429,19 @@ CREATE TABLE `system_post` (
   `update_time` datetime NULL DEFAULT NULL COMMENT '更新时间',
   `remark` varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '备注',
   PRIMARY KEY (`post_id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 5 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '岗位信息表' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '岗位信息表' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of system_post
 -- ----------------------------
-INSERT INTO `system_post` VALUES (1, 'ceo', '董事长', 1, '0', 'admin', '2024-05-06 06:12:17', NULL, NULL, NULL);
-INSERT INTO `system_post` VALUES (2, 'se', '项目经理', 2, '0', 'admin', '2024-05-06 06:12:17', NULL, NULL, NULL);
-INSERT INTO `system_post` VALUES (3, 'hr', '人力资源', 3, '0', 'admin', '2024-05-06 06:12:17', 'admin', '2024-11-26 15:50:39', NULL);
-INSERT INTO `system_post` VALUES (4, 'user', '普通员工', 4, '0', 'admin', '2024-05-06 06:12:17', NULL, NULL, NULL);
+INSERT INTO `system_post` VALUES (1, 'CEO', '董事长', 1, '0', '吴同', '2026-05-12 09:33:22', '', NULL, NULL);
+INSERT INTO `system_post` VALUES (2, 'DM', '部门经理', 2, '0', '吴同', '2026-05-12 09:33:23', '', NULL, NULL);
+INSERT INTO `system_post` VALUES (3, 'AR', '架构师', 3, '0', '吴同', '2026-05-12 09:33:23', '', NULL, NULL);
+INSERT INTO `system_post` VALUES (4, 'SE', '软件工程师', 4, '0', '吴同', '2026-05-12 09:33:24', '', NULL, NULL);
+INSERT INTO `system_post` VALUES (5, 'PM', '产品经理', 5, '0', '吴同', '2026-05-12 09:33:24', '', NULL, NULL);
+INSERT INTO `system_post` VALUES (6, 'QA', '测试工程师', 6, '0', '吴同', '2026-05-12 09:33:24', '', NULL, NULL);
+INSERT INTO `system_post` VALUES (7, 'OP', '运维工程师', 7, '0', '吴同', '2026-05-12 09:33:25', '', NULL, NULL);
+INSERT INTO `system_post` VALUES (8, 'CM', '客户经理', 8, '0', '吴同', '2026-05-12 09:33:25', '', NULL, NULL);
 
 -- ----------------------------
 -- Table structure for system_role
@@ -791,9 +468,8 @@ CREATE TABLE `system_role` (
 -- ----------------------------
 -- Records of system_role
 -- ----------------------------
-INSERT INTO `system_role` VALUES (1, '超级管理员', 'admin', 1, '1', 1, 1, '0', '0', '吴同', '2024-05-06 06:12:17', NULL, NULL, '超级管理员');
-INSERT INTO `system_role` VALUES (2, '普通角色', 'common', 3, '1', 1, 1, '0', '0', '吴同', '2024-05-06 06:12:17', '吴同', '2026-07-17 15:46:03', '普通角色');
-INSERT INTO `system_role` VALUES (4, '系统管理员', 'system', 2, '1', 1, 1, '0', '0', '吴同', '2026-07-17 11:21:31', '吴同', '2026-07-17 15:50:01', '系统管理员');
+INSERT INTO `system_role` VALUES (1, '超级管理员', 'admin', 1, '1', 1, 1, '0', '0', '吴同', sysdate(), '', NULL, '');
+INSERT INTO `system_role` VALUES (2, '系统管理员', 'system', 2, '1', 1, 1, '0', '0', '吴同', sysdate(), '超级管理员', sysdate(), '');
 
 -- ----------------------------
 -- Table structure for system_role_dept
@@ -822,224 +498,7 @@ CREATE TABLE `system_role_menu` (
 -- ----------------------------
 -- Records of system_role_menu
 -- ----------------------------
-INSERT INTO `system_role_menu` VALUES (2, 2);
-INSERT INTO `system_role_menu` VALUES (2, 110);
-INSERT INTO `system_role_menu` VALUES (2, 1049);
-INSERT INTO `system_role_menu` VALUES (2, 1050);
-INSERT INTO `system_role_menu` VALUES (2, 1051);
-INSERT INTO `system_role_menu` VALUES (2, 1052);
-INSERT INTO `system_role_menu` VALUES (2, 1053);
-INSERT INTO `system_role_menu` VALUES (2, 1054);
-INSERT INTO `system_role_menu` VALUES (2, 2000);
-INSERT INTO `system_role_menu` VALUES (2, 2001);
-INSERT INTO `system_role_menu` VALUES (2, 2002);
-INSERT INTO `system_role_menu` VALUES (2, 2003);
-INSERT INTO `system_role_menu` VALUES (2, 2004);
-INSERT INTO `system_role_menu` VALUES (2, 2005);
-INSERT INTO `system_role_menu` VALUES (2, 2006);
-INSERT INTO `system_role_menu` VALUES (2, 2007);
-INSERT INTO `system_role_menu` VALUES (2, 2008);
-INSERT INTO `system_role_menu` VALUES (2, 2009);
-INSERT INTO `system_role_menu` VALUES (2, 2245);
-INSERT INTO `system_role_menu` VALUES (2, 2253);
-INSERT INTO `system_role_menu` VALUES (2, 2254);
-INSERT INTO `system_role_menu` VALUES (2, 2255);
-INSERT INTO `system_role_menu` VALUES (2, 2256);
-INSERT INTO `system_role_menu` VALUES (2, 2257);
-INSERT INTO `system_role_menu` VALUES (2, 2258);
-INSERT INTO `system_role_menu` VALUES (2, 2259);
-INSERT INTO `system_role_menu` VALUES (2, 2260);
-INSERT INTO `system_role_menu` VALUES (2, 2261);
-INSERT INTO `system_role_menu` VALUES (2, 2262);
-INSERT INTO `system_role_menu` VALUES (2, 2263);
-INSERT INTO `system_role_menu` VALUES (2, 2264);
-INSERT INTO `system_role_menu` VALUES (2, 2265);
-INSERT INTO `system_role_menu` VALUES (2, 2266);
-INSERT INTO `system_role_menu` VALUES (2, 2267);
-INSERT INTO `system_role_menu` VALUES (2, 2268);
-INSERT INTO `system_role_menu` VALUES (2, 2269);
-INSERT INTO `system_role_menu` VALUES (2, 2270);
-INSERT INTO `system_role_menu` VALUES (2, 2271);
-INSERT INTO `system_role_menu` VALUES (2, 2272);
-INSERT INTO `system_role_menu` VALUES (2, 2273);
-INSERT INTO `system_role_menu` VALUES (2, 2274);
-INSERT INTO `system_role_menu` VALUES (2, 2276);
-INSERT INTO `system_role_menu` VALUES (2, 2277);
-INSERT INTO `system_role_menu` VALUES (2, 2278);
-INSERT INTO `system_role_menu` VALUES (2, 2279);
-INSERT INTO `system_role_menu` VALUES (2, 2280);
-INSERT INTO `system_role_menu` VALUES (2, 2281);
-INSERT INTO `system_role_menu` VALUES (2, 2282);
-INSERT INTO `system_role_menu` VALUES (2, 2283);
-INSERT INTO `system_role_menu` VALUES (2, 2284);
-INSERT INTO `system_role_menu` VALUES (2, 2285);
-INSERT INTO `system_role_menu` VALUES (2, 2286);
-INSERT INTO `system_role_menu` VALUES (2, 2287);
-INSERT INTO `system_role_menu` VALUES (2, 2288);
-INSERT INTO `system_role_menu` VALUES (2, 2296);
-INSERT INTO `system_role_menu` VALUES (2, 2297);
-INSERT INTO `system_role_menu` VALUES (2, 2298);
-INSERT INTO `system_role_menu` VALUES (2, 2299);
-INSERT INTO `system_role_menu` VALUES (2, 2300);
-INSERT INTO `system_role_menu` VALUES (2, 2301);
-INSERT INTO `system_role_menu` VALUES (2, 2302);
-INSERT INTO `system_role_menu` VALUES (2, 2303);
-INSERT INTO `system_role_menu` VALUES (2, 2304);
-INSERT INTO `system_role_menu` VALUES (2, 2305);
-INSERT INTO `system_role_menu` VALUES (2, 2306);
-INSERT INTO `system_role_menu` VALUES (2, 2307);
-INSERT INTO `system_role_menu` VALUES (2, 2308);
-INSERT INTO `system_role_menu` VALUES (2, 2309);
-INSERT INTO `system_role_menu` VALUES (2, 2310);
-INSERT INTO `system_role_menu` VALUES (2, 2311);
-INSERT INTO `system_role_menu` VALUES (2, 2312);
-INSERT INTO `system_role_menu` VALUES (2, 2313);
-INSERT INTO `system_role_menu` VALUES (2, 2314);
-INSERT INTO `system_role_menu` VALUES (2, 2315);
-INSERT INTO `system_role_menu` VALUES (2, 2316);
-INSERT INTO `system_role_menu` VALUES (2, 2317);
-INSERT INTO `system_role_menu` VALUES (2, 2318);
-INSERT INTO `system_role_menu` VALUES (2, 2333);
-INSERT INTO `system_role_menu` VALUES (2, 2334);
-INSERT INTO `system_role_menu` VALUES (2, 2335);
-INSERT INTO `system_role_menu` VALUES (2, 2336);
-INSERT INTO `system_role_menu` VALUES (2, 2337);
-
-INSERT INTO `system_role_menu` VALUES (4, 1);
-INSERT INTO `system_role_menu` VALUES (4, 2);
-INSERT INTO `system_role_menu` VALUES (4, 101);
-INSERT INTO `system_role_menu` VALUES (4, 102);
-INSERT INTO `system_role_menu` VALUES (4, 103);
-INSERT INTO `system_role_menu` VALUES (4, 104);
-INSERT INTO `system_role_menu` VALUES (4, 105);
-INSERT INTO `system_role_menu` VALUES (4, 106);
-INSERT INTO `system_role_menu` VALUES (4, 107);
-INSERT INTO `system_role_menu` VALUES (4, 108);
-INSERT INTO `system_role_menu` VALUES (4, 110);
-INSERT INTO `system_role_menu` VALUES (4, 500);
-INSERT INTO `system_role_menu` VALUES (4, 501);
-INSERT INTO `system_role_menu` VALUES (4, 1007);
-INSERT INTO `system_role_menu` VALUES (4, 1012);
-INSERT INTO `system_role_menu` VALUES (4, 1016);
-INSERT INTO `system_role_menu` VALUES (4, 1020);
-INSERT INTO `system_role_menu` VALUES (4, 1025);
-INSERT INTO `system_role_menu` VALUES (4, 1030);
-INSERT INTO `system_role_menu` VALUES (4, 1035);
-INSERT INTO `system_role_menu` VALUES (4, 1039);
-INSERT INTO `system_role_menu` VALUES (4, 1042);
-INSERT INTO `system_role_menu` VALUES (4, 1049);
-INSERT INTO `system_role_menu` VALUES (4, 1050);
-INSERT INTO `system_role_menu` VALUES (4, 1051);
-INSERT INTO `system_role_menu` VALUES (4, 1052);
-INSERT INTO `system_role_menu` VALUES (4, 1053);
-INSERT INTO `system_role_menu` VALUES (4, 1054);
-INSERT INTO `system_role_menu` VALUES (4, 2000);
-INSERT INTO `system_role_menu` VALUES (4, 2001);
-INSERT INTO `system_role_menu` VALUES (4, 2002);
-INSERT INTO `system_role_menu` VALUES (4, 2003);
-INSERT INTO `system_role_menu` VALUES (4, 2004);
-INSERT INTO `system_role_menu` VALUES (4, 2005);
-INSERT INTO `system_role_menu` VALUES (4, 2006);
-INSERT INTO `system_role_menu` VALUES (4, 2007);
-INSERT INTO `system_role_menu` VALUES (4, 2008);
-INSERT INTO `system_role_menu` VALUES (4, 2009);
-INSERT INTO `system_role_menu` VALUES (4, 2026);
-INSERT INTO `system_role_menu` VALUES (4, 2027);
-INSERT INTO `system_role_menu` VALUES (4, 2028);
-INSERT INTO `system_role_menu` VALUES (4, 2029);
-INSERT INTO `system_role_menu` VALUES (4, 2030);
-INSERT INTO `system_role_menu` VALUES (4, 2031);
-INSERT INTO `system_role_menu` VALUES (4, 2068);
-INSERT INTO `system_role_menu` VALUES (4, 2069);
-INSERT INTO `system_role_menu` VALUES (4, 2245);
-INSERT INTO `system_role_menu` VALUES (4, 2253);
-INSERT INTO `system_role_menu` VALUES (4, 2254);
-INSERT INTO `system_role_menu` VALUES (4, 2255);
-INSERT INTO `system_role_menu` VALUES (4, 2256);
-INSERT INTO `system_role_menu` VALUES (4, 2257);
-INSERT INTO `system_role_menu` VALUES (4, 2258);
-INSERT INTO `system_role_menu` VALUES (4, 2259);
-INSERT INTO `system_role_menu` VALUES (4, 2260);
-INSERT INTO `system_role_menu` VALUES (4, 2261);
-INSERT INTO `system_role_menu` VALUES (4, 2262);
-INSERT INTO `system_role_menu` VALUES (4, 2263);
-INSERT INTO `system_role_menu` VALUES (4, 2264);
-INSERT INTO `system_role_menu` VALUES (4, 2265);
-INSERT INTO `system_role_menu` VALUES (4, 2266);
-INSERT INTO `system_role_menu` VALUES (4, 2267);
-INSERT INTO `system_role_menu` VALUES (4, 2268);
-INSERT INTO `system_role_menu` VALUES (4, 2269);
-INSERT INTO `system_role_menu` VALUES (4, 2270);
-INSERT INTO `system_role_menu` VALUES (4, 2271);
-INSERT INTO `system_role_menu` VALUES (4, 2272);
-INSERT INTO `system_role_menu` VALUES (4, 2273);
-INSERT INTO `system_role_menu` VALUES (4, 2274);
-INSERT INTO `system_role_menu` VALUES (4, 2276);
-INSERT INTO `system_role_menu` VALUES (4, 2277);
-INSERT INTO `system_role_menu` VALUES (4, 2278);
-INSERT INTO `system_role_menu` VALUES (4, 2279);
-INSERT INTO `system_role_menu` VALUES (4, 2280);
-INSERT INTO `system_role_menu` VALUES (4, 2281);
-INSERT INTO `system_role_menu` VALUES (4, 2282);
-INSERT INTO `system_role_menu` VALUES (4, 2283);
-INSERT INTO `system_role_menu` VALUES (4, 2284);
-INSERT INTO `system_role_menu` VALUES (4, 2285);
-INSERT INTO `system_role_menu` VALUES (4, 2286);
-INSERT INTO `system_role_menu` VALUES (4, 2287);
-INSERT INTO `system_role_menu` VALUES (4, 2288);
-INSERT INTO `system_role_menu` VALUES (4, 2296);
-INSERT INTO `system_role_menu` VALUES (4, 2297);
-INSERT INTO `system_role_menu` VALUES (4, 2298);
-INSERT INTO `system_role_menu` VALUES (4, 2299);
-INSERT INTO `system_role_menu` VALUES (4, 2300);
-INSERT INTO `system_role_menu` VALUES (4, 2301);
-INSERT INTO `system_role_menu` VALUES (4, 2302);
-INSERT INTO `system_role_menu` VALUES (4, 2303);
-INSERT INTO `system_role_menu` VALUES (4, 2304);
-INSERT INTO `system_role_menu` VALUES (4, 2305);
-INSERT INTO `system_role_menu` VALUES (4, 2306);
-INSERT INTO `system_role_menu` VALUES (4, 2307);
-INSERT INTO `system_role_menu` VALUES (4, 2308);
-INSERT INTO `system_role_menu` VALUES (4, 2309);
-INSERT INTO `system_role_menu` VALUES (4, 2310);
-INSERT INTO `system_role_menu` VALUES (4, 2311);
-INSERT INTO `system_role_menu` VALUES (4, 2312);
-INSERT INTO `system_role_menu` VALUES (4, 2313);
-INSERT INTO `system_role_menu` VALUES (4, 2314);
-INSERT INTO `system_role_menu` VALUES (4, 2315);
-INSERT INTO `system_role_menu` VALUES (4, 2316);
-INSERT INTO `system_role_menu` VALUES (4, 2317);
-INSERT INTO `system_role_menu` VALUES (4, 2318);
-
-
-INSERT INTO `system_role_menu`  VALUES (4, 2319);
-INSERT INTO `system_role_menu`  VALUES (4, 2320);
-INSERT INTO `system_role_menu`  VALUES (4, 2321);
-INSERT INTO `system_role_menu`  VALUES (4, 2322);
-INSERT INTO `system_role_menu`  VALUES (4, 2323);
-INSERT INTO `system_role_menu`  VALUES (4, 2324);
-INSERT INTO `system_role_menu`  VALUES (4, 2325);
-INSERT INTO `system_role_menu`  VALUES (4, 2326);
-INSERT INTO `system_role_menu`  VALUES (4, 2327);
-INSERT INTO `system_role_menu`  VALUES (4, 2328);
-INSERT INTO `system_role_menu`  VALUES (4, 2329);
-INSERT INTO `system_role_menu`  VALUES (4, 2330);
-INSERT INTO `system_role_menu`  VALUES (4, 2331);
-INSERT INTO `system_role_menu`  VALUES (4, 2332);
-INSERT INTO `system_role_menu` VALUES (4, 2333);
-INSERT INTO `system_role_menu` VALUES (4, 2334);
-INSERT INTO `system_role_menu` VALUES (4, 2335);
-INSERT INTO `system_role_menu` VALUES (4, 2336);
-INSERT INTO `system_role_menu` VALUES (4, 2337);
-
--- V1.4.3 API管理角色授权（系统管理员 role_id=4）
-INSERT INTO `system_role_menu` VALUES (4, 2350);
-INSERT INTO `system_role_menu` VALUES (4, 2444);
-INSERT INTO `system_role_menu` VALUES (4, 2445);
-INSERT INTO `system_role_menu` VALUES (4, 2446);
-INSERT INTO `system_role_menu` VALUES (4, 2447);
-INSERT INTO `system_role_menu` VALUES (4, 2448);
-INSERT INTO `system_role_menu` VALUES (4, 2449);
+-- TODO 注意：角色菜单关联数据请从Latest中拷贝
 
 -- ----------------------------
 -- Table structure for system_user
@@ -1090,11 +549,6 @@ CREATE TABLE `system_user_post` (
 -- ----------------------------
 INSERT INTO `system_user_post` VALUES (1, 1);
 INSERT INTO `system_user_post` VALUES (2, 2);
-INSERT INTO `system_user_post` VALUES (730, 1);
-INSERT INTO `system_user_post` VALUES (733, 4);
-INSERT INTO `system_user_post` VALUES (738, 4);
-INSERT INTO `system_user_post` VALUES (742, 4);
-INSERT INTO `system_user_post` VALUES (744, 4);
 
 -- ----------------------------
 -- Table structure for system_user_role
@@ -1110,6 +564,6 @@ CREATE TABLE `system_user_role` (
 -- Records of system_user_role
 -- ----------------------------
 INSERT INTO `system_user_role` VALUES (1, 1);
-INSERT INTO `system_user_role` VALUES (2, 4);
+INSERT INTO `system_user_role` VALUES (2, 2);
 
 SET FOREIGN_KEY_CHECKS = 1;

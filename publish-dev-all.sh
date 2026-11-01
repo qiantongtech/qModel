@@ -32,102 +32,75 @@ EXCLUDE_DIRS=(".git" "docker")
 
 echo "🚀 准备将项目版本号从 $OLD_VERSION 升级至: $NEW_VERSION"
 
-# ==========================================
-# 2. 通用函数定义
-# ==========================================
-
-# 防呆校验：检查当前版本号是否与 OLD_VERSION 一致
-check_current_version() {
-    if [ ! -f "$VERSION_CHECK_FILE" ]; then
-        echo "❌ 错误: 未找到版本校验文件 $VERSION_CHECK_FILE，请确认当前目录是否正确。"
-        exit 1
-    fi
-
-    # 从 pom.xml 中提取第一个 <version> 标签的值（兼容 macOS BSD grep/sed）
-    local current_version
-    current_version=$(sed -n 's/.*<version>\([^<]*\)<\/version>.*/\1/p' "$VERSION_CHECK_FILE" | head -n 1)
-
-    if [ "$current_version" != "$OLD_VERSION" ]; then
-        echo "❌ 防呆校验失败！"
-        echo "   期望当前版本号为: $OLD_VERSION"
-        echo "   实际检测到的版本号为: $current_version"
-        echo "   脚本已终止，请检查版本号配置后重试。"
-        exit 1
-    fi
-
-    echo "✅ 防呆校验通过，当前版本号确认为: $current_version"
-}
-
-# 通用版本替换函数
-replace_version() {
-    local file=$1
-    local pattern=$2
-    local replacement=$3
-    if [ -f "$file" ]; then
-        echo "  -> 正在更新: $file"
-        sed -i.bak -E "s|${pattern}|${replacement}|g" "$file"
-        rm -f "${file}.bak"
-    fi
-}
-
-# ==========================================
-# 3. 防呆校验
-# ==========================================
-check_current_version
-
-# ==========================================
-# 4. 升级项目版本号
-# ==========================================
-echo "📦 正在扫描并升级所有 pom.xml 文件..."
-
-EXCLUDE_ARGS=""
-for dir in "${EXCLUDE_DIRS[@]}"; do
-    EXCLUDE_ARGS="$EXCLUDE_ARGS -not -path '*/$dir/*'"
-done
-
-eval "find . -name 'pom.xml' $EXCLUDE_ARGS" | while read -r pom_file; do
-    replace_version "$pom_file" "<version>$OLD_VERSION</version>" "<version>$NEW_VERSION</version>"
-done
-
-# 升级 Docker 环境变量
-ENV_FILE="./docker/.env"
-replace_version "$ENV_FILE" "^QMODEL_VERSION=$OLD_VERSION" "QMODEL_VERSION=$NEW_VERSION"
-
-echo "✅ 版本号升级完成！"
-
-# ==========================================
-# 5. Docker 环境准备与构建
-# ==========================================
-
-echo "🔑 正在检查阿里云镜像仓库登录状态..."
-if ! docker login --username=zhuzhuxia12138 --password-stdin $REGISTRY_URL < /dev/null 2>/dev/null; then
-    echo "⚠️ 需要手动输入密码进行登录..."
-    docker login --username=zhuzhuxia12138 $REGISTRY_URL
-fi
-
-echo "🏗️ 正在配置 Docker Buildx Builder..."
-docker buildx rm qmodel-builder 2>/dev/null || true
-docker buildx create --name qmodel-builder --driver docker-container --use >/dev/null
-
-echo "🚀 开始 Maven 构建、打包并推送 Docker 镜像..."
-mvn -B clean deploy \
-    -Dmaven.test.skip=true \
-    -Dmaven.javadoc.skip=true \
-    -Dmaven.deploy.skip=true \
-    -Ddocker.build.skip=false \
-    -Ddocker.push.skip=false
-
-# ==========================================
-# 6. 前端打包与资源拷贝
-# ==========================================
-echo "🎨 开始打包前端..."
-
-cd qmodel-ui
-sh build-prod.sh || { echo "❌ 前端打包失败"; exit 1; }
-cd ..
-
-echo "📂 正在更新 Docker 目录下的前端资源..."
-cp -r ./qmodel-ui/dist ./docker/qModel/nginx/
+## ==========================================
+## 2. 通用函数定义
+## ==========================================
+#
+## 通用版本替换函数
+#replace_version() {
+#    local file=$1
+#    local pattern=$2
+#    local replacement=$3
+#    if [ -f "$file" ]; then
+#        echo "  -> 正在更新: $file"
+#        sed -i.bak -E "s|${pattern}|${replacement}|g" "$file"
+#        rm -f "${file}.bak"
+#    fi
+#}
+#
+## ==========================================
+## 4. 升级项目版本号
+## ==========================================
+#echo "📦 正在扫描并升级所有 pom.xml 文件..."
+#
+#EXCLUDE_ARGS=""
+#for dir in "${EXCLUDE_DIRS[@]}"; do
+#    EXCLUDE_ARGS="$EXCLUDE_ARGS -not -path '*/$dir/*'"
+#done
+#
+#eval "find . -name 'pom.xml' $EXCLUDE_ARGS" | while read -r pom_file; do
+#    replace_version "$pom_file" "<version>$OLD_VERSION</version>" "<version>$NEW_VERSION</version>"
+#done
+#
+## 升级 Docker 环境变量
+#ENV_FILE="./docker/.env"
+#replace_version "$ENV_FILE" "^QMODEL_VERSION=$OLD_VERSION" "QMODEL_VERSION=$NEW_VERSION"
+#
+#echo "✅ 版本号升级完成！"
+#
+## ==========================================
+## 5. Docker 环境准备与构建
+## ==========================================
+#
+#echo "🔑 正在检查阿里云镜像仓库登录状态..."
+#if ! docker login --username=zhuzhuxia12138 --password-stdin $REGISTRY_URL < /dev/null 2>/dev/null; then
+#    echo "⚠️ 需要手动输入密码进行登录..."
+#    docker login --username=zhuzhuxia12138 $REGISTRY_URL
+#fi
+#
+#echo "🏗️ 正在配置 Docker Buildx Builder..."
+#docker buildx rm qmodel-builder 2>/dev/null || true
+#docker buildx create --name qmodel-builder --driver docker-container --use >/dev/null
+#
+#echo "🚀 开始 Maven 构建、打包并推送 Docker 镜像..."
+#mvn -B clean deploy \
+#    -Dmaven.test.skip=true \
+#    -Dmaven.javadoc.skip=true \
+#    -Dmaven.deploy.skip=true \
+#    -Ddocker.build.skip=false \
+#    -Ddocker.push.skip=false
+#
+## ==========================================
+## 6. 前端打包与资源拷贝
+## ==========================================
+#echo "🎨 开始打包前端..."
+#
+#cd qmodel-ui
+#sh build-prod.sh || { echo "❌ 前端打包失败"; exit 1; }
+#cd ..
+#
+#echo "📂 正在更新 Docker 目录下的前端资源..."
+#cp -r ./qmodel-ui/dist ./docker/qModel/nginx/
 
 # ==========================================
 # 7. 远程部署
