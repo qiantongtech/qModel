@@ -20,121 +20,6 @@ SET NAMES utf8mb4;
 SET FOREIGN_KEY_CHECKS = 0;
 
 -- ----------------------------
--- Table structure for auth_client
--- ----------------------------
-DROP TABLE IF EXISTS `auth_client`;
-CREATE TABLE `auth_client` (
-                               `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '应用ID',
-                               `secret_key` varchar(256) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '应用秘钥',
-                               `name` varchar(128) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '应用名称',
-                               `type` int(11) NOT NULL COMMENT '应用类型;0：Web，1：App，2：小程序',
-                               `icon` varchar(256) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '应用图标',
-                               `home_url` varchar(256) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '应用首页',
-                               `sync_url` varchar(256) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '同步地址',
-                               `redirect_url` varchar(1024) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '允许授权的url',
-                               `public_flag` tinyint(4) NOT NULL COMMENT '是否公开',
-                               `valid_flag` tinyint(4) NOT NULL COMMENT '是否有效;0：无效，1：有效',
-                               `del_flag` tinyint(4) NOT NULL COMMENT '删除标志;1：已删除，0：未删除',
-                               `create_by` varchar(128) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '创建人',
-                               `creator_id` bigint(20) DEFAULT NULL COMMENT '创建人id;创建者的sys_user_id',
-                               `create_time` datetime NOT NULL COMMENT '创建时间',
-                               `update_by` varchar(128) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '更新人',
-                               `updator_id` varchar(20) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '更新人id;更新者的sys_user_id',
-                               `update_time` datetime NOT NULL COMMENT '更新时间',
-                               `remark` varchar(512) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '备注',
-                               PRIMARY KEY (`id`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=39 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC COMMENT='应用管理';
-
--- ----------------------------
--- Records of auth_client
--- ----------------------------
-BEGIN;
-COMMIT;
-
--- ----------------------------
--- Table structure for auth_client_user
--- ----------------------------
-DROP TABLE IF EXISTS `auth_client_user`;
-CREATE TABLE `auth_client_user` (
-                                    `client_id` bigint(20) NOT NULL COMMENT '应用ID',
-                                    `user_id` bigint(20) NOT NULL COMMENT '用户ID',
-                                    `open_id` varchar(256) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT 'open_id'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC COMMENT='应用和用户关联表';
-
--- ----------------------------
--- Records of auth_client_user
--- ----------------------------
-BEGIN;
-COMMIT;
-
--- ----------------------------
--- Table structure for ca_cert
--- ----------------------------
-DROP TABLE IF EXISTS `ca_cert`;
-CREATE TABLE `ca_cert` (
-                           `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT 'ID;ID',
-                           `name` varchar(90) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '证书名称',
-                           `subject_id` int(11) NOT NULL COMMENT '主体id',
-                           `subject_name` varchar(90) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '主体名称',
-                           `certificate` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '证书;证书',
-                           `private_key` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '私钥;私钥',
-                           `issuer` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '颁发者',
-                           `possessor` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '所有者',
-                           `valid_time` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '有效期',
-                           `valid_flag` int(11) NOT NULL DEFAULT '1' COMMENT '是否有效;0：无效，1：有效',
-                           `del_flag` int(11) NOT NULL DEFAULT '0' COMMENT '删除标志;1：已删除，0：未删除',
-                           `create_by` varchar(90) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '创建人',
-                           `creator_id` int(11) DEFAULT NULL COMMENT '创建人id',
-                           `create_time` datetime DEFAULT NULL COMMENT '创建时间',
-                           `update_by` varchar(90) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '更新人',
-                           `update_time` datetime DEFAULT NULL COMMENT '更新时间',
-                           `remark` varchar(900) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '备注;备注',
-                           PRIMARY KEY (`id`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC COMMENT='证书管理';
-
--- ----------------------------
--- Records of ca_cert
--- ----------------------------
-BEGIN;
-INSERT INTO `ca_cert` (`id`, `name`, `subject_id`, `subject_name`, `certificate`, `private_key`, `issuer`, `possessor`, `valid_time`, `valid_flag`, `del_flag`, `create_by`, `creator_id`, `create_time`, `update_by`, `update_time`, `remark`) VALUES (9, '冰凤框架Nginx证书', 9, '江苏千桐科技有限公司', '/profile/ca/2024/10/23/6718d6e3a921cf6536292244.cer', '/profile/ca/2024/10/23/6718d6e3a921cf6536292245.pem', '江苏千桐科技有限公司', '192.168.0.1', '30', 1, 0, 'admin', 1, '2024-10-23 18:58:44', NULL, NULL, NULL);
-INSERT INTO `ca_cert` (`id`, `name`, `subject_id`, `subject_name`, `certificate`, `private_key`, `issuer`, `possessor`, `valid_time`, `valid_flag`, `del_flag`, `create_by`, `creator_id`, `create_time`, `update_by`, `update_time`, `remark`) VALUES (10, '测试', 9, '江苏千桐科技有限公司', '/profile/ca/2024/12/09/6756acfbe2f804e7283bef9d.cer', '/profile/ca/2024/12/09/6756acfbe2f804e7283bef9e.pem', '江苏千桐科技有限公司', '1000', '3', 1, 0, 'admin', 1, '2024-12-09 16:40:27', NULL, NULL, NULL);
-COMMIT;
-
--- ----------------------------
--- Table structure for ca_subject
--- ----------------------------
-DROP TABLE IF EXISTS `ca_subject`;
-CREATE TABLE `ca_subject` (
-                              `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT 'ID;主体ID',
-                              `name` varchar(90) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '主体名称;主体名称',
-                              `cn` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '通用名称;通用名称',
-                              `ou` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '组织部门;组织单位名称',
-                              `o` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '组织名称',
-                              `l` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '城市名称',
-                              `st` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '省名称',
-                              `c` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '国家',
-                              `certificate` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '证书;证书',
-                              `private_key` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '私钥;私钥',
-                              `valid_flag` int(11) NOT NULL DEFAULT '1' COMMENT '是否有效;是否有效 0：无效，1：有效',
-                              `del_flag` int(11) NOT NULL DEFAULT '0' COMMENT '删除标志;删除标志 1：已删除，0：未删除',
-                              `create_by` varchar(90) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '创建人;创建人',
-                              `creator_id` int(11) DEFAULT NULL COMMENT '创建人id;创建人id',
-                              `create_time` datetime DEFAULT NULL COMMENT '创建时间;创建时间',
-                              `update_by` varchar(90) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '更新人;更新人',
-                              `update_time` datetime DEFAULT NULL COMMENT '更新时间;更新时间',
-                              `remark` varchar(900) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '备注;备注',
-                              PRIMARY KEY (`id`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC COMMENT='主体管理';
-
--- ----------------------------
--- Records of ca_subject
--- ----------------------------
-BEGIN;
-INSERT INTO `ca_subject` (`id`, `name`, `cn`, `ou`, `o`, `l`, `st`, `c`, `certificate`, `private_key`, `valid_flag`, `del_flag`, `create_by`, `creator_id`, `create_time`, `update_by`, `update_time`, `remark`) VALUES (9, '江苏千桐科技有限公司', '江苏千桐科技有限公司', '技术部', '技术部', '南京', '江苏', '中国', '/profile/ca/2024/10/23/6718d658a921cf6536292242.cer', '/profile/ca/2024/10/23/6718d658a921cf6536292243.pem', 1, 0, 'admin', 1, '2024-10-23 18:56:25', NULL, NULL, NULL);
-INSERT INTO `ca_subject` (`id`, `name`, `cn`, `ou`, `o`, `l`, `st`, `c`, `certificate`, `private_key`, `valid_flag`, `del_flag`, `create_by`, `creator_id`, `create_time`, `update_by`, `update_time`, `remark`) VALUES (10, '12', '12', '12', '12', '12', '12', '12', '/profile/ca/2024/12/09/6756abdbe2f804e7283bef9b.cer', '/profile/ca/2024/12/09/6756abdbe2f804e7283bef9c.pem', 1, 0, 'admin', 1, '2024-12-09 16:35:39', NULL, NULL, NULL);
-COMMIT;
-
--- ----------------------------
 -- Table structure for gen_table
 -- ----------------------------
 DROP TABLE IF EXISTS `gen_table`;
@@ -318,38 +203,6 @@ INSERT INTO `model` (`id`, `company_id`, `classify_id`, `name`, `code`, `access_
 INSERT INTO `model` (`id`, `company_id`, `classify_id`, `name`, `code`, `access_type`, `version`, `author`, `status`, `tags`, `icon`, `description`, `valid_flag`, `del_flag`, `create_by`, `creator_id`, `create_time`, `update_by`, `updator_id`, `update_time`, `remark`) VALUES (9, NULL, 17, 'qKnow_周报模板测试', 'QKNOW_WEEKLYREPORT', 'API', 'V1.0', '吴同', 7, '[{\"name\":\"周报\"},{\"name\":\"测试\"}]', '/2026/05/11/6a01a9a0e4b0d389f4f52f99.png', '获取 qKnow 系统中的周报模板测试数据', 1, 0, '吴同', 1, '2026-07-16 14:25:22', 'qModel', 1, '2026-07-16 15:58:40', NULL);
 INSERT INTO `model` (`id`, `company_id`, `classify_id`, `name`, `code`, `access_type`, `version`, `author`, `status`, `tags`, `icon`, `description`, `valid_flag`, `del_flag`, `create_by`, `creator_id`, `create_time`, `update_by`, `updator_id`, `update_time`, `remark`) VALUES (10, NULL, 2, '水位流量插值算法', 'WQIA', 'PYTHON', 'V1.0', '吴同', 5, '[{\"name\":\"水位流量\"},{\"name\":\"预测\"}]', '/2026/05/11/6a01a9a0e4b0d389f4f5ff99.png', NULL, 1, 0, '吴同', 1, '2026-07-16 15:09:06', 'system', 1, '2026-07-17 09:24:46', NULL);
 INSERT INTO `model` (`id`, `company_id`, `classify_id`, `name`, `code`, `access_type`, `version`, `author`, `status`, `tags`, `icon`, `description`, `valid_flag`, `del_flag`, `create_by`, `creator_id`, `create_time`, `update_by`, `updator_id`, `update_time`, `remark`) VALUES (11, NULL, 1, '水量预测模型', 'WATER_VOLUME_MODEL', 'API', 'V1.0', '吴同', 3, '[{\"name\":\"预测\"},{\"name\":\"水量\"}]', '/2026/08/05/6a72b353ee5a274b8e519c08.png', NULL, 1, 0, '超级管理员', 1, '2026-08-05 11:20:28', '超级管理员', 1, '2026-08-05 11:51:50', NULL);
-COMMIT;
-
--- ----------------------------
--- Table structure for model_audit
--- ----------------------------
-DROP TABLE IF EXISTS `model_audit`;
-CREATE TABLE `model_audit` (
-                               `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT 'ID',
-                               `model_id` bigint(20) NOT NULL COMMENT '模型id',
-                               `apply_id` bigint(20) NOT NULL COMMENT '申请人',
-                               `apply_time` datetime NOT NULL COMMENT '申请时间',
-                               `apply_reason` varchar(256) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '申请理由',
-                               `audit_status` tinyint(3) unsigned DEFAULT NULL COMMENT '审核状态;0：待审核，1：审核通过，2：审核拒绝',
-                               `auditor_id` bigint(20) DEFAULT NULL COMMENT '审核人',
-                               `audit_time` datetime DEFAULT NULL COMMENT '审核时间',
-                               `audit_reason` varchar(256) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '审核理由',
-                               `valid_flag` tinyint(1) NOT NULL DEFAULT '1' COMMENT '是否有效;0：无效，1：有效',
-                               `del_flag` tinyint(1) NOT NULL DEFAULT '0' COMMENT '删除标志;1：已删除，0：未删除',
-                               `create_by` varchar(32) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '创建人',
-                               `creator_id` bigint(20) DEFAULT NULL COMMENT '创建人id',
-                               `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-                               `update_by` varchar(32) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '更新人',
-                               `updator_id` bigint(20) DEFAULT NULL COMMENT '更新人id',
-                               `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '更新时间',
-                               `remark` varchar(512) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '备注',
-                               PRIMARY KEY (`id`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC COMMENT='模型审核';
-
--- ----------------------------
--- Records of model_audit
--- ----------------------------
-BEGIN;
 COMMIT;
 
 -- ----------------------------
@@ -1041,35 +894,6 @@ INSERT INTO `model_invoke_history` (`id`, `model_id`, `model_name`, `resource_id
 COMMIT;
 
 -- ----------------------------
--- Table structure for model_key
--- ----------------------------
-DROP TABLE IF EXISTS `model_key`;
-CREATE TABLE `model_key` (
-                             `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT 'ID',
-                             `user_id` bigint(20) NOT NULL COMMENT '用户id',
-                             `name` varchar(256) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '密钥名称',
-                             `description` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '描述',
-                             `api_key` varchar(128) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT 'key',
-                             `last_use_time` datetime DEFAULT NULL COMMENT '最后使用时间',
-                             `valid_flag` tinyint(1) NOT NULL DEFAULT '1' COMMENT '是否有效;0：无效，1：有效',
-                             `del_flag` tinyint(1) NOT NULL DEFAULT '0' COMMENT '删除标志;1：已删除，0：未删除',
-                             `create_by` varchar(32) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '创建人',
-                             `creator_id` bigint(20) DEFAULT NULL COMMENT '创建人id',
-                             `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-                             `update_by` varchar(32) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '更新人',
-                             `updator_id` bigint(20) DEFAULT NULL COMMENT '更新人id',
-                             `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '更新时间',
-                             `remark` varchar(512) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '备注',
-                             PRIMARY KEY (`id`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC COMMENT='模型访问 key';
-
--- ----------------------------
--- Records of model_key
--- ----------------------------
-BEGIN;
-COMMIT;
-
--- ----------------------------
 -- Table structure for model_operate
 -- ----------------------------
 DROP TABLE IF EXISTS `model_operate`;
@@ -1205,47 +1029,6 @@ INSERT INTO `model_reconstitution` (`id`, `company_id`, `name`, `classify_id`, `
 COMMIT;
 
 -- ----------------------------
--- Table structure for model_version
--- ----------------------------
-DROP TABLE IF EXISTS `model_version`;
-CREATE TABLE `model_version` (
-                                 `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT 'ID',
-                                 `model_id` bigint(20) NOT NULL COMMENT '模型id',
-                                 `model_version` varchar(128) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '版本号',
-                                 `description` varchar(256) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '描述',
-                                 `digest` varchar(256) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '版本摘要',
-                                 `base_version` varchar(128) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '基础版本',
-                                 `valid_flag` tinyint(1) NOT NULL DEFAULT '1' COMMENT '是否有效;0：无效，1：有效',
-                                 `del_flag` tinyint(1) NOT NULL DEFAULT '0' COMMENT '删除标志;1：已删除，0：未删除',
-                                 `create_by` varchar(32) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '创建人',
-                                 `creator_id` bigint(20) DEFAULT NULL COMMENT '创建人id',
-                                 `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-                                 `update_by` varchar(32) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '更新人',
-                                 `updator_id` bigint(20) DEFAULT NULL COMMENT '更新人id',
-                                 `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '更新时间',
-                                 `remark` varchar(512) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '备注',
-                                 PRIMARY KEY (`id`) USING BTREE,
-                                 UNIQUE KEY `model_version_un` (`model_id`,`model_version`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=30 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC COMMENT='模型版本表';
-
--- ----------------------------
--- Records of model_version
--- ----------------------------
-BEGIN;
-INSERT INTO `model_version` (`id`, `model_id`, `model_version`, `description`, `digest`, `base_version`, `valid_flag`, `del_flag`, `create_by`, `creator_id`, `create_time`, `update_by`, `updator_id`, `update_time`, `remark`) VALUES (1, 1, 'V1.0', NULL, NULL, NULL, 1, 0, NULL, NULL, '2026-09-01 11:38:10', NULL, NULL, '2026-09-01 11:38:10', NULL);
-INSERT INTO `model_version` (`id`, `model_id`, `model_version`, `description`, `digest`, `base_version`, `valid_flag`, `del_flag`, `create_by`, `creator_id`, `create_time`, `update_by`, `updator_id`, `update_time`, `remark`) VALUES (2, 2, 'V2.0', NULL, NULL, NULL, 1, 0, NULL, NULL, '2026-09-01 11:38:10', NULL, NULL, '2026-09-01 11:38:10', NULL);
-INSERT INTO `model_version` (`id`, `model_id`, `model_version`, `description`, `digest`, `base_version`, `valid_flag`, `del_flag`, `create_by`, `creator_id`, `create_time`, `update_by`, `updator_id`, `update_time`, `remark`) VALUES (3, 3, 'V1.5', NULL, NULL, NULL, 1, 0, NULL, NULL, '2026-09-01 11:38:10', NULL, NULL, '2026-09-01 11:38:10', NULL);
-INSERT INTO `model_version` (`id`, `model_id`, `model_version`, `description`, `digest`, `base_version`, `valid_flag`, `del_flag`, `create_by`, `creator_id`, `create_time`, `update_by`, `updator_id`, `update_time`, `remark`) VALUES (4, 4, 'V1.0', NULL, NULL, NULL, 1, 0, NULL, NULL, '2026-09-01 11:38:10', NULL, NULL, '2026-09-01 11:38:10', NULL);
-INSERT INTO `model_version` (`id`, `model_id`, `model_version`, `description`, `digest`, `base_version`, `valid_flag`, `del_flag`, `create_by`, `creator_id`, `create_time`, `update_by`, `updator_id`, `update_time`, `remark`) VALUES (5, 5, 'V2.3', NULL, NULL, NULL, 1, 0, NULL, NULL, '2026-09-01 11:38:10', NULL, NULL, '2026-09-01 11:38:10', NULL);
-INSERT INTO `model_version` (`id`, `model_id`, `model_version`, `description`, `digest`, `base_version`, `valid_flag`, `del_flag`, `create_by`, `creator_id`, `create_time`, `update_by`, `updator_id`, `update_time`, `remark`) VALUES (6, 6, 'V1.2', NULL, NULL, NULL, 1, 0, NULL, NULL, '2026-09-01 11:38:10', NULL, NULL, '2026-09-01 11:38:10', NULL);
-INSERT INTO `model_version` (`id`, `model_id`, `model_version`, `description`, `digest`, `base_version`, `valid_flag`, `del_flag`, `create_by`, `creator_id`, `create_time`, `update_by`, `updator_id`, `update_time`, `remark`) VALUES (7, 7, 'V3.0', NULL, NULL, NULL, 1, 0, NULL, NULL, '2026-09-01 11:38:10', NULL, NULL, '2026-09-01 11:38:10', NULL);
-INSERT INTO `model_version` (`id`, `model_id`, `model_version`, `description`, `digest`, `base_version`, `valid_flag`, `del_flag`, `create_by`, `creator_id`, `create_time`, `update_by`, `updator_id`, `update_time`, `remark`) VALUES (8, 8, 'v1.0', NULL, NULL, NULL, 1, 0, NULL, NULL, '2026-09-01 11:38:10', NULL, NULL, '2026-09-01 11:38:10', NULL);
-INSERT INTO `model_version` (`id`, `model_id`, `model_version`, `description`, `digest`, `base_version`, `valid_flag`, `del_flag`, `create_by`, `creator_id`, `create_time`, `update_by`, `updator_id`, `update_time`, `remark`) VALUES (9, 9, 'V1.0', NULL, NULL, NULL, 1, 0, NULL, NULL, '2026-09-01 11:38:10', NULL, NULL, '2026-09-01 11:38:10', NULL);
-INSERT INTO `model_version` (`id`, `model_id`, `model_version`, `description`, `digest`, `base_version`, `valid_flag`, `del_flag`, `create_by`, `creator_id`, `create_time`, `update_by`, `updator_id`, `update_time`, `remark`) VALUES (10, 10, 'V1.0', NULL, NULL, NULL, 1, 0, NULL, NULL, '2026-09-01 11:38:10', NULL, NULL, '2026-09-01 11:38:10', NULL);
-INSERT INTO `model_version` (`id`, `model_id`, `model_version`, `description`, `digest`, `base_version`, `valid_flag`, `del_flag`, `create_by`, `creator_id`, `create_time`, `update_by`, `updator_id`, `update_time`, `remark`) VALUES (11, 11, 'V1.0', NULL, NULL, NULL, 1, 0, NULL, NULL, '2026-09-01 11:38:10', NULL, NULL, '2026-09-01 11:38:10', NULL);
-COMMIT;
-
--- ----------------------------
 -- Table structure for qrtz_blob_triggers
 -- ----------------------------
 DROP TABLE IF EXISTS `qrtz_blob_triggers`;
@@ -1276,234 +1059,6 @@ CREATE TABLE `qrtz_calendars` (
 
 -- ----------------------------
 -- Records of qrtz_calendars
--- ----------------------------
-BEGIN;
-COMMIT;
-
--- ----------------------------
--- Table structure for qrtz_cron_triggers
--- ----------------------------
-DROP TABLE IF EXISTS `qrtz_cron_triggers`;
-CREATE TABLE `qrtz_cron_triggers` (
-                                      `sched_name` varchar(120) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '调度名称',
-                                      `trigger_name` varchar(200) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT 'qrtz_triggers表trigger_name的外键',
-                                      `trigger_group` varchar(200) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT 'qrtz_triggers表trigger_group的外键',
-                                      `cron_expression` varchar(200) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT 'cron表达式',
-                                      `time_zone_id` varchar(80) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '时区',
-                                      PRIMARY KEY (`sched_name`,`trigger_name`,`trigger_group`) USING BTREE,
-                                      CONSTRAINT `qrtz_cron_triggers_ibfk_1` FOREIGN KEY (`sched_name`, `trigger_name`, `trigger_group`) REFERENCES `qrtz_triggers` (`sched_name`, `trigger_name`, `trigger_group`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC COMMENT='Cron类型的触发器表';
-
--- ----------------------------
--- Records of qrtz_cron_triggers
--- ----------------------------
-BEGIN;
-INSERT INTO `qrtz_cron_triggers` (`sched_name`, `trigger_name`, `trigger_group`, `cron_expression`, `time_zone_id`) VALUES ('RuoyiScheduler', 'TASK_CLASS_NAME1', 'DEFAULT', '0/10 * * * * ?', 'Asia/Shanghai');
-INSERT INTO `qrtz_cron_triggers` (`sched_name`, `trigger_name`, `trigger_group`, `cron_expression`, `time_zone_id`) VALUES ('RuoyiScheduler', 'TASK_CLASS_NAME2', 'DEFAULT', '0/15 * * * * ?', 'Asia/Shanghai');
-INSERT INTO `qrtz_cron_triggers` (`sched_name`, `trigger_name`, `trigger_group`, `cron_expression`, `time_zone_id`) VALUES ('RuoyiScheduler', 'TASK_CLASS_NAME3', 'DEFAULT', '0/20 * * * * ?', 'Asia/Shanghai');
-COMMIT;
-
--- ----------------------------
--- Table structure for qrtz_fired_triggers
--- ----------------------------
-DROP TABLE IF EXISTS `qrtz_fired_triggers`;
-CREATE TABLE `qrtz_fired_triggers` (
-                                       `sched_name` varchar(120) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '调度名称',
-                                       `entry_id` varchar(95) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '调度器实例id',
-                                       `trigger_name` varchar(200) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT 'qrtz_triggers表trigger_name的外键',
-                                       `trigger_group` varchar(200) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT 'qrtz_triggers表trigger_group的外键',
-                                       `instance_name` varchar(200) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '调度器实例名',
-                                       `fired_time` bigint(20) NOT NULL COMMENT '触发的时间',
-                                       `sched_time` bigint(20) NOT NULL COMMENT '定时器制定的时间',
-                                       `priority` int(11) NOT NULL COMMENT '优先级',
-                                       `state` varchar(16) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '状态',
-                                       `job_name` varchar(200) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '任务名称',
-                                       `job_group` varchar(200) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '任务组名',
-                                       `is_nonconcurrent` varchar(1) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '是否并发',
-                                       `requests_recovery` varchar(1) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '是否接受恢复执行',
-                                       PRIMARY KEY (`sched_name`,`entry_id`) USING BTREE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC COMMENT='已触发的触发器表';
-
--- ----------------------------
--- Records of qrtz_fired_triggers
--- ----------------------------
-BEGIN;
-COMMIT;
-
--- ----------------------------
--- Table structure for qrtz_job_details
--- ----------------------------
-DROP TABLE IF EXISTS `qrtz_job_details`;
-CREATE TABLE `qrtz_job_details` (
-                                    `sched_name` varchar(120) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '调度名称',
-                                    `job_name` varchar(200) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '任务名称',
-                                    `job_group` varchar(200) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '任务组名',
-                                    `description` varchar(250) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '相关介绍',
-                                    `job_class_name` varchar(250) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '执行任务类名称',
-                                    `is_durable` varchar(1) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '是否持久化',
-                                    `is_nonconcurrent` varchar(1) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '是否并发',
-                                    `is_update_data` varchar(1) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '是否更新数据',
-                                    `requests_recovery` varchar(1) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '是否接受恢复执行',
-                                    `job_data` blob COMMENT '存放持久化job对象',
-                                    PRIMARY KEY (`sched_name`,`job_name`,`job_group`) USING BTREE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC COMMENT='任务详细信息表';
-
--- ----------------------------
--- Records of qrtz_job_details
--- ----------------------------
-BEGIN;
-INSERT INTO `qrtz_job_details` (`sched_name`, `job_name`, `job_group`, `description`, `job_class_name`, `is_durable`, `is_nonconcurrent`, `is_update_data`, `requests_recovery`, `job_data`) VALUES ('RuoyiScheduler', 'TASK_CLASS_NAME1', 'DEFAULT', NULL, 'com.ruoyi.common.utils.job.QuartzDisallowConcurrentExecution', '0', '1', '0', '0', 0xACED0005737200156F72672E71756172747A2E4A6F62446174614D61709FB083E8BFA9B0CB020000787200266F72672E71756172747A2E7574696C732E537472696E674B65794469727479466C61674D61708208E8C3FBC55D280200015A0013616C6C6F77735472616E7369656E74446174617872001D6F72672E71756172747A2E7574696C732E4469727479466C61674D617013E62EAD28760ACE0200025A000564697274794C00036D617074000F4C6A6176612F7574696C2F4D61703B787001737200116A6176612E7574696C2E486173684D61700507DAC1C31660D103000246000A6C6F6164466163746F724900097468726573686F6C6478703F4000000000000C7708000000100000000174000F5441534B5F50524F5045525449455373720027636F6D2E72756F79692E70726F6A6563742E6D6F6E69746F722E646F6D61696E2E5379734A6F6200000000000000010200084C000A636F6E63757272656E747400124C6A6176612F6C616E672F537472696E673B4C000E63726F6E45787072657373696F6E71007E00094C000C696E766F6B6554617267657471007E00094C00086A6F6247726F757071007E00094C00056A6F6249647400104C6A6176612F6C616E672F4C6F6E673B4C00076A6F624E616D6571007E00094C000D6D697366697265506F6C69637971007E00094C000673746174757371007E000978720029636F6D2E72756F79692E6672616D65776F726B2E7765622E646F6D61696E2E42617365456E7469747900000000000000010200094C0009626567696E54696D6571007E00094C0008637265617465427971007E00094C000A63726561746554696D6571007E00094C0007656E6454696D6571007E00094C0006706172616D7371007E00034C000672656D61726B71007E00094C000B73656172636856616C756571007E00094C0008757064617465427971007E00094C000A75706461746554696D6571007E000978707074000561646D696E740013323032342D30382D31382030313A32333A323970707400007070707400013174000E302F3130202A202A202A202A203F74001172795461736B2E72794E6F506172616D7374000744454641554C547372000E6A6176612E6C616E672E4C6F6E673B8BE490CC8F23DF0200014A000576616C7565787200106A6176612E6C616E672E4E756D62657286AC951D0B94E08B02000078700000000000000001740018E7B3BBE7BB9FE9BB98E8AEA4EFBC88E697A0E58F82EFBC8974000133740001317800);
-INSERT INTO `qrtz_job_details` (`sched_name`, `job_name`, `job_group`, `description`, `job_class_name`, `is_durable`, `is_nonconcurrent`, `is_update_data`, `requests_recovery`, `job_data`) VALUES ('RuoyiScheduler', 'TASK_CLASS_NAME2', 'DEFAULT', NULL, 'com.ruoyi.common.utils.job.QuartzDisallowConcurrentExecution', '0', '1', '0', '0', 0xACED0005737200156F72672E71756172747A2E4A6F62446174614D61709FB083E8BFA9B0CB020000787200266F72672E71756172747A2E7574696C732E537472696E674B65794469727479466C61674D61708208E8C3FBC55D280200015A0013616C6C6F77735472616E7369656E74446174617872001D6F72672E71756172747A2E7574696C732E4469727479466C61674D617013E62EAD28760ACE0200025A000564697274794C00036D617074000F4C6A6176612F7574696C2F4D61703B787001737200116A6176612E7574696C2E486173684D61700507DAC1C31660D103000246000A6C6F6164466163746F724900097468726573686F6C6478703F4000000000000C7708000000100000000174000F5441534B5F50524F5045525449455373720027636F6D2E72756F79692E70726F6A6563742E6D6F6E69746F722E646F6D61696E2E5379734A6F6200000000000000010200084C000A636F6E63757272656E747400124C6A6176612F6C616E672F537472696E673B4C000E63726F6E45787072657373696F6E71007E00094C000C696E766F6B6554617267657471007E00094C00086A6F6247726F757071007E00094C00056A6F6249647400104C6A6176612F6C616E672F4C6F6E673B4C00076A6F624E616D6571007E00094C000D6D697366697265506F6C69637971007E00094C000673746174757371007E000978720029636F6D2E72756F79692E6672616D65776F726B2E7765622E646F6D61696E2E42617365456E7469747900000000000000010200094C0009626567696E54696D6571007E00094C0008637265617465427971007E00094C000A63726561746554696D6571007E00094C0007656E6454696D6571007E00094C0006706172616D7371007E00034C000672656D61726B71007E00094C000B73656172636856616C756571007E00094C0008757064617465427971007E00094C000A75706461746554696D6571007E000978707074000561646D696E740013323032342D30382D31382030313A32333A323970707400007070707400013174000E302F3135202A202A202A202A203F74001572795461736B2E7279506172616D7328277279272974000744454641554C547372000E6A6176612E6C616E672E4C6F6E673B8BE490CC8F23DF0200014A000576616C7565787200106A6176612E6C616E672E4E756D62657286AC951D0B94E08B02000078700000000000000002740018E7B3BBE7BB9FE9BB98E8AEA4EFBC88E69C89E58F82EFBC8974000133740001317800);
-INSERT INTO `qrtz_job_details` (`sched_name`, `job_name`, `job_group`, `description`, `job_class_name`, `is_durable`, `is_nonconcurrent`, `is_update_data`, `requests_recovery`, `job_data`) VALUES ('RuoyiScheduler', 'TASK_CLASS_NAME3', 'DEFAULT', NULL, 'com.ruoyi.common.utils.job.QuartzDisallowConcurrentExecution', '0', '1', '0', '0', 0xACED0005737200156F72672E71756172747A2E4A6F62446174614D61709FB083E8BFA9B0CB020000787200266F72672E71756172747A2E7574696C732E537472696E674B65794469727479466C61674D61708208E8C3FBC55D280200015A0013616C6C6F77735472616E7369656E74446174617872001D6F72672E71756172747A2E7574696C732E4469727479466C61674D617013E62EAD28760ACE0200025A000564697274794C00036D617074000F4C6A6176612F7574696C2F4D61703B787001737200116A6176612E7574696C2E486173684D61700507DAC1C31660D103000246000A6C6F6164466163746F724900097468726573686F6C6478703F4000000000000C7708000000100000000174000F5441534B5F50524F5045525449455373720027636F6D2E72756F79692E70726F6A6563742E6D6F6E69746F722E646F6D61696E2E5379734A6F6200000000000000010200084C000A636F6E63757272656E747400124C6A6176612F6C616E672F537472696E673B4C000E63726F6E45787072657373696F6E71007E00094C000C696E766F6B6554617267657471007E00094C00086A6F6247726F757071007E00094C00056A6F6249647400104C6A6176612F6C616E672F4C6F6E673B4C00076A6F624E616D6571007E00094C000D6D697366697265506F6C69637971007E00094C000673746174757371007E000978720029636F6D2E72756F79692E6672616D65776F726B2E7765622E646F6D61696E2E42617365456E7469747900000000000000010200094C0009626567696E54696D6571007E00094C0008637265617465427971007E00094C000A63726561746554696D6571007E00094C0007656E6454696D6571007E00094C0006706172616D7371007E00034C000672656D61726B71007E00094C000B73656172636856616C756571007E00094C0008757064617465427971007E00094C000A75706461746554696D6571007E000978707074000561646D696E740013323032342D30382D31382030313A32333A323970707400007070707400013174000E302F3230202A202A202A202A203F74003872795461736B2E72794D756C7469706C65506172616D7328277279272C20747275652C20323030304C2C203331362E3530442C203130302974000744454641554C547372000E6A6176612E6C616E672E4C6F6E673B8BE490CC8F23DF0200014A000576616C7565787200106A6176612E6C616E672E4E756D62657286AC951D0B94E08B02000078700000000000000003740018E7B3BBE7BB9FE9BB98E8AEA4EFBC88E5A49AE58F82EFBC8974000133740001317800);
-COMMIT;
-
--- ----------------------------
--- Table structure for qrtz_locks
--- ----------------------------
-DROP TABLE IF EXISTS `qrtz_locks`;
-CREATE TABLE `qrtz_locks` (
-                              `sched_name` varchar(120) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '调度名称',
-                              `lock_name` varchar(40) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '悲观锁名称',
-                              PRIMARY KEY (`sched_name`,`lock_name`) USING BTREE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC COMMENT='存储的悲观锁信息表';
-
--- ----------------------------
--- Records of qrtz_locks
--- ----------------------------
-BEGIN;
-INSERT INTO `qrtz_locks` (`sched_name`, `lock_name`) VALUES ('RuoyiScheduler', 'TRIGGER_ACCESS');
-COMMIT;
-
--- ----------------------------
--- Table structure for qrtz_paused_trigger_grps
--- ----------------------------
-DROP TABLE IF EXISTS `qrtz_paused_trigger_grps`;
-CREATE TABLE `qrtz_paused_trigger_grps` (
-                                            `sched_name` varchar(120) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '调度名称',
-                                            `trigger_group` varchar(200) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT 'qrtz_triggers表trigger_group的外键',
-                                            PRIMARY KEY (`sched_name`,`trigger_group`) USING BTREE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC COMMENT='暂停的触发器表';
-
--- ----------------------------
--- Records of qrtz_paused_trigger_grps
--- ----------------------------
-BEGIN;
-COMMIT;
-
--- ----------------------------
--- Table structure for qrtz_scheduler_state
--- ----------------------------
-DROP TABLE IF EXISTS `qrtz_scheduler_state`;
-CREATE TABLE `qrtz_scheduler_state` (
-                                        `sched_name` varchar(120) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '调度名称',
-                                        `instance_name` varchar(200) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '实例名称',
-                                        `last_checkin_time` bigint(20) NOT NULL COMMENT '上次检查时间',
-                                        `checkin_interval` bigint(20) NOT NULL COMMENT '检查间隔时间',
-                                        PRIMARY KEY (`sched_name`,`instance_name`) USING BTREE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC COMMENT='调度器状态表';
-
--- ----------------------------
--- Records of qrtz_scheduler_state
--- ----------------------------
-BEGIN;
-COMMIT;
-
--- ----------------------------
--- Table structure for qrtz_simple_triggers
--- ----------------------------
-DROP TABLE IF EXISTS `qrtz_simple_triggers`;
-CREATE TABLE `qrtz_simple_triggers` (
-                                        `sched_name` varchar(120) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '调度名称',
-                                        `trigger_name` varchar(200) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT 'qrtz_triggers表trigger_name的外键',
-                                        `trigger_group` varchar(200) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT 'qrtz_triggers表trigger_group的外键',
-                                        `repeat_count` bigint(20) NOT NULL COMMENT '重复的次数统计',
-                                        `repeat_interval` bigint(20) NOT NULL COMMENT '重复的间隔时间',
-                                        `times_triggered` bigint(20) NOT NULL COMMENT '已经触发的次数',
-                                        PRIMARY KEY (`sched_name`,`trigger_name`,`trigger_group`) USING BTREE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC COMMENT='简单触发器的信息表';
-
--- ----------------------------
--- Records of qrtz_simple_triggers
--- ----------------------------
-BEGIN;
-COMMIT;
-
--- ----------------------------
--- Table structure for qrtz_simprop_triggers
--- ----------------------------
-DROP TABLE IF EXISTS `qrtz_simprop_triggers`;
-CREATE TABLE `qrtz_simprop_triggers` (
-                                         `sched_name` varchar(120) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '调度名称',
-                                         `trigger_name` varchar(200) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT 'qrtz_triggers表trigger_name的外键',
-                                         `trigger_group` varchar(200) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT 'qrtz_triggers表trigger_group的外键',
-                                         `str_prop_1` varchar(512) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'String类型的trigger的第一个参数',
-                                         `str_prop_2` varchar(512) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'String类型的trigger的第二个参数',
-                                         `str_prop_3` varchar(512) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'String类型的trigger的第三个参数',
-                                         `int_prop_1` int(11) DEFAULT NULL COMMENT 'int类型的trigger的第一个参数',
-                                         `int_prop_2` int(11) DEFAULT NULL COMMENT 'int类型的trigger的第二个参数',
-                                         `long_prop_1` bigint(20) DEFAULT NULL COMMENT 'long类型的trigger的第一个参数',
-                                         `long_prop_2` bigint(20) DEFAULT NULL COMMENT 'long类型的trigger的第二个参数',
-                                         `dec_prop_1` decimal(13,4) DEFAULT NULL COMMENT 'decimal类型的trigger的第一个参数',
-                                         `dec_prop_2` decimal(13,4) DEFAULT NULL COMMENT 'decimal类型的trigger的第二个参数',
-                                         `bool_prop_1` varchar(1) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'Boolean类型的trigger的第一个参数',
-                                         `bool_prop_2` varchar(1) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'Boolean类型的trigger的第二个参数',
-                                         PRIMARY KEY (`sched_name`,`trigger_name`,`trigger_group`) USING BTREE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC COMMENT='同步机制的行锁表';
-
--- ----------------------------
--- Records of qrtz_simprop_triggers
--- ----------------------------
-BEGIN;
-COMMIT;
-
--- ----------------------------
--- Table structure for qrtz_triggers
--- ----------------------------
-DROP TABLE IF EXISTS `qrtz_triggers`;
-CREATE TABLE `qrtz_triggers` (
-                                 `sched_name` varchar(120) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '调度名称',
-                                 `trigger_name` varchar(200) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '触发器的名字',
-                                 `trigger_group` varchar(200) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '触发器所属组的名字',
-                                 `job_name` varchar(200) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT 'qrtz_job_details表job_name的外键',
-                                 `job_group` varchar(200) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT 'qrtz_job_details表job_group的外键',
-                                 `description` varchar(250) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '相关介绍',
-                                 `next_fire_time` bigint(20) DEFAULT NULL COMMENT '上一次触发时间（毫秒）',
-                                 `prev_fire_time` bigint(20) DEFAULT NULL COMMENT '下一次触发时间（默认为-1表示不触发）',
-                                 `priority` int(11) DEFAULT NULL COMMENT '优先级',
-                                 `trigger_state` varchar(16) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '触发器状态',
-                                 `trigger_type` varchar(8) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '触发器的类型',
-                                 `start_time` bigint(20) NOT NULL COMMENT '开始时间',
-                                 `end_time` bigint(20) DEFAULT NULL COMMENT '结束时间',
-                                 `calendar_name` varchar(200) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '日程表名称',
-                                 `misfire_instr` smallint(6) DEFAULT NULL COMMENT '补偿执行的策略',
-                                 `job_data` blob COMMENT '存放持久化job对象',
-                                 PRIMARY KEY (`sched_name`,`trigger_name`,`trigger_group`) USING BTREE,
-                                 KEY `sched_name` (`sched_name`,`job_name`,`job_group`) USING BTREE,
-                                 CONSTRAINT `qrtz_triggers_ibfk_1` FOREIGN KEY (`sched_name`, `job_name`, `job_group`) REFERENCES `qrtz_job_details` (`sched_name`, `job_name`, `job_group`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC COMMENT='触发器详细信息表';
-
--- ----------------------------
--- Records of qrtz_triggers
--- ----------------------------
-BEGIN;
-INSERT INTO `qrtz_triggers` (`sched_name`, `trigger_name`, `trigger_group`, `job_name`, `job_group`, `description`, `next_fire_time`, `prev_fire_time`, `priority`, `trigger_state`, `trigger_type`, `start_time`, `end_time`, `calendar_name`, `misfire_instr`, `job_data`) VALUES ('RuoyiScheduler', 'TASK_CLASS_NAME1', 'DEFAULT', 'TASK_CLASS_NAME1', 'DEFAULT', NULL, 1723915630000, -1, 5, 'PAUSED', 'CRON', 1723915630000, 0, NULL, 2, NULL);
-INSERT INTO `qrtz_triggers` (`sched_name`, `trigger_name`, `trigger_group`, `job_name`, `job_group`, `description`, `next_fire_time`, `prev_fire_time`, `priority`, `trigger_state`, `trigger_type`, `start_time`, `end_time`, `calendar_name`, `misfire_instr`, `job_data`) VALUES ('RuoyiScheduler', 'TASK_CLASS_NAME2', 'DEFAULT', 'TASK_CLASS_NAME2', 'DEFAULT', NULL, 1723915635000, -1, 5, 'PAUSED', 'CRON', 1723915631000, 0, NULL, 2, NULL);
-INSERT INTO `qrtz_triggers` (`sched_name`, `trigger_name`, `trigger_group`, `job_name`, `job_group`, `description`, `next_fire_time`, `prev_fire_time`, `priority`, `trigger_state`, `trigger_type`, `start_time`, `end_time`, `calendar_name`, `misfire_instr`, `job_data`) VALUES ('RuoyiScheduler', 'TASK_CLASS_NAME3', 'DEFAULT', 'TASK_CLASS_NAME3', 'DEFAULT', NULL, 1723915640000, -1, 5, 'PAUSED', 'CRON', 1723915632000, 0, NULL, 2, NULL);
-COMMIT;
-
--- ----------------------------
--- Table structure for rel_user_auth_product
--- ----------------------------
-DROP TABLE IF EXISTS `rel_user_auth_product`;
-CREATE TABLE `rel_user_auth_product` (
-                                         `user_id` bigint(20) NOT NULL COMMENT '用户ID',
-                                         `auth_id` varchar(256) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '统一身份认证id',
-                                         `auth_product_type` int(11) NOT NULL COMMENT '认证平台类型;0：冰凤框架；1：微信；2：支付宝',
-                                         PRIMARY KEY (`user_id`,`auth_id`,`auth_product_type`) USING BTREE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC COMMENT='用户与认证中心关系表';
-
--- ----------------------------
--- Records of rel_user_auth_product
 -- ----------------------------
 BEGIN;
 COMMIT;
@@ -1597,23 +1152,23 @@ CREATE TABLE `system_dept` (
 -- Records of system_dept
 -- ----------------------------
 BEGIN;
-INSERT INTO `system_dept` (`dept_id`, `parent_id`, `ancestors`, `dept_name`, `order_num`, `leader`, `phone`, `email`, `status`, `del_flag`, `create_by`, `create_time`, `update_by`, `update_time`) VALUES (100, 0, '0', '江苏千桐科技有限公司', 0, NULL, NULL, NULL, '0', '0', '吴同', '2026-11-01 19:15:49', '', NULL);
-INSERT INTO `system_dept` (`dept_id`, `parent_id`, `ancestors`, `dept_name`, `order_num`, `leader`, `phone`, `email`, `status`, `del_flag`, `create_by`, `create_time`, `update_by`, `update_time`) VALUES (101, 100, '0,100', '南京总公司', 1, NULL, NULL, NULL, '0', '0', '吴同', '2026-11-01 19:15:49', '', NULL);
-INSERT INTO `system_dept` (`dept_id`, `parent_id`, `ancestors`, `dept_name`, `order_num`, `leader`, `phone`, `email`, `status`, `del_flag`, `create_by`, `create_time`, `update_by`, `update_time`) VALUES (102, 100, '0,100', '郑州分公司', 2, NULL, NULL, NULL, '0', '0', '吴同', '2026-11-01 19:15:49', '', NULL);
-INSERT INTO `system_dept` (`dept_id`, `parent_id`, `ancestors`, `dept_name`, `order_num`, `leader`, `phone`, `email`, `status`, `del_flag`, `create_by`, `create_time`, `update_by`, `update_time`) VALUES (103, 100, '0,100', '合作伙伴', 3, NULL, NULL, NULL, '0', '0', '吴同', '2026-11-01 19:15:49', '', NULL);
-INSERT INTO `system_dept` (`dept_id`, `parent_id`, `ancestors`, `dept_name`, `order_num`, `leader`, `phone`, `email`, `status`, `del_flag`, `create_by`, `create_time`, `update_by`, `update_time`) VALUES (104, 101, '0,100,101', '研发部门', 1, NULL, NULL, NULL, '0', '0', '吴同', '2026-11-01 19:15:49', '', NULL);
-INSERT INTO `system_dept` (`dept_id`, `parent_id`, `ancestors`, `dept_name`, `order_num`, `leader`, `phone`, `email`, `status`, `del_flag`, `create_by`, `create_time`, `update_by`, `update_time`) VALUES (105, 101, '0,100,101', '市场部门', 2, NULL, NULL, NULL, '0', '0', '吴同', '2026-11-01 19:15:50', '', NULL);
-INSERT INTO `system_dept` (`dept_id`, `parent_id`, `ancestors`, `dept_name`, `order_num`, `leader`, `phone`, `email`, `status`, `del_flag`, `create_by`, `create_time`, `update_by`, `update_time`) VALUES (106, 101, '0,100,101', '测试部门', 3, NULL, NULL, NULL, '0', '0', '吴同', '2026-11-01 19:15:50', '', NULL);
-INSERT INTO `system_dept` (`dept_id`, `parent_id`, `ancestors`, `dept_name`, `order_num`, `leader`, `phone`, `email`, `status`, `del_flag`, `create_by`, `create_time`, `update_by`, `update_time`) VALUES (107, 101, '0,100,101', '财务部门', 4, NULL, NULL, NULL, '0', '0', '吴同', '2026-11-01 19:15:50', '', NULL);
-INSERT INTO `system_dept` (`dept_id`, `parent_id`, `ancestors`, `dept_name`, `order_num`, `leader`, `phone`, `email`, `status`, `del_flag`, `create_by`, `create_time`, `update_by`, `update_time`) VALUES (108, 101, '0,100,101', '运维部门', 5, NULL, NULL, NULL, '0', '0', '吴同', '2026-11-01 19:15:50', '', NULL);
-INSERT INTO `system_dept` (`dept_id`, `parent_id`, `ancestors`, `dept_name`, `order_num`, `leader`, `phone`, `email`, `status`, `del_flag`, `create_by`, `create_time`, `update_by`, `update_time`) VALUES (109, 102, '0,100,102', '研发部门', 1, NULL, NULL, NULL, '0', '0', '吴同', '2026-11-01 19:15:50', '', NULL);
-INSERT INTO `system_dept` (`dept_id`, `parent_id`, `ancestors`, `dept_name`, `order_num`, `leader`, `phone`, `email`, `status`, `del_flag`, `create_by`, `create_time`, `update_by`, `update_time`) VALUES (110, 102, '0,100,102', '市场部门', 2, NULL, NULL, NULL, '0', '0', '吴同', '2026-11-01 19:15:50', '', NULL);
-INSERT INTO `system_dept` (`dept_id`, `parent_id`, `ancestors`, `dept_name`, `order_num`, `leader`, `phone`, `email`, `status`, `del_flag`, `create_by`, `create_time`, `update_by`, `update_time`) VALUES (111, 102, '0,100,102', '测试部门', 3, NULL, NULL, NULL, '0', '0', '吴同', '2026-11-01 19:15:51', '', NULL);
-INSERT INTO `system_dept` (`dept_id`, `parent_id`, `ancestors`, `dept_name`, `order_num`, `leader`, `phone`, `email`, `status`, `del_flag`, `create_by`, `create_time`, `update_by`, `update_time`) VALUES (112, 102, '0,100,102', '财务部门', 4, NULL, NULL, NULL, '0', '0', '吴同', '2026-11-01 19:15:51', '', NULL);
-INSERT INTO `system_dept` (`dept_id`, `parent_id`, `ancestors`, `dept_name`, `order_num`, `leader`, `phone`, `email`, `status`, `del_flag`, `create_by`, `create_time`, `update_by`, `update_time`) VALUES (113, 102, '0,100,102', '运维部门', 5, NULL, NULL, NULL, '0', '0', '吴同', '2026-11-01 19:15:51', '', NULL);
-INSERT INTO `system_dept` (`dept_id`, `parent_id`, `ancestors`, `dept_name`, `order_num`, `leader`, `phone`, `email`, `status`, `del_flag`, `create_by`, `create_time`, `update_by`, `update_time`) VALUES (114, 103, '0,100,103', '研发部门', 1, NULL, NULL, NULL, '0', '0', '吴同', '2026-11-01 19:15:51', '', NULL);
-INSERT INTO `system_dept` (`dept_id`, `parent_id`, `ancestors`, `dept_name`, `order_num`, `leader`, `phone`, `email`, `status`, `del_flag`, `create_by`, `create_time`, `update_by`, `update_time`) VALUES (115, 103, '0,100,103', '市场部门', 2, NULL, NULL, NULL, '0', '0', '吴同', '2026-11-01 19:15:51', '', NULL);
-INSERT INTO `system_dept` (`dept_id`, `parent_id`, `ancestors`, `dept_name`, `order_num`, `leader`, `phone`, `email`, `status`, `del_flag`, `create_by`, `create_time`, `update_by`, `update_time`) VALUES (116, 103, '0,100,103', '测试部门', 3, NULL, NULL, NULL, '0', '0', '吴同', '2026-11-01 19:15:52', '', NULL);
+INSERT INTO `system_dept` (`dept_id`, `parent_id`, `ancestors`, `dept_name`, `order_num`, `leader`, `phone`, `email`, `status`, `del_flag`, `create_by`, `create_time`, `update_by`, `update_time`) VALUES (100, 0, '0', '江苏千桐科技有限公司', 0, NULL, NULL, NULL, '0', '0', '吴同', '2026-11-01 19:48:55', '', NULL);
+INSERT INTO `system_dept` (`dept_id`, `parent_id`, `ancestors`, `dept_name`, `order_num`, `leader`, `phone`, `email`, `status`, `del_flag`, `create_by`, `create_time`, `update_by`, `update_time`) VALUES (101, 100, '0,100', '南京总公司', 1, NULL, NULL, NULL, '0', '0', '吴同', '2026-11-01 19:48:55', '', NULL);
+INSERT INTO `system_dept` (`dept_id`, `parent_id`, `ancestors`, `dept_name`, `order_num`, `leader`, `phone`, `email`, `status`, `del_flag`, `create_by`, `create_time`, `update_by`, `update_time`) VALUES (102, 100, '0,100', '郑州分公司', 2, NULL, NULL, NULL, '0', '0', '吴同', '2026-11-01 19:48:55', '', NULL);
+INSERT INTO `system_dept` (`dept_id`, `parent_id`, `ancestors`, `dept_name`, `order_num`, `leader`, `phone`, `email`, `status`, `del_flag`, `create_by`, `create_time`, `update_by`, `update_time`) VALUES (103, 100, '0,100', '合作伙伴', 3, NULL, NULL, NULL, '0', '0', '吴同', '2026-11-01 19:48:55', '', NULL);
+INSERT INTO `system_dept` (`dept_id`, `parent_id`, `ancestors`, `dept_name`, `order_num`, `leader`, `phone`, `email`, `status`, `del_flag`, `create_by`, `create_time`, `update_by`, `update_time`) VALUES (104, 101, '0,100,101', '研发部门', 1, NULL, NULL, NULL, '0', '0', '吴同', '2026-11-01 19:48:55', '', NULL);
+INSERT INTO `system_dept` (`dept_id`, `parent_id`, `ancestors`, `dept_name`, `order_num`, `leader`, `phone`, `email`, `status`, `del_flag`, `create_by`, `create_time`, `update_by`, `update_time`) VALUES (105, 101, '0,100,101', '市场部门', 2, NULL, NULL, NULL, '0', '0', '吴同', '2026-11-01 19:48:55', '', NULL);
+INSERT INTO `system_dept` (`dept_id`, `parent_id`, `ancestors`, `dept_name`, `order_num`, `leader`, `phone`, `email`, `status`, `del_flag`, `create_by`, `create_time`, `update_by`, `update_time`) VALUES (106, 101, '0,100,101', '测试部门', 3, NULL, NULL, NULL, '0', '0', '吴同', '2026-11-01 19:48:55', '', NULL);
+INSERT INTO `system_dept` (`dept_id`, `parent_id`, `ancestors`, `dept_name`, `order_num`, `leader`, `phone`, `email`, `status`, `del_flag`, `create_by`, `create_time`, `update_by`, `update_time`) VALUES (107, 101, '0,100,101', '财务部门', 4, NULL, NULL, NULL, '0', '0', '吴同', '2026-11-01 19:48:55', '', NULL);
+INSERT INTO `system_dept` (`dept_id`, `parent_id`, `ancestors`, `dept_name`, `order_num`, `leader`, `phone`, `email`, `status`, `del_flag`, `create_by`, `create_time`, `update_by`, `update_time`) VALUES (108, 101, '0,100,101', '运维部门', 5, NULL, NULL, NULL, '0', '0', '吴同', '2026-11-01 19:48:55', '', NULL);
+INSERT INTO `system_dept` (`dept_id`, `parent_id`, `ancestors`, `dept_name`, `order_num`, `leader`, `phone`, `email`, `status`, `del_flag`, `create_by`, `create_time`, `update_by`, `update_time`) VALUES (109, 102, '0,100,102', '研发部门', 1, NULL, NULL, NULL, '0', '0', '吴同', '2026-11-01 19:48:55', '', NULL);
+INSERT INTO `system_dept` (`dept_id`, `parent_id`, `ancestors`, `dept_name`, `order_num`, `leader`, `phone`, `email`, `status`, `del_flag`, `create_by`, `create_time`, `update_by`, `update_time`) VALUES (110, 102, '0,100,102', '市场部门', 2, NULL, NULL, NULL, '0', '0', '吴同', '2026-11-01 19:48:55', '', NULL);
+INSERT INTO `system_dept` (`dept_id`, `parent_id`, `ancestors`, `dept_name`, `order_num`, `leader`, `phone`, `email`, `status`, `del_flag`, `create_by`, `create_time`, `update_by`, `update_time`) VALUES (111, 102, '0,100,102', '测试部门', 3, NULL, NULL, NULL, '0', '0', '吴同', '2026-11-01 19:48:55', '', NULL);
+INSERT INTO `system_dept` (`dept_id`, `parent_id`, `ancestors`, `dept_name`, `order_num`, `leader`, `phone`, `email`, `status`, `del_flag`, `create_by`, `create_time`, `update_by`, `update_time`) VALUES (112, 102, '0,100,102', '财务部门', 4, NULL, NULL, NULL, '0', '0', '吴同', '2026-11-01 19:48:55', '', NULL);
+INSERT INTO `system_dept` (`dept_id`, `parent_id`, `ancestors`, `dept_name`, `order_num`, `leader`, `phone`, `email`, `status`, `del_flag`, `create_by`, `create_time`, `update_by`, `update_time`) VALUES (113, 102, '0,100,102', '运维部门', 5, NULL, NULL, NULL, '0', '0', '吴同', '2026-11-01 19:48:55', '', NULL);
+INSERT INTO `system_dept` (`dept_id`, `parent_id`, `ancestors`, `dept_name`, `order_num`, `leader`, `phone`, `email`, `status`, `del_flag`, `create_by`, `create_time`, `update_by`, `update_time`) VALUES (114, 103, '0,100,103', '研发部门', 1, NULL, NULL, NULL, '0', '0', '吴同', '2026-11-01 19:48:55', '', NULL);
+INSERT INTO `system_dept` (`dept_id`, `parent_id`, `ancestors`, `dept_name`, `order_num`, `leader`, `phone`, `email`, `status`, `del_flag`, `create_by`, `create_time`, `update_by`, `update_time`) VALUES (115, 103, '0,100,103', '市场部门', 2, NULL, NULL, NULL, '0', '0', '吴同', '2026-11-01 19:48:55', '', NULL);
+INSERT INTO `system_dept` (`dept_id`, `parent_id`, `ancestors`, `dept_name`, `order_num`, `leader`, `phone`, `email`, `status`, `del_flag`, `create_by`, `create_time`, `update_by`, `update_time`) VALUES (116, 103, '0,100,103', '测试部门', 3, NULL, NULL, NULL, '0', '0', '吴同', '2026-11-01 19:48:56', '', NULL);
 COMMIT;
 
 -- ----------------------------
@@ -1875,18 +1430,16 @@ CREATE TABLE `system_logininfor` (
                                      `msg` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '提示消息',
                                      `login_time` datetime DEFAULT NULL COMMENT '访问时间',
                                      PRIMARY KEY (`info_id`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC COMMENT='系统访问记录';
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC COMMENT='系统访问记录';
 
 -- ----------------------------
 -- Records of system_logininfor
 -- ----------------------------
 BEGIN;
-INSERT INTO `system_logininfor` (`info_id`, `user_name`, `ipaddr`, `login_location`, `browser`, `os`, `status`, `msg`, `login_time`) VALUES (1, 'qModel', '192.168.0.43', '内网IP', 'Chrome 15', 'Mac OS X', '0', '退出成功', '2026-11-01 19:16:34');
-INSERT INTO `system_logininfor` (`info_id`, `user_name`, `ipaddr`, `login_location`, `browser`, `os`, `status`, `msg`, `login_time`) VALUES (2, 'qModel', '192.168.0.43', '内网IP', 'Chrome 15', 'Mac OS X', '0', '登录成功', '2026-11-01 19:16:39');
-INSERT INTO `system_logininfor` (`info_id`, `user_name`, `ipaddr`, `login_location`, `browser`, `os`, `status`, `msg`, `login_time`) VALUES (3, 'qModel', '192.168.0.43', '内网IP', 'Chrome 15', 'Mac OS X', '0', '退出成功', '2026-11-01 19:16:44');
-INSERT INTO `system_logininfor` (`info_id`, `user_name`, `ipaddr`, `login_location`, `browser`, `os`, `status`, `msg`, `login_time`) VALUES (4, 'admin', '192.168.0.43', '内网IP', 'Chrome 15', 'Mac OS X', '0', '登录成功', '2026-11-01 19:20:04');
-INSERT INTO `system_logininfor` (`info_id`, `user_name`, `ipaddr`, `login_location`, `browser`, `os`, `status`, `msg`, `login_time`) VALUES (5, 'admin', '192.168.0.43', '内网IP', 'Chrome 15', 'Mac OS X', '0', '退出成功', '2026-11-01 19:26:30');
-INSERT INTO `system_logininfor` (`info_id`, `user_name`, `ipaddr`, `login_location`, `browser`, `os`, `status`, `msg`, `login_time`) VALUES (6, 'qModel', '192.168.0.43', '内网IP', 'Chrome 15', 'Mac OS X', '0', '登录成功', '2026-11-01 19:26:37');
+INSERT INTO `system_logininfor` (`info_id`, `user_name`, `ipaddr`, `login_location`, `browser`, `os`, `status`, `msg`, `login_time`) VALUES (1, 'qModel', '172.52.0.1', 'XX XX', 'Chrome 15', 'Mac OS X', '0', '退出成功', '2026-11-01 19:50:20');
+INSERT INTO `system_logininfor` (`info_id`, `user_name`, `ipaddr`, `login_location`, `browser`, `os`, `status`, `msg`, `login_time`) VALUES (2, 'admin', '172.52.0.1', 'XX XX', 'Chrome 15', 'Mac OS X', '1', '用户不存在/密码错误', '2026-11-01 19:50:27');
+INSERT INTO `system_logininfor` (`info_id`, `user_name`, `ipaddr`, `login_location`, `browser`, `os`, `status`, `msg`, `login_time`) VALUES (3, 'admin', '172.52.0.1', 'XX XX', 'Chrome 15', 'Mac OS X', '1', '用户不存在/密码错误', '2026-11-01 19:50:30');
+INSERT INTO `system_logininfor` (`info_id`, `user_name`, `ipaddr`, `login_location`, `browser`, `os`, `status`, `msg`, `login_time`) VALUES (4, 'admin', '172.52.0.1', 'XX XX', 'Chrome 15', 'Mac OS X', '0', '登录成功', '2026-11-01 19:51:26');
 COMMIT;
 
 -- ----------------------------
@@ -2173,14 +1726,13 @@ CREATE TABLE `system_oper_log` (
                                    `oper_time` datetime DEFAULT NULL COMMENT '操作时间',
                                    `cost_time` bigint(20) DEFAULT NULL COMMENT '消耗时间',
                                    PRIMARY KEY (`oper_id`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC COMMENT='操作日志记录';
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC COMMENT='操作日志记录';
 
 -- ----------------------------
 -- Records of system_oper_log
 -- ----------------------------
 BEGIN;
-INSERT INTO `system_oper_log` (`oper_id`, `title`, `business_type`, `method`, `request_method`, `operator_type`, `oper_name`, `dept_name`, `oper_url`, `oper_ip`, `oper_location`, `oper_param`, `json_result`, `status`, `error_msg`, `oper_time`, `cost_time`) VALUES (1, '菜单管理', 3, 'tech.qiantong.qmodel.module.system.controller.admin.system.SysMenuController.remove()', 'DELETE', 1, 'admin', '合作伙伴', '/system/menu/2000', '192.168.0.43', '内网IP', '{}', '{\"msg\":\"存在子菜单,不允许删除\",\"code\":601}', 0, NULL, '2026-11-01 19:23:10', 3);
-INSERT INTO `system_oper_log` (`oper_id`, `title`, `business_type`, `method`, `request_method`, `operator_type`, `oper_name`, `dept_name`, `oper_url`, `oper_ip`, `oper_location`, `oper_param`, `json_result`, `status`, `error_msg`, `oper_time`, `cost_time`) VALUES (2, '角色管理', 2, 'tech.qiantong.qmodel.module.system.controller.admin.system.SysRoleController.edit()', 'PUT', 1, 'admin', '合作伙伴', '/system/role', '192.168.0.43', '内网IP', '{\"admin\":false,\"createTime\":\"2026-11-01 19:16:14\",\"dataScope\":\"1\",\"delFlag\":\"0\",\"deptCheckStrictly\":true,\"flag\":false,\"menuCheckStrictly\":true,\"menuIds\":[1,100,101,102,103,104,105,106,107,2,109,110,2245,2276,2277,2278,2279,2280,2281,2254,2255,2256,2257,2258,2259,2260,2282,2283,2284,2285,2286,2287,2288,2296,2297,2298,2299,2300,2301,2302,2268,2269,2270,2271,2272,2273,2274,2261,2262,2263,2264,2265,2266,2267,2253,2318,2317,2000,2002,2001,2004,2003,2005,2006,2007,2008,2009,2337,2319,2320,2326,2327,2328,2329,2330,2331,2332,2321,2322,2323,2324,2325,2303,2304,2305,2306,2307,2308,2309,2333,2334,2335,2336,2444,2445,2446,2447,2448,2449,2350,2068,2069,2070,2071,2072,2073,1000,1007,1012,1016,1020,1025,1030,1035,108,500,1039,1040,1041,501,1042,1043,1044,1045,3,115,116,1055,1056,1057,1058,1059,1060,117,1046,1049,111,112,113,114],\"params\":{},\"remark\":\"\",\"roleId\":2,\"roleKey\":\"system\",\"roleName\":\"系统管理员\",\"roleSort\":2,\"status\":\"0\",\"updateBy\":\"超级管理员\"}', '{\"msg\":\"操作成功\",\"code\":200}', 0, NULL, '2026-11-01 19:26:26', 695);
+INSERT INTO `system_oper_log` (`oper_id`, `title`, `business_type`, `method`, `request_method`, `operator_type`, `oper_name`, `dept_name`, `oper_url`, `oper_ip`, `oper_location`, `oper_param`, `json_result`, `status`, `error_msg`, `oper_time`, `cost_time`) VALUES (1, '角色管理', 2, 'tech.qiantong.qmodel.module.system.controller.admin.system.SysRoleController.edit()', 'PUT', 1, 'admin', '合作伙伴', '/system/role', '172.52.0.1', 'XX XX', '{\"admin\":false,\"createTime\":\"2026-11-01 19:48:58\",\"dataScope\":\"1\",\"delFlag\":\"0\",\"deptCheckStrictly\":true,\"flag\":false,\"menuCheckStrictly\":true,\"menuIds\":[1,100,101,102,103,104,105,106,107,2,109,110,2245,2276,2277,2278,2279,2280,2281,2254,2255,2256,2257,2258,2259,2260,2282,2283,2284,2285,2286,2287,2288,2296,2297,2298,2299,2300,2301,2302,2268,2269,2270,2271,2272,2273,2274,2261,2262,2263,2264,2265,2266,2267,2253,2318,2317,2000,2002,2001,2004,2003,2005,2006,2007,2008,2009,2337,2319,2320,2326,2327,2328,2329,2330,2331,2332,2321,2322,2323,2324,2325,2303,2304,2305,2306,2307,2308,2309,2333,2334,2335,2336,2444,2445,2446,2447,2448,2449,2350,2068,2069,2070,2071,2072,2073,1000,1007,1012,1016,1020,1025,1030,1035,108,500,1039,1040,1041,501,1042,1043,1044,1045,1046,1049,111,112,113,114],\"params\":{},\"remark\":\"\",\"roleId\":2,\"roleKey\":\"system\",\"roleName\":\"系统管理员\",\"roleSort\":2,\"status\":\"0\",\"updateBy\":\"超级管理员\"}', '{\"msg\":\"操作成功\",\"code\":200}', 0, NULL, '2026-11-01 19:58:51', 82);
 COMMIT;
 
 -- ----------------------------
@@ -2241,8 +1793,8 @@ CREATE TABLE `system_role` (
 -- Records of system_role
 -- ----------------------------
 BEGIN;
-INSERT INTO `system_role` (`role_id`, `role_name`, `role_key`, `role_sort`, `data_scope`, `menu_check_strictly`, `dept_check_strictly`, `status`, `del_flag`, `create_by`, `create_time`, `update_by`, `update_time`, `remark`) VALUES (1, '超级管理员', 'admin', 1, '1', 1, 1, '0', '0', '吴同', '2026-11-01 19:16:13', '', NULL, '');
-INSERT INTO `system_role` (`role_id`, `role_name`, `role_key`, `role_sort`, `data_scope`, `menu_check_strictly`, `dept_check_strictly`, `status`, `del_flag`, `create_by`, `create_time`, `update_by`, `update_time`, `remark`) VALUES (2, '系统管理员', 'system', 2, '1', 1, 1, '0', '0', '吴同', '2026-11-01 19:16:14', '超级管理员', '2026-11-01 19:26:25', '');
+INSERT INTO `system_role` (`role_id`, `role_name`, `role_key`, `role_sort`, `data_scope`, `menu_check_strictly`, `dept_check_strictly`, `status`, `del_flag`, `create_by`, `create_time`, `update_by`, `update_time`, `remark`) VALUES (1, '超级管理员', 'admin', 1, '1', 1, 1, '0', '0', '吴同', '2026-11-01 19:48:58', '', NULL, '');
+INSERT INTO `system_role` (`role_id`, `role_name`, `role_key`, `role_sort`, `data_scope`, `menu_check_strictly`, `dept_check_strictly`, `status`, `del_flag`, `create_by`, `create_time`, `update_by`, `update_time`, `remark`) VALUES (2, '系统管理员', 'system', 2, '1', 1, 1, '0', '0', '吴同', '2026-11-01 19:48:58', '超级管理员', '2026-11-01 19:58:51', '');
 COMMIT;
 
 -- ----------------------------
@@ -2277,7 +1829,6 @@ CREATE TABLE `system_role_menu` (
 BEGIN;
 INSERT INTO `system_role_menu` (`role_id`, `menu_id`) VALUES (2, 1);
 INSERT INTO `system_role_menu` (`role_id`, `menu_id`) VALUES (2, 2);
-INSERT INTO `system_role_menu` (`role_id`, `menu_id`) VALUES (2, 3);
 INSERT INTO `system_role_menu` (`role_id`, `menu_id`) VALUES (2, 100);
 INSERT INTO `system_role_menu` (`role_id`, `menu_id`) VALUES (2, 101);
 INSERT INTO `system_role_menu` (`role_id`, `menu_id`) VALUES (2, 102);
@@ -2293,9 +1844,6 @@ INSERT INTO `system_role_menu` (`role_id`, `menu_id`) VALUES (2, 111);
 INSERT INTO `system_role_menu` (`role_id`, `menu_id`) VALUES (2, 112);
 INSERT INTO `system_role_menu` (`role_id`, `menu_id`) VALUES (2, 113);
 INSERT INTO `system_role_menu` (`role_id`, `menu_id`) VALUES (2, 114);
-INSERT INTO `system_role_menu` (`role_id`, `menu_id`) VALUES (2, 115);
-INSERT INTO `system_role_menu` (`role_id`, `menu_id`) VALUES (2, 116);
-INSERT INTO `system_role_menu` (`role_id`, `menu_id`) VALUES (2, 117);
 INSERT INTO `system_role_menu` (`role_id`, `menu_id`) VALUES (2, 500);
 INSERT INTO `system_role_menu` (`role_id`, `menu_id`) VALUES (2, 501);
 INSERT INTO `system_role_menu` (`role_id`, `menu_id`) VALUES (2, 1000);
@@ -2315,12 +1863,6 @@ INSERT INTO `system_role_menu` (`role_id`, `menu_id`) VALUES (2, 1044);
 INSERT INTO `system_role_menu` (`role_id`, `menu_id`) VALUES (2, 1045);
 INSERT INTO `system_role_menu` (`role_id`, `menu_id`) VALUES (2, 1046);
 INSERT INTO `system_role_menu` (`role_id`, `menu_id`) VALUES (2, 1049);
-INSERT INTO `system_role_menu` (`role_id`, `menu_id`) VALUES (2, 1055);
-INSERT INTO `system_role_menu` (`role_id`, `menu_id`) VALUES (2, 1056);
-INSERT INTO `system_role_menu` (`role_id`, `menu_id`) VALUES (2, 1057);
-INSERT INTO `system_role_menu` (`role_id`, `menu_id`) VALUES (2, 1058);
-INSERT INTO `system_role_menu` (`role_id`, `menu_id`) VALUES (2, 1059);
-INSERT INTO `system_role_menu` (`role_id`, `menu_id`) VALUES (2, 1060);
 INSERT INTO `system_role_menu` (`role_id`, `menu_id`) VALUES (2, 2000);
 INSERT INTO `system_role_menu` (`role_id`, `menu_id`) VALUES (2, 2001);
 INSERT INTO `system_role_menu` (`role_id`, `menu_id`) VALUES (2, 2002);
@@ -2449,8 +1991,8 @@ CREATE TABLE `system_user` (
 -- Records of system_user
 -- ----------------------------
 BEGIN;
-INSERT INTO `system_user` (`user_id`, `dept_id`, `user_name`, `nick_name`, `user_type`, `email`, `phonenumber`, `sex`, `avatar`, `password`, `status`, `del_flag`, `login_ip`, `login_date`, `create_by`, `create_time`, `update_by`, `update_time`, `remark`, `auth_id`) VALUES (1, 103, 'admin', '超级管理员', '00', NULL, '13812345678', '0', '/profile/avatar/2026/07/21/profilePhoto.png', '$2a$10$rCwuIzApQ0YwaQPD8ivtSeOGvpXpjo2ZVRx8/iSFV0TiyUZmmjTL2', '0', '0', '192.168.0.43', '2026-11-01 19:20:04', '吴同', '2026-07-17 10:47:27', '吴同', '2026-11-01 19:20:04', '超级管理员', NULL);
-INSERT INTO `system_user` (`user_id`, `dept_id`, `user_name`, `nick_name`, `user_type`, `email`, `phonenumber`, `sex`, `avatar`, `password`, `status`, `del_flag`, `login_ip`, `login_date`, `create_by`, `create_time`, `update_by`, `update_time`, `remark`, `auth_id`) VALUES (2, 103, 'qModel', '吴同', '00', 'support@qiantong.tech', '19951942682', '1', '/profile/avatar/2026/07/21/profilePhoto.png', '$2a$10$butlDwq0TSIeP/rT9PGx6u571M.2VE.VsTAPoSSMOyQ0jmTc9TEyy', '0', '0', '192.168.0.43', '2026-11-01 19:26:38', '吴同', '2024-05-06 06:12:17', '吴同', '2026-11-01 19:26:37', '管理员', NULL);
+INSERT INTO `system_user` (`user_id`, `dept_id`, `user_name`, `nick_name`, `user_type`, `email`, `phonenumber`, `sex`, `avatar`, `password`, `status`, `del_flag`, `login_ip`, `login_date`, `create_by`, `create_time`, `update_by`, `update_time`, `remark`, `auth_id`) VALUES (1, 103, 'admin', '超级管理员', '00', NULL, '13812345678', '0', '/profile/avatar/2026/07/21/profilePhoto.png', '$2a$10$rCwuIzApQ0YwaQPD8ivtSeOGvpXpjo2ZVRx8/iSFV0TiyUZmmjTL2', '0', '0', '172.52.0.1', '2026-11-01 19:51:27', '吴同', '2026-07-17 10:47:27', '吴同', '2026-11-01 19:51:27', '超级管理员', NULL);
+INSERT INTO `system_user` (`user_id`, `dept_id`, `user_name`, `nick_name`, `user_type`, `email`, `phonenumber`, `sex`, `avatar`, `password`, `status`, `del_flag`, `login_ip`, `login_date`, `create_by`, `create_time`, `update_by`, `update_time`, `remark`, `auth_id`) VALUES (2, 103, 'qModel', '吴同', '00', 'support@qiantong.tech', '19951942682', '1', '/profile/avatar/2026/07/21/profilePhoto.png', '$2a$10$butlDwq0TSIeP/rT9PGx6u571M.2VE.VsTAPoSSMOyQ0jmTc9TEyy', '0', '0', '127.0.0.1', '2026-07-17 16:02:40', '吴同', '2024-05-06 06:12:17', '吴同', '2026-07-17 16:02:40', '管理员', NULL);
 COMMIT;
 
 -- ----------------------------
