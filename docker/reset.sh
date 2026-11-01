@@ -10,7 +10,7 @@
 set -e  # 遇错立即退出
 
 # docker-compose 项目的路径
-COMPOSE_DIR="/home/qtt/opt/qModel/docker"
+COMPOSE_DIR="/opt/qModel/docker"
 
 cd "$COMPOSE_DIR"
 
