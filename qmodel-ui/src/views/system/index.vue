@@ -1566,7 +1566,7 @@ onActivated(() => {
 }
 
 .border-item .border-item-head {
-  height: 50px;
+  height: 40px;
   padding: 0 20px;
   display: flex;
   justify-content: space-between;
@@ -1601,7 +1601,7 @@ onActivated(() => {
 }
 
 .border-item .border-item-body {
-  height: calc(100% - 50px);
+  height: calc(100% - 40px);
   position: relative;
 }
 
@@ -1663,13 +1663,16 @@ onActivated(() => {
   .border-item-body {
     overflow-y: auto;
     overflow-x: hidden;
-    padding: 12px 0px;
+    padding: 14px 18px;
   }
   .module-item {
     display: flex;
     align-items: center;
-    padding: 6px 20px;
+    margin-bottom: 14px;
     cursor: pointer;
+  }
+  .module-item:last-child {
+    margin-bottom: 0;
   }
   // .value,
   // .title {
