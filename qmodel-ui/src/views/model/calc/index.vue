@@ -131,7 +131,11 @@
           :show-overflow-tooltip="{ effect: 'light' }"
           sortable="custom"
           :sort-orders="['descending', 'ascending']"
-        />
+        >
+          <template #default="scope">
+            {{ scope.$index + 1 }}
+          </template>
+        </el-table-column>
         <el-table-column
           v-if="getColumnVisibility(1)"
           label="任务名称"
@@ -579,7 +583,11 @@
           :show-overflow-tooltip="{ effect: 'light' }"
           sortable="custom"
           :sort-orders="['descending', 'ascending']"
-        />
+        >
+          <template #default="scope">
+            {{ scope.$index + 1 }}
+          </template>
+        </el-table-column>
         <el-table-column label="API 名称" prop="name" min-width="170" :show-overflow-tooltip="{ effect: 'light' }" />
         <el-table-column label="用途" prop="description" min-width="220" :show-overflow-tooltip="{ effect: 'light' }">
           <template #default="scope">{{ scope.row.description || scope.row.remark || '-' }}</template>
@@ -729,6 +737,7 @@ import { getModelConfigByModelId, testModelConfig } from '@/api/model/config'
 import { listModelFileResource } from '@/api/model/modelFileResource'
 import { listModelDataApi, getModelDataApi } from '@/api/model/modelData/modelDataApi'
 import FileUpload from '@/components/FileUpload2'
+import { getSchemaDefaultValue } from '@/utils/modelSchema'
 
 const { proxy } = getCurrentInstance()
 const router = useRouter()
@@ -774,6 +783,7 @@ const calcList = ref([])
 const modelOptions = ref([])          // 所有模型列表
 const classifyTreeOptions = ref([])   // 树形分类选项
 const versionOptions = ref([])        // 所选模型的版本下拉选项
+const inputDefaultValues = ref({})    // 当前模型入参的默认值映射，用于取消 API 绑定时恢复
 
 // 根据分类筛选的模型列表（计算属性）：顶级分类(id=0) = 全部
 const filteredModelOptions = computed(() => {
@@ -976,6 +986,7 @@ function cancel() {
 function reset() {
   validateError.value = ''
   versionOptions.value = []
+  inputDefaultValues.value = {}
   form.value = {
     id: null,
     code: '',
@@ -1133,10 +1144,11 @@ function clearApiSelection() {
   form.value.resourceMethod = ''
   form.value.resourceType = ''
 
-  // 清空已匹配的参数值
+  // 清空已匹配的参数值，恢复为 Schema 中定义的默认值
   if (form.value.inputParams && form.value.inputParams.length > 0) {
     form.value.inputParams.forEach(param => {
-      param.value = ''
+      const defaultValue = inputDefaultValues.value[param.name]
+      param.value = defaultValue !== undefined ? defaultValue : ''
     })
   }
 
@@ -1279,6 +1291,7 @@ function handleModelChange(modelId) {
 function parseInputSchema(inputSchema) {
   if (!inputSchema) {
     form.value.inputParams = []
+    inputDefaultValues.value = {}
     return
   }
 
@@ -1287,18 +1300,21 @@ function parseInputSchema(inputSchema) {
     schemaObj = typeof inputSchema === 'string' ? JSON.parse(inputSchema) : inputSchema
   } catch {
     form.value.inputParams = []
+    inputDefaultValues.value = {}
     return
   }
 
   // 校验 schema 结构
   if (!schemaObj || schemaObj.type !== 'object' || !schemaObj.properties) {
     form.value.inputParams = []
+    inputDefaultValues.value = {}
     return
   }
 
   // 生成参数表格行（参考 onlineTest.vue 的 fieldList computed）
   const props = schemaObj.properties
   const required = schemaObj.required || []
+  const defaultValues = {}
 
   form.value.inputParams = Object.keys(props).map((key) => {
     const p = props[key] || {}
@@ -1306,12 +1322,16 @@ function parseInputSchema(inputSchema) {
     // format: 'binary' 对应文件上传类型
     const isFile = p.format === 'binary'
     const displayType = isFile ? 'file' : rawType
+    // 回填参数定义中设置的默认值
+    const schemaDefault = getSchemaDefaultValue(p)
+    const value = schemaDefault !== undefined ? schemaDefault : ''
+    defaultValues[key] = value
 
     return {
       key: key,
       name: key,
       title: p.title || key,                      // 参数显示名称
-      value: '',                                  // 参数值（用户填写）
+      value: value,                               // 参数值（默认值回填，用户可修改）
       type: displayType,                          // 展示类型
       rawType: rawType,                           // 原始类型
       format: p.format || '',                     // 格式
@@ -1319,6 +1339,7 @@ function parseInputSchema(inputSchema) {
       required: required.includes(key)            // 是否必填
     }
   })
+  inputDefaultValues.value = defaultValues
 }
 
 /** 新增 */
@@ -1465,7 +1486,12 @@ async function submitForm() {
   // 3. 提交数据
   const submitData = { ...form.value }
   if (Array.isArray(submitData.inputParams)) {
-    submitData.inputParams = JSON.stringify({ params: submitData.inputParams })
+    // 统一补齐 paramCode（执行引擎按该字段读取入参名），避免只存 name/key 时参数被丢弃
+    const params = submitData.inputParams.map((item) => ({
+      ...item,
+      paramCode: item.paramCode || item.name || item.key
+    }))
+    submitData.inputParams = JSON.stringify({ params })
   }
   if (!submitData.code) {
     const now = new Date()

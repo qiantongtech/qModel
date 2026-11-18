@@ -260,8 +260,13 @@ public class ModelCalcWidgetServiceImpl  extends ServiceImpl<ModelCalcWidgetMapp
      */
     private void validateWidgetConfig(ModelCalcWidgetSaveReqVO reqVO) {
         String type = reqVO.getType();
-        if (!"base64".equals(type) && !"line".equals(type)) {
+        if (!"base64".equals(type) && !"line".equals(type)
+                && !"bar".equals(type) && !"pie".equals(type)) {
             throw new ServiceException("不支持的组件类型：" + type);
+        }
+        // 新版前端整体透传 config，字段细节由前端校验，后端只校验组件类型
+        if (!StringUtils.isEmpty(reqVO.getConfig())) {
+            return;
         }
         if ("base64".equals(type)) {
             if (StringUtils.isEmpty(reqVO.getField())) {
@@ -296,6 +301,10 @@ public class ModelCalcWidgetServiceImpl  extends ServiceImpl<ModelCalcWidgetMapp
      * 根据前端平铺字段组装 config JSON
      */
     private String buildConfigJson(ModelCalcWidgetSaveReqVO reqVO) {
+        // 透传优先：后续新增组件类型或配置项无需再改后端
+        if (!StringUtils.isEmpty(reqVO.getConfig())) {
+            return reqVO.getConfig();
+        }
         Map<String, Object> config = new HashMap<>();
         if ("base64".equals(reqVO.getType())) {
             config.put("field", reqVO.getField());

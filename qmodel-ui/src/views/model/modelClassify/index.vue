@@ -287,7 +287,7 @@ import {
   delClassify,
   addClassify,
   updateClassify,
-} from "@/api/modelReconstitution/classify";
+} from "@/api/model/classify";
 import { parseTime } from "@/utils/anivia.js";
 import { ElMessage, ElMessageBox } from "element-plus";
 

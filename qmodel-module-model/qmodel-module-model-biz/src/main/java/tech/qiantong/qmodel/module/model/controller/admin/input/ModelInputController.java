@@ -38,11 +38,11 @@ import tech.qiantong.qmodel.module.model.controller.admin.input.vo.ModelInputRes
 import tech.qiantong.qmodel.module.model.controller.admin.input.vo.ModelInputSaveReqVO;
 import tech.qiantong.qmodel.module.model.convert.input.ModelInputConvert;
 import tech.qiantong.qmodel.module.model.dal.dataobject.input.ModelInputDO;
+import tech.qiantong.qmodel.module.model.dal.dataobject.modelReconstitution.ModelReconstitutionDO;
 import tech.qiantong.qmodel.module.model.dal.dataobject.modelVersion.ModelVersionDO;
 import tech.qiantong.qmodel.module.model.service.input.IModelInputService;
 import tech.qiantong.qmodel.module.model.service.modelReconstitution.IModelReconstitutionService;
 import tech.qiantong.qmodel.module.model.service.modelVersion.IModelVersionService;
-import tech.qiantong.qmodel.module.modelReconstitution.domain.ModelReconstitution;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
@@ -139,7 +139,7 @@ public class ModelInputController extends BaseController {
      * 查询所有模型
      */
     @PostMapping("/findAllModel")
-    public AjaxResult findAllModel(@RequestBody ModelReconstitution modelReconstitution) {
+    public AjaxResult findAllModel(@RequestBody ModelReconstitutionDO modelReconstitution) {
         modelReconstitution.setDelFlag(false);
         return AjaxResult.success(modelReconstitutionService.selectModelReconstitutionList(modelReconstitution));
     }

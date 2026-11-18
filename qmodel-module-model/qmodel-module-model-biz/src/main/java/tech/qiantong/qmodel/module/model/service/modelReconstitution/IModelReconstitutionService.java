@@ -26,7 +26,6 @@ import tech.qiantong.qmodel.module.model.controller.admin.modelReconstitution.vo
 import tech.qiantong.qmodel.module.model.controller.admin.modelReconstitution.vo.ModelReconstitutionSaveReqVO;
 import tech.qiantong.qmodel.module.model.dal.dataobject.modelReconstitution.FileItemDO;
 import tech.qiantong.qmodel.module.model.dal.dataobject.modelReconstitution.ModelReconstitutionDO;
-import tech.qiantong.qmodel.module.modelReconstitution.domain.ModelReconstitution;
 
 import java.util.Collection;
 import java.util.List;
@@ -104,54 +103,12 @@ public interface IModelReconstitutionService extends IService<ModelReconstitutio
     String importModelReconstitution(List<ModelReconstitutionRespVO> importExcelList, boolean isUpdateSupport, String operName);
 
     /**
-     * 查询模型库的重构表
+     * 按条件查询模型库重构列表
      *
-     * @param id 模型库的重构表主键
-     * @return 模型库的重构表
+     * @param modelReconstitution 查询条件
+     * @return 模型库重构列表
      */
-    ModelReconstitution selectModelReconstitutionById(Long id);
-
-    /**
-     * 查询模型库的重构表列表
-     *
-     * @param modelReconstitution 模型库的重构表
-     * @return 模型库的重构表集合
-     */
-    List<ModelReconstitution> selectModelReconstitutionList(ModelReconstitution modelReconstitution);
-
-    /**
-     * 新增模型库的重构表
-     *
-     * @param modelReconstitution 模型库的重构表
-     * @return 结果
-     */
-    int insertModelReconstitution(ModelReconstitution modelReconstitution);
-
-    /**
-     * 修改模型库的重构表
-     *
-     * @param modelReconstitution 模型库的重构表
-     * @return 结果
-     */
-    int updateModelReconstitution(ModelReconstitution modelReconstitution);
-
-    /**
-     * 批量删除模型库的重构表
-     *
-     * @param ids 需要删除的模型库的重构表主键集合
-     * @return 结果
-     */
-    int deleteModelReconstitutionByIds(Long[] ids);
-
-    /**
-     * 删除模型库的重构表信息
-     *
-     * @param id 模型库的重构表主键
-     * @return 结果
-     */
-    int deleteModelReconstitutionById(Long id);
-
-
+    List<ModelReconstitutionDO> selectModelReconstitutionList(ModelReconstitutionDO modelReconstitution);
     /**
      * 查询模型总数
      *

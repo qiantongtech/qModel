@@ -27,6 +27,7 @@
 import { ref, computed, watch, onMounted, onUnmounted, nextTick } from 'vue';
 import { ElMessage } from 'element-plus';
 import * as echarts from 'echarts';
+import { toNumeric, toCategory } from './chartData';
 
 const props = defineProps({
   data: {
@@ -48,20 +49,19 @@ let chartInstance = null;
 
 const xData = computed(() => {
   if (Array.isArray(props.xValue) && props.xValue.length > 0) {
-    return props.xValue.map((item) => (item === null || item === undefined ? '-' : String(item)));
+    return props.xValue.map(toCategory);
   }
   const first = seriesData.value[0];
   const len = first ? first.data.length : 0;
-  return Array.from({ length: len }, (_, index) => String(index));
+  return Array.from({ length: len }, (_, index) => String(index + 1));
 });
 
 const seriesData = computed(() => {
   if (!Array.isArray(props.series)) return [];
   return props.series.map((s) => ({
     name: s.name || '数据',
-    data: (Array.isArray(s.value) ? s.value : []).map((item) =>
-      typeof item === 'number' ? item : parseFloat(item) || 0
-    )
+    // 空值保留为 null（图表断点），不再静默补 0
+    data: (Array.isArray(s.value) ? s.value : []).map(toNumeric)
   }));
 });
 

@@ -18,7 +18,13 @@
 
 <template>
   <div class="schema-preview">
-    <SchemaNode :schema="schema" name="root" :required="true" />
+    <SchemaNode
+      :schema="schema"
+      name="root"
+      :required="true"
+      :editable="editable"
+      @update-default="(payload) => emit('updateDefault', payload)"
+    />
   </div>
 </template>
 
@@ -29,8 +35,15 @@ defineProps({
   schema: {
     type: Object,
     required: true
+  },
+  // 是否允许在预览树中编辑参数默认值
+  editable: {
+    type: Boolean,
+    default: false
   }
 })
+
+const emit = defineEmits(['updateDefault'])
 </script>
 
 <style lang="scss" scoped>

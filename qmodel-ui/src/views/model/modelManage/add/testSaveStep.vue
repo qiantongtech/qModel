@@ -46,7 +46,7 @@
               <span>{{ row.required ? '是' : '否' }}</span>
             </template>
           </el-table-column>
-          <el-table-column label="参数值" min-width="220" >
+          <el-table-column label="参数值" min-width="220" class-name="param-value-cell">
             <template #default="{ row }">
               <el-input
                 v-if="row.displayType === 'string'"
@@ -173,6 +173,7 @@ import { VideoPlay, Warning } from '@element-plus/icons-vue'
 import Ajv from 'ajv'
 import FileUpload from '@/components/FileUpload2'
 import { testModelConfig } from '@/api/model/config'
+import { getSchemaDefaultValue } from '@/utils/modelSchema'
 
 const { proxy } = getCurrentInstance()
 
@@ -329,16 +330,36 @@ const fieldList = computed(() => {
   })
 })
 
+// 记录上一次自动回填的默认值，用于识别“仍是默认值”的字段，跟随第三步的默认值修改同步更新
+const lastSchemaDefaults = ref({})
+
 const initFormValues = () => {
   const schema = inputSchemaObj.value
   const existingBody = parseExistingBody()
+  const prevDefaults = lastSchemaDefaults.value
   const defaultValues = {}
+  const currentDefaults = {}
 
   if (schema && schema.type === 'object' && schema.properties) {
     Object.keys(schema.properties).forEach((key) => {
       const p = schema.properties[key] || {}
+      const schemaDefault = getSchemaDefaultValue(p)
+      if (schemaDefault !== undefined) {
+        currentDefaults[key] = schemaDefault
+      }
       if (existingBody && key in existingBody) {
-        defaultValues[key] = existingBody[key]
+        const prevDefault = prevDefaults[key]
+        const isStillPrevDefault = prevDefault !== undefined &&
+          JSON.stringify(existingBody[key]) === JSON.stringify(prevDefault)
+        if (isStillPrevDefault && schemaDefault !== undefined) {
+          // 字段值仍是上次自动回填的默认值，跟随最新默认值更新
+          defaultValues[key] = schemaDefault
+        } else {
+          defaultValues[key] = existingBody[key]
+        }
+      } else if (schemaDefault !== undefined) {
+        // 回填第三步参数定义中设置的默认值
+        defaultValues[key] = schemaDefault
       } else if (p.type === 'integer' || p.type === 'number') {
         defaultValues[key] = undefined
       } else {
@@ -347,6 +368,7 @@ const initFormValues = () => {
     })
   }
 
+  lastSchemaDefaults.value = currentDefaults
   Object.keys(formValues).forEach((key) => delete formValues[key])
   Object.assign(formValues, defaultValues)
 }
@@ -611,6 +633,12 @@ defineExpose({
   .el-input-number,
   .el-select {
     width: 100%;
+  }
+
+  // el-input-number 自带居中，普通 el-input 默认左对齐；
+  // 统一「参数值」列的文字对齐，避免同一列 placeholder 有的居中有的靠左
+  :deep(.param-value-cell input) {
+    text-align: center;
   }
 }
 

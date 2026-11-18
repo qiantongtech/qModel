@@ -303,6 +303,7 @@ import {
 } from "@/api/model/modelFileResource";
 import { listModelDataApi, getModelDataApi } from '@/api/model/modelData/modelDataApi';
 import { getModelVersionDict } from '@/api/model/version.js';
+import { getSchemaDefaultValue } from '@/utils/modelSchema';
 
 const props = defineProps({
   modelId: {
@@ -484,7 +485,11 @@ const initFormValues = () => {
   if (schema && schema.type === "object" && schema.properties) {
     Object.keys(schema.properties).forEach((key) => {
       const p = schema.properties[key] || {};
-      if (p.type === "integer" || p.type === "number") {
+      const schemaDefault = getSchemaDefaultValue(p);
+      if (schemaDefault !== undefined) {
+        // 回填参数定义中设置的默认值
+        defaultValues[key] = schemaDefault;
+      } else if (p.type === "integer" || p.type === "number") {
         defaultValues[key] = undefined;
       } else {
         defaultValues[key] = "";
@@ -713,10 +718,8 @@ function clearApiSelection() {
   resourceMethod.value = ''
   resourceType.value = ''
 
-  // 清空已匹配的参数值
-  Object.keys(formValues).forEach(key => {
-    formValues[key] = ''
-  })
+  // 重置参数值：恢复为 Schema 中定义的默认值
+  initFormValues()
 
   proxy.$modal.msgSuccess('已取消 API 绑定，并重置参数值')
 }

@@ -77,5 +77,8 @@ public class ModelCalcWidgetSaveReqVO extends BaseEntity {
     @JsonProperty("yFields")
     private List<ModelCalcWidgetYFieldVO> yFields;
 
+    @Schema(description = "组件配置JSON（新版前端整体透传，优先于平铺字段）")
+    private String config;
+
 
 }

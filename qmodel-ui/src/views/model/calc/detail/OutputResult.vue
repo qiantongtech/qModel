@@ -117,8 +117,22 @@
                       v-else-if="widget.type === 'line'"
                       :ref="(el) => setWidgetRef(el, widget.id)"
                       :data="widget"
-                      :xValue="getFieldValue(widget.xField)"
-                      :series="getLineSeries(widget)"
+                      :xValue="getChartData(widget).xValue"
+                      :series="getChartData(widget).series"
+                    />
+                    <BarChartWidget
+                      v-else-if="widget.type === 'bar'"
+                      :ref="(el) => setWidgetRef(el, widget.id)"
+                      :data="widget"
+                      :xValue="getChartData(widget).xValue"
+                      :series="getChartData(widget).series"
+                    />
+                    <PieChartWidget
+                      v-else-if="widget.type === 'pie'"
+                      :ref="(el) => setWidgetRef(el, widget.id)"
+                      :data="widget"
+                      :xValue="getChartData(widget).xValue"
+                      :series="getChartData(widget).series"
                     />
                   </div>
                   <div v-if="widget.buildError" class="widget-error-tip">
@@ -187,6 +201,47 @@
             </el-form-item>
           </el-col>
         </el-row>
+        <!-- 图表类：数据形状 -->
+        <template v-if="isChartType">
+          <el-row :gutter="20">
+            <el-col :span="24">
+              <el-form-item label="数据形状" prop="shape">
+                <el-select
+                  v-model="widgetForm.shape"
+                  placeholder="请选择返回结果的形状"
+                  @change="handleShapeChange"
+                >
+                  <el-option
+                    v-for="item in shapeOptions"
+                    :key="item.value"
+                    :label="item.label"
+                    :value="item.value"
+                  />
+                </el-select>
+              </el-form-item>
+            </el-col>
+          </el-row>
+          <el-row v-if="widgetForm.shape !== 'parallel'" :gutter="20">
+            <el-col :span="24">
+              <el-form-item label="数据节点" prop="path">
+                <el-select
+                  v-model="widgetForm.path"
+                  placeholder="请选择数据所在节点"
+                  clearable
+                  filterable
+                >
+                  <el-option
+                    v-for="item in dataNodeOptions"
+                    :key="item.value"
+                    :label="item.label"
+                    :value="item.value"
+                  />
+                </el-select>
+              </el-form-item>
+            </el-col>
+          </el-row>
+        </template>
+
         <!-- Base64 配置 -->
         <template v-if="widgetForm.type === 'base64'">
           <el-row :gutter="20">
@@ -210,19 +265,19 @@
           </el-row>
         </template>
 
-        <!-- 折线图配置 -->
-        <template v-if="widgetForm.type === 'line'">
+        <!-- 图表类：X / Y 字段绑定 -->
+        <template v-if="isChartType">
           <el-row :gutter="20">
             <el-col :span="24">
-              <el-form-item label="X 轴字段" prop="xField">
+              <el-form-item :label="isSeriesMap ? 'X 轴字段（可选）' : 'X 轴字段'" prop="xField">
                 <el-select
                   v-model="widgetForm.xField"
-                  placeholder="请选择 X 轴字段"
+                  :placeholder="isSeriesMap ? '留空则使用序号' : '请选择 X 轴字段'"
                   clearable
                   filterable
                 >
                   <el-option
-                    v-for="item in allFieldOptions"
+                    v-for="item in bindingFieldOptions"
                     :key="item.path"
                     :label="`${item.path}（${item.type}）`"
                     :value="item.path"
@@ -234,8 +289,13 @@
           <el-row :gutter="20">
             <el-col :span="24">
               <el-form-item label="Y 轴字段" prop="yFields">
-                <template #label>Y 轴字段</template>
-                <el-button type="primary" plain style="margin-bottom: 15px" :disabled="widgetForm.yFields.length >= 5" @click="addYField">
+                <el-button
+                  type="primary"
+                  plain
+                  style="margin-bottom: 15px"
+                  :disabled="widgetForm.yFields.length >= maxYFields"
+                  @click="addYField"
+                >
                   新增 Y 轴
                 </el-button>
                 <el-table :data="widgetForm.yFields" class="y-fields-table" style="width: 100%">
@@ -244,16 +304,16 @@
                       <el-input v-model="scope.row.tag" placeholder="请输入图例名称" />
                     </template>
                   </el-table-column>
-                  <el-table-column label="字段绑定" min-width="260">
+                  <el-table-column :label="widgetForm.shape === 'seriesMap' ? '系列字段' : '字段绑定'" min-width="260">
                     <template #default="scope">
                       <el-select
                         v-model="scope.row.field"
-                        placeholder="请选择 Y 轴字段"
+                        :placeholder="widgetForm.shape === 'seriesMap' ? '请选择系列字段' : '请选择 Y 轴字段'"
                         clearable
                         filterable
                       >
                         <el-option
-                          v-for="item in allFieldOptions"
+                          v-for="item in bindingFieldOptions"
                           :key="item.path"
                           :label="`${item.path}（${item.type}）`"
                           :value="item.path"
@@ -272,6 +332,7 @@
                     </template>
                   </el-table-column>
                 </el-table>
+                <div v-if="isPie" class="form-tip">饼图仅支持 1 条 Y 轴数据，X 轴字段作为分类名称</div>
               </el-form-item>
             </el-col>
           </el-row>
@@ -297,6 +358,14 @@ import VueJsonPretty from 'vue-json-pretty';
 import 'vue-json-pretty/lib/styles.css';
 import Base64Widget from './widgets/Base64Widget.vue';
 import LineChartWidget from './widgets/LineChartWidget.vue';
+import BarChartWidget from './widgets/BarChartWidget.vue';
+import PieChartWidget from './widgets/PieChartWidget.vue';
+import {
+  resolvePath,
+  resolveWidgetData,
+  parseWidgetConfig,
+  buildWidgetConfig
+} from './widgets/chartData';
 import { listCalcWidgetByCalcId, addCalcWidget, updateCalcWidget, delCalcWidget } from '@/api/model/calcWidget/calcWidget';
 
 const mockJsonData = {
@@ -408,36 +477,62 @@ const base64FieldOptions = computed(() => {
   });
 });
 
-// 根据路径获取字段值
+// 根据路径获取字段值，'$' 或空路径表示根节点
 function getFieldValue(path) {
   if (!path || !hasOutputResult.value) return undefined;
-  const keys = path.split('.');
-  let value = outputResult.value;
-  for (const key of keys) {
-    if (value === null || value === undefined) return undefined;
-    const arrayMatch = key.match(/^(.+)\[(\*|\d+)\]$/);
-    if (arrayMatch) {
-      const arrKey = arrayMatch[1];
-      const index = arrayMatch[2] === '*' ? 0 : parseInt(arrayMatch[2], 10);
-      value = value[arrKey];
-      if (Array.isArray(value)) {
-        value = value[index];
-      }
-    } else {
-      value = value[key];
-    }
-  }
-  return value;
+  return resolvePath(outputResult.value, path);
 }
 
-// 组装折线图系列数据
-function getLineSeries(widget) {
-  if (!Array.isArray(widget.yFields)) return [];
-  return widget.yFields.map((item) => ({
-    name: item.tag || '',
-    value: getFieldValue(item.field)
-  }));
+// 图表组件统一入口：按配置把返回结果解析成 { xValue, series }
+function getChartData(widget) {
+  return resolveWidgetData(widget, outputResult.value);
 }
+
+// 数据节点选项：按形状只列数组 / 对象节点，'$' 表示返回结果根节点
+const dataNodeOptions = computed(() => {
+  const shape = widgetForm.value?.shape || 'parallel';
+  let options = [];
+  if (shape === 'records') {
+    options = allFieldOptions.value
+      .filter((item) => item.type === 'array')
+      .map((item) => ({ value: item.path, label: `${item.path}（数组）` }));
+  } else if (shape === 'seriesMap') {
+    options = allFieldOptions.value
+      .filter((item) => item.type === 'object')
+      .map((item) => ({ value: item.path, label: `${item.path}（对象）` }));
+  }
+  const root = outputResult.value;
+  const rootMatch =
+    shape === 'records'
+      ? Array.isArray(root)
+      : shape === 'seriesMap'
+        ? root && typeof root === 'object' && !Array.isArray(root)
+        : false;
+  if (rootMatch) options.unshift({ value: '$', label: '返回结果根节点（$）' });
+  return options;
+});
+
+// X / Y 字段选项：并行数组用全局路径，其余按数据节点内部字段生成
+const bindingFieldOptions = computed(() => {
+  const shape = widgetForm.value?.shape || 'parallel';
+  if (shape === 'parallel') return allFieldOptions.value;
+  const node = getFieldValue(widgetForm.value?.path);
+  if (shape === 'records') {
+    const first = Array.isArray(node) ? node[0] : null;
+    if (!first || typeof first !== 'object' || Array.isArray(first)) return [];
+    return Object.keys(first).map((key) => ({
+      path: key,
+      type: Array.isArray(first[key]) ? 'array' : typeof first[key]
+    }));
+  }
+  if (shape === 'seriesMap') {
+    if (!node || typeof node !== 'object' || Array.isArray(node)) return [];
+    return Object.keys(node)
+      .filter((key) => Array.isArray(node[key]))
+      .map((key) => ({ path: key, type: 'array' }));
+  }
+  return allFieldOptions.value;
+});
 
 // ==================== JSON 导出 ====================
 function handleExportJson() {
@@ -453,8 +548,26 @@ function handleExportJson() {
 // ==================== 组件配置 ====================
 const widgetTypeOptions = [
   { label: 'Base64 图片', value: 'base64' },
-  { label: '折线图', value: 'line' }
+  { label: '折线图', value: 'line' },
+  { label: '柱形图', value: 'bar' },
+  { label: '饼图', value: 'pie' }
 ];
+
+const CHART_TYPES = ['line', 'bar', 'pie'];
+const CHART_SHAPES = [
+  { label: '并行数组（X / Y 各自独立数组）', value: 'parallel' },
+  { label: '对象数组（一行一条记录）', value: 'records' },
+  { label: '键值数组（对象内多个数组）', value: 'seriesMap' }
+];
+const isChartType = computed(() => CHART_TYPES.includes(widgetForm.value.type));
+const isPie = computed(() => widgetForm.value.type === 'pie');
+const isSeriesMap = computed(() => widgetForm.value.shape === 'seriesMap');
+const maxYFields = computed(() => (isPie.value ? 1 : 5));
+const shapeOptions = computed(() =>
+  isPie.value
+    ? CHART_SHAPES.filter((item) => item.value !== 'seriesMap')
+    : CHART_SHAPES
+);
 
 const widgetList = ref([]);
 
@@ -504,8 +617,10 @@ function loadWidgetList() {
     list.sort((a, b) => {
       return (b.createTime || '').localeCompare(a.createTime || '');
     });
+    // config 原串优先，后端平铺字段作为历史数据兜底
     widgetList.value = (list || []).map((item) => ({
       ...item,
+      ...parseWidgetConfig(item),
       buildError: ''
     }));
   });
@@ -520,6 +635,8 @@ const widgetFormRef = ref(null);
 const widgetForm = ref({
   type: 'base64',
   title: '',
+  shape: 'parallel',
+  path: '',
   field: '',
   xField: '',
   yFields: [{ tag: '', field: '' }]
@@ -528,6 +645,10 @@ const widgetForm = ref({
 function validateYFields(rule, value, callback) {
   if (!Array.isArray(value) || value.length === 0) {
     callback(new Error('请至少配置一条 Y 轴数据'));
+    return;
+  }
+  if (isPie.value && value.length > 1) {
+    callback(new Error('饼图仅支持 1 条 Y 轴数据'));
     return;
   }
   for (let i = 0; i < value.length; i++) {
@@ -555,12 +676,19 @@ const widgetRules = computed(() => {
       field: [{ required: true, message: '请选择字段绑定', trigger: 'submit' }]
     };
   }
-  if (widgetForm.value.type === 'line') {
-    return {
+  if (isChartType.value) {
+    const rules = {
       ...base,
-      xField: [{ required: true, message: '请选择 X 轴字段', trigger: 'submit' }],
+      shape: [{ required: true, message: '请选择数据形状', trigger: 'submit' }],
       yFields: [{ required: true, validator: validateYFields, trigger: 'submit' }]
     };
+    if (widgetForm.value.shape !== 'parallel') {
+      rules.path = [{ required: true, message: '请选择数据节点', trigger: 'submit' }];
+    }
+    if (!isSeriesMap.value) {
+      rules.xField = [{ required: true, message: '请选择 X 轴字段', trigger: 'submit' }];
+    }
+    return rules;
   }
   return base;
 });
@@ -569,6 +697,8 @@ function resetWidgetForm() {
   widgetForm.value = {
     type: 'base64',
     title: '',
+    shape: 'parallel',
+    path: '',
     field: '',
     xField: '',
     yFields: [{ tag: '', field: '' }]
@@ -590,17 +720,23 @@ function handleEditWidget(widget) {
   isEdit.value = true;
   editWidgetId.value = widget.id;
   dialogTitle.value = '编辑可视化组件';
-  let yFields = [{ tag: '', field: '' }];
-  if (Array.isArray(widget.yFields) && widget.yFields.length > 0) {
-    yFields = widget.yFields.map((item) => ({ tag: item.tag || '', field: item.field || '' }));
-  } else if (widget.yField) {
+  const config = parseWidgetConfig(widget);
+  let yFields = config.yFields.length > 0
+    ? config.yFields.map((item) => ({ tag: item.tag || '', field: item.field || '' }))
+    : [{ tag: '', field: '' }];
+  if (yFields.length === 1 && !yFields[0].field && widget.yField) {
     yFields = [{ tag: widget.title || '数据', field: widget.yField }];
+  }
+  if (widget.type === 'pie' && yFields.length > 1) {
+    yFields = yFields.slice(0, 1);
   }
   widgetForm.value = {
     type: widget.type,
     title: widget.title,
-    field: widget.field || '',
-    xField: widget.xField || '',
+    shape: config.shape,
+    path: config.path,
+    field: config.field,
+    xField: config.xField,
     yFields
   };
   dialogOpen.value = true;
@@ -622,6 +758,17 @@ function handleDeleteWidget(widget) {
 function handleTypeChange() {
   widgetForm.value.field = '';
   widgetForm.value.xField = '';
+  widgetForm.value.path = '';
+  widgetForm.value.shape = 'parallel';
+  widgetForm.value.yFields = [{ tag: '', field: '' }];
+  nextTick(() => {
+    widgetFormRef.value?.clearValidate();
+  });
+}
+
+function handleShapeChange() {
+  widgetForm.value.path = '';
+  widgetForm.value.xField = '';
   widgetForm.value.yFields = [{ tag: '', field: '' }];
   nextTick(() => {
     widgetFormRef.value?.clearValidate();
@@ -629,8 +776,8 @@ function handleTypeChange() {
 }
 
 function addYField() {
-  if (widgetForm.value.yFields.length >= 5) {
-    ElMessage.warning('最多支持 5 条 Y 轴数据');
+  if (widgetForm.value.yFields.length >= maxYFields.value) {
+    ElMessage.warning(isPie.value ? '饼图仅支持 1 条 Y 轴数据' : '最多支持 5 条 Y 轴数据');
     return;
   }
   widgetForm.value.yFields.push({ tag: '', field: '' });
@@ -698,26 +845,65 @@ function submitWidget() {
         const validImage = await validateBase64Images(value);
         if (!validImage) errorMsg = '绑定的字段无法解析为图片，请检查 Base64 数据';
       }
-    } else if (form.type === 'line') {
-      const xValue = getFieldValue(form.xField);
-      if (xValue !== undefined && !Array.isArray(xValue)) {
-        errorMsg = 'X 轴字段需要是数组类型';
-      }
-      if (!errorMsg) {
-        for (let i = 0; i < form.yFields.length; i++) {
-          const item = form.yFields[i];
-          const yValue = getFieldValue(item.field);
-          if (yValue === undefined) {
-            errorMsg = `第 ${i + 1} 条 Y 轴字段不存在`;
-            break;
+    } else if (isChartType.value) {
+      const shape = form.shape;
+      if (isPie.value && shape === 'seriesMap') {
+        errorMsg = '饼图不支持键值数组';
+      } else if (isPie.value && form.yFields.length > 1) {
+        errorMsg = '饼图仅支持 1 条 Y 轴数据';
+      } else if (shape === 'records') {
+        const rows = getFieldValue(form.path);
+        if (!Array.isArray(rows)) {
+          errorMsg = '数据节点需要是对象数组';
+        } else if (rows.length === 0) {
+          errorMsg = '数据节点中没有记录';
+        } else {
+          for (let i = 0; i < form.yFields.length; i++) {
+            const field = form.yFields[i].field;
+            const exists = rows.some((row) => row && typeof row === 'object' && field in row);
+            if (!exists) {
+              errorMsg = `第 ${i + 1} 条 Y 轴绑定的列「${field}」不存在`;
+              break;
+            }
           }
-          if (!Array.isArray(yValue)) {
-            errorMsg = `第 ${i + 1} 条 Y 轴字段需要是数组类型`;
-            break;
+        }
+      } else if (shape === 'seriesMap') {
+        const node = getFieldValue(form.path);
+        if (!node || typeof node !== 'object' || Array.isArray(node)) {
+          errorMsg = '数据节点需要是对象';
+        } else {
+          for (let i = 0; i < form.yFields.length; i++) {
+            const field = form.yFields[i].field;
+            if (!Array.isArray(node[field])) {
+              errorMsg = `第 ${i + 1} 条系列「${field}」需要是数组`;
+              break;
+            }
           }
-          if (Array.isArray(xValue) && yValue.length > xValue.length) {
-            errorMsg = `第 ${i + 1} 条 Y 轴数组长度不能大于 X 轴数组长度`;
-            break;
+          if (!errorMsg && form.xField && !Array.isArray(node[form.xField])) {
+            errorMsg = 'X 轴字段需要是数组类型';
+          }
+        }
+      } else {
+        const xValue = getFieldValue(form.xField);
+        if (xValue !== undefined && !Array.isArray(xValue)) {
+          errorMsg = 'X 轴字段需要是数组类型';
+        }
+        if (!errorMsg) {
+          for (let i = 0; i < form.yFields.length; i++) {
+            const item = form.yFields[i];
+            const yValue = getFieldValue(item.field);
+            if (yValue === undefined) {
+              errorMsg = `第 ${i + 1} 条 Y 轴字段不存在`;
+              break;
+            }
+            if (!Array.isArray(yValue)) {
+              errorMsg = `第 ${i + 1} 条 Y 轴字段需要是数组类型`;
+              break;
+            }
+            if (Array.isArray(xValue) && yValue.length > xValue.length) {
+              errorMsg = `第 ${i + 1} 条 Y 轴数组长度不能大于 X 轴数组长度`;
+              break;
+            }
           }
         }
       }
@@ -728,19 +914,23 @@ function submitWidget() {
       return;
     }
 
+    const config = buildWidgetConfig(form);
     const payload = {
       calcId: props.calcDetail.id,
       modelId: props.calcDetail.modelId,
       type: form.type,
       title: form.title,
-      sort: isEdit.value ? undefined : widgetList.value.length + 1
+      sort: isEdit.value ? undefined : widgetList.value.length + 1,
+      // 平铺字段保留，兼容后端历史数据与其它调用方
+      ...(form.type === 'base64'
+        ? { field: form.field }
+        : {
+            xField: form.xField || '',
+            yFields: form.yFields.map((item) => ({ tag: item.tag, field: item.field }))
+          }),
+      // 新配置整体透传，后续新增图表类型不必再改后端
+      config: JSON.stringify(config)
     };
-    if (form.type === 'base64') {
-      payload.field = form.field;
-    } else if (form.type === 'line') {
-      payload.xField = form.xField;
-      payload.yFields = form.yFields.map((item) => ({ tag: item.tag, field: item.field }));
-    }
 
     const saveAction = isEdit.value
       ? updateCalcWidget({ id: editWidgetId.value, ...payload })
@@ -792,13 +982,33 @@ watch(
           const validImage = await validateBase64Images(value);
           if (!validImage) errorMsg = '图片数据无法解析，请检查 Base64 数据';
         }
-      } else if (widget.type === 'line') {
-        const xValue = getFieldValue(widget.xField);
-        if (!Array.isArray(widget.yFields) || widget.yFields.length === 0) {
+      } else if (CHART_TYPES.includes(widget.type)) {
+        const shape = widget.shape || 'parallel';
+        const yFields = Array.isArray(widget.yFields) ? widget.yFields : [];
+        if (yFields.length === 0) {
           errorMsg = 'Y 轴配置已丢失';
+        } else if (shape === 'records') {
+          const rows = getFieldValue(widget.path);
+          if (!Array.isArray(rows)) {
+            errorMsg = '绑定的数据节点已不存在或类型已变化';
+          } else {
+            const missing = yFields.find((item) =>
+              !rows.some((row) => row && typeof row === 'object' && item.field in row)
+            );
+            if (missing) errorMsg = `绑定的列「${missing.field}」已不存在`;
+          }
+        } else if (shape === 'seriesMap') {
+          const node = getFieldValue(widget.path);
+          if (!node || typeof node !== 'object' || Array.isArray(node)) {
+            errorMsg = '绑定的数据节点已不存在或类型已变化';
+          } else {
+            const missing = yFields.find((item) => !Array.isArray(node[item.field]));
+            if (missing) errorMsg = `系列「${missing.field}」已不存在或类型已变化`;
+          }
         } else {
-          for (let i = 0; i < widget.yFields.length; i++) {
-            const item = widget.yFields[i];
+          const xValue = getFieldValue(widget.xField);
+          for (let i = 0; i < yFields.length; i++) {
+            const item = yFields[i];
             const yValue = getFieldValue(item.field);
             if (yValue === undefined) {
               errorMsg = `第 ${i + 1} 条 Y 轴字段已不存在`;
@@ -991,6 +1201,13 @@ watch(
   color: #f56c6c;
   font-size: 12px;
   border-top: 1px solid #fde2e2;
+}
+
+.form-tip {
+  margin-top: 8px;
+  font-size: 12px;
+  color: #909399;
+  line-height: 1.5;
 }
 
 .output-error {

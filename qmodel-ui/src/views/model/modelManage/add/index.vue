@@ -122,6 +122,7 @@
         <ParamDefineStep v-if="activeStep === 2"
             ref="paramStepRef"
             v-model:form-data="inputSchema"
+            :access-type="model.accessType"
         />
 
         <TestSaveStep v-if="activeStep === 3 && model.accessType === 'API'"

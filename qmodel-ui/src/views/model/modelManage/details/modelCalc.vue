@@ -61,7 +61,11 @@
           :show-overflow-tooltip="{ effect: 'light' }"
           sortable="custom"
           :sort-orders="['descending', 'ascending']"
-      />
+      >
+        <template #default="scope">
+          {{ scope.$index + 1 }}
+        </template>
+      </el-table-column>
       <el-table-column
           v-if="getColumnVisibility(1)"
           label="任务名称"
@@ -432,6 +436,7 @@ import {useRouter} from 'vue-router';
 import {listCalc, getCalc, delCalc, addCalc, updateCalc, executeCalc, cancelCalc} from '@/api/model/calc/calc'
 import {listModelFileResource} from "@/api/model/modelFileResource.js";
 import {getModelConfigByModelId} from "@/api/model/config.js";
+import {getSchemaDefaultValue} from '@/utils/modelSchema'
 
 const {proxy} = getCurrentInstance()
 const router = useRouter()
@@ -688,12 +693,14 @@ function parseInputSchema(inputSchema) {
     // format: 'binary' 对应文件上传类型
     const isFile = p.format === 'binary'
     const displayType = isFile ? 'file' : rawType
+    // 回填参数定义中设置的默认值
+    const schemaDefault = getSchemaDefaultValue(p)
 
     return {
       key: key,
       name: key,
       title: p.title || key,                      // 参数显示名称
-      value: '',                                  // 参数值（用户填写）
+      value: schemaDefault !== undefined ? schemaDefault : '', // 参数值（默认值回填，用户可修改）
       type: displayType,                          // 展示类型
       rawType: rawType,                           // 原始类型
       format: p.format || '',                     // 格式
@@ -806,7 +813,12 @@ async function submitForm() {
   // 3. 提交数据
   const submitData = {...form.value}
   if (Array.isArray(submitData.inputParams)) {
-    submitData.inputParams = JSON.stringify({params: submitData.inputParams})
+    // 统一补齐 paramCode（执行引擎按该字段读取入参名），避免只存 name/key 时参数被丢弃
+    const params = submitData.inputParams.map((item) => ({
+      ...item,
+      paramCode: item.paramCode || item.name || item.key
+    }))
+    submitData.inputParams = JSON.stringify({ params })
   }
   if (!submitData.code) {
     const now = new Date()

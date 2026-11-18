@@ -51,9 +51,15 @@
           <div class="preview-card">
             <div class="preview-header">
               <span><el-icon><View /></el-icon> 实时结构预览</span>
+              <span v-if="isApiModel" class="preview-tip">可直接为参数设置默认值，后续测试与调用时自动回填</span>
             </div>
             <div class="preview-body">
-              <SchemaPreview v-if="currentSchema" :schema="currentSchema" />
+              <SchemaPreview
+                v-if="currentSchema"
+                :schema="currentSchema"
+                :editable="isApiModel"
+                @update-default="handleUpdateDefault"
+              />
               <el-empty v-else description="左侧输入合法的 JSON Schema 后，此处将实时展示结构" />
             </div>
           </div>
@@ -73,6 +79,16 @@ const formData = defineModel('formData', {
   type: Object,
   required: true
 })
+
+const props = defineProps({
+  // 接入类型：仅 API 类型模型支持在参数定义时设置默认值
+  accessType: {
+    type: String,
+    default: 'API'
+  }
+})
+
+const isApiModel = computed(() => props.accessType === 'API')
 
 const parseError = ref('')
 const parsedSchema = ref(null)
@@ -133,6 +149,27 @@ const updateParsedSchema = () => {
 }
 
 watch(currentSchemaText, updateParsedSchema, { immediate: true })
+
+/**
+ * 预览树中编辑参数默认值后，将 default 关键字写回 Schema 文本
+ * @param {Object} payload { path: 属性名路径, value: 默认值, remove: 是否移除 }
+ */
+const handleUpdateDefault = ({ path, value, remove }) => {
+  const schema = parsedSchema.value
+  if (!schema || !Array.isArray(path) || path.length === 0) return
+  const next = JSON.parse(JSON.stringify(schema))
+  let node = next
+  for (const key of path) {
+    node = node?.properties?.[key]
+    if (!node) return
+  }
+  if (remove) {
+    delete node.default
+  } else {
+    node.default = value
+  }
+  formData.value.inputSchema = JSON.stringify(next, null, 2)
+}
 
 const canFormat = computed(() => {
   const text = (formData.value.inputSchema || '').trim()
@@ -233,6 +270,12 @@ defineExpose({
       display: inline-flex;
       align-items: center;
       gap: 6px;
+    }
+
+    .preview-tip {
+      font-size: 12px;
+      font-weight: normal;
+      color: #909399;
     }
   }
 

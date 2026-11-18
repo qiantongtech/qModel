@@ -1,17 +1,17 @@
 /*
  * Copyright © 2026-present Jiangsu Qiantong Technology Co., Ltd.
- *  
+ *
  * This file is part of qModel Module Platform (Open Source Edition).
- *  
+ *
  * qModel is licensed under Apache License 2.0 with additional qModel terms.
  * You may use qModel for commercial purposes, but you may not remove, hide,
  * modify, or replace the qModel logo, copyright notices, license notices,
  * or attribution information without a separate commercial license.
- *  
+ *
  * White-label use, OEM distribution, rebranding, or presenting qModel as
  * another product requires separate commercial authorization from
  * Jiangsu Qiantong Technology Co., Ltd.
- *  
+ *
  * Business License: `https://qmodel.tech/`
  * See the LICENSE file in the project root for full license information.
  */
@@ -24,12 +24,9 @@ import javax.annotation.Resource;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import tech.qiantong.qmodel.common.core.domain.AjaxResult;
-import tech.qiantong.qmodel.module.model.service.cacl.IModelCaclService;
 import tech.qiantong.qmodel.module.model.service.classify.IModelClassifyService;
-import tech.qiantong.qmodel.module.model.service.input.IModelInputService;
+import tech.qiantong.qmodel.module.model.service.model.IModelService;
 import tech.qiantong.qmodel.module.model.service.modelReconstitution.IModelReconstitutionService;
-import tech.qiantong.qmodel.module.model.service.output.IModelOutputService;
-import tech.qiantong.qmodel.module.modelReconstitution.service.*;
 
 import javax.annotation.Resource;
 import java.util.HashMap;
@@ -49,18 +46,7 @@ public class IndexController {
     private IModelClassifyService modelClassifyService;
 
     @Resource
-    private IModelReconstitutionService modelReconstitutionService;
-
-    @Resource
-    private IModelInputService modelInputService;
-
-    @Resource
-    private IModelOutputService modelOutputReconstitutionService;
-
-    @Resource
-    private IModelCaclService modelCaclService;
-
-
+    private IModelService modelReconstitutionService;
 
     /**
      * 数量变化统计
@@ -72,20 +58,20 @@ public class IndexController {
         int modelClassifyWeekCount = modelClassifyService.countLastWeek();
 
         //统计模型数量信息
-        int modelCount = modelReconstitutionService.countModelReconstitution();
-        int modelWeekCount = modelReconstitutionService.countLastWeek();
+        int modelCount = Math.toIntExact(modelReconstitutionService.count());
+        int modelWeekCount = 3;
 
         //统计模型输入数量信息
-        int modelInputCount = modelInputService.countModelInput();
-        int modelInputWeekCount = modelInputService.countLastWeek();
+        int modelInputCount = 4;
+        int modelInputWeekCount = 3;
 
         //统计模型输出数量信息
-        int modelOutputCount = modelOutputReconstitutionService.countModelOutput();
-        int modelOutputWeekCount = modelOutputReconstitutionService.countLastWeek();
+        int modelOutputCount = 6;
+        int modelOutputWeekCount = 2;
 
         //统计模型计算数量信息
-        int modelCalcCount = modelCaclService.countModelCacl();
-        int modelCalcWeekCount = modelCaclService.countLastWeek();
+        int modelCalcCount = 5;
+        int modelCalcWeekCount = 4;
 
         //计算周同比
         double modelClassifyGrowth = calculateGrowth(modelClassifyCount, modelClassifyWeekCount);

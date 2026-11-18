@@ -45,7 +45,6 @@ import tech.qiantong.qmodel.module.model.dal.mapper.modelReconstitution.ModelRec
 import tech.qiantong.qmodel.module.model.service.classify.IModelClassifyService;
 import tech.qiantong.qmodel.module.model.service.modelReconstitution.IModelReconstitutionService;
 import tech.qiantong.qmodel.module.model.service.modelVersion.IModelVersionService;
-import tech.qiantong.qmodel.module.modelReconstitution.domain.ModelReconstitution;
 
 import javax.annotation.Resource;
 import java.io.File;
@@ -192,55 +191,24 @@ public class ModelReconstitutionServiceImpl  extends ServiceImpl<ModelReconstitu
     }
 
     @Override
-    public ModelReconstitution selectModelReconstitutionById(Long id) {
-        ModelReconstitutionDO modelReconstitutionDO = modelReconstitutionMapper.selectById(id);
-        return BeanUtils.toBean(modelReconstitutionDO, ModelReconstitution.class);
-    }
-
-    @Override
-    public List<ModelReconstitution> selectModelReconstitutionList(ModelReconstitution modelReconstitution) {
-        ModelReconstitutionDO modelReconstitutionDO = BeanUtils.toBean(modelReconstitution, ModelReconstitutionDO.class);
-        List<ModelReconstitutionDO> modelReconstitutionDOList = modelReconstitutionMapper.selectList(
+    public List<ModelReconstitutionDO> selectModelReconstitutionList(ModelReconstitutionDO modelReconstitution) {
+        if (modelReconstitution == null) {
+            return modelReconstitutionMapper.selectList();
+        }
+        return modelReconstitutionMapper.selectList(
                 new LambdaQueryWrapper<ModelReconstitutionDO>()
-                        .eq(modelReconstitutionDO.getCompanyId() != null, ModelReconstitutionDO::getCompanyId, modelReconstitutionDO.getCompanyId())
-                        .eq(modelReconstitutionDO.getName() != null, ModelReconstitutionDO::getName, modelReconstitutionDO.getName())
-                        .eq(modelReconstitutionDO.getClassifyId() != null, ModelReconstitutionDO::getClassifyId, modelReconstitutionDO.getClassifyId())
-                        .eq(modelReconstitutionDO.getBuiltin() != null, ModelReconstitutionDO::getBuiltin, modelReconstitutionDO.getBuiltin())
-                        .eq(modelReconstitutionDO.getAccessMode() != null, ModelReconstitutionDO::getAccessMode, modelReconstitutionDO.getAccessMode())
-                        .eq(modelReconstitutionDO.getRequestMethod() != null, ModelReconstitutionDO::getRequestMethod, modelReconstitutionDO.getRequestMethod())
-                        .eq(modelReconstitutionDO.getInterfaceorfileAddress() != null, ModelReconstitutionDO::getInterfaceorfileAddress, modelReconstitutionDO.getInterfaceorfileAddress())
-                        .eq(modelReconstitutionDO.getVersionId() != null, ModelReconstitutionDO::getVersionId, modelReconstitutionDO.getVersionId())
-                        .eq(modelReconstitutionDO.getWhetherPublish() != null, ModelReconstitutionDO::getWhetherPublish, modelReconstitutionDO.getWhetherPublish())
-                        .eq(modelReconstitutionDO.getPublishTime() != null, ModelReconstitutionDO::getPublishTime, modelReconstitutionDO.getPublishTime())
-                        .eq(modelReconstitutionDO.getDelFlag() != null, ModelReconstitutionDO::getDelFlag, modelReconstitutionDO.getDelFlag())
+                        .eq(modelReconstitution.getCompanyId() != null, ModelReconstitutionDO::getCompanyId, modelReconstitution.getCompanyId())
+                        .eq(modelReconstitution.getName() != null, ModelReconstitutionDO::getName, modelReconstitution.getName())
+                        .eq(modelReconstitution.getClassifyId() != null, ModelReconstitutionDO::getClassifyId, modelReconstitution.getClassifyId())
+                        .eq(modelReconstitution.getBuiltin() != null, ModelReconstitutionDO::getBuiltin, modelReconstitution.getBuiltin())
+                        .eq(modelReconstitution.getAccessMode() != null, ModelReconstitutionDO::getAccessMode, modelReconstitution.getAccessMode())
+                        .eq(modelReconstitution.getRequestMethod() != null, ModelReconstitutionDO::getRequestMethod, modelReconstitution.getRequestMethod())
+                        .eq(modelReconstitution.getInterfaceorfileAddress() != null, ModelReconstitutionDO::getInterfaceorfileAddress, modelReconstitution.getInterfaceorfileAddress())
+                        .eq(modelReconstitution.getVersionId() != null, ModelReconstitutionDO::getVersionId, modelReconstitution.getVersionId())
+                        .eq(modelReconstitution.getWhetherPublish() != null, ModelReconstitutionDO::getWhetherPublish, modelReconstitution.getWhetherPublish())
+                        .eq(modelReconstitution.getPublishTime() != null, ModelReconstitutionDO::getPublishTime, modelReconstitution.getPublishTime())
+                        .eq(modelReconstitution.getDelFlag() != null, ModelReconstitutionDO::getDelFlag, modelReconstitution.getDelFlag())
         );
-        return modelReconstitutionDOList.stream()
-                .map(doObj -> BeanUtils.toBean(doObj, ModelReconstitution.class))
-                .collect(Collectors.toList());
-    }
-
-    @Override
-    public int insertModelReconstitution(ModelReconstitution modelReconstitution) {
-        ModelReconstitutionDO modelReconstitutionDO = BeanUtils.toBean(modelReconstitution, ModelReconstitutionDO.class);
-        modelReconstitutionDO.setCreateTime(DateUtils.getNowDate());
-        return modelReconstitutionMapper.insert(modelReconstitutionDO);
-    }
-
-    @Override
-    public int updateModelReconstitution(ModelReconstitution modelReconstitution) {
-        ModelReconstitutionDO modelReconstitutionDO = BeanUtils.toBean(modelReconstitution, ModelReconstitutionDO.class);
-        modelReconstitutionDO.setUpdateTime(DateUtils.getNowDate());
-        return modelReconstitutionMapper.updateById(modelReconstitutionDO);
-    }
-
-    @Override
-    public int deleteModelReconstitutionByIds(Long[] ids) {
-        return modelReconstitutionMapper.deleteBatchIds(Arrays.asList(ids));
-    }
-
-    @Override
-    public int deleteModelReconstitutionById(Long id) {
-        return modelReconstitutionMapper.deleteById(id);
     }
 
     @Override
