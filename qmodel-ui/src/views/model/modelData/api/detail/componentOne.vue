@@ -160,6 +160,7 @@ import Ajv from "ajv";
 import FileUpload from "@/components/FileUpload2";
 import { testModelConfig } from "@/api/model/config";
 import { getModelDataApi } from "@/api/model/modelData/modelDataApi";
+import { normalizeSchemaTypes, stripBinaryFormat } from "@/utils/modelSchema";
 
 const { proxy } = getCurrentInstance()
 
@@ -405,15 +406,15 @@ const validateTestBody = async () => {
     try {
       const schema = JSON.parse(schemaText);
       const schemaCopy = JSON.parse(JSON.stringify(schema));
-      const removeBinaryFormat = (obj) => {
-        if (typeof obj === "object" && obj !== null) {
-          if (obj.format === "binary") {
-            delete obj.format;
-          }
-          Object.keys(obj).forEach((key) => removeBinaryFormat(obj[key]));
-        }
-      };
-      removeBinaryFormat(schemaCopy);
+
+      // ajv 会按 JSON Schema 元规范校验，非标准 type 会直接抛错导致无法调试；
+      // 这里先归一化 type，再移除 ajv 不认识的 binary 格式
+      const typeFixes = normalizeSchemaTypes(schemaCopy);
+      stripBinaryFormat(schemaCopy);
+      if (typeFixes.length > 0) {
+        addLog("入参 Schema 存在不规范的 type，已按以下方式校验：", "warn");
+        typeFixes.forEach((item) => addLog("  " + item, "warn"));
+      }
 
       const validate = ajv.compile(schemaCopy);
       const valid = validate(body);

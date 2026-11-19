@@ -173,7 +173,7 @@ import { VideoPlay, Warning } from '@element-plus/icons-vue'
 import Ajv from 'ajv'
 import FileUpload from '@/components/FileUpload2'
 import { testModelConfig } from '@/api/model/config'
-import { getSchemaDefaultValue } from '@/utils/modelSchema'
+import { getSchemaDefaultValue, normalizeSchemaTypes, stripBinaryFormat } from '@/utils/modelSchema'
 
 const { proxy } = getCurrentInstance()
 
@@ -481,8 +481,16 @@ const validateTestBody = async () => {
   const schemaText = (formData.value.inputSchema || '').trim()
   if (schemaText) {
     try {
-      const schema = JSON.parse(schemaText)
-      const validate = ajv.compile(schema)
+      const schemaCopy = JSON.parse(JSON.stringify(JSON.parse(schemaText)))
+      // ajv 会按 JSON Schema 元规范校验，非标准 type 会直接抛错导致无法测试；
+      // 这里先归一化 type，再移除 ajv 不认识的 binary 格式
+      const typeFixes = normalizeSchemaTypes(schemaCopy)
+      stripBinaryFormat(schemaCopy)
+      if (typeFixes.length > 0) {
+        addLog('入参 Schema 存在不规范的 type，已按以下方式校验：', 'warn')
+        typeFixes.forEach((item) => addLog('  ' + item, 'warn'))
+      }
+      const validate = ajv.compile(schemaCopy)
       const valid = validate(body)
       if (!valid) {
         validateError.value = '不符合入参 Schema：' + validate.errors.map((e) => e.message).join('；')

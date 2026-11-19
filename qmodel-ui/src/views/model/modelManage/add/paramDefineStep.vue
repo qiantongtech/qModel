@@ -51,13 +51,13 @@
           <div class="preview-card">
             <div class="preview-header">
               <span><el-icon><View /></el-icon> 实时结构预览</span>
-              <span v-if="isApiModel" class="preview-tip">可直接为参数设置默认值，后续测试与调用时自动回填</span>
+              <span class="preview-tip">可直接为参数设置默认值，后续测试与调用时自动回填</span>
             </div>
             <div class="preview-body">
               <SchemaPreview
                 v-if="currentSchema"
                 :schema="currentSchema"
-                :editable="isApiModel"
+                :editable="true"
                 @update-default="handleUpdateDefault"
               />
               <el-empty v-else description="左侧输入合法的 JSON Schema 后，此处将实时展示结构" />
@@ -79,16 +79,6 @@ const formData = defineModel('formData', {
   type: Object,
   required: true
 })
-
-const props = defineProps({
-  // 接入类型：仅 API 类型模型支持在参数定义时设置默认值
-  accessType: {
-    type: String,
-    default: 'API'
-  }
-})
-
-const isApiModel = computed(() => props.accessType === 'API')
 
 const parseError = ref('')
 const parsedSchema = ref(null)

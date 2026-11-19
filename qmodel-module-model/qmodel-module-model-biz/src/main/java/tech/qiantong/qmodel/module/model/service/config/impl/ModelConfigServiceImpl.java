@@ -53,6 +53,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 import tech.qiantong.qmodel.common.core.page.PageResult;
 import tech.qiantong.qmodel.common.exception.ServiceException;
 import tech.qiantong.qmodel.common.utils.ip.IpUtils;
+import tech.qiantong.qmodel.common.constant.Constants;
 import tech.qiantong.qmodel.common.utils.StringUtils;
 import tech.qiantong.qmodel.common.utils.SecurityUtils;
 import tech.qiantong.qmodel.common.utils.object.BeanUtils;
@@ -81,9 +82,6 @@ import java.util.Date;
 public class ModelConfigServiceImpl  extends ServiceImpl<ModelConfigMapper,ModelConfigDO> implements IModelConfigService {
     @Resource
     private ModelConfigMapper modelConfigMapper;
-
-    @Resource
-    private tech.qiantong.qmodel.config.ServerConfig serverConfig;
 
     @Resource
     private IModelInvokeHistoryService modelInvokeHistoryService;
@@ -530,30 +528,49 @@ public class ModelConfigServiceImpl  extends ServiceImpl<ModelConfigMapper,Model
         return current == null ? null : String.valueOf(current);
     }
 
+    /**
+     * 将文件访问地址还原为本地文件（用于 multipart 请求体上传本地文件）
+     *
+     * <p>按 {@link Constants#RESOURCE_PREFIX} 标记定位相对路径，不依赖当前请求上下文；
+     * 原实现通过 serverConfig.getUrl() 取域名做前缀比对，在异步线程上会抛 NullPointerException。</p>
+     *
+     * @param filePath 参数值，可能是文件访问地址或本地绝对路径
+     * @return 存在的本地文件；无法识别或文件不存在时返回 null
+     */
     private File resolveLocalFile(String filePath) {
         if (StringUtils.isBlank(filePath)) {
             return null;
         }
         filePath = filePath.trim();
-        String currentServerUrl = serverConfig.getUrl();
-        if (StringUtils.isNotBlank(currentServerUrl) && filePath.startsWith(currentServerUrl)) {
-            String relativePath = filePath.substring(currentServerUrl.length());
-            if (relativePath.startsWith("/profile/")) {
-                relativePath = relativePath.substring("/profile/".length());
-            } else if (relativePath.startsWith("/")) {
-                relativePath = relativePath.substring(1);
-            }
-            String localPath = storagePath + relativePath;
-            File file = new File(localPath);
+
+        String relativePath = StringUtils.substringAfter(filePath, Constants.RESOURCE_PREFIX + "/");
+        if (StringUtils.isNotBlank(relativePath)) {
+            File file = new File(buildLocalStoragePath(relativePath));
             if (file.exists()) {
                 return file;
             }
         }
+
         File file = new File(filePath);
         if (file.exists()) {
             return file;
         }
         return null;
+    }
+
+    /**
+     * 拼接本地存储绝对路径，兼容 storagePath 结尾缺少分隔符的配置
+     *
+     * @param relativePath 相对存储根目录的路径
+     * @return 本地存储绝对路径
+     */
+    private String buildLocalStoragePath(String relativePath) {
+        String base = storagePath;
+        if (!base.endsWith("/") && !base.endsWith("\\")) {
+            base = base + "/";
+        }
+        String path = relativePath.startsWith("/") ? relativePath.substring(1) : relativePath;
+        return base + path;
     }
 
     /**

@@ -41,6 +41,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import javax.annotation.Resource;
 import org.springframework.web.multipart.MultipartFile;
+import tech.qiantong.qmodel.common.constant.Constants;
 import tech.qiantong.qmodel.common.core.page.PageResult;
 import tech.qiantong.qmodel.common.utils.ip.IpUtils;
 import tech.qiantong.qmodel.common.utils.object.BeanUtils;
@@ -51,7 +52,6 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import tech.qiantong.qmodel.config.PythonConfig;
-import tech.qiantong.qmodel.config.ServerConfig;
 import tech.qiantong.qmodel.module.model.controller.admin.fileResource.vo.ModelFileResourcePageReqVO;
 import tech.qiantong.qmodel.module.model.controller.admin.fileResource.vo.ModelFileResourceRespVO;
 import tech.qiantong.qmodel.module.model.controller.admin.fileResource.vo.ModelFileResourceSaveReqVO;
@@ -92,9 +92,6 @@ public class ModelFileResourceServiceImpl extends ServiceImpl<ModelFileResourceM
 
     @Resource
     private PythonConfig pythonConfig;
-
-    @Resource
-    private ServerConfig serverConfig;
 
     @Resource
     private IModelInvokeHistoryService modelInvokeHistoryService;
@@ -444,25 +441,28 @@ public class ModelFileResourceServiceImpl extends ServiceImpl<ModelFileResourceM
         }
     }
 
-    // 文件路径解析方法
+    /**
+     * 文件路径解析方法：把文件访问地址还原为本地存储路径
+     *
+     * <p>计算任务在异步/调度线程中执行，线程上不存在 HTTP 请求上下文，
+     * 不能再用 serverConfig.getUrl() 取当前域名做前缀比对（会直接抛 NullPointerException），
+     * 因此改为按 {@link Constants#RESOURCE_PREFIX} 标记定位相对路径，与请求无关。</p>
+     *
+     * @param filePath 参数值，可能是文件访问地址、本地绝对路径或普通值
+     * @return 可直接交给 Python 脚本使用的路径；无法识别时原样返回
+     */
     private String resolveFilePath(String filePath) {
         if (StringUtils.isBlank(filePath)) {
             return filePath;
         }
         filePath = filePath.trim();
 
-        String currentServerUrl = serverConfig.getUrl();
-        if (StringUtils.isNotBlank(currentServerUrl) && filePath.startsWith(currentServerUrl)) {
-            String relativePath = filePath.substring(currentServerUrl.length());
-            if (relativePath.startsWith("/profile/")) {
-                relativePath = relativePath.substring("/profile/".length());
-            } else if (relativePath.startsWith("/")) {
-                relativePath = relativePath.substring(1);
-            }
-            String localPath = storagePath + relativePath;
-            File file = new File(localPath);
+        // 1. 文件访问地址（如 http://host:port/profile/2026/11/main.py）还原为本地存储路径
+        String relativePath = StringUtils.substringAfter(filePath, Constants.RESOURCE_PREFIX + "/");
+        if (StringUtils.isNotBlank(relativePath)) {
+            File file = new File(buildLocalStoragePath(relativePath));
             if (file.exists()) {
-                return localPath;
+                return file.getAbsolutePath();
             }
         }
 
@@ -474,6 +474,21 @@ public class ModelFileResourceServiceImpl extends ServiceImpl<ModelFileResourceM
 
         // 3. 如果都不存在，保持原路径不变（Python脚本可能会处理）
         return filePath;
+    }
+
+    /**
+     * 拼接本地存储绝对路径，兼容 storagePath 结尾缺少分隔符的配置
+     *
+     * @param relativePath 相对存储根目录的路径
+     * @return 本地存储绝对路径
+     */
+    private String buildLocalStoragePath(String relativePath) {
+        String base = storagePath;
+        if (!base.endsWith("/") && !base.endsWith("\\")) {
+            base = base + "/";
+        }
+        String path = relativePath.startsWith("/") ? relativePath.substring(1) : relativePath;
+        return base + path;
     }
 
     @Override

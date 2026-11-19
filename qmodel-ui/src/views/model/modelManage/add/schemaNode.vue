@@ -121,7 +121,7 @@ const props = defineProps({
     type: Array,
     default: () => []
   },
-  // 是否允许编辑默认值（仅 API 类型模型的参数定义开启）
+  // 是否允许编辑默认值（API / PYTHON 类型模型的参数定义均开启）
   editable: {
     type: Boolean,
     default: false
