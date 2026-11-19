@@ -350,6 +350,14 @@ const commitDefault = (raw) => {
       text-align: center;
     }
 
+    // el-select 的选中值渲染在 .el-select__placeholder 上而不是 input，
+    // 上面那条管不到；该元素同时带 .el-select__selected-item（display: flex），
+    // 所以 text-align 与 justify-content 都要给，否则布尔类默认值与相邻输入框对不齐
+    :deep(.el-select__placeholder) {
+      justify-content: center;
+      text-align: center;
+    }
+
     // 数组/对象默认值是 JSON 文本，给更宽的输入区域
     &.is-complex .el-input {
       width: 260px;

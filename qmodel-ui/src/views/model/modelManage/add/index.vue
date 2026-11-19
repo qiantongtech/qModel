@@ -344,6 +344,23 @@ const handlePrevStep = () => {
   }
 };
 
+/**
+ * 提取各步骤 validate() 失败时的提示文案
+ * @param {*} error 校验失败的原因
+ * @returns {string} 需要弹出的提示，空串表示表单内已提示、不再弹窗
+ */
+const resolveValidateMessage = (error) => {
+  if (error instanceof Error) {
+    return error.message;
+  }
+  if (error && typeof error === "object") {
+    const first = Object.values(error)[0];
+    const item = Array.isArray(first) ? first[0] : first;
+    return item?.message || "";
+  }
+  return "";
+};
+
 // 下一步
 const handleNextStep = async () => {
   try {
@@ -370,8 +387,9 @@ const handleNextStep = async () => {
       activeStep.value++;
     }
   } catch (error) {
-    if (error.message !== ""){
-      proxy.$modal.msgError(error?.message || "请上传并检测通过 ZIP 模型包");
+    const message = resolveValidateMessage(error);
+    if (message) {
+      proxy.$modal.msgError(message);
     }
   }
 };
