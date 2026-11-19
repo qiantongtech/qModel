@@ -74,15 +74,9 @@ CREATE TABLE `message`
 -- ----------------------------
 -- Records of message
 -- ----------------------------
-INSERT INTO `message`
-VALUES (46, NULL, NULL, '测试', '测试内容', 0, 0, 0, NULL, NULL, NULL, 0, 0, 1, 0, '小桐', 1, '2025-12-30 14:00:24',
-        '小桐', '2025-12-30 14:00:24', 1, NULL);
-INSERT INTO `message`
-VALUES (47, NULL, NULL, '测试', '测试内容', 0, 0, 0, NULL, NULL, NULL, 0, 0, 1, 0, '小桐', 1, '2025-12-30 14:01:37',
-        '小桐', '2025-12-30 14:01:37', 1, NULL);
-INSERT INTO `message`
-VALUES (48, NULL, NULL, '测试', '测试内容', 0, 0, 0, NULL, NULL, NULL, 0, 0, 1, 0, '小桐', 1, '2025-12-30 14:01:41',
-        '小桐', '2025-12-30 14:01:41', 1, NULL);
+INSERT INTO `message` VALUES (46, NULL, NULL, '测试', '测试内容', 0, 0, 0, NULL, NULL, NULL, 0, 0, 1, 0, '小桐', 1, '2025-12-30 14:00:24', '小桐', '2025-12-30 14:00:24', 1, NULL);
+INSERT INTO `message` VALUES (47, NULL, NULL, '测试', '测试内容', 0, 0, 0, NULL, NULL, NULL, 0, 0, 1, 0, '小桐', 1, '2025-12-30 14:01:37', '小桐', '2025-12-30 14:01:37', 1, NULL);
+INSERT INTO `message` VALUES (48, NULL, NULL, '测试', '测试内容', 0, 0, 0, NULL, NULL, NULL, 0, 0, 1, 0, '小桐', 1, '2025-12-30 14:01:41', '小桐', '2025-12-30 14:01:41', 1, NULL);
 
 -- ----------------------------
 -- Table structure for message_template
@@ -110,11 +104,8 @@ CREATE TABLE `message_template`
 -- ----------------------------
 -- Records of message_template
 -- ----------------------------
-INSERT INTO `message_template`
-VALUES (1, '测试模版', '${test}测试模版', 0, 0, 1, 1, NULL, 1, '2024-11-01 10:35:16', 'admin', 1, '2025-12-30 10:45:41',
-        NULL);
-INSERT INTO `message_template`
-VALUES (2, '测试', '2', 0, 0, 1, 1, 'admin', 1, '2024-11-20 11:12:52', 'admin', 1, '2025-12-30 10:45:38', NULL);
+INSERT INTO `message_template` VALUES (1, '测试模版', '${test}测试模版', 0, 0, 1, 1, NULL, 1, '2024-11-01 10:35:16', 'admin', 1, '2025-12-30 10:45:41', NULL);
+INSERT INTO `message_template` VALUES (2, '测试', '2', 0, 0, 1, 1, 'admin', 1, '2024-11-20 11:12:52', 'admin', 1, '2025-12-30 10:45:38', NULL);
 
 -- ----------------------------
 -- Table structure for model
@@ -144,58 +135,22 @@ CREATE TABLE `model`
     `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '更新时间',
     `remark`      varchar(512) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '备注',
     PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 119 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '模型基础信息表' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 12 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '模型基础信息表' ROW_FORMAT = Dynamic;
 
 
 -- ----------------------------
 -- Records of model
 -- ----------------------------
-INSERT INTO `model`
-VALUES (1, NULL, 1, '工业大模型-动态 Token', 'INDUSTRY_MODEL_TEST', 'API', 'V1.0', '吴同', 7, '[{\"name\":\"工业\"}]',
-        '/2026/05/11/6a01a8f6e4b0d389f4f52e8f.png', '工业大模型接口', 1, 0, '吴同', NULL, '2026-07-10 14:14:51', '吴同',
-        1, '2026-07-16 15:23:15', '测试数据');
-INSERT INTO `model`
-VALUES (2, NULL, 8, '线性回归算法', 'LINEAR_REGRESSION', 'API', 'V2.0', '吴同', 7,
-        '[{\"name\":\"NLP\"},{\"name\":\"分类\"}]', '/2026/05/11/6a01aa17e4b0d389f4f52e95.png',
-        '文本分类API，使用固定Bearer Token', 1, 0, '吴同', 2, '2026-07-10 10:00:00', '吴同', 1, '2026-07-10 11:48:06',
-        '固定Token示例');
-INSERT INTO `model`
-VALUES (3, NULL, 9, '支持向量机算法', 'SVM', 'API', 'V1.5', '吴同', 7, '[{\"name\":\"对话\"},{\"name\":\"生成\"}]',
-        '/2026/05/11/6a01aa0ae4b0d389f4f52e94.png', '模拟OpenAI Chat Completion接口', 1, 0, '吴同', 3,
-        '2026-07-10 09:00:00', '吴同', 1, '2026-07-10 11:58:14', 'APIKey固定鉴权示例');
-INSERT INTO `model`
-VALUES (4, NULL, 9, '逻辑回归算法', 'LOGISTIC_REGRESSION', 'API', 'V1.0', '吴同', 7,
-        '[{\"name\":\"视觉\"},{\"name\":\"图像识别\"}]', '/2026/05/11/6a01a9f9e4b0d389f4f52e93.png',
-        '内网图片分类识别服务，无需鉴权', 1, 0, '吴同', 4, '2026-07-10 08:00:00', '吴同', 1, '2026-07-10 13:33:41',
-        '无鉴权示例');
-INSERT INTO `model`
-VALUES (5, NULL, 10, '随机森林算法', 'RANDOM_FOREST', 'API', 'V2.3', '吴同', 7,
-        '[{\"name\":\"问答\"},{\"name\":\"RAG\"}]', '/2026/05/11/6a01a9e9e4b0d389f4f52e92.png',
-        '基于知识库的企业问答接口', 1, 0, '吴同', 5, '2026-07-10 07:30:00', '吴同', 1, '2026-07-10 11:48:15',
-        '动态Token-GET方式示例');
-INSERT INTO `model`
-VALUES (6, NULL, 11, '降维算法', 'DIMENSIONALITY_REDUCTION', 'PYTHON', 'V1.2', '吴同', 2,
-        '[{\"name\":\"运维\"},{\"name\":\"流水线\"}]', '/2026/05/11/6a01a9d8e4b0d389f4f52e91.png',
-        '数据流水线状态管理接口', 1, 0, '吴同', 6, '2026-07-10 06:00:00', '吴同', 1, '2026-07-10 11:48:13',
-        'PUT请求+Query注入示例');
-INSERT INTO `model`
-VALUES (7, NULL, 10, '梯度增强算法', 'GRADIENT_BOOSTING', 'PYTHON', 'V3.0', '吴同', 3,
-        '[{\"name\":\"生成\"},{\"name\":\"多模态\"}]', '/2026/05/11/6a01a9a0e4b0d389f4f52e90.png',
-        '支持文本/图像/音频生成的多模态模型', 1, 0, '吴同', 7, '2026-07-10 05:00:00', '吴同', 1, '2026-07-10 11:48:12',
-        '复杂动态Token示例-组合认证');
-INSERT INTO `model`
-VALUES (8, NULL, 1, '工业大模型-固定 Token', 'INDUSTRY_MODEL_TEST', 'API', 'v1.0', '吴同', 5, '[{\"name\":\"工业\"}]',
-        '/2026/05/11/6a01a9a0e4b0d389f4f52e99.png', NULL, 1, 0, '吴同', 1, '2026-07-10 11:55:55', '吴同', 1,
-        '2026-07-10 16:20:19', NULL);
-INSERT INTO `model`
-VALUES (9, NULL, 17, 'qKnow_周报模板测试', 'QKNOW_WEEKLYREPORT', 'API', 'V1.0', '吴同', 7,
-        '[{\"name\":\"周报\"},{\"name\":\"测试\"}]', '/2026/05/11/6a01a9a0e4b0d389f4f52f99.png',
-        '获取 qKnow 系统中的周报模板测试数据', 1, 0, '吴同', 1, '2026-07-16 14:25:22', 'qModel', 1,
-        '2026-07-16 15:58:40', NULL);
-INSERT INTO `model`
-VALUES (10, NULL, 2, '水位流量插值算法', 'WQIA', 'PYTHON', 'V1.0', '吴同', 5,
-        '[{\"name\":\"水位流量\"},{\"name\":\"预测\"}]', '/2026/05/11/6a01a9a0e4b0d389f4f5ff99.png', NULL, 1, 0, '吴同',
-        1, '2026-07-16 15:09:06', 'system', 1, '2026-07-17 09:24:46', NULL);
+INSERT INTO `model` VALUES (1, NULL, 1, '工业大模型-动态 Token', 'INDUSTRY_MODEL_TEST', 'API', 'V1.0', '吴同', 7, '[{\"name\":\"工业\"}]', '/2026/05/11/6a01a8f6e4b0d389f4f52e8f.png', '工业大模型接口', 1, 0, '吴同', NULL, '2026-07-10 14:14:51', '吴同', 1, '2026-07-16 15:23:15', '测试数据');
+INSERT INTO `model` VALUES (2, NULL, 8, '线性回归算法', 'LINEAR_REGRESSION', 'API', 'V2.0', '吴同', 7, '[{\"name\":\"NLP\"},{\"name\":\"分类\"}]', '/2026/05/11/6a01aa17e4b0d389f4f52e95.png', '文本分类API，使用固定Bearer Token', 1, 0, '吴同', 2, '2026-07-10 10:00:00', '吴同', 1, '2026-07-10 11:48:06', '固定Token示例');
+INSERT INTO `model` VALUES (3, NULL, 9, '支持向量机算法', 'SVM', 'API', 'V1.5', '吴同', 7, '[{\"name\":\"对话\"},{\"name\":\"生成\"}]', '/2026/05/11/6a01aa0ae4b0d389f4f52e94.png', '模拟OpenAI Chat Completion接口', 1, 0, '吴同', 3, '2026-07-10 09:00:00', '吴同', 1, '2026-07-10 11:58:14', 'APIKey固定鉴权示例');
+INSERT INTO `model` VALUES (4, NULL, 9, '逻辑回归算法', 'LOGISTIC_REGRESSION', 'API', 'V1.0', '吴同', 7, '[{\"name\":\"视觉\"},{\"name\":\"图像识别\"}]', '/2026/05/11/6a01a9f9e4b0d389f4f52e93.png', '内网图片分类识别服务，无需鉴权', 1, 0, '吴同', 4, '2026-07-10 08:00:00', '吴同', 1, '2026-07-10 13:33:41', '无鉴权示例');
+INSERT INTO `model` VALUES (5, NULL, 10, '随机森林算法', 'RANDOM_FOREST', 'API', 'V2.3', '吴同', 7, '[{\"name\":\"问答\"},{\"name\":\"RAG\"}]', '/2026/05/11/6a01a9e9e4b0d389f4f52e92.png', '基于知识库的企业问答接口', 1, 0, '吴同', 5, '2026-07-10 07:30:00', '吴同', 1, '2026-07-10 11:48:15', '动态Token-GET方式示例');
+INSERT INTO `model` VALUES (6, NULL, 11, '降维算法', 'DIMENSIONALITY_REDUCTION', 'PYTHON', 'V1.2', '吴同', 2, '[{\"name\":\"运维\"},{\"name\":\"流水线\"}]', '/2026/05/11/6a01a9d8e4b0d389f4f52e91.png', '数据流水线状态管理接口', 1, 0, '吴同', 6, '2026-07-10 06:00:00', '吴同', 1, '2026-07-10 11:48:13', 'PUT请求+Query注入示例');
+INSERT INTO `model` VALUES (7, NULL, 10, '梯度增强算法', 'GRADIENT_BOOSTING', 'PYTHON', 'V3.0', '吴同', 3, '[{\"name\":\"生成\"},{\"name\":\"多模态\"}]', '/2026/05/11/6a01a9a0e4b0d389f4f52e90.png', '支持文本/图像/音频生成的多模态模型', 1, 0, '吴同', 7, '2026-07-10 05:00:00', '吴同', 1, '2026-07-10 11:48:12', '复杂动态Token示例-组合认证');
+INSERT INTO `model` VALUES (8, NULL, 1, '工业大模型-固定 Token', 'INDUSTRY_MODEL_TEST', 'API', 'v1.0', '吴同', 5, '[{\"name\":\"工业\"}]', '/2026/05/11/6a01a9a0e4b0d389f4f52e99.png', NULL, 1, 0, '吴同', 1, '2026-07-10 11:55:55', '吴同', 1, '2026-07-10 16:20:19', NULL);
+INSERT INTO `model` VALUES (9, NULL, 17, 'qKnow_周报模板测试', 'QKNOW_WEEKLYREPORT', 'API', 'V1.0', '吴同', 7, '[{\"name\":\"周报\"},{\"name\":\"测试\"}]', '/2026/05/11/6a01a9a0e4b0d389f4f52f99.png', '获取 qKnow 系统中的周报模板测试数据', 1, 0, '吴同', 1, '2026-07-16 14:25:22', 'qModel', 1, '2026-07-16 15:58:40', NULL);
+INSERT INTO `model` VALUES (10, NULL, 2, '水位流量插值算法', 'WQIA', 'PYTHON', 'V1.0', '吴同', 5, '[{\"name\":\"水位流量\"},{\"name\":\"预测\"}]', '/2026/05/11/6a01a9a0e4b0d389f4f5ff99.png', NULL, 1, 0, '吴同', 1, '2026-07-16 15:09:06', 'system', 1, '2026-07-17 09:24:46', NULL);
 INSERT INTO `model` VALUES (11, NULL, 1, '水量预测模型', 'WATER_VOLUME_MODEL', 'API', 'V1.0', '吴同', 3, '[{\"name\":\"预测\"},{\"name\":\"水量\"}]', '/2026/08/05/6a72b353ee5a274b8e519c08.png', NULL, 1, 0, '超级管理员', 1, '2026-08-05 11:20:28', '超级管理员', 1, '2026-08-05 11:51:50', NULL);
 
 -- ----------------------------
@@ -235,7 +190,7 @@ CREATE TABLE `model_config`  (
                                  `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '更新时间',
                                  `remark` varchar(512) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '备注',
                                  PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 21 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '模型配置详情表' ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 11 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '模型配置详情表' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of model_config
@@ -275,7 +230,7 @@ CREATE TABLE `model_calc_widget`  (
                                       `remark` varchar(512) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '备注',
                                       PRIMARY KEY (`id`) USING BTREE,
                                       INDEX `idx_calc_id`(`calc_id` ASC) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 18 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '模型计算任务可视化组件配置' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 3 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '模型计算任务可视化组件配置' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of model_calc_widget
@@ -283,108 +238,6 @@ CREATE TABLE `model_calc_widget`  (
 
 INSERT INTO `model_calc_widget` VALUES (1, NULL, 3, 11, 'base64', 'base64 图片解析', 1, '{\"field\":\"image_base64\"}', 1, 0, '超级管理员', 1, '2026-08-05 16:14:44', '超级管理员', 1, '2026-08-05 16:16:55', NULL);
 INSERT INTO `model_calc_widget` VALUES (2, NULL, 3, 11, 'line', '折线图可视化', 2, '{\"xField\":\"chart_data.dates\",\"yFields\":[{\"field\":\"chart_data.predict_flow\",\"tag\":\"预测值\"},{\"field\":\"chart_data.actual_flow\",\"tag\":\"实际值\"}]}', 1, 0, '超级管理员', 1, '2026-08-05 16:15:45', '超级管理员', 1, '2026-08-05 16:16:55', NULL);
-
-
--- ----------------------------
--- Table structure for model_cacl
--- ----------------------------
-DROP TABLE IF EXISTS `model_cacl`;
-CREATE TABLE `model_cacl`
-(
-    `id`              int(11) NOT NULL AUTO_INCREMENT COMMENT '主键id',
-    `company_id`      int(11) NULL DEFAULT NULL COMMENT '企业id',
-    `code`            varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '计算编码',
-    `name`            varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '计算名称',
-    `model_id`        int(11) NULL DEFAULT NULL COMMENT '模型id',
-    `model_name`      varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '模型名称',
-    `model_version`   varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '模型版本',
-    `start_time`      datetime NULL DEFAULT NULL COMMENT '开始时间',
-    `end_time`        datetime NULL DEFAULT NULL COMMENT '结束时间',
-    `status`          int(11) NULL DEFAULT NULL COMMENT '计算状态',
-    `input_content`   varchar(6144) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '模型输入内容',
-    `output_content`  text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL COMMENT '模型输出内容',
-    `valid_flag`      int(11) NOT NULL COMMENT '是否有效 0：无效，1：有效',
-    `del_flag`        int(11) NOT NULL COMMENT '删除标志 1：已删除，0：未删除',
-    `create_by`       varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '创建人',
-    `creator_id`      int(11) NULL DEFAULT NULL COMMENT '创建人id',
-    `create_time`     datetime NOT NULL COMMENT '创建时间',
-    `update_by`       varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '更新人',
-    `updator_id`      int(11) NULL DEFAULT NULL COMMENT '更新人id',
-    `update_time`     datetime NOT NULL COMMENT '更新时间',
-    `remark`          varchar(1024) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '备注',
-    `address_id`      int(11) NULL DEFAULT NULL COMMENT '文件或接口地址id',
-    `address_type`    int(11) NULL DEFAULT NULL COMMENT '判断是文件的id还是地址的id，0:文件，1：接口',
-    `mp_programme_id` int(11) NULL DEFAULT NULL COMMENT '文件计算的历史方案id',
-    PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 11 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '模型计算' ROW_FORMAT = DYNAMIC;
-
--- ----------------------------
--- Records of model_cacl
--- ----------------------------
-INSERT INTO `model_cacl`
-VALUES (11, 1001, 'CALC_IND_20260716001', '7月设备震动数据异常检测', 101, '工业大模型-动态Token', 'v1.0',
-        '2026-07-16 09:00:00', '2026-07-16 09:05:30', 2, '{\"fileName\": \"sensor_data_july.csv\", \"rows\": 5000}',
-        '{\"result\": \"Normal\", \"confidence\": 0.98, \"anomaly_count\": 3, \"details\": \"检测到3处微小震动异常，建议复查\"}',
-        1, 0, '吴同', 10001, '2026-07-16 09:00:00', '吴同', 10001, '2026-07-16 09:05:30', '常规巡检计算', 5001, 0,
-        NULL);
-INSERT INTO `model_cacl`
-VALUES (12, 1001, 'CALC_REG_20260716002', 'Q3季度销售趋势实时推演', 103, '线性回归算法', 'v1.0', '2026-07-16 10:15:00',
-        '2026-07-16 10:32:10', 1, '{\"api_url\": \"/api/data/sales/realtime\", \"params\": {\"region\": \"East\"}}',
-        NULL, 1, 0, '吴同', 10001, '2026-07-16 10:15:00', '吴同', 10001, '2026-07-16 10:15:00', '接口调用计算中', 5002,
-        1, NULL);
-INSERT INTO `model_cacl`
-VALUES (13, 1001, 'CALC_SVM_20260716003', '高价值客户流失风险分级', 104, '支持向量机算法', 'v1.0',
-        '2026-07-16 11:00:00', '2026-07-16 11:02:10', 2,
-        '{\"dataset_id\": \"DS_CUST_2026\", \"features\": [\"login_freq\", \"spend_amt\"]}',
-        '{\"classification\": \"High Risk\", \"probability\": 0.85, \"group_id\": \"A01\"}', 1, 0, '吴同', 10001,
-        '2026-07-16 11:00:00', '吴同', 10001, '2026-07-16 11:02:10', '月度客户分层分析', 5003, 0, 201);
-INSERT INTO `model_cacl`
-VALUES (14, 1001, 'CALC_GB_20260716004', '信用评分模型重训练', 108, '梯度增强算法', 'v1.0', '2026-07-16 13:00:00',
-        '2026-07-16 13:01:05', 3, '{\"config\": {\"learning_rate\": 0.1, \"n_estimators\": 100}}',
-        '{\"error\": \"OutOfMemoryError\", \"msg\": \"显存不足，无法加载数据集\"}', 1, 0, '吴同', 10001,
-        '2026-07-16 13:00:00', '系统', 9999, '2026-07-16 13:01:05', '资源不足导致中断', NULL, NULL, NULL);
-INSERT INTO `model_cacl`
-VALUES (15, 1001, 'CALC_RF_20260716005', '生产线次品图像识别', 106, '随机森林算法', 'v1.0', '2026-07-16 14:30:00',
-        '2026-07-16 14:31:00', 2, '{\"image_batch\": [\"img_001.jpg\", \"img_002.jpg\"], \"threshold\": 0.9}',
-        '{\"defect_detected\": true, \"type\": \"scratch\", \"location\": [120, 45]}', 1, 0, '吴同', 10001,
-        '2026-07-16 14:30:00', '吴同', 10001, '2026-07-16 14:31:00', '自动化质检流程', 5004, 1, NULL);
-
--- ----------------------------
--- Table structure for model_cacl_reconstitution
--- ----------------------------
-DROP TABLE IF EXISTS `model_cacl_reconstitution`;
-CREATE TABLE `model_cacl_reconstitution`
-(
-    `id`              int(11) NOT NULL AUTO_INCREMENT,
-    `company_id`      int(11) NULL DEFAULT NULL,
-    `code`            varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL,
-    `name`            varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL,
-    `model_id`        int(11) NULL DEFAULT NULL,
-    `model_name`      varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL,
-    `model_version`   varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL,
-    `start_time`      datetime NULL DEFAULT NULL,
-    `end_time`        datetime NULL DEFAULT NULL,
-    `status`          int(11) NULL DEFAULT NULL,
-    `input_content`   varchar(6144) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL,
-    `output_content`  text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL,
-    `valid_flag`      int(11) NOT NULL,
-    `del_flag`        int(11) NOT NULL,
-    `create_by`       varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL,
-    `creator_id`      int(11) NULL DEFAULT NULL,
-    `create_time`     datetime NOT NULL,
-    `update_by`       varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL,
-    `updator_id`      int(11) NULL DEFAULT NULL,
-    `update_time`     datetime NOT NULL,
-    `remark`          varchar(1024) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL,
-    `address_id`      int(11) NULL DEFAULT NULL,
-    `address_type`    int(11) NULL DEFAULT NULL,
-    `mp_programme_id` int(11) NULL DEFAULT NULL,
-    PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '模型计算重构表' ROW_FORMAT = DYNAMIC;
-
--- ----------------------------
--- Records of model_cacl_reconstitution
--- ----------------------------
 
 -- ----------------------------
 -- Table structure for model_classify
@@ -409,62 +262,28 @@ CREATE TABLE `model_classify`
     `update_time` datetime NOT NULL COMMENT '更新时间',
     `remark`      varchar(1024) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '备注',
     PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 32 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '模型分类' ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 18 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '模型分类' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of model_classify
 -- ----------------------------
-INSERT INTO `model_classify`
-VALUES (1, NULL, 0, '0', '工业大模型', '面向工业领域的预训练大语言模型及衍生应用', 1, 1, 0, '吴同', 1,
-        '2026-07-14 09:15:22', NULL, NULL, '2026-07-14 09:15:22', '面向工业领域的预训练大语言模型及衍生应用');
-INSERT INTO `model_classify`
-VALUES (2, NULL, 0, '0', '机器学习', '经典机器学习算法与模型', 0, 1, 0, '吴同', 1, '2026-07-14 09:32:45', NULL, NULL,
-        '2026-07-14 09:32:45', '经典机器学习算法与模型');
-INSERT INTO `model_classify`
-VALUES (3, NULL, 0, '0', '深度学习', '基于深度神经网络的模型', 1, 1, 0, '吴同', 1, '2026-07-14 09:48:10', NULL, NULL,
-        '2026-07-14 09:48:10', '基于深度神经网络的模型');
-INSERT INTO `model_classify`
-VALUES (4, NULL, 0, '0', '数据智能', '面向数据的分析、预测与挖掘模型', 1, 1, 0, '吴同', 1, '2026-07-14 10:05:33', NULL,
-        NULL, '2026-07-14 10:05:33', '面向数据的分析、预测与挖掘模型');
-INSERT INTO `model_classify`
-VALUES (5, NULL, 1, '0,1', '文本生成', '文本生成、摘要、扩写等大模型能力', 1, 1, 0, '吴同', 1, '2026-07-14 10:22:18',
-        NULL, NULL, '2026-07-14 10:22:18', '文本生成、摘要、扩写等大模型能力');
-INSERT INTO `model_classify`
-VALUES (6, NULL, 1, '0,1', '对话交互', '问答、对话、助手类大模型应用', 2, 1, 0, '吴同', 1, '2026-07-14 10:45:09', NULL,
-        NULL, '2026-07-14 10:45:09', '问答、对话、助手类大模型应用');
-INSERT INTO `model_classify`
-VALUES (7, NULL, 1, '0,1', '代码生成', '代码辅助、生成、审查类大模型', 3, 1, 0, '吴同', 1, '2026-07-14 11:12:55', NULL,
-        NULL, '2026-07-14 11:12:55', '代码辅助、生成、审查类大模型');
-INSERT INTO `model_classify`
-VALUES (8, NULL, 2, '0,2', '回归模型', '连续值预测类机器学习模型', 1, 1, 0, '吴同', 1, '2026-07-14 11:35:40', NULL,
-        NULL, '2026-07-14 11:35:40', '连续值预测类机器学习模型');
-INSERT INTO `model_classify`
-VALUES (9, NULL, 2, '0,2', '分类模型', '离散类别预测类机器学习模型', 2, 1, 0, '吴同', 1, '2026-07-14 13:20:15', NULL,
-        NULL, '2026-07-14 13:20:15', '离散类别预测类机器学习模型');
-INSERT INTO `model_classify`
-VALUES (10, NULL, 2, '0,2', '集成学习', '多基学习器集成的机器学习模型', 3, 1, 0, '吴同', 1, '2026-07-14 13:55:28', NULL,
-        NULL, '2026-07-14 13:55:28', '多基学习器集成的机器学习模型');
-INSERT INTO `model_classify`
-VALUES (11, NULL, 2, '0,2', '降维与特征工程', '特征降维、选择与工程化方法', 4, 1, 0, '吴同', 1, '2026-07-14 14:30:42',
-        NULL, NULL, '2026-07-14 14:30:42', '特征降维、选择与工程化方法');
-INSERT INTO `model_classify`
-VALUES (12, NULL, 3, '0,3', '计算机视觉', '图像识别、检测、分割等视觉模型', 1, 1, 0, '吴同', 1, '2026-07-14 14:58:11',
-        NULL, NULL, '2026-07-14 14:58:11', '图像识别、检测、分割等视觉模型');
-INSERT INTO `model_classify`
-VALUES (13, NULL, 3, '0,3', '自然语言处理', '文本分类、序列标注、语义理解等模型', 2, 1, 0, '吴同', 1,
-        '2026-07-14 15:25:36', NULL, NULL, '2026-07-14 15:25:36', '文本分类、序列标注、语义理解等模型');
-INSERT INTO `model_classify`
-VALUES (14, NULL, 3, '0,3', '语音识别', '语音转文字、声纹识别等模型', 3, 1, 0, '吴同', 1, '2026-07-14 16:10:48', NULL,
-        NULL, '2026-07-14 16:10:48', '语音转文字、声纹识别等模型');
-INSERT INTO `model_classify`
-VALUES (15, NULL, 4, '0,4', '时序预测', '时间序列分析与预测模型', 1, 1, 0, '吴同', 1, '2026-07-14 16:45:22', NULL, NULL,
-        '2026-07-14 16:45:22', '时间序列分析与预测模型');
-INSERT INTO `model_classify`
-VALUES (16, NULL, 4, '0,4', '推荐系统', '协同过滤、内容推荐等模型', 2, 1, 0, '吴同', 1, '2026-07-14 17:20:55', NULL,
-        NULL, '2026-07-14 17:20:55', '协同过滤、内容推荐等模型');
-INSERT INTO `model_classify`
-VALUES (17, NULL, 4, '0,4', '异常检测', '离群点、异常行为识别模型', 3, 1, 0, '吴同', 1, '2026-07-14 17:55:30', NULL,
-        NULL, '2026-07-14 17:55:30', '离群点、异常行为识别模型');
+INSERT INTO `model_classify` VALUES (1, NULL, 0, '0', '工业大模型', '面向工业领域的预训练大语言模型及衍生应用', 1, 1, 0, '吴同', 1, '2026-07-14 09:15:22', NULL, NULL, '2026-07-14 09:15:22', '面向工业领域的预训练大语言模型及衍生应用');
+INSERT INTO `model_classify` VALUES (2, NULL, 0, '0', '机器学习', '经典机器学习算法与模型', 0, 1, 0, '吴同', 1, '2026-07-14 09:32:45', NULL, NULL, '2026-07-14 09:32:45', '经典机器学习算法与模型');
+INSERT INTO `model_classify` VALUES (3, NULL, 0, '0', '深度学习', '基于深度神经网络的模型', 1, 1, 0, '吴同', 1, '2026-07-14 09:48:10', NULL, NULL, '2026-07-14 09:48:10', '基于深度神经网络的模型');
+INSERT INTO `model_classify` VALUES (4, NULL, 0, '0', '数据智能', '面向数据的分析、预测与挖掘模型', 1, 1, 0, '吴同', 1, '2026-07-14 10:05:33', NULL, NULL, '2026-07-14 10:05:33', '面向数据的分析、预测与挖掘模型');
+INSERT INTO `model_classify` VALUES (5, NULL, 1, '0,1', '文本生成', '文本生成、摘要、扩写等大模型能力', 1, 1, 0, '吴同', 1, '2026-07-14 10:22:18', NULL, NULL, '2026-07-14 10:22:18', '文本生成、摘要、扩写等大模型能力');
+INSERT INTO `model_classify` VALUES (6, NULL, 1, '0,1', '对话交互', '问答、对话、助手类大模型应用', 2, 1, 0, '吴同', 1, '2026-07-14 10:45:09', NULL, NULL, '2026-07-14 10:45:09', '问答、对话、助手类大模型应用');
+INSERT INTO `model_classify` VALUES (7, NULL, 1, '0,1', '代码生成', '代码辅助、生成、审查类大模型', 3, 1, 0, '吴同', 1, '2026-07-14 11:12:55', NULL, NULL, '2026-07-14 11:12:55', '代码辅助、生成、审查类大模型');
+INSERT INTO `model_classify` VALUES (8, NULL, 2, '0,2', '回归模型', '连续值预测类机器学习模型', 1, 1, 0, '吴同', 1, '2026-07-14 11:35:40', NULL, NULL, '2026-07-14 11:35:40', '连续值预测类机器学习模型');
+INSERT INTO `model_classify` VALUES (9, NULL, 2, '0,2', '分类模型', '离散类别预测类机器学习模型', 2, 1, 0, '吴同', 1, '2026-07-14 13:20:15', NULL, NULL, '2026-07-14 13:20:15', '离散类别预测类机器学习模型');
+INSERT INTO `model_classify` VALUES (10, NULL, 2, '0,2', '集成学习', '多基学习器集成的机器学习模型', 3, 1, 0, '吴同', 1, '2026-07-14 13:55:28', NULL, NULL, '2026-07-14 13:55:28', '多基学习器集成的机器学习模型');
+INSERT INTO `model_classify` VALUES (11, NULL, 2, '0,2', '降维与特征工程', '特征降维、选择与工程化方法', 4, 1, 0, '吴同', 1, '2026-07-14 14:30:42', NULL, NULL, '2026-07-14 14:30:42', '特征降维、选择与工程化方法');
+INSERT INTO `model_classify` VALUES (12, NULL, 3, '0,3', '计算机视觉', '图像识别、检测、分割等视觉模型', 1, 1, 0, '吴同', 1, '2026-07-14 14:58:11', NULL, NULL, '2026-07-14 14:58:11', '图像识别、检测、分割等视觉模型');
+INSERT INTO `model_classify` VALUES (13, NULL, 3, '0,3', '自然语言处理', '文本分类、序列标注、语义理解等模型', 2, 1, 0, '吴同', 1, '2026-07-14 15:25:36', NULL, NULL, '2026-07-14 15:25:36', '文本分类、序列标注、语义理解等模型');
+INSERT INTO `model_classify` VALUES (14, NULL, 3, '0,3', '语音识别', '语音转文字、声纹识别等模型', 3, 1, 0, '吴同', 1, '2026-07-14 16:10:48', NULL, NULL, '2026-07-14 16:10:48', '语音转文字、声纹识别等模型');
+INSERT INTO `model_classify` VALUES (15, NULL, 4, '0,4', '时序预测', '时间序列分析与预测模型', 1, 1, 0, '吴同', 1, '2026-07-14 16:45:22', NULL, NULL, '2026-07-14 16:45:22', '时间序列分析与预测模型');
+INSERT INTO `model_classify` VALUES (16, NULL, 4, '0,4', '推荐系统', '协同过滤、内容推荐等模型', 2, 1, 0, '吴同', 1, '2026-07-14 17:20:55', NULL, NULL, '2026-07-14 17:20:55', '协同过滤、内容推荐等模型');
+INSERT INTO `model_classify` VALUES (17, NULL, 4, '0,4', '异常检测', '离群点、异常行为识别模型', 3, 1, 0, '吴同', 1, '2026-07-14 17:55:30', NULL, NULL, '2026-07-14 17:55:30', '离群点、异常行为识别模型');
 
 -- ----------------------------
 -- Table structure for model_compute
@@ -586,7 +405,7 @@ CREATE TABLE `model_build_log`  (
     `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '更新时间',
     `remark` varchar(512) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '备注',
     PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '构建日志表' ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 4 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '构建日志表' ROW_FORMAT = DYNAMIC;
 
 INSERT INTO `model_build_log` (`id`, `resource_id`, `model_version`, `model_id`, `model_name`, `build_type`, `status`, `start_time`, `end_time`, `duration`, `installed_packages`, `missing_packages`, `failed_packages`, `dockerfile_content`, `build_log`, `error_message`, `requirements`, `valid_flag`, `del_flag`, `create_by`, `creator_id`, `create_time`, `update_by`, `updator_id`, `update_time`, `remark`) VALUES (1, 6, NULL, 10, '水位流量插值算法.zip', 1, 3, '2026-10-29 18:28:17', '2026-10-29 18:28:17', NULL, NULL, NULL, NULL, NULL, '========== 开始依赖检测 ==========\n时间: 2026-10-29 18:28:16\n文件资源ID: 6\n模型ID: 10\n文件名: 水位流量插值算法.zip\n\n错误: 解压ZIP文件失败\n', '解压ZIP文件失败', NULL, 1, 0, 'system', 1, '2026-10-29 18:28:17', 'system', 1, '2026-10-29 18:28:17', NULL);
 INSERT INTO `model_build_log` (`id`, `resource_id`, `model_version`, `model_id`, `model_name`, `build_type`, `status`, `start_time`, `end_time`, `duration`, `installed_packages`, `missing_packages`, `failed_packages`, `dockerfile_content`, `build_log`, `error_message`, `requirements`, `valid_flag`, `del_flag`, `create_by`, `creator_id`, `create_time`, `update_by`, `updator_id`, `update_time`, `remark`) VALUES (2, 7, NULL, 10, '水位流量插值算法.zip', 1, 2, '2026-10-29 18:31:15', '2026-10-29 18:31:17', NULL, '[\"numpy\",\"scipy\",\"matplotlib\"]', '[]', NULL, NULL, '========== 开始依赖检测 ==========\n时间: 2026-10-29 18:31:14\n文件资源ID: 7\n模型ID: 10\n文件名: 水位流量插值算法.zip\n\n入口文件: main.py\n依赖文件: requirements.txt\n\n检测到依赖包: 3 个\n依赖列表: numpy, scipy, matplotlib\n\n已安装依赖包数量: 3\n\n========== 依赖检测完成 ==========\n', NULL, 'numpy\nscipy\nmatplotlib\n', 1, 0, 'system', 1, '2026-10-29 18:31:15', 'system', 1, '2026-10-29 18:31:17', NULL);
@@ -622,7 +441,7 @@ CREATE TABLE `model_invoke_history`  (
     `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '更新时间',
     `remark` varchar(512) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '备注',
     PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 12 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '模型调用历史记录' ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 25 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '模型调用历史记录' ROW_FORMAT = DYNAMIC;
 
 INSERT INTO `model_invoke_history` (`id`, `model_id`, `model_name`, `resource_id`, `model_version`, `request_method`, `invoke_type`, `input_params`, `output_result`, `start_time`, `end_time`, `duration`, `error_message`, `status`, `client_ip`, `valid_flag`, `del_flag`, `create_by`, `creator_id`, `create_time`, `update_by`, `updator_id`, `update_time`, `remark`) VALUES (12, 11, '水量预测模型', NULL, 'V1.0', 1, 2, '{}', '<html>\r\n<head><title>301 Moved Permanently</title></head>\r\n<body>\r\n<center><h1>301 Moved Permanently</h1></center>\r\n<hr><center>nginx/1.30.4</center>\r\n</body>\r\n</html>\r\n', '2026-10-29 18:26:23', '2026-10-29 18:26:24', 829, NULL, 1, '127.0.0.1', 1, 0, 'admin', 1, '2026-10-29 18:26:24', 'admin', 1, '2026-10-29 18:26:24', NULL);
 INSERT INTO `model_invoke_history` (`id`, `model_id`, `model_name`, `resource_id`, `model_version`, `request_method`, `invoke_type`, `input_params`, `output_result`, `start_time`, `end_time`, `duration`, `error_message`, `status`, `client_ip`, `valid_flag`, `del_flag`, `create_by`, `creator_id`, `create_time`, `update_by`, `updator_id`, `update_time`, `remark`) VALUES (13, 9, 'qKnow_周报模板测试', NULL, 'V1.0', 1, 2, '{}', '{\"code\":200,\"data\":[{\"name\":\"报告标题\",\"key\":\"report_title\",\"value\":\"产融科技公司工作周报\"},{\"name\":\"报告期次\",\"key\":\"report_period\",\"value\":\"2026年第4期\"},{\"name\":\"报告日期范围\",\"key\":\"report_date_range\",\"value\":\"2026年1月19日-2026年1月25日\"},{\"name\":\"发布日期\",\"key\":\"publish_date\",\"value\":\"2026年1月26日\"},{\"name\":\"本周新增收入\",\"key\":\"weekly_new_revenue\",\"value\":\"45719.93万元\"},{\"name\":\"本周新增利润\",\"key\":\"weekly_new_profit\",\"value\":\"16.26万元\"},{\"name\":\"累计总收入\",\"key\":\"total_revenue\",\"value\":\"1253840.65万元\"},{\"name\":\"累计总利润\",\"key\":\"total_profit\",\"value\":\"247.33万元\"},{\"name\":\"东阳光铝-本周新增收入\",\"key\":\"dongyang_aluminum_new_revenue\",\"value\":\"151.15万元\"},{\"name\":\"东阳光铝-本周新增利润\",\"key\":\"dongyang_aluminum_new_profit\",\"value\":\"3.25万元\"},{\"name\":\"东阳光铝-累计营收\",\"key\":\"dongyang_aluminum_revenue\",\"value\":\"5682.40万元\"},{\"name\":\"东阳光铝-累计利润\",\"key\":\"dongyang_aluminum_profit\",\"value\":\"98.21万元\"},{\"name\":\"东阳光铝-本周发货量\",\"key\":\"dongyang_weekly_shipment\",\"value\":\"1325.78吨\"},{\"name\":\"东阳光铝-累计发货量\",\"key\":\"dongyang_total_shipment\",\"value\":\"32528.94吨\"},{\"name\":\"东阳光铝-12月已结算量\",\"key\":\"dongyang_dec_settled\",\"value\":\"12350.60吨\"},{\"name\":\"东阳光铝-待结算发货量\",\"key\":\"dongyang_pending_settlement\",\"value\":\"12410.35吨\"},{\"name\":\"东阳光铝-上月退回量\",\"key\":\"dongyang_returned_last_month\",\"value\":\"1320.45吨\"},{\"name\":\"东阳光铝-结算模式\",\"key\":\"dongyang_billing_model\",\"value\":\"先货后款、月末结算\"},{\"name\":\"诺德铜-本周新增收入\",\"key\":\"nuode_copper_new_revenue\",\"value\":\"72.70万元\"},{\"name\":\"诺德铜-本周新增利润\",\"key\":\"nuode_copper_new_profit\",\"value\":\"2.13万元\"},{\"name\":\"诺德铜-累计营收\",\"key\":\"nuode_copper_revenue\",\"value\":\"2876.50万元\"},{\"name\":\"诺德铜-累计利润\",\"key\":\"nuode_copper_profit\",\"value\":\"51.20万元\"},{\"name\":\"诺德铜-备注\",\"key\":\"nuode_copper_note\",\"value\":\"本周完成小批量采购，恢复运营\"},{\"name\":\"茶原料-本周新增收入\",\"key\":\"tea_raw_material_new_revenue\",\"value\":\"14.32万元\"},{\"name\":\"茶原料-本周新增利润\",\"key\":\"tea_raw_material_new_profit\",\"value\":\"0.54万元\"},{\"name\":\"茶原料-累计营收\",\"key\":\"tea_raw_material_revenue\",\"value\":\"495.60万元\"},{\"name\":\"茶原料-累计利润\",\"key\":\"tea_raw_material_profit\",\"value\":\"5.82万元\"},{\"name\":\"宜茶茶叶-本周新增收入\",\"key\":\"yicha_tea_new_revenue\",\"value\":\"148.23万元\"},{\"name\":\"宜茶茶叶-本周新增利润\",\"key\":\"yicha_tea_new_profit\",\"value\":\"2.65万元\"},{\"name\":\"宜茶茶叶-累计营收\",\"key\":\"yicha_tea_revenue\",\"value\":\"6720.35万元\"},{\"name\":\"宜茶茶叶-累计利润\",\"key\":\"yicha_tea_profit\",\"value\":\"76.10万元\"},{\"name\":\"宜茶茶叶-总贡献利润\",\"key\":\"yicha_total_contribution\",\"value\":\"81.92万元\"},{\"name\":\"涂多多-本周新增收入\",\"key\":\"tuduoduo_new_revenue\",\"value\":\"37.58万元\"},{\"name\":\"涂多多-本周新增利润\",\"key\":\"tuduoduo_new_profit\",\"value\":\"0.74万元\"},{\"name\":\"涂多多-累计营收\",\"key\":\"tuduoduo_revenue\",\"value\":\"1465.80万元\"},{\"name\":\"涂多多-累计利润\",\"key\":\"tuduoduo_profit\",\"value\":\"9.05万元\"},{\"name\":\"涂多多-备注\",\"key\":\"tuduoduo_note\",\"value\":\"聚焦大客户订单，零散业务暂停\"}],\"msg\":\"操作成功\"}', '2026-10-29 18:27:02', '2026-10-29 18:27:03', 663, NULL, 1, '127.0.0.1', 1, 0, 'admin', 1, '2026-10-29 18:27:03', 'admin', 1, '2026-10-29 18:27:03', NULL);
@@ -638,129 +457,6 @@ INSERT INTO `model_invoke_history` (`id`, `model_id`, `model_name`, `resource_id
 INSERT INTO `model_invoke_history` (`id`, `model_id`, `model_name`, `resource_id`, `model_version`, `request_method`, `invoke_type`, `input_params`, `output_result`, `start_time`, `end_time`, `duration`, `error_message`, `status`, `client_ip`, `valid_flag`, `del_flag`, `create_by`, `creator_id`, `create_time`, `update_by`, `updator_id`, `update_time`, `remark`) VALUES (23, 9, 'qKnow_周报模板测试', NULL, 'V1.0', 1, 2, '{}', '{\"code\":200,\"data\":[{\"name\":\"报告标题\",\"key\":\"report_title\",\"value\":\"产融科技公司工作周报\"},{\"name\":\"报告期次\",\"key\":\"report_period\",\"value\":\"2026年第4期\"},{\"name\":\"报告日期范围\",\"key\":\"report_date_range\",\"value\":\"2026年1月19日-2026年1月25日\"},{\"name\":\"发布日期\",\"key\":\"publish_date\",\"value\":\"2026年1月26日\"},{\"name\":\"本周新增收入\",\"key\":\"weekly_new_revenue\",\"value\":\"45719.93万元\"},{\"name\":\"本周新增利润\",\"key\":\"weekly_new_profit\",\"value\":\"16.26万元\"},{\"name\":\"累计总收入\",\"key\":\"total_revenue\",\"value\":\"1253840.65万元\"},{\"name\":\"累计总利润\",\"key\":\"total_profit\",\"value\":\"247.33万元\"},{\"name\":\"东阳光铝-本周新增收入\",\"key\":\"dongyang_aluminum_new_revenue\",\"value\":\"151.15万元\"},{\"name\":\"东阳光铝-本周新增利润\",\"key\":\"dongyang_aluminum_new_profit\",\"value\":\"3.25万元\"},{\"name\":\"东阳光铝-累计营收\",\"key\":\"dongyang_aluminum_revenue\",\"value\":\"5682.40万元\"},{\"name\":\"东阳光铝-累计利润\",\"key\":\"dongyang_aluminum_profit\",\"value\":\"98.21万元\"},{\"name\":\"东阳光铝-本周发货量\",\"key\":\"dongyang_weekly_shipment\",\"value\":\"1325.78吨\"},{\"name\":\"东阳光铝-累计发货量\",\"key\":\"dongyang_total_shipment\",\"value\":\"32528.94吨\"},{\"name\":\"东阳光铝-12月已结算量\",\"key\":\"dongyang_dec_settled\",\"value\":\"12350.60吨\"},{\"name\":\"东阳光铝-待结算发货量\",\"key\":\"dongyang_pending_settlement\",\"value\":\"12410.35吨\"},{\"name\":\"东阳光铝-上月退回量\",\"key\":\"dongyang_returned_last_month\",\"value\":\"1320.45吨\"},{\"name\":\"东阳光铝-结算模式\",\"key\":\"dongyang_billing_model\",\"value\":\"先货后款、月末结算\"},{\"name\":\"诺德铜-本周新增收入\",\"key\":\"nuode_copper_new_revenue\",\"value\":\"72.70万元\"},{\"name\":\"诺德铜-本周新增利润\",\"key\":\"nuode_copper_new_profit\",\"value\":\"2.13万元\"},{\"name\":\"诺德铜-累计营收\",\"key\":\"nuode_copper_revenue\",\"value\":\"2876.50万元\"},{\"name\":\"诺德铜-累计利润\",\"key\":\"nuode_copper_profit\",\"value\":\"51.20万元\"},{\"name\":\"诺德铜-备注\",\"key\":\"nuode_copper_note\",\"value\":\"本周完成小批量采购，恢复运营\"},{\"name\":\"茶原料-本周新增收入\",\"key\":\"tea_raw_material_new_revenue\",\"value\":\"14.32万元\"},{\"name\":\"茶原料-本周新增利润\",\"key\":\"tea_raw_material_new_profit\",\"value\":\"0.54万元\"},{\"name\":\"茶原料-累计营收\",\"key\":\"tea_raw_material_revenue\",\"value\":\"495.60万元\"},{\"name\":\"茶原料-累计利润\",\"key\":\"tea_raw_material_profit\",\"value\":\"5.82万元\"},{\"name\":\"宜茶茶叶-本周新增收入\",\"key\":\"yicha_tea_new_revenue\",\"value\":\"148.23万元\"},{\"name\":\"宜茶茶叶-本周新增利润\",\"key\":\"yicha_tea_new_profit\",\"value\":\"2.65万元\"},{\"name\":\"宜茶茶叶-累计营收\",\"key\":\"yicha_tea_revenue\",\"value\":\"6720.35万元\"},{\"name\":\"宜茶茶叶-累计利润\",\"key\":\"yicha_tea_profit\",\"value\":\"76.10万元\"},{\"name\":\"宜茶茶叶-总贡献利润\",\"key\":\"yicha_total_contribution\",\"value\":\"81.92万元\"},{\"name\":\"涂多多-本周新增收入\",\"key\":\"tuduoduo_new_revenue\",\"value\":\"37.58万元\"},{\"name\":\"涂多多-本周新增利润\",\"key\":\"tuduoduo_new_profit\",\"value\":\"0.74万元\"},{\"name\":\"涂多多-累计营收\",\"key\":\"tuduoduo_revenue\",\"value\":\"1465.80万元\"},{\"name\":\"涂多多-累计利润\",\"key\":\"tuduoduo_profit\",\"value\":\"9.05万元\"},{\"name\":\"涂多多-备注\",\"key\":\"tuduoduo_note\",\"value\":\"聚焦大客户订单，零散业务暂停\"}],\"msg\":\"操作成功\"}', '2026-10-29 18:48:52', '2026-10-29 18:48:52', 362, NULL, 1, '127.0.0.1', 1, 0, 'admin', 1, '2026-10-29 18:48:52', 'admin', 1, '2026-10-29 18:48:52', NULL);
 INSERT INTO `model_invoke_history` (`id`, `model_id`, `model_name`, `resource_id`, `model_version`, `request_method`, `invoke_type`, `input_params`, `output_result`, `start_time`, `end_time`, `duration`, `error_message`, `status`, `client_ip`, `valid_flag`, `del_flag`, `create_by`, `creator_id`, `create_time`, `update_by`, `updator_id`, `update_time`, `remark`) VALUES (24, 10, '水位流量插值算法', NULL, 'V1.0', 1, 1, '{\"H\":\"3\"}', '{\"input_water_level\":3.0,\"predict_flow\":54.96,\"fit_info\":{\"a\":7.02,\"H0\":0.0145,\"b\":1.8815,\"r2\":1.0},\"formula\":\"Q = 7.02 * (H - 0.0145)^1.8815\"}', '2026-10-29 18:48:59', '2026-10-29 18:49:01', 2800, NULL, 1, '127.0.0.1', 1, 0, 'admin', 1, '2026-10-29 18:49:01', 'admin', 1, '2026-10-29 18:49:01', NULL);
 
--- ----------------------------
--- Table structure for model_history
--- ----------------------------
-DROP TABLE IF EXISTS `model_history`;
-CREATE TABLE `model_history`
-(
-    `id`            bigint(20) NOT NULL AUTO_INCREMENT COMMENT '主键id',
-    `company_id`    bigint(20) NULL DEFAULT NULL COMMENT '企业id',
-    `model_id`      bigint(20) NULL DEFAULT NULL COMMENT '所属模型id',
-    `model_name`    varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '所属模型名称',
-    `context`       varchar(1024) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '操作内容',
-    `start_time`    datetime NULL DEFAULT NULL COMMENT '启用时间',
-    `model_version` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '启用版本号',
-    `valid_flag`    tinyint(4) NOT NULL COMMENT '是否有效 0：无效，1：有效',
-    `del_flag`      tinyint(4) NOT NULL COMMENT '删除标志 1：已删除，0：未删除 ',
-    `create_by`     varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '创建人',
-    `creator_id`    bigint(20) NULL DEFAULT NULL COMMENT '创建人id',
-    `create_time`   datetime NOT NULL COMMENT '创建时间',
-    `update_by`     varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '更新人',
-    `updator_id`    bigint(20) NULL DEFAULT NULL COMMENT '更新人id',
-    `update_time`   datetime NOT NULL COMMENT '更新时间',
-    `remark`        varchar(1024) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '备注',
-    PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 1378 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '模型历史' ROW_FORMAT = DYNAMIC;
-
--- ----------------------------
--- Records of model_history
--- ----------------------------
-INSERT INTO `model_history`
-VALUES (1368, NULL, 13, '接口服务类', '修改了接口服务类基本信息', NULL, '2', 1, 0, 'qModel', 1, '2026-07-01 18:24:31',
-        'qModel', 1, '2026-07-01 18:24:31', NULL);
-INSERT INTO `model_history`
-VALUES (1369, NULL, 13, '接口服务类', '修改了接口服务类基本信息', NULL, '2', 1, 0, 'qModel', 1, '2026-07-01 18:24:34',
-        'qModel', 1, '2026-07-01 18:24:34', NULL);
-INSERT INTO `model_history`
-VALUES (1370, NULL, 13, '接口服务类', '修改了接口服务类基本信息', NULL, '2', 1, 0, 'qModel', 1, '2026-07-01 18:24:37',
-        'qModel', 1, '2026-07-01 18:24:37', NULL);
-INSERT INTO `model_history`
-VALUES (1371, NULL, 13, '接口服务类', '修改了接口服务类基本信息', NULL, '2', 1, 0, 'qModel', 1, '2026-07-01 18:25:06',
-        'qModel', 1, '2026-07-01 18:25:06', NULL);
-INSERT INTO `model_history`
-VALUES (1372, NULL, 13, '接口服务类', '修改了接口服务类基本信息', NULL, '2', 1, 0, 'qModel', 1, '2026-07-01 18:25:25',
-        'qModel', 1, '2026-07-01 18:25:25', NULL);
-INSERT INTO `model_history`
-VALUES (1373, NULL, 13, '接口服务类', '修改了接口服务类基本信息', NULL, '2', 1, 0, 'qModel', 1, '2026-07-01 18:25:26',
-        'qModel', 1, '2026-07-01 18:25:26', NULL);
-INSERT INTO `model_history`
-VALUES (1374, NULL, 13, '接口服务类', '修改了接口服务类基本信息', NULL, '2', 1, 0, 'qModel', 1, '2026-07-01 18:25:28',
-        'qModel', 1, '2026-07-01 18:25:28', NULL);
-INSERT INTO `model_history`
-VALUES (1375, NULL, 13, '接口服务类', '修改了接口服务类基本信息', NULL, '2', 1, 0, 'qModel', 1, '2026-07-01 18:25:37',
-        'qModel', 1, '2026-07-01 18:25:37', NULL);
-INSERT INTO `model_history`
-VALUES (1376, NULL, 13, '接口服务类', '修改了接口服务类基本信息', NULL, '2', 1, 0, 'qModel', 1, '2026-07-01 18:26:31',
-        'qModel', 1, '2026-07-01 18:26:31', NULL);
-INSERT INTO `model_history`
-VALUES (1377, NULL, 13, '接口服务类', '修改了接口服务类基本信息', NULL, '2', 1, 0, 'qModel', 1, '2026-07-01 18:26:32',
-        'qModel', 1, '2026-07-01 18:26:32', NULL);
-
--- ----------------------------
--- Table structure for model_input
--- ----------------------------
-DROP TABLE IF EXISTS `model_input`;
-CREATE TABLE `model_input`
-(
-    `id`               int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID',
-    `company_id`       int(11) NULL DEFAULT NULL COMMENT '企业Id',
-    `name`             varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '参数名称',
-    `eng_name`         varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '英文名称',
-    `type`             int(11) NULL DEFAULT NULL COMMENT '参数类型 0:单值，1：多列数值，2：文件',
-    `model_id`         int(11) NULL DEFAULT NULL COMMENT '所属模型id',
-    `model_name`       varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '所属模型名称',
-    `model_version`    varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '所属模型版本',
-    `description`      varchar(1024) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '参数说明(描述)',
-    `example`          varchar(512) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '参数示例（文件上传）',
-    `param_file`       varchar(512) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '参数文件',
-    `single_content`   text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL COMMENT '参数单值',
-    `multiple_content` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL COMMENT '参数多列值',
-    `valid_flag`       int(11) NOT NULL COMMENT '是否有效 0：无效，1：有效',
-    `del_flag`         int(11) NOT NULL COMMENT '删除标志 1：已删除，0：未删除',
-    `create_by`        varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '创建人',
-    `creator_id`       int(11) NULL DEFAULT NULL COMMENT '创建人id 创建者的sys_user_id',
-    `create_time`      datetime NOT NULL COMMENT '创建时间',
-    `update_by`        varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '更新人',
-    `updator_id`       int(11) NULL DEFAULT NULL COMMENT '更新人id 更新者的sys_user_id',
-    `update_time`      datetime NOT NULL COMMENT '更新时间',
-    `remark`           varchar(1024) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '备注',
-    `change_flag`      tinyint(1) NOT NULL COMMENT '是否可变 0：不可变，1：可变',
-    PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 10 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '模型输入管理' ROW_FORMAT = DYNAMIC;
-
--- ----------------------------
--- Records of model_input
--- ----------------------------
-INSERT INTO `model_input`
-VALUES (1, NULL, '123', '333', 0, 4, '测试', '1', NULL, NULL, NULL, '[]', '[]', 1, 1, 'admin', NULL,
-        '2025-11-17 04:22:12', NULL, NULL, '2025-11-17 04:57:36', NULL, 1);
-INSERT INTO `model_input`
-VALUES (2, NULL, 'q', 'q', 0, 8, '综合水利集成模型', '1', '水位', NULL, NULL, '[]', '[]', 1, 0, 'admin', NULL,
-        '2025-11-17 06:20:52', NULL, NULL, '2025-12-31 16:09:04', NULL, 0);
-INSERT INTO `model_input`
-VALUES (3, NULL, '日水量', 'AW_DT', 0, 7, '来水预测模型', NULL, NULL, NULL, NULL, '[]', '[]', 1, 1, 'admin', NULL,
-        '2025-12-11 13:53:10', NULL, NULL, '2025-12-11 13:53:11', NULL, 1);
-INSERT INTO `model_input`
-VALUES (4, NULL, '水位', 'P', 1, 10, '水土保持模型', '1', NULL, NULL, NULL, '[]', '[]', 1, 0, '小桐', NULL,
-        '2025-12-31 18:21:14', NULL, NULL, '2025-12-31 18:21:14', NULL, 1);
-INSERT INTO `model_input`
-VALUES (5, NULL, 'q', '123', NULL, 11, 'AI水位预测', '1', NULL, NULL, NULL, '[]', '[]', 1, 1, '小桐', NULL,
-        '2026-01-06 11:43:32', NULL, NULL, '2026-01-06 11:43:32', NULL, 1);
-INSERT INTO `model_input`
-VALUES (6, NULL, 'q', '123', 1, 11, 'AI水位预测', '1', NULL, NULL, NULL, '[]',
-        '[{\"name\":\"q\",\"value\":\"1\",\"order\":2,\"index\":1}]', 1, 0, '小桐', NULL, '2026-01-06 11:44:06', NULL,
-        NULL, '2026-01-06 11:48:17', NULL, 1);
-INSERT INTO `model_input`
-VALUES (7, NULL, '测试', 'name', 0, 5, '单机程序', '1', NULL, NULL, NULL, '[]', '[]', 1, 1, '小桐', NULL,
-        '2026-01-06 13:58:57', NULL, NULL, '2026-01-06 11:48:17', NULL, 0);
-INSERT INTO `model_input`
-VALUES (8, NULL, 'q', 'level', 0, 5, '单机程序', '1', '说明', NULL, NULL, '[]', '[]', 1, 0, '小桐', 1,
-        '2026-01-09 16:35:37', '小桐', 1, '2026-01-09 16:35:37', NULL, 1);
-INSERT INTO `model_input`
-VALUES (9, NULL, 'q', '/data/jgst/jgst.chaoshen.20250113/data_input.json', 1, 12, '流量是计算', '2', '参数说明', NULL,
-        NULL, '[]', '[{\"name\":\"q\",\"value\":\"0\",\"order\":213,\"index\":1}]', 1, 0, '小桐', 1,
-        '2026-01-14 16:59:34', '小桐', 1, '2026-01-21 15:17:32', NULL, 1);
 
 -- ----------------------------
 -- Table structure for model_interface_address
@@ -792,248 +488,15 @@ CREATE TABLE `model_interface_address`
 -- ----------------------------
 -- Records of model_interface_address
 -- ----------------------------
-INSERT INTO `model_interface_address`
-VALUES (1, NULL, 7, 'null:6379/null:6379/123', 7, 1, NULL, NULL, 1, '小桐', 1, '2026-01-14 14:20:25', '小桐', 1,
-        '2026-01-14 14:46:12', '测试', NULL, NULL);
-INSERT INTO `model_interface_address`
-VALUES (2, NULL, 7, 'null:6379/https://baidu.weather.com.cn/mweather15d/101180101.shtml', 7, 2, NULL, NULL, 0, '小桐',
-        1, '2026-01-14 15:27:03', '小桐', 1, '2026-01-14 16:04:55', '测试新增', NULL, NULL);
-INSERT INTO `model_interface_address`
-VALUES (3, NULL, 13, 'http://localhost/dev-api/captchaImage', 18, 0, NULL, NULL, 0, '小桐', 1, '2026-01-20 13:20:18',
-        '小桐', 1, '2026-01-20 15:48:04', 'q', NULL, NULL);
-INSERT INTO `model_interface_address`
-VALUES (4, NULL, 13, 'null:80/http://localhost:8090/captchaImage', 18, 0, NULL, NULL, 0, '小桐', 1,
-        '2026-01-21 14:26:04', '小桐', 1, '2026-01-21 14:26:04', 'z', NULL, NULL);
-INSERT INTO `model_interface_address`
-VALUES (5, NULL, 13, '/https://demo.qmodel.tech/prod-api/captchaImage', 22, 0, NULL, NULL, 1, '小桐2', 1,
-        '2026-01-26 16:51:24', '小桐2', 1, '2026-01-26 16:51:24', '测试', NULL, NULL);
-INSERT INTO `model_interface_address`
-VALUES (6, NULL, 13, 'https://demo.qmodel.tech/prod-api/captchaImage', 22, 0, NULL, NULL, 0, '小桐2', 1,
-        '2026-01-26 16:52:00', '小桐2', 1, '2026-01-26 16:52:00', '测试', NULL, NULL);
-INSERT INTO `model_interface_address`
-VALUES (7, NULL, 13, 'https://demo.qmodel.tech/prod-api/captchaImage', 22, 0, NULL, NULL, 0, '小桐2', 1,
-        '2026-01-26 17:08:12', '小桐2', 1, '2026-01-26 17:08:12', '测试', NULL, NULL);
+INSERT INTO `model_interface_address` VALUES (1, NULL, 7, 'null:6379/null:6379/123', 7, 1, NULL, NULL, 1, '小桐', 1, '2026-01-14 14:20:25', '小桐', 1, '2026-01-14 14:46:12', '测试', NULL, NULL);
+INSERT INTO `model_interface_address` VALUES (2, NULL, 7, 'null:6379/https://baidu.weather.com.cn/mweather15d/101180101.shtml', 7, 2, NULL, NULL, 0, '小桐', 1, '2026-01-14 15:27:03', '小桐', 1, '2026-01-14 16:04:55', '测试新增', NULL, NULL);
+INSERT INTO `model_interface_address` VALUES (3, NULL, 13, 'http://localhost/dev-api/captchaImage', 18, 0, NULL, NULL, 0, '小桐', 1, '2026-01-20 13:20:18', '小桐', 1, '2026-01-20 15:48:04', 'q', NULL, NULL);
+INSERT INTO `model_interface_address` VALUES (4, NULL, 13, 'null:80/http://localhost:8090/captchaImage', 18, 0, NULL, NULL, 0, '小桐', 1, '2026-01-21 14:26:04', '小桐', 1, '2026-01-21 14:26:04', 'z', NULL, NULL);
+INSERT INTO `model_interface_address` VALUES (5, NULL, 13, '/https://demo.qmodel.tech/prod-api/captchaImage', 22, 0, NULL, NULL, 1, '小桐2', 1, '2026-01-26 16:51:24', '小桐2', 1, '2026-01-26 16:51:24', '测试', NULL, NULL);
+INSERT INTO `model_interface_address` VALUES (6, NULL, 13, 'https://demo.qmodel.tech/prod-api/captchaImage', 22, 0, NULL, NULL, 0, '小桐2', 1, '2026-01-26 16:52:00', '小桐2', 1, '2026-01-26 16:52:00', '测试', NULL, NULL);
+INSERT INTO `model_interface_address` VALUES (7, NULL, 13, 'https://demo.qmodel.tech/prod-api/captchaImage', 22, 0, NULL, NULL, 0, '小桐2', 1, '2026-01-26 17:08:12', '小桐2', 1, '2026-01-26 17:08:12', '测试', NULL, NULL);
 
--- ----------------------------
--- Table structure for model_operate
--- ----------------------------
-DROP TABLE IF EXISTS `model_operate`;
-CREATE TABLE `model_operate`
-(
-    `id`           int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID',
-    `company_id`   int(11) NULL DEFAULT NULL COMMENT '企业id',
-    `module_name`  varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '操作模块',
-    `type`         int(11) NULL DEFAULT NULL COMMENT '操作类型',
-    `content`      varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '操作内容',
-    `method`       varchar(2048) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '请求方式',
-    `req_content`  varchar(2048) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '请求参数',
-    `resp_content` varchar(2048) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '返回参数',
-    `ip`           varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '操作地址(Ip)',
-    `address`      varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '操作地点',
-    `status`       int(11) NULL DEFAULT NULL COMMENT '操作状态',
-    `valid_flag`   int(11) NOT NULL COMMENT '是否有效 0：无效，1：有效',
-    `del_flag`     int(11) NOT NULL COMMENT '删除标志 1：已删除，0：未删除',
-    `create_by`    varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '创建人',
-    `creator_id`   int(11) NULL DEFAULT NULL COMMENT '创建人id 创建者的sys_user_id',
-    `create_time`  datetime NOT NULL COMMENT '创建时间',
-    `update_by`    varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '更新人',
-    `updator_id`   int(11) NULL DEFAULT NULL COMMENT '更新人id 更新者的sys_user_id',
-    `update_time`  datetime NOT NULL COMMENT '更新时间',
-    `remark`       varchar(1024) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '备注',
-    PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '模型历史管理' ROW_FORMAT = DYNAMIC;
 
--- ----------------------------
--- Records of model_operate
--- ----------------------------
-INSERT INTO `model_operate`
-VALUES (1, 1001, '工业大模型', 1, '启动设备故障预测微调任务', 'POST /api/model/industry/train',
-        '{\"modelCode\":\"INDUSTRY_MODEL_TEST\", \"datasetId\":\"DS_2026_Q3\", \"epochs\": 50, \"learningRate\": 0.001}',
-        '{\"code\":200, \"msg\":\"训练任务已下发\", \"taskId\":\"TRAIN_JOB_9981\"}', '192.168.10.55', '江苏省南京市', 1,
-        1, 0, '吴同', 10001, '2026-07-16 09:15:00', '吴同', 10001, '2026-07-16 09:15:00',
-        '基于Q3季度传感器数据进行微调');
-INSERT INTO `model_operate`
-VALUES (2, 1001, '线性回归算法', 0, '获取销售额预测模型评估报告', 'GET /api/model/regression/report?id=LR_001', NULL,
-        '{\"code\":200, \"data\": {\"r2_score\": 0.95, \"rmse\": 12.4, \"chartUrl\": \"/static/img/lr_chart.png\"}}',
-        '192.168.10.55', '江苏省南京市', 1, 1, 0, '吴同', 10001, '2026-07-16 10:30:00', '吴同', 10001,
-        '2026-07-16 10:30:00', '日常模型效果监控');
-INSERT INTO `model_operate`
-VALUES (3, 1001, '支持向量机算法', 2, '调整SVM核函数参数并重试', 'PUT /api/model/svm/config',
-        '{\"modelCode\":\"SVM\", \"kernel\": \"rbf\", \"C\": 1.5, \"gamma\": \"scale\"}',
-        '{\"code\":200, \"msg\": \"配置更新成功，等待下次计算生效\"}', '192.168.10.55', '江苏省南京市', 1, 1, 0, '吴同',
-        10001, '2026-07-16 11:00:00', '吴同', 10001, '2026-07-16 11:00:00', '优化分类边界准确率');
-INSERT INTO `model_operate`
-VALUES (4, 1001, '随机森林算法', 1, '执行客户流失风险批量预测', 'POST /api/model/random_forest/predict',
-        '{\"modelCode\":\"RANDOM_FOREST\", \"batchSize\": 1000, \"inputSource\": \"db_crm_customers\"}',
-        '{\"code\":200, \"msg\": \"预测完成\", \"resultCount\": 1000, \"highRiskCount\": 45}', '192.168.10.55',
-        '江苏省南京市', 1, 1, 0, '吴同', 10001, '2026-07-16 14:20:00', '吴同', 10001, '2026-07-16 14:20:00',
-        '月度例行风险评估');
-
--- ----------------------------
--- Table structure for model_output
--- ----------------------------
-DROP TABLE IF EXISTS `model_output`;
-CREATE TABLE `model_output`
-(
-    `id`               int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID',
-    `company_id`       int(11) NULL DEFAULT NULL COMMENT '企业Id',
-    `name`             varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '参数名称',
-    `eng_name`         varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '英文名称',
-    `type`             int(11) NULL DEFAULT NULL COMMENT '参数类型 0:单值，1：多列数值',
-    `model_id`         int(11) NULL DEFAULT NULL COMMENT '所属模型id',
-    `model_name`       varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '所属模型名称',
-    `model_version`    varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '所属模型版本',
-    `description`      varchar(1024) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '参数说明(描述)',
-    `single_content`   text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL COMMENT '参数单值',
-    `multiple_content` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL COMMENT '参数多列值',
-    `valid_flag`       int(11) NOT NULL COMMENT '是否有效 0：无效，1：有效',
-    `del_flag`         int(11) NOT NULL COMMENT '删除标志 1：已删除，0：未删除',
-    `create_by`        varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '创建人',
-    `creator_id`       int(11) NULL DEFAULT NULL COMMENT '创建人id 创建者的sys_user_id',
-    `create_time`      datetime NOT NULL COMMENT '创建时间',
-    `update_by`        varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '更新人',
-    `updator_id`       int(11) NULL DEFAULT NULL COMMENT '更新人id 更新者的sys_user_id',
-    `update_time`      datetime NOT NULL COMMENT '更新时间',
-    `remark`           varchar(1024) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '备注',
-    PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 6 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '模型输出管理' ROW_FORMAT = DYNAMIC;
-
--- ----------------------------
--- Records of model_output
--- ----------------------------
-INSERT INTO `model_output`
-VALUES (1, NULL, '33', '22', 1, 4, '测试', '1', NULL, '[]',
-        '[{\"name\":\"1\",\"value\":\"2\",\"order\":0,\"index\":1}]', 1, 1, 'admin', 1, '2025-11-17 04:29:29', NULL,
-        NULL, '2025-11-17 04:29:28', NULL);
-INSERT INTO `model_output`
-VALUES (2, NULL, 'z', 'z', 0, 5, '测试', '1', NULL, '\"1\"', '[]', 1, 1, 'admin', 1, '2025-11-17 06:21:19', NULL, NULL,
-        '2025-11-17 06:21:20', NULL);
-INSERT INTO `model_output`
-VALUES (3, NULL, '水利1112', 'weater', 0, 5, '单机程序', '1', NULL, '[]', '[]', 1, 1, '小桐', 1, '2026-01-06 14:47:18',
-        NULL, NULL, '2026-01-06 14:47:24', NULL);
-INSERT INTO `model_output`
-VALUES (4, NULL, '输出模型', 'q', 0, 5, '单机程序', '1', 'qqq', '\"0\"', '[]', 1, 1, '小桐', 1, '2026-01-09 16:26:54',
-        '小桐', 1, '2026-01-13 14:52:55', NULL);
-INSERT INTO `model_output`
-VALUES (5, NULL, 'AVQ', '/data/jgst/jgst.chaoshen.20250113/data_output.json', 0, 12, '流量是计算', '2', '测试', '\"0\"',
-        '[]', 1, 0, '小桐', 1, '2026-01-14 18:05:18', '小桐', 1, '2026-01-21 15:16:51', NULL);
-
--- ----------------------------
--- Table structure for model_reconstitution
--- ----------------------------
-DROP TABLE IF EXISTS `model_reconstitution`;
-CREATE TABLE `model_reconstitution`
-(
-    `id`                      int(11) NOT NULL AUTO_INCREMENT COMMENT 'id',
-    `company_id`              int(11) NULL DEFAULT NULL COMMENT '企业id',
-    `name`                    varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '模型名称',
-    `classify_id`             int(11) NULL DEFAULT NULL COMMENT '模型分类',
-    `builtin`                 int(11) NULL DEFAULT NULL COMMENT '是否预置',
-    `access_mode`             int(11) NULL DEFAULT NULL COMMENT '接入方式',
-    `request_method`          int(11) NULL DEFAULT NULL COMMENT '请求方式',
-    `interfaceorfile_address` varchar(512) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '接口和文件的地址',
-    `version_id`              int(11) NULL DEFAULT NULL COMMENT '版本id',
-    `whether_publish`         int(11) NOT NULL COMMENT '是否发布',
-    `publish_time`            datetime NULL DEFAULT NULL COMMENT '发布时间',
-    `del_flag`                bigint(20) NOT NULL COMMENT '删除标志',
-    `create_by`               varchar(512) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '创建人',
-    `creator_id`              bigint(20) NULL DEFAULT NULL COMMENT '创建人id',
-    `create_time`             datetime NULL DEFAULT NULL COMMENT '创建时间',
-    `update_by`               varchar(512) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '更新人',
-    `updator_id`              bigint(20) NULL DEFAULT NULL COMMENT '更新人id',
-    `update_time`             datetime NULL DEFAULT NULL COMMENT '更新时间',
-    `remark`                  varchar(4096) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '备注',
-    `port`                    varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '接口的端口号',
-    `file_name`               varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '文件名称',
-    `runnable_file_address`   varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '可执行文件相对路径',
-    PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 23 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '模型库重构表' ROW_FORMAT = DYNAMIC;
-
--- ----------------------------
--- Records of model_reconstitution
--- ----------------------------
-INSERT INTO `model_reconstitution`
-VALUES (1, NULL, '产汇流模型', 2, NULL, NULL, NULL, NULL, 1, 0, '2025-11-14 18:35:43', 1, 'admin', 1,
-        '2025-11-14 18:34:04', NULL, NULL, '2025-11-14 18:35:43', NULL, NULL, NULL, NULL);
-INSERT INTO `model_reconstitution`
-VALUES (2, NULL, '123', 2, 1, 1, NULL, NULL, 2, 0, NULL, 1, 'admin', 1, '2025-11-14 19:38:17', NULL, NULL, NULL, NULL,
-        '123', NULL, NULL);
-INSERT INTO `model_reconstitution`
-VALUES (3, NULL, 'test', 2, 0, 0, NULL,
-        'http://localhost:8080/profile/upload/2025/11/16/YL_DP_USER-MODEL etc_20251116153741A009.zip', 3, 0, NULL, 1,
-        'admin', 1, '2025-11-16 15:38:07', NULL, NULL, NULL, NULL, NULL, 'YL_DP_USER-MODEL etc.zip', NULL);
-INSERT INTO `model_reconstitution`
-VALUES (4, NULL, '测试', 2, 0, 0, NULL,
-        'http://localhost:8080/profile/upload/2025/11/16/YL_DP_USER-MODEL etc_20251116153827A010.zip', 4, 0,
-        '2025-11-17 04:21:54', 1, 'admin', 1, '2025-11-16 15:40:03', NULL, NULL, '2025-11-17 04:21:54', NULL, NULL,
-        'YL_DP_USER-MODEL etc.zip', NULL);
-INSERT INTO `model_reconstitution`
-VALUES (5, NULL, '单机程序', 3, 0, 0, NULL,
-        'http://110.42.38.62:52000/profile/upload/2025/11/17/YL_DP_USER-MODEL etc_20251117062018A001.zip', 5, 0,
-        '2025-12-30 13:30:41', 1, 'admin', 1, '2025-11-17 06:20:23', NULL, NULL, '2025-12-30 13:30:41', NULL, NULL,
-        'YL_DP_USER-MODEL etc.zip', NULL);
-INSERT INTO `model_reconstitution`
-VALUES (6, NULL, 'ceshi ', 2, NULL, 1, NULL, NULL, 6, 0, NULL, 1, 'admin', 1, '2025-11-18 10:45:41', NULL, NULL, NULL,
-        NULL, '1001', NULL, NULL);
-INSERT INTO `model_reconstitution`
-VALUES (7, NULL, '来水预测模型', 3, 0, 1, NULL, NULL, 12, 0, '2025-12-11 14:38:09', 1, 'admin', 1,
-        '2025-12-11 10:38:28', '小桐', 1, '2026-01-14 15:32:29', '模型介绍', '6379', NULL, NULL);
-INSERT INTO `model_reconstitution`
-VALUES (8, NULL, '综合水利集成模型', 28, 1, 0, NULL, NULL, 8, 0, NULL, 1, '小桐', 1, '2025-12-31 15:40:23', NULL, NULL,
-        NULL, NULL, NULL, NULL, NULL);
-INSERT INTO `model_reconstitution`
-VALUES (9, NULL, '水土保持模型', 30, NULL, 0, NULL, NULL, 9, 0, NULL, 1, '小桐', 1, '2025-12-31 15:40:55', NULL, NULL,
-        NULL, NULL, NULL, NULL, NULL);
-INSERT INTO `model_reconstitution`
-VALUES (10, NULL, '水土保持模型', 30, 1, 0, NULL,
-        'http://localhost:8090/profile/upload/2025/12/31/jgst.chaoshen.20250113_20251231181715A001.zip', 10, 0, NULL, 1,
-        '小桐', 1, '2025-12-31 18:17:47', NULL, NULL, NULL, NULL, NULL, 'jgst.chaoshen.20250113.zip', NULL);
-INSERT INTO `model_reconstitution`
-VALUES (11, NULL, 'AI水位预测', 29, 0, 0, NULL,
-        'http://localhost:8090/profile/upload/2025/12/31/jgst.chaoshen.20250113_20251231182507A002.zip', 11, 0,
-        '2026-01-06 17:14:08', 0, '小桐', 1, '2025-12-31 18:25:19', NULL, NULL, '2026-01-06 17:14:08', NULL, NULL,
-        'jgst.chaoshen.20250113.zip', NULL);
-INSERT INTO `model_reconstitution`
-VALUES (12, NULL, '流量是计算', 9, 1, 0, NULL,
-        'http://localhost:8090/profile/upload/2026/01/14/jgst.chaoshen.20250113_20260114161110A002.zip', 14, 0,
-        '2026-04-09 15:49:50', 0, '小桐', 1, '2026-01-14 16:22:53', 'qModel', 1, '2026-04-09 15:49:50', NULL, NULL,
-        NULL, '\\jgst.chaoshen.20250113\\data.json');
-INSERT INTO `model_reconstitution`
-VALUES (13, NULL, '接口服务类', 9, 1, 1, NULL, NULL, 22, 0, '2026-07-01 18:26:32', 0, '小桐', 1, '2026-01-20 09:17:25',
-        'qModel', 1, '2026-07-01 18:26:32', NULL, '80', NULL, NULL);
-INSERT INTO `model_reconstitution`
-VALUES (14, NULL, 'base64图片获取', 3, 1, 1, NULL, NULL, 19, 0, NULL, 1, '小桐', 1, '2026-01-21 14:41:41', '小桐', 1,
-        '2026-01-21 14:41:41', NULL, '80', NULL, NULL);
-INSERT INTO `model_reconstitution`
-VALUES (15, NULL, '测试', 3, 1, 1, NULL, NULL, 20, 0, NULL, 1, '小桐', 1, '2026-01-21 14:47:59', '小桐', 1,
-        '2026-01-21 14:47:59', NULL, '6379', NULL, NULL);
-INSERT INTO `model_reconstitution`
-VALUES (16, NULL, '测试', 17, 0, 1, NULL, 'http:192.1623', 21, 0, NULL, 1, '小桐', 1, '2026-01-21 15:27:03', '小桐', 1,
-        '2026-01-21 15:27:03', NULL, '8888', NULL, NULL);
-INSERT INTO `model_reconstitution`
-VALUES (17, NULL, '降雨量计算', 8, 1, 0, NULL,
-        'http://localhost:8090/profile/upload/2026/03/06/test1111.py_20260306154644A001.zip', 23, 0,
-        '2026-04-09 15:35:17', 0, '小桐2', 1, '2026-03-06 15:49:45', 'qModel', 1, '2026-04-09 15:35:17', '111', NULL,
-        NULL, 'test1111.py');
-INSERT INTO `model_reconstitution`
-VALUES (18, NULL, '来水预测', 8, 1, 0, NULL,
-        'http://localhost:8090/profile/upload/2026/04/09/6729ab66-56e6-43fa-820a-745ca7b85037_20260409154627A004.zip',
-        24, 0, NULL, 0, 'qModel', 1, '2026-04-09 15:46:39', 'qModel', 1, '2026-04-09 15:46:39', NULL, NULL, NULL, NULL);
-INSERT INTO `model_reconstitution`
-VALUES (19, NULL, '转发三方信息', 8, 1, 1, NULL, 'http://localhost/model/version', 25, 0, '2026-04-09 15:55:20', 1,
-        'qModel', 1, '2026-04-09 15:50:23', 'qModel', 1, '2026-04-09 15:55:20', '权威的', '80', NULL, NULL);
-INSERT INTO `model_reconstitution`
-VALUES (20, NULL, '测试', 12, 1, 0, NULL,
-        'http://localhost:8090/profile/upload/2026/04/09/6729ab66-56e6-43fa-820a-745ca7b85037_20260409155539A005.zip',
-        26, 0, NULL, 0, 'qModel', 1, '2026-04-09 15:55:43', 'qModel', 1, '2026-04-09 15:55:43', NULL, '80', NULL, NULL);
-INSERT INTO `model_reconstitution`
-VALUES (21, NULL, 'model', 8, 1, 0, NULL,
-        'http://localhost:8090/profile/upload/2026/04/09/6729ab66-56e6-43fa-820a-745ca7b85037_20260409155629A006.zip',
-        27, 0, NULL, 1, 'qModel', 1, '2026-04-09 15:56:33', 'qModel', 1, '2026-04-09 15:56:33', 'qwdqw ', '80', NULL,
-        NULL);
-INSERT INTO `model_reconstitution`
-VALUES (22, NULL, '测试模型', 8, 0, 0, NULL, NULL, 28, 0, NULL, 1, 'qModel', 1, '2026-07-01 13:35:34', 'qModel', 1,
-        '2026-07-01 13:35:34', NULL, NULL, NULL, NULL);
 
 DROP TABLE IF EXISTS `model_calc`;
 CREATE TABLE `model_calc`
@@ -1072,7 +535,7 @@ CREATE TABLE `model_calc`
     `update_time`      datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
     `remark`           varchar(512)      DEFAULT NULL COMMENT '备注',
     PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COMMENT='模型计算任务';
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COMMENT='模型计算任务';
 
 INSERT INTO `model_calc` VALUES (1, NULL, 'CALC_20260727182215', '计算流量任务', 2, '机器学习', 13, '水位流量插值算法脚本', 'V1.0', NULL, '根据输入水位信息计算流量数据。', '{\"params\":[{\"key\":\"H\",\"name\":\"H\",\"title\":\"参数H\",\"value\":\"\",\"type\":\"integer\",\"rawType\":\"integer\",\"format\":\"\",\"description\":\"自定义数值参数\",\"required\":true}]}', '{\"input_water_level\":0.0,\"predict_flow\":0.0,\"fit_info\":{\"a\":7.02,\"H0\":0.0145,\"b\":1.8815,\"r2\":1.0},\"formula\":\"Q = 7.02 * (H - 0.0145)^1.8815\"}', '2026-08-04 16:37:51', '2026-08-04 16:37:56', 4887, 2, 60, 0, 3, 1, '', NULL, 1, 1, 0, '吴同', 2, '2026-07-27 18:22:16', NULL, NULL, '2026-08-05 16:25:01', '');
 INSERT INTO `model_calc` VALUES (2, NULL, 'CALC_20260731152348', '千桐周报', 17, '异常检测', 9, 'qKnow_周报模板测试', 'V1.0', NULL, 'q', '{\"params\":[{\"key\":\"query\",\"name\":\"query\",\"title\":\"query\",\"value\":\"1\",\"type\":\"string\",\"rawType\":\"string\",\"format\":\"\",\"description\":\"搜索关键词、查询语句\",\"required\":false}]}', '{\"code\":200,\"data\":[{\"name\":\"报告标题\",\"key\":\"report_title\",\"value\":\"产融科技公司工作周报\"},{\"name\":\"报告期次\",\"key\":\"report_period\",\"value\":\"2026年第4期\"},{\"name\":\"报告日期范围\",\"key\":\"report_date_range\",\"value\":\"2026年1月19日-2026年1月25日\"},{\"name\":\"发布日期\",\"key\":\"publish_date\",\"value\":\"2026年1月26日\"},{\"name\":\"本周新增收入\",\"key\":\"weekly_new_revenue\",\"value\":\"45719.93万元\"},{\"name\":\"本周新增利润\",\"key\":\"weekly_new_profit\",\"value\":\"16.26万元\"},{\"name\":\"累计总收入\",\"key\":\"total_revenue\",\"value\":\"1253840.65万元\"},{\"name\":\"累计总利润\",\"key\":\"total_profit\",\"value\":\"247.33万元\"},{\"name\":\"东阳光铝-本周新增收入\",\"key\":\"dongyang_aluminum_new_revenue\",\"value\":\"151.15万元\"},{\"name\":\"东阳光铝-本周新增利润\",\"key\":\"dongyang_aluminum_new_profit\",\"value\":\"3.25万元\"},{\"name\":\"东阳光铝-累计营收\",\"key\":\"dongyang_aluminum_revenue\",\"value\":\"5682.40万元\"},{\"name\":\"东阳光铝-累计利润\",\"key\":\"dongyang_aluminum_profit\",\"value\":\"98.21万元\"},{\"name\":\"东阳光铝-本周发货量\",\"key\":\"dongyang_weekly_shipment\",\"value\":\"1325.78吨\"},{\"name\":\"东阳光铝-累计发货量\",\"key\":\"dongyang_total_shipment\",\"value\":\"32528.94吨\"},{\"name\":\"东阳光铝-12月已结算量\",\"key\":\"dongyang_dec_settled\",\"value\":\"12350.60吨\"},{\"name\":\"东阳光铝-待结算发货量\",\"key\":\"dongyang_pending_settlement\",\"value\":\"12410.35吨\"},{\"name\":\"东阳光铝-上月退回量\",\"key\":\"dongyang_returned_last_month\",\"value\":\"1320.45吨\"},{\"name\":\"东阳光铝-结算模式\",\"key\":\"dongyang_billing_model\",\"value\":\"先货后款、月末结算\"},{\"name\":\"诺德铜-本周新增收入\",\"key\":\"nuode_copper_new_revenue\",\"value\":\"72.70万元\"},{\"name\":\"诺德铜-本周新增利润\",\"key\":\"nuode_copper_new_profit\",\"value\":\"2.13万元\"},{\"name\":\"诺德铜-累计营收\",\"key\":\"nuode_copper_revenue\",\"value\":\"2876.50万元\"},{\"name\":\"诺德铜-累计利润\",\"key\":\"nuode_copper_profit\",\"value\":\"51.20万元\"},{\"name\":\"诺德铜-备注\",\"key\":\"nuode_copper_note\",\"value\":\"本周完成小批量采购，恢复运营\"},{\"name\":\"茶原料-本周新增收入\",\"key\":\"tea_raw_material_new_revenue\",\"value\":\"14.32万元\"},{\"name\":\"茶原料-本周新增利润\",\"key\":\"tea_raw_material_new_profit\",\"value\":\"0.54万元\"},{\"name\":\"茶原料-累计营收\",\"key\":\"tea_raw_material_revenue\",\"value\":\"495.60万元\"},{\"name\":\"茶原料-累计利润\",\"key\":\"tea_raw_material_profit\",\"value\":\"5.82万元\"},{\"name\":\"宜茶茶叶-本周新增收入\",\"key\":\"yicha_tea_new_revenue\",\"value\":\"148.23万元\"},{\"name\":\"宜茶茶叶-本周新增利润\",\"key\":\"yicha_tea_new_profit\",\"value\":\"2.65万元\"},{\"name\":\"宜茶茶叶-累计营收\",\"key\":\"yicha_tea_revenue\",\"value\":\"6720.35万元\"},{\"name\":\"宜茶茶叶-累计利润\",\"key\":\"yicha_tea_profit\",\"value\":\"76.10万元\"},{\"name\":\"宜茶茶叶-总贡献利润\",\"key\":\"yicha_total_contribution\",\"value\":\"81.92万元\"},{\"name\":\"涂多多-本周新增收入\",\"key\":\"tuduoduo_new_revenue\",\"value\":\"37.58万元\"},{\"name\":\"涂多多-本周新增利润\",\"key\":\"tuduoduo_new_profit\",\"value\":\"0.74万元\"},{\"name\":\"涂多多-累计营收\",\"key\":\"tuduoduo_revenue\",\"value\":\"1465.80万元\"},{\"name\":\"涂多多-累计利润\",\"key\":\"tuduoduo_profit\",\"value\":\"9.05万元\"},{\"name\":\"涂多多-备注\",\"key\":\"tuduoduo_note\",\"value\":\"聚焦大客户订单，零散业务暂停\"}],\"msg\":\"操作成功\"}', '2026-08-03 14:36:39', '2026-08-03 14:36:40', 900, 2, 60, 0, 3, 2, '', NULL, 0, 1, 0, '吴同', 2, '2026-07-31 15:23:49', NULL, NULL, '2026-08-05 16:25:01', 'w');
@@ -1106,7 +569,7 @@ CREATE TABLE `model_calc_execution` (
     `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '更新时间',
     `remark` varchar(512) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '备注',
     PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=51 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='模型计算执行记录表';
+) ENGINE=InnoDB AUTO_INCREMENT=61 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='模型计算执行记录表';
 
 INSERT INTO `model_calc_execution` VALUES (1, 1, 13, 'EXEC_20260805143300', 1, 2, '2026-08-05 14:33:01', '2026-08-05 14:33:06', 5246, '{\"params\":[{\"key\":\"H\",\"name\":\"H\",\"title\":\"参数H\",\"value\":\"\",\"type\":\"integer\",\"rawType\":\"integer\",\"format\":\"\",\"description\":\"自定义数值参数\",\"required\":true}]}', '{\"input_water_level\":0.0,\"predict_flow\":0.0,\"fit_info\":{\"a\":7.02,\"H0\":0.0145,\"b\":1.8815,\"r2\":1.0},\"formula\":\"Q = 7.02 * (H - 0.0145)^1.8815\"}', '[EXEC_20260805143300] 开始执行任务，calcId=1, modelId=13, engine=PythonExecutionEngine\n输入参数解析完成，共 0 个字段：{}\nPython 脚本执行成功，结果长度：141\n结果预览：{\"input_water_level\":0.0,\"predict_flow\":0.0,\"fit_info\":{\"a\":7.02,\"H0\":0.0145,\"b\":1.8815,\"r2\":1.0},\"formula\":\"Q = 7.02 * (H - 0.0145)^1.8815\"}', NULL, 0, '{\"峰值CPU使用率\":0.0,\"峰值内存使用KB\":0,\"平均CPU使用率\":0.0,\"平均内存使用KB\":0,\"执行时长毫秒\":4932,\"是否正常完成\":true,\"监控开始时间毫秒\":1785911581391,\"监控结束时间毫秒\":1785911586323,\"进程PID\":13160,\"采样次数\":0}', 1, 0, NULL, NULL, '2026-08-05 14:33:02', NULL, NULL, '2026-08-05 14:33:02', NULL);
 
@@ -1172,7 +635,7 @@ CREATE TABLE `model_data_api` (
     INDEX `idx_mda_model_id`     (`model_id`)     USING BTREE,
     INDEX `idx_mda_name`         (`name`)         USING BTREE,
     INDEX `idx_mda_create_time`  (`create_time`)  USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '模型数据API接入表' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 12 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '模型数据API接入表' ROW_FORMAT = Dynamic;
 
 INSERT INTO `model_data_api` (`id`, `name`, `model_id`, `api_type`, `api_url`, `request_method`, `content_type`, `timeout_seconds`, `auth_type`, `auth_method`, `auth_inject_pos`, `auth_key_name`, `auth_token_prefix`, `auth_token_value`, `auth_dyn_method`, `auth_dyn_url`, `auth_dyn_headers`, `auth_dyn_params`, `auth_dyn_body`, `auth_extract_path`, `request_template`, `batch_params`, `input_schema`, `output_schema`, `description`, `valid_flag`, `del_flag`, `create_by`, `creator_id`, `create_time`, `update_by`, `updater_id`, `update_time`, `remark`) VALUES (1, '水文站实时水位监测接口', NULL, NULL, 'https://demo.qmodel.tech/prod-api/model/mock/waterLevel', '0', 'application/json', 30, 'NONE', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '{\"type\":\"object\",\"properties\":{\"station_code\":{\"type\":\"string\",\"description\":\"水文站编码\",\"example\":\"HT-6201\"}}}', '{\"type\":\"object\",\"properties\":{\"station_code\":{\"type\":\"string\",\"description\":\"水文站编码\"},\"water_level\":{\"type\":\"number\",\"description\":\"实时水位(米)\"},\"flow\":{\"type\":\"number\",\"description\":\"实时流量(m³/s)\"},\"warn_level\":{\"type\":\"number\",\"description\":\"警戒水位(米)\"},\"rainfall\":{\"type\":\"number\",\"description\":\"流域降雨量(mm)\"},\"monitor_time\":{\"type\":\"string\",\"description\":\"监测时间\"}}}', '实时回传水文站水位、流量、降雨等特征，供水位/水量预测模型按名称匹配入参', 1, 0, '吴桐', 1, '2026-10-20 10:05:00', '吴桐', NULL, '2026-10-29 17:47:40', '水文站实时水位在线监测接口，回传水位、流量、降雨等特征，水位/水量预测模型按名称自动匹配入参');
 INSERT INTO `model_data_api` (`id`, `name`, `model_id`, `api_type`, `api_url`, `request_method`, `content_type`, `timeout_seconds`, `auth_type`, `auth_method`, `auth_inject_pos`, `auth_key_name`, `auth_token_prefix`, `auth_token_value`, `auth_dyn_method`, `auth_dyn_url`, `auth_dyn_headers`, `auth_dyn_params`, `auth_dyn_body`, `auth_extract_path`, `request_template`, `batch_params`, `input_schema`, `output_schema`, `description`, `valid_flag`, `del_flag`, `create_by`, `creator_id`, `create_time`, `update_by`, `updater_id`, `update_time`, `remark`) VALUES (2, '气象观测数据获取接口', NULL, NULL, 'https://demo.qmodel.tech/prod-api/model/mock/weather', '0', 'application/json', 30, 'NONE', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '{\"type\":\"object\",\"properties\":{\"city\":{\"type\":\"string\",\"description\":\"城市名称\",\"example\":\"南京\"}}}', '{\"type\":\"object\",\"properties\":{\"city\":{\"type\":\"string\",\"description\":\"城市名称\"},\"temperature\":{\"type\":\"number\",\"description\":\"气温(℃)\"},\"humidity\":{\"type\":\"number\",\"description\":\"相对湿度(%)\"},\"rainfall\":{\"type\":\"number\",\"description\":\"降雨量(mm)\"},\"wind_speed\":{\"type\":\"number\",\"description\":\"风速(m/s)\"},\"pressure\":{\"type\":\"number\",\"description\":\"气压(hPa)\"}}}', '第三方气象接口，获取气温、降雨、风速等特征，补充预报类模型输入', 1, 0, '吴同', 2, '2026-10-20 10:12:00', '吴桐', NULL, '2026-10-29 17:47:41', '第三方气象接口，获取气温、降雨、风速等数据，补充预报类模型输入特征');
@@ -1237,12 +700,9 @@ CREATE TABLE `qrtz_cron_triggers`
 -- ----------------------------
 -- Records of qrtz_cron_triggers
 -- ----------------------------
-INSERT INTO `qrtz_cron_triggers`
-VALUES ('RuoyiScheduler', 'TASK_CLASS_NAME1', 'DEFAULT', '0/10 * * * * ?', 'Asia/Shanghai');
-INSERT INTO `qrtz_cron_triggers`
-VALUES ('RuoyiScheduler', 'TASK_CLASS_NAME2', 'DEFAULT', '0/15 * * * * ?', 'Asia/Shanghai');
-INSERT INTO `qrtz_cron_triggers`
-VALUES ('RuoyiScheduler', 'TASK_CLASS_NAME3', 'DEFAULT', '0/20 * * * * ?', 'Asia/Shanghai');
+INSERT INTO `qrtz_cron_triggers` VALUES ('RuoyiScheduler', 'TASK_CLASS_NAME1', 'DEFAULT', '0/10 * * * * ?', 'Asia/Shanghai');
+INSERT INTO `qrtz_cron_triggers` VALUES ('RuoyiScheduler', 'TASK_CLASS_NAME2', 'DEFAULT', '0/15 * * * * ?', 'Asia/Shanghai');
+INSERT INTO `qrtz_cron_triggers` VALUES ('RuoyiScheduler', 'TASK_CLASS_NAME3', 'DEFAULT', '0/20 * * * * ?', 'Asia/Shanghai');
 
 -- ----------------------------
 -- Table structure for qrtz_fired_triggers
@@ -1292,18 +752,9 @@ CREATE TABLE `qrtz_job_details`
 -- ----------------------------
 -- Records of qrtz_job_details
 -- ----------------------------
-INSERT INTO `qrtz_job_details`
-VALUES ('RuoyiScheduler', 'TASK_CLASS_NAME1', 'DEFAULT', NULL,
-        'com.ruoyi.common.utils.job.QuartzDisallowConcurrentExecution', '0', '1', '0', '0',
-        0xACED0005737200156F72672E71756172747A2E4A6F62446174614D61709FB083E8BFA9B0CB020000787200266F72672E71756172747A2E7574696C732E537472696E674B65794469727479466C61674D61708208E8C3FBC55D280200015A0013616C6C6F77735472616E7369656E74446174617872001D6F72672E71756172747A2E7574696C732E4469727479466C61674D617013E62EAD28760ACE0200025A000564697274794C00036D617074000F4C6A6176612F7574696C2F4D61703B787001737200116A6176612E7574696C2E486173684D61700507DAC1C31660D103000246000A6C6F6164466163746F724900097468726573686F6C6478703F4000000000000C7708000000100000000174000F5441534B5F50524F5045525449455373720027636F6D2E72756F79692E70726F6A6563742E6D6F6E69746F722E646F6D61696E2E5379734A6F6200000000000000010200084C000A636F6E63757272656E747400124C6A6176612F6C616E672F537472696E673B4C000E63726F6E45787072657373696F6E71007E00094C000C696E766F6B6554617267657471007E00094C00086A6F6247726F757071007E00094C00056A6F6249647400104C6A6176612F6C616E672F4C6F6E673B4C00076A6F624E616D6571007E00094C000D6D697366697265506F6C69637971007E00094C000673746174757371007E000978720029636F6D2E72756F79692E6672616D65776F726B2E7765622E646F6D61696E2E42617365456E7469747900000000000000010200094C0009626567696E54696D6571007E00094C0008637265617465427971007E00094C000A63726561746554696D6571007E00094C0007656E6454696D6571007E00094C0006706172616D7371007E00034C000672656D61726B71007E00094C000B73656172636856616C756571007E00094C0008757064617465427971007E00094C000A75706461746554696D6571007E000978707074000561646D696E740013323032342D30382D31382030313A32333A323970707400007070707400013174000E302F3130202A202A202A202A203F74001172795461736B2E72794E6F506172616D7374000744454641554C547372000E6A6176612E6C616E672E4C6F6E673B8BE490CC8F23DF0200014A000576616C7565787200106A6176612E6C616E672E4E756D62657286AC951D0B94E08B02000078700000000000000001740018E7B3BBE7BB9FE9BB98E8AEA4EFBC88E697A0E58F82EFBC8974000133740001317800);
-INSERT INTO `qrtz_job_details`
-VALUES ('RuoyiScheduler', 'TASK_CLASS_NAME2', 'DEFAULT', NULL,
-        'com.ruoyi.common.utils.job.QuartzDisallowConcurrentExecution', '0', '1', '0', '0',
-        0xACED0005737200156F72672E71756172747A2E4A6F62446174614D61709FB083E8BFA9B0CB020000787200266F72672E71756172747A2E7574696C732E537472696E674B65794469727479466C61674D61708208E8C3FBC55D280200015A0013616C6C6F77735472616E7369656E74446174617872001D6F72672E71756172747A2E7574696C732E4469727479466C61674D617013E62EAD28760ACE0200025A000564697274794C00036D617074000F4C6A6176612F7574696C2F4D61703B787001737200116A6176612E7574696C2E486173684D61700507DAC1C31660D103000246000A6C6F6164466163746F724900097468726573686F6C6478703F4000000000000C7708000000100000000174000F5441534B5F50524F5045525449455373720027636F6D2E72756F79692E70726F6A6563742E6D6F6E69746F722E646F6D61696E2E5379734A6F6200000000000000010200084C000A636F6E63757272656E747400124C6A6176612F6C616E672F537472696E673B4C000E63726F6E45787072657373696F6E71007E00094C000C696E766F6B6554617267657471007E00094C00086A6F6247726F757071007E00094C00056A6F6249647400104C6A6176612F6C616E672F4C6F6E673B4C00076A6F624E616D6571007E00094C000D6D697366697265506F6C69637971007E00094C000673746174757371007E000978720029636F6D2E72756F79692E6672616D65776F726B2E7765622E646F6D61696E2E42617365456E7469747900000000000000010200094C0009626567696E54696D6571007E00094C0008637265617465427971007E00094C000A63726561746554696D6571007E00094C0007656E6454696D6571007E00094C0006706172616D7371007E00034C000672656D61726B71007E00094C000B73656172636856616C756571007E00094C0008757064617465427971007E00094C000A75706461746554696D6571007E000978707074000561646D696E740013323032342D30382D31382030313A32333A323970707400007070707400013174000E302F3135202A202A202A202A203F74001572795461736B2E7279506172616D7328277279272974000744454641554C547372000E6A6176612E6C616E672E4C6F6E673B8BE490CC8F23DF0200014A000576616C7565787200106A6176612E6C616E672E4E756D62657286AC951D0B94E08B02000078700000000000000002740018E7B3BBE7BB9FE9BB98E8AEA4EFBC88E69C89E58F82EFBC8974000133740001317800);
-INSERT INTO `qrtz_job_details`
-VALUES ('RuoyiScheduler', 'TASK_CLASS_NAME3', 'DEFAULT', NULL,
-        'com.ruoyi.common.utils.job.QuartzDisallowConcurrentExecution', '0', '1', '0', '0',
-        0xACED0005737200156F72672E71756172747A2E4A6F62446174614D61709FB083E8BFA9B0CB020000787200266F72672E71756172747A2E7574696C732E537472696E674B65794469727479466C61674D61708208E8C3FBC55D280200015A0013616C6C6F77735472616E7369656E74446174617872001D6F72672E71756172747A2E7574696C732E4469727479466C61674D617013E62EAD28760ACE0200025A000564697274794C00036D617074000F4C6A6176612F7574696C2F4D61703B787001737200116A6176612E7574696C2E486173684D61700507DAC1C31660D103000246000A6C6F6164466163746F724900097468726573686F6C6478703F4000000000000C7708000000100000000174000F5441534B5F50524F5045525449455373720027636F6D2E72756F79692E70726F6A6563742E6D6F6E69746F722E646F6D61696E2E5379734A6F6200000000000000010200084C000A636F6E63757272656E747400124C6A6176612F6C616E672F537472696E673B4C000E63726F6E45787072657373696F6E71007E00094C000C696E766F6B6554617267657471007E00094C00086A6F6247726F757071007E00094C00056A6F6249647400104C6A6176612F6C616E672F4C6F6E673B4C00076A6F624E616D6571007E00094C000D6D697366697265506F6C69637971007E00094C000673746174757371007E000978720029636F6D2E72756F79692E6672616D65776F726B2E7765622E646F6D61696E2E42617365456E7469747900000000000000010200094C0009626567696E54696D6571007E00094C0008637265617465427971007E00094C000A63726561746554696D6571007E00094C0007656E6454696D6571007E00094C0006706172616D7371007E00034C000672656D61726B71007E00094C000B73656172636856616C756571007E00094C0008757064617465427971007E00094C000A75706461746554696D6571007E000978707074000561646D696E740013323032342D30382D31382030313A32333A323970707400007070707400013174000E302F3230202A202A202A202A203F74003872795461736B2E72794D756C7469706C65506172616D7328277279272C20747275652C20323030304C2C203331362E3530442C203130302974000744454641554C547372000E6A6176612E6C616E672E4C6F6E673B8BE490CC8F23DF0200014A000576616C7565787200106A6176612E6C616E672E4E756D62657286AC951D0B94E08B02000078700000000000000003740018E7B3BBE7BB9FE9BB98E8AEA4EFBC88E5A49AE58F82EFBC8974000133740001317800);
+INSERT INTO `qrtz_job_details` VALUES ('RuoyiScheduler', 'TASK_CLASS_NAME1', 'DEFAULT', NULL, 'com.ruoyi.common.utils.job.QuartzDisallowConcurrentExecution', '0', '1', '0', '0', 0xACED0005737200156F72672E71756172747A2E4A6F62446174614D61709FB083E8BFA9B0CB020000787200266F72672E71756172747A2E7574696C732E537472696E674B65794469727479466C61674D61708208E8C3FBC55D280200015A0013616C6C6F77735472616E7369656E74446174617872001D6F72672E71756172747A2E7574696C732E4469727479466C61674D617013E62EAD28760ACE0200025A000564697274794C00036D617074000F4C6A6176612F7574696C2F4D61703B787001737200116A6176612E7574696C2E486173684D61700507DAC1C31660D103000246000A6C6F6164466163746F724900097468726573686F6C6478703F4000000000000C7708000000100000000174000F5441534B5F50524F5045525449455373720027636F6D2E72756F79692E70726F6A6563742E6D6F6E69746F722E646F6D61696E2E5379734A6F6200000000000000010200084C000A636F6E63757272656E747400124C6A6176612F6C616E672F537472696E673B4C000E63726F6E45787072657373696F6E71007E00094C000C696E766F6B6554617267657471007E00094C00086A6F6247726F757071007E00094C00056A6F6249647400104C6A6176612F6C616E672F4C6F6E673B4C00076A6F624E616D6571007E00094C000D6D697366697265506F6C69637971007E00094C000673746174757371007E000978720029636F6D2E72756F79692E6672616D65776F726B2E7765622E646F6D61696E2E42617365456E7469747900000000000000010200094C0009626567696E54696D6571007E00094C0008637265617465427971007E00094C000A63726561746554696D6571007E00094C0007656E6454696D6571007E00094C0006706172616D7371007E00034C000672656D61726B71007E00094C000B73656172636856616C756571007E00094C0008757064617465427971007E00094C000A75706461746554696D6571007E000978707074000561646D696E740013323032342D30382D31382030313A32333A323970707400007070707400013174000E302F3130202A202A202A202A203F74001172795461736B2E72794E6F506172616D7374000744454641554C547372000E6A6176612E6C616E672E4C6F6E673B8BE490CC8F23DF0200014A000576616C7565787200106A6176612E6C616E672E4E756D62657286AC951D0B94E08B02000078700000000000000001740018E7B3BBE7BB9FE9BB98E8AEA4EFBC88E697A0E58F82EFBC8974000133740001317800);
+INSERT INTO `qrtz_job_details` VALUES ('RuoyiScheduler', 'TASK_CLASS_NAME2', 'DEFAULT', NULL, 'com.ruoyi.common.utils.job.QuartzDisallowConcurrentExecution', '0', '1', '0', '0', 0xACED0005737200156F72672E71756172747A2E4A6F62446174614D61709FB083E8BFA9B0CB020000787200266F72672E71756172747A2E7574696C732E537472696E674B65794469727479466C61674D61708208E8C3FBC55D280200015A0013616C6C6F77735472616E7369656E74446174617872001D6F72672E71756172747A2E7574696C732E4469727479466C61674D617013E62EAD28760ACE0200025A000564697274794C00036D617074000F4C6A6176612F7574696C2F4D61703B787001737200116A6176612E7574696C2E486173684D61700507DAC1C31660D103000246000A6C6F6164466163746F724900097468726573686F6C6478703F4000000000000C7708000000100000000174000F5441534B5F50524F5045525449455373720027636F6D2E72756F79692E70726F6A6563742E6D6F6E69746F722E646F6D61696E2E5379734A6F6200000000000000010200084C000A636F6E63757272656E747400124C6A6176612F6C616E672F537472696E673B4C000E63726F6E45787072657373696F6E71007E00094C000C696E766F6B6554617267657471007E00094C00086A6F6247726F757071007E00094C00056A6F6249647400104C6A6176612F6C616E672F4C6F6E673B4C00076A6F624E616D6571007E00094C000D6D697366697265506F6C69637971007E00094C000673746174757371007E000978720029636F6D2E72756F79692E6672616D65776F726B2E7765622E646F6D61696E2E42617365456E7469747900000000000000010200094C0009626567696E54696D6571007E00094C0008637265617465427971007E00094C000A63726561746554696D6571007E00094C0007656E6454696D6571007E00094C0006706172616D7371007E00034C000672656D61726B71007E00094C000B73656172636856616C756571007E00094C0008757064617465427971007E00094C000A75706461746554696D6571007E000978707074000561646D696E740013323032342D30382D31382030313A32333A323970707400007070707400013174000E302F3135202A202A202A202A203F74001572795461736B2E7279506172616D7328277279272974000744454641554C547372000E6A6176612E6C616E672E4C6F6E673B8BE490CC8F23DF0200014A000576616C7565787200106A6176612E6C616E672E4E756D62657286AC951D0B94E08B02000078700000000000000002740018E7B3BBE7BB9FE9BB98E8AEA4EFBC88E69C89E58F82EFBC8974000133740001317800);
+INSERT INTO `qrtz_job_details` VALUES ('RuoyiScheduler', 'TASK_CLASS_NAME3', 'DEFAULT', NULL, 'com.ruoyi.common.utils.job.QuartzDisallowConcurrentExecution', '0', '1', '0', '0', 0xACED0005737200156F72672E71756172747A2E4A6F62446174614D61709FB083E8BFA9B0CB020000787200266F72672E71756172747A2E7574696C732E537472696E674B65794469727479466C61674D61708208E8C3FBC55D280200015A0013616C6C6F77735472616E7369656E74446174617872001D6F72672E71756172747A2E7574696C732E4469727479466C61674D617013E62EAD28760ACE0200025A000564697274794C00036D617074000F4C6A6176612F7574696C2F4D61703B787001737200116A6176612E7574696C2E486173684D61700507DAC1C31660D103000246000A6C6F6164466163746F724900097468726573686F6C6478703F4000000000000C7708000000100000000174000F5441534B5F50524F5045525449455373720027636F6D2E72756F79692E70726F6A6563742E6D6F6E69746F722E646F6D61696E2E5379734A6F6200000000000000010200084C000A636F6E63757272656E747400124C6A6176612F6C616E672F537472696E673B4C000E63726F6E45787072657373696F6E71007E00094C000C696E766F6B6554617267657471007E00094C00086A6F6247726F757071007E00094C00056A6F6249647400104C6A6176612F6C616E672F4C6F6E673B4C00076A6F624E616D6571007E00094C000D6D697366697265506F6C69637971007E00094C000673746174757371007E000978720029636F6D2E72756F79692E6672616D65776F726B2E7765622E646F6D61696E2E42617365456E7469747900000000000000010200094C0009626567696E54696D6571007E00094C0008637265617465427971007E00094C000A63726561746554696D6571007E00094C0007656E6454696D6571007E00094C0006706172616D7371007E00034C000672656D61726B71007E00094C000B73656172636856616C756571007E00094C0008757064617465427971007E00094C000A75706461746554696D6571007E000978707074000561646D696E740013323032342D30382D31382030313A32333A323970707400007070707400013174000E302F3230202A202A202A202A203F74003872795461736B2E72794D756C7469706C65506172616D7328277279272C20747275652C20323030304C2C203331362E3530442C203130302974000744454641554C547372000E6A6176612E6C616E672E4C6F6E673B8BE490CC8F23DF0200014A000576616C7565787200106A6176612E6C616E672E4E756D62657286AC951D0B94E08B02000078700000000000000003740018E7B3BBE7BB9FE9BB98E8AEA4EFBC88E5A49AE58F82EFBC8974000133740001317800);
 
 -- ----------------------------
 -- Table structure for qrtz_locks
@@ -1319,8 +770,7 @@ CREATE TABLE `qrtz_locks`
 -- ----------------------------
 -- Records of qrtz_locks
 -- ----------------------------
-INSERT INTO `qrtz_locks`
-VALUES ('RuoyiScheduler', 'TRIGGER_ACCESS');
+INSERT INTO `qrtz_locks` VALUES ('RuoyiScheduler', 'TRIGGER_ACCESS');
 
 -- ----------------------------
 -- Table structure for qrtz_paused_trigger_grps
@@ -1430,15 +880,9 @@ CREATE TABLE `qrtz_triggers`
 -- ----------------------------
 -- Records of qrtz_triggers
 -- ----------------------------
-INSERT INTO `qrtz_triggers`
-VALUES ('RuoyiScheduler', 'TASK_CLASS_NAME1', 'DEFAULT', 'TASK_CLASS_NAME1', 'DEFAULT', NULL, 1723915630000, -1, 5,
-        'PAUSED', 'CRON', 1723915630000, 0, NULL, 2, NULL);
-INSERT INTO `qrtz_triggers`
-VALUES ('RuoyiScheduler', 'TASK_CLASS_NAME2', 'DEFAULT', 'TASK_CLASS_NAME2', 'DEFAULT', NULL, 1723915635000, -1, 5,
-        'PAUSED', 'CRON', 1723915631000, 0, NULL, 2, NULL);
-INSERT INTO `qrtz_triggers`
-VALUES ('RuoyiScheduler', 'TASK_CLASS_NAME3', 'DEFAULT', 'TASK_CLASS_NAME3', 'DEFAULT', NULL, 1723915640000, -1, 5,
-        'PAUSED', 'CRON', 1723915632000, 0, NULL, 2, NULL);
+INSERT INTO `qrtz_triggers` VALUES ('RuoyiScheduler', 'TASK_CLASS_NAME1', 'DEFAULT', 'TASK_CLASS_NAME1', 'DEFAULT', NULL, 1723915630000, -1, 5, 'PAUSED', 'CRON', 1723915630000, 0, NULL, 2, NULL);
+INSERT INTO `qrtz_triggers` VALUES ('RuoyiScheduler', 'TASK_CLASS_NAME2', 'DEFAULT', 'TASK_CLASS_NAME2', 'DEFAULT', NULL, 1723915635000, -1, 5, 'PAUSED', 'CRON', 1723915631000, 0, NULL, 2, NULL);
+INSERT INTO `qrtz_triggers` VALUES ('RuoyiScheduler', 'TASK_CLASS_NAME3', 'DEFAULT', 'TASK_CLASS_NAME3', 'DEFAULT', NULL, 1723915640000, -1, 5, 'PAUSED', 'CRON', 1723915632000, 0, NULL, 2, NULL);
 
 -- ----------------------------
 -- Table structure for model_audit
@@ -1465,7 +909,7 @@ CREATE TABLE `model_audit`
     `update_time`  datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '更新时间',
     `remark`       varchar(512) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '备注',
     PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 4 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '模型审核' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 9 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '模型审核' ROW_FORMAT = Dynamic;
 
 INSERT INTO `model_audit` (`id`, `model_id`, `apply_id`, `apply_time`, `apply_reason`, `audit_status`, `auditor_id`, `audit_time`, `audit_reason`, `valid_flag`, `del_flag`, `create_by`, `creator_id`, `create_time`, `update_by`, `updator_id`, `update_time`, `remark`) VALUES (4, 11, 1, '2026-10-29 17:57:05', '', 2, 2, '2026-10-30 09:29:52', '审核拒绝', 1, 0, '吴同', 1, '2026-10-29 17:57:05', '吴同', 2, '2026-10-30 09:29:52', NULL);
 INSERT INTO `model_audit` (`id`, `model_id`, `apply_id`, `apply_time`, `apply_reason`, `audit_status`, `auditor_id`, `audit_time`, `audit_reason`, `valid_flag`, `del_flag`, `create_by`, `creator_id`, `create_time`, `update_by`, `updator_id`, `update_time`, `remark`) VALUES (5, 11, 2, '2026-10-30 09:29:30', '', 1, 2, '2026-10-30 09:30:09', '审核通过', 1, 0, '吴同', 2, '2026-10-30 09:29:30', '吴同', 2, '2026-10-30 09:30:09', NULL);
@@ -1495,7 +939,7 @@ CREATE TABLE `model_key`  (
     `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '更新时间',
     `remark` varchar(512) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '备注',
     PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 10 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '模型访问 key' ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 21 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '模型访问 key' ROW_FORMAT = DYNAMIC;
 SET
 FOREIGN_KEY_CHECKS = 1;
 
@@ -1536,7 +980,7 @@ CREATE TABLE `model_version`  (
                                   `remark` varchar(512) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '备注',
                                   PRIMARY KEY (`id`) USING BTREE,
                                   UNIQUE INDEX `model_version_un`(`model_id`, `model_version`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 30 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '模型版本表' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 12 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '模型版本表' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of model_version
@@ -1553,6 +997,42 @@ INSERT INTO `model_version` VALUES (9, 9, 'V1.0', NULL, NULL, NULL, 1, 0, NULL, 
 INSERT INTO `model_version` VALUES (10, 10, 'V1.0', NULL, NULL, NULL, 1, 0, NULL, NULL, '2026-09-01 11:38:10', NULL, NULL, '2026-09-01 11:38:10', NULL);
 INSERT INTO `model_version` VALUES (11, 11, 'V1.0', NULL, NULL, NULL, 1, 0, NULL, NULL, '2026-09-01 11:38:10', NULL, NULL, '2026-09-01 11:38:10', NULL);
 
+-- ----------------------------
+-- Table structure for model_history
+-- ----------------------------
+DROP TABLE IF EXISTS `model_history`;
+CREATE TABLE `model_history`  (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '主键id',
+  `company_id` bigint(20) NULL DEFAULT NULL COMMENT '企业id',
+  `model_id` bigint(20) NULL DEFAULT NULL COMMENT '所属模型id',
+  `model_name` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '所属模型名称',
+  `context` varchar(1024) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '操作内容',
+  `start_time` datetime NULL DEFAULT NULL COMMENT '启用时间',
+  `model_version` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '启用版本号',
+  `valid_flag` tinyint(4) NOT NULL COMMENT '是否有效 0：无效，1：有效',
+  `del_flag` tinyint(4) NOT NULL COMMENT '删除标志 1：已删除，0：未删除 ',
+  `create_by` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '创建人',
+  `creator_id` bigint(20) NULL DEFAULT NULL COMMENT '创建人id',
+  `create_time` datetime NOT NULL COMMENT '创建时间',
+  `update_by` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '更新人',
+  `updator_id` bigint(20) NULL DEFAULT NULL COMMENT '更新人id',
+  `update_time` datetime NOT NULL COMMENT '更新时间',
+  `remark` varchar(1024) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '备注',
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 1378 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '模型历史' ROW_FORMAT = DYNAMIC;
 
+-- ----------------------------
+-- Records of model_history
+-- ----------------------------
+INSERT INTO `model_history` VALUES (1368, NULL, 13, '接口服务类', '修改了接口服务类基本信息', NULL, '2', 1, 0, 'qModel', 1, '2026-07-01 18:24:31', 'qModel', 1, '2026-07-01 18:24:31', NULL);
+INSERT INTO `model_history` VALUES (1369, NULL, 13, '接口服务类', '修改了接口服务类基本信息', NULL, '2', 1, 0, 'qModel', 1, '2026-07-01 18:24:34', 'qModel', 1, '2026-07-01 18:24:34', NULL);
+INSERT INTO `model_history` VALUES (1370, NULL, 13, '接口服务类', '修改了接口服务类基本信息', NULL, '2', 1, 0, 'qModel', 1, '2026-07-01 18:24:37', 'qModel', 1, '2026-07-01 18:24:37', NULL);
+INSERT INTO `model_history` VALUES (1371, NULL, 13, '接口服务类', '修改了接口服务类基本信息', NULL, '2', 1, 0, 'qModel', 1, '2026-07-01 18:25:06', 'qModel', 1, '2026-07-01 18:25:06', NULL);
+INSERT INTO `model_history` VALUES (1372, NULL, 13, '接口服务类', '修改了接口服务类基本信息', NULL, '2', 1, 0, 'qModel', 1, '2026-07-01 18:25:25', 'qModel', 1, '2026-07-01 18:25:25', NULL);
+INSERT INTO `model_history` VALUES (1373, NULL, 13, '接口服务类', '修改了接口服务类基本信息', NULL, '2', 1, 0, 'qModel', 1, '2026-07-01 18:25:26', 'qModel', 1, '2026-07-01 18:25:26', NULL);
+INSERT INTO `model_history` VALUES (1374, NULL, 13, '接口服务类', '修改了接口服务类基本信息', NULL, '2', 1, 0, 'qModel', 1, '2026-07-01 18:25:28', 'qModel', 1, '2026-07-01 18:25:28', NULL);
+INSERT INTO `model_history` VALUES (1375, NULL, 13, '接口服务类', '修改了接口服务类基本信息', NULL, '2', 1, 0, 'qModel', 1, '2026-07-01 18:25:37', 'qModel', 1, '2026-07-01 18:25:37', NULL);
+INSERT INTO `model_history` VALUES (1376, NULL, 13, '接口服务类', '修改了接口服务类基本信息', NULL, '2', 1, 0, 'qModel', 1, '2026-07-01 18:26:31', 'qModel', 1, '2026-07-01 18:26:31', NULL);
+INSERT INTO `model_history` VALUES (1377, NULL, 13, '接口服务类', '修改了接口服务类基本信息', NULL, '2', 1, 0, 'qModel', 1, '2026-07-01 18:26:32', 'qModel', 1, '2026-07-01 18:26:32', NULL);
 
 SET FOREIGN_KEY_CHECKS = 1;
