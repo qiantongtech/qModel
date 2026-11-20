@@ -21,7 +21,7 @@ qmodel:
   # 名称
   name: qModel
   # 版本
-  version: 1.4.0
+  version: 1.4.4
   # 版权年份
   copyrightYear: 2024
   # 文件路径 示例（ Windows配置D:/anivia/uploadPath，Linux配置 /home/anivia/uploadPath） -- 需要和 file 模块保持一致
@@ -103,7 +103,7 @@ spring:
   devtools:
     restart:
       # 热部署开关
-      enabled: true
+      enabled: false
 
 # token配置
 token:

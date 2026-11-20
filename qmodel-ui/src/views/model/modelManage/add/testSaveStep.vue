@@ -648,6 +648,21 @@ defineExpose({
   :deep(.param-value-cell input) {
     text-align: center;
   }
+
+  // clearable 的清除图标出现时不再挤压输入区：
+  // 清除图标由 hover 触发显示，若参与 flex 布局会使 input 可用宽度变窄，
+  // 居中的文本随之左右跳动；改为绝对定位后输入区宽度恒定
+  :deep(.el-input__wrapper) {
+    position: relative;
+  }
+
+  :deep(.el-input__suffix) {
+    position: absolute;
+    right: 8px;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 1;
+  }
 }
 
 .file-upload-wrapper {

@@ -131,11 +131,7 @@
           :show-overflow-tooltip="{ effect: 'light' }"
           sortable="custom"
           :sort-orders="['descending', 'ascending']"
-        >
-          <template #default="scope">
-            {{ scope.$index + 1 }}
-          </template>
-        </el-table-column>
+        />
         <el-table-column
           v-if="getColumnVisibility(1)"
           label="任务名称"
@@ -575,7 +571,7 @@
         stripe
         @row-click="handleApiSelect"
       >
-      <el-table-column
+        <el-table-column
           label="编号"
           align="center"
           prop="id"
@@ -583,11 +579,7 @@
           :show-overflow-tooltip="{ effect: 'light' }"
           sortable="custom"
           :sort-orders="['descending', 'ascending']"
-        >
-          <template #default="scope">
-            {{ scope.$index + 1 }}
-          </template>
-        </el-table-column>
+        />
         <el-table-column label="API 名称" prop="name" min-width="170" :show-overflow-tooltip="{ effect: 'light' }" />
         <el-table-column label="用途" prop="description" min-width="220" :show-overflow-tooltip="{ effect: 'light' }">
           <template #default="scope">{{ scope.row.description || scope.row.remark || '-' }}</template>

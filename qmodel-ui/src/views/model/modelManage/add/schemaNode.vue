@@ -344,6 +344,32 @@ const commitDefault = (raw) => {
       width: 150px;
     }
 
+    // 关闭 hover 过渡，且 hover 阴影与常态一致，避免鼠标悬浮时边框闪动
+    :deep(.el-input__wrapper),
+    :deep(.el-select__wrapper) {
+      position: relative;
+      transition: none !important;
+    }
+
+    :deep(.el-input__wrapper:hover) {
+      box-shadow: 0 0 0 1px var(--el-input-border-color) inset;
+    }
+
+    :deep(.el-select__wrapper:hover) {
+      box-shadow: 0 0 0 1px var(--el-border-color) inset;
+    }
+
+    // clearable 的清除图标由 hover 触发显示，若参与 flex 布局会使输入区宽度变窄，
+    // 居中文本随之左右跳动；改为绝对定位后输入区宽度恒定
+    :deep(.el-input__suffix),
+    :deep(.el-select__suffix) {
+      position: absolute;
+      right: 8px;
+      top: 50%;
+      transform: translateY(-50%);
+      z-index: 1;
+    }
+
     // el-input-number 自带文字居中，普通 el-input 默认左对齐；
     // 统一默认值输入框的占位符/输入值对齐，避免同一列样式不一致
     :deep(input) {
