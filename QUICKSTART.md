@@ -26,7 +26,7 @@
 
 ## 二、获取项目代码 <small>（下载与解压）</small>
 
-前往 【[qKnow Gitee 下载页面](https://gitee.com/qiantongtech/qModel)】 下载项目并解压到您的工作目录。
+前往 【[qModel Gitee 下载页面](https://gitee.com/qiantongtech/qModel)】 下载项目并解压到您的工作目录。
 
 ---
 
