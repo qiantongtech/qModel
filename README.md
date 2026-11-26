@@ -1,175 +1,202 @@
-![banner.png](.gitee/banner.jpg)
+![banner.png](.gitee/banner-en.png)
 
 <p align="center">
- <img src="https://img.shields.io/badge/JDK-1.8+-brightgreen.svg" alt="JDK">
- <img src="https://img.shields.io/badge/Spring%20Boot-2.5.15-blue.svg" alt="Spring Boot">
- <img src="https://img.shields.io/badge/Vue-3.4.31-blue.svg" alt="Vue">
- <img src="https://img.shields.io/badge/license-Apache--2.0-green" alt="License"/>
- <img src="https://img.shields.io/badge/qModel-v1.4.4-blue.svg" alt="qModel"/>
- <img src="https://gitee.com/qiantongtech/qModel/badge/star.svg" alt="Gitee Stars"/>
- <img src="https://img.shields.io/github/stars/qiantongtech/qModel?label=Github%20Stars" alt="GitHub Stars"/>
-<a href="https://atomgit.com/qiantongtech/qModel">
-  <img src="https://atomgit.com/qiantongtech/qModel/star/badge.svg" alt="AtomGit Star"/>
-</a>
+  <img src="https://img.shields.io/badge/JDK-1.8+-brightgreen.svg" alt="JDK">
+  <img src="https://img.shields.io/badge/Spring%20Boot-2.5.15-blue.svg" alt="Spring Boot">
+  <img src="https://img.shields.io/badge/Vue-3.4.31-blue.svg" alt="Vue">
+  <img src="https://img.shields.io/badge/license-Apache--2.0-green" alt="License"/>
+  <img src="https://img.shields.io/badge/qModel-v1.4.4-blue.svg" alt="qModel"/>
+  <img src="https://gitee.com/qiantongtech/qModel/badge/star.svg" alt="Gitee Stars"/>
+  <img src="https://img.shields.io/github/stars/qiantongtech/qModel?label=Github%20Stars" alt="GitHub Stars"/>
+  <a href="https://atomgit.com/qiantongtech/qModel">
+    <img src="https://atomgit.com/qiantongtech/qModel/star/badge.svg" alt="AtomGit Star"/>
+  </a>
 </p>
 
 <p align="center">
-  📖简体中文 | <a href="README.en.md">📖English</a>
+  <a href="README.zh-CN.md">📖简体中文</a> | 📖English
 </p>
 
 
-## 平台简介
+## Platform Overview
 
-**让已有算法可管理、可调用、可复用。**
+**Make existing algorithms manageable, accessible, and reusable.**
 
-**qModel 算法模型平台是一款开源的算法模型管理与服务平台。** 支持 **API 接入、Python 本地接入、SSH 远程接入** 三种模型接入方式，提供模型版本、输入输出定义、在线调试、计算任务、结果展示与调用追踪等能力，帮助开发者将已有算法用于业务系统，并在团队中持续复用。
+**qModel is an open-source algorithm and model management and serving platform.** It supports algorithms in multiple languages and formats, including **Python, Java JAR, executable programs, and existing model APIs**, through **API Integration, Local Python Integration, and Remote SSH Integration**. The platform provides model version management, input and output definitions, online debugging, computation tasks, result visualization, and invocation tracing, helping developers integrate existing algorithms into business systems and continuously reuse algorithm assets.
 
-从个人算法验证、科研成果交付，到业务系统集成和团队模型共享，qModel 将分散的程序、接口与使用说明组织起来，让算法作者交付得更清楚，让业务开发者接入得更顺畅，让团队积累的模型持续发挥作用。
+From individual algorithm validation and research deliverables to business system integration and team-wide model sharing, qModel brings distributed programs, interfaces, and usage documentation together. It helps algorithm developers deliver their work more clearly, business developers integrate algorithms more efficiently, and teams continuously benefit from their accumulated model assets.
 
-✨✨✨**在线文档**✨✨✨ <a href="https://community.qmodel.tech" target="_blank">https://community.qmodel.tech</a>
+✨✨✨**Online Documentation**✨✨✨ <a href="https://community.qmodel.tech" target="_blank">https://community.qmodel.tech</a>
 
-✨✨✨**开源版演示地址**✨✨✨ <a href="https://demo.qmodel.tech" target="_blank">https://demo.qmodel.tech</a> （账号：`qModel`，密码：`qModel123`）
+✨✨✨**Open Source Edition Demo**✨✨✨ <a href="https://demo.qmodel.tech" target="_blank">https://demo.qmodel.tech</a> (Username: `qModel`, Password: `qModel123`)
 
-✨✨✨**专业版演示地址**✨✨✨ <a href="https://pro-demo.qmodel.tech" target="_blank">https://pro-demo.qmodel.tech</a> 演示账号请[联系客服获取](https://community.qmodel.tech/business/policy.html)
+✨✨✨**Professional Edition Demo**✨✨✨ <a href="https://pro-demo.qmodel.tech" target="_blank">https://pro-demo.qmodel.tech</a> To obtain a demo account, please [contact our customer service team](https://community.qmodel.tech/business/policy.html).
 
-许可：**Apache License 2.0 及 qModel 项目附加条件**，详见 [LICENSE](LICENSE) 与[许可与商业服务](#license-and-services)。
+License: **Apache License 2.0 with additional qModel project terms**. For details, see [LICENSE](LICENSE) and [Licensing and Commercial Services](#license-and-services).
 
-## 核心特点
 
-### 多语言、多形态接入：让已有算法进入统一管理
+## Key Features
 
-支持 **API 接入、Python 本地接入、SSH 远程接入** 等模型形态，将不同来源的算法与模型描述、参数定义、分类标签及版本信息关联。已有模型服务可通过接口适配接入，统一维护请求地址、数据格式与认证配置，减少跨团队集成时的重复对接。
+### Multi-Language and Multi-Format Integration: Bring Existing Algorithms Under Unified Management
 
-### 算法服务化：让算法能力进入业务系统
+qModel supports algorithms in multiple languages and formats, including **Python, Java JAR, executable programs, and existing model APIs**. Through **API Integration, Local Python Integration, and Remote SSH Integration**, it provides unified model management, associating models with descriptions, parameter definitions, classification tags, and version information. By centrally managing interface configurations, runtime environments, and invocation methods, qModel lowers integration costs and reduces repetitive integration efforts across teams.
 
-通过 **输入输出定义、接口适配、API 调用说明与调用凭证管理**，为算法作者和业务开发者建立清楚的使用约定。调用方可以了解模型用途、准备参数并获取结果，结合在线调试和调用记录定位问题，推动算法从交付文件走向持续使用。
+### Algorithm Serving: Bring Algorithm Capabilities into Business Systems
 
-### 模型资产管理：让模型、版本与使用记录清楚可查
+Through **input and output definitions, interface adaptation, API invocation documentation, and access credential management**, qModel establishes clear usage conventions between algorithm developers and business developers.
 
-集中维护模型标识、分类标签、版本与状态，通过 **版本差异对比、计算历史和调用追踪**了解模型怎样变化、被谁使用、产生什么结果。结合模型市场中的发现、使用说明与评价，让团队更容易找到已有能力并在不同项目中复用。
+Consumers can understand the purpose of a model, prepare input parameters, and retrieve computation results. Online debugging and invocation records help identify and troubleshoot issues, enabling algorithms to evolve from standalone deliverables into continuously utilized capabilities.
 
-### 轻量易用：从平台部署到模型计算顺畅开始
 
-提供在线体验、Docker Compose 与自主部署入口，按使用场景选择开始方式。通过可视化界面完成 **参数配置、模型调试、计算任务和结果查看**，以结构化结果、字段说明、图表与导出能力帮助开发者和业务人员理解计算结论。
+### Model Asset Management: Keep Models, Versions, and Usage Records Traceable
 
-### 开源可扩展：按项目需要集成与二次开发
+Centrally manage model identifiers, classification tags, versions, and statuses. Through **version comparison, computation history, and invocation tracing**, users can understand how models have evolved, who has used them, and what results they have produced.
 
-采用 **Java、Spring Boot 与 Vue 3** 技术栈，按模型管理、基础框架和系统管理等模块组织代码。开发者可以阅读实现、对接业务系统，围绕模型接入、计算逻辑、接口适配和结果展示进行二次开发，并通过代码、文档与模型示例参与共建。
+Combined with model discovery, usage documentation, and evaluations in the Model Marketplace, teams can more easily discover existing capabilities and reuse them across different projects.
 
-## 快速开始
 
-### 在线体验
+### Lightweight and Easy to Use: Get Started Smoothly from Deployment to Model Execution
 
-访问 [qModel 开源版演示环境](https://demo.qmodel.tech)，无需安装即可了解产品。
+qModel provides online demos, Docker Compose deployment, and manual deployment options, allowing users to choose the most suitable approach for their needs.
 
-**账号：`qModel`　密码：`qModel123`**
+Through a visual interface, users can complete **parameter configuration, model debugging, computation tasks, and result inspection**. Structured results, field descriptions, charts, and export capabilities help developers and business users better understand computation outcomes.
 
-建议按以下顺序体验：
 
-1. **了解模型**：在模型中心选择可用模型，查看用途、版本、输入参数与输出说明。
-2. **执行计算**：进入模型计算，选择模型及版本，配置输入参数或文件并执行任务。
-3. **核对结果**：查看执行状态、输入输出和运行日志，在计算历史中找到对应记录。
-4. **了解业务调用**：查看模型的 API 调用说明与凭证要求，了解业务系统如何使用这项能力。
+### Open Source and Extensible: Integrate and Customize According to Project Requirements
 
-演示环境的可操作范围以账号权限为准；需要接入自己的模型时，可部署独立环境后按相同过程完成验证。
+Built with **Java, Spring Boot, and Vue 3**, qModel organizes its codebase into modules such as model management, the core framework, and system management.
 
-### 选择部署方式
+Developers can explore the implementation, integrate business systems, and extend capabilities related to model integration, computation logic, interface adaptation, and result visualization. They can also contribute to the project through code, documentation, and model examples.
 
-- **[Docker Compose 部署](https://community.qmodel.tech/docs/deploy/docker-compose-deployment.html)**：按文档配置并启动本地环境，适合快速体验与部署。
-- **[自主部署](https://community.qmodel.tech/docs/deploy/manual-deployment/)**：自行安装与管理服务，适合已有基础设施及个性化部署需求。
 
-> 首次体验推荐使用 Docker Compose 部署方式，可以更快完成环境启动和功能验证。
+## Quick Start
 
-## 产品功能架构
+### Online Demo
 
-![qModel 算法模型平台开源版产品功能架构图](.gitee/qModel-architecture.jpg)
+Visit the [qModel Open Source Edition Demo](https://demo.qmodel.tech) to explore the platform without installation.
 
-## 系统配图
+**Username: `qModel` | Password: `qModel123`**
 
-<table>
-    <tr>
-        <td><img alt="登录页" src=".gitee/system/login.png"/></td>
-        <td><img alt="工作台" src=".gitee/system/workbench.png"/></td>
-    </tr>
-    <tr>
-        <td><img alt="模型中心" src=".gitee/system/modelList.png"/></td>
-        <td><img alt="模型分类" src=".gitee/system/modelCategory.png"/></td>
-    </tr>
-    <tr>
-        <td><img alt="模型详情" src=".gitee/system/modelDetail.png"/></td>
-        <td><img alt="在线调试" src=".gitee/system/modelDebug.png"/></td>
-    </tr>
-    <tr>
-        <td><img alt="版本管理" src=".gitee/system/modelVersion.png"/></td>
-        <td><img alt="版本对比" src=".gitee/system/modelVersionCompare.png"/></td>
-    </tr>
-    <tr>
-        <td><img alt="计算任务" src=".gitee/system/taskList.png"/></td>
-        <td><img alt="计算历史" src=".gitee/system/taskExecDetail.png"/></td>
-    </tr>
-    <tr>
-        <td><img alt="模型审批" src=".gitee/system/modelApproval.png"/></td>
-        <td><img alt="密钥管理" src=".gitee/system/password.png"/></td>
-    </tr>
-</table>
+We recommend exploring the platform in the following order:
 
-## 能力概览
+1. **Explore Models**: Select an available model in the Model Center and review its purpose, version, input parameters, and output descriptions.
+2. **Execute Computations**: Navigate to Model Computation, select a model and version, configure input parameters or files, and execute the task.
+3. **Review Results**: Check execution status, inputs, outputs, and runtime logs, and locate the corresponding record in the computation history.
+4. **Explore Business Integration**: Review the model's API invocation documentation and credential requirements to understand how business systems can access its capabilities.
 
-| 能力 | 可以完成什么 |
+Available operations in the demo environment depend on account permissions. To integrate your own models, deploy an independent environment and follow the same process to complete model validation.
+
+
+### Choose a Deployment Method
+
+- **[Docker Compose Deployment](https://community.qmodel.tech/docs/deploy/docker-compose-deployment.html)**: Configure and launch a local environment by following the documentation. Suitable for quick evaluation and deployment.
+- **[Manual Deployment](https://community.qmodel.tech/docs/deploy/manual-deployment/)**: Install and manage services independently. Suitable for existing infrastructure and customized deployment requirements.
+
+> For first-time users, Docker Compose is recommended to quickly set up the environment and validate platform capabilities.
+
+
+## Product Architecture
+
+![qModel Open Source Edition Product Architecture](.gitee/qModel-architecture-en.png)
+
+## Screenshots
+
+![Login Page](.gitee/system/login.png)
+
+![Workbench](.gitee/system/workbench.png)
+
+![Model Center](.gitee/system/modelList.png)
+
+![Model Categories](.gitee/system/modelCategory.png)
+
+![Model Details](.gitee/system/modelDetail.png)
+
+![Online Debugging](.gitee/system/modelDebug.png)
+
+![Version Management](.gitee/system/modelVersion.png)
+
+![Version Comparison](.gitee/system/modelVersionCompare.png)
+
+![Computation Tasks](.gitee/system/taskList.png)
+
+![Computation History](.gitee/system/taskExecDetail.png)
+
+![Model Approval](.gitee/system/modelApproval.png)
+
+![Key Management](.gitee/system/password.png)
+
+## Capabilities Overview
+
+| Capability | What You Can Do |
 | --- | --- |
-| **模型接入与接口适配** | 接入算法程序与已有模型服务；配置 API 地址、请求头、Query 参数、数据格式和超时，适配外部服务的固定或动态 Token 等认证要求。 |
-| **模型资产与分类** | 维护模型标识、用途、分类标签、接入方式及启用、上架状态，按分类与业务用途查找和复用模型。 |
-| **Python 运行环境与构建** | 校验代码文件、识别入口、解析依赖并组织运行环境；通过构建状态、时间和详情检查构建过程与结果。 |
-| **输入输出规范与调试** | 使用 JSON Schema 定义输入参数，结合输出字段说明和示例形成调用约定；对指定版本检查响应、日志和输出结构。 |
-| **版本管理与对比** | 维护版本描述，比较模型文件、配置和参数定义的变化，执行版本切换并追溯历史变更。 |
-| **计算任务与执行策略** | 选择模型及版本，配置输入参数、文件、超时、重试次数与优先级，组织可管理的业务计算任务。 |
-| **计算结果与可视化** | 查看结构化结果、字段解释与适用的图表，导出计算结果，通过执行记录复核输入、输出及运行过程。 |
-| **模型调用与追踪** | 管理模型调用凭证，查看调用方、客户端 IP、模型版本、调用类型、耗时、时间和状态，辅助集成联调与问题排查。 |
-| **模型市场与共享** | 通过分类、标签及评价发现模型，查看 API 服务文档，完成模型上架申请、订阅与试用，积累使用反馈。 |
-| **用户与权限管理** | 管理用户、角色、部门、岗位、菜单、字典、参数、通知与日志，为模型使用和团队协作提供基础管理能力。 |
+| **Model Integration and Interface Adaptation** | Integrate algorithm programs and existing model services. Configure API addresses, request headers, query parameters, data formats, and timeouts, and adapt to external service authentication requirements, including static and dynamic tokens. |
+| **Model Asset Management and Classification** | Maintain model identifiers, purposes, classification tags, integration methods, enabled statuses, and listing statuses. Discover and reuse models by category and business purpose. |
+| **Python Runtime Environment and Build Management** | Validate code files, identify execution entry points, resolve dependencies, and configure runtime environments. Review build status, build time, and build details to verify the build process and its results. |
+| **Input/Output Specifications and Debugging** | Define input parameters using JSON Schema, and establish invocation conventions through output field descriptions and examples. Inspect responses, logs, and output structures for specific model versions. |
+| **Version Management and Comparison** | Maintain version descriptions, compare changes in model files, configurations, and parameter definitions, switch between versions, and trace historical changes. |
+| **Computation Tasks and Execution Strategies** | Select models and versions, configure input parameters, files, timeouts, retry counts, and priorities, and organize manageable business computation tasks. |
+| **Computation Results and Visualization** | View structured results, field descriptions, and applicable charts. Export computation results and review inputs, outputs, and execution processes through execution records. |
+| **Model Invocation and Tracing** | Manage model access credentials and inspect callers, client IP addresses, model versions, invocation types, latency, timestamps, and statuses to support integration testing and troubleshooting. |
+| **Model Marketplace and Sharing** | Discover models through categories, tags, and evaluations. View API service documentation, submit model listing requests, subscribe to and try models, and collect usage feedback. |
+| **User and Permission Management** | Manage users, roles, departments, positions, menus, dictionaries, parameters, notifications, and logs, providing foundational management capabilities for model usage and team collaboration. |
 
-以上聚焦开源版的主要能力。详细操作请查阅[使用文档](https://community.qmodel.tech)，专业版扩展方向见[许可与商业服务](#license-and-services)。
+The capabilities listed above focus on the Open Source Edition. For detailed instructions, please refer to the [User Documentation](https://community.qmodel.tech). For information about Professional Edition extensions, see [Licensing and Commercial Services](#license-and-services).
 
-## 模型接入与运行
 
-qModel 面向不同部署形态的算法模型提供统一接入、管理与调用能力，支持 API 接入、Python 本地接入和 SSH 远程接入三种方式。用户可根据已有算法模型的交付形态、部署位置及运行条件，选择合适的接入方式，无需对已有算法进行大规模改造。
+## Model Integration and Execution
 
-| 接入方式 | 接入说明 | 接入前准备 |
+qModel supports algorithms in multiple languages and formats, including **Python, Java JAR, executable programs, and existing model APIs**, and provides three integration methods: **API Integration, Local Python Integration, and Remote SSH Integration**. Users can flexibly select the appropriate integration method based on the model's delivery format, deployment location, and runtime requirements, enabling unified management and invocation without extensive modifications to existing algorithms.
+
+| Integration Method | Description | Prerequisites |
 | --- | --- | --- |
-| **API 接入** | 通过 API 接口集成已部署在外部服务器上的算法模型，由 qModel 统一发起请求并获取模型计算结果，无需迁移模型及其运行环境。 | 准备 API 服务地址、请求方式、输入输出参数、认证信息等，并确认接口服务的可用性及网络连通性。 |
-| **Python 本地接入** | 通过上传符合平台规范的 Python 模型文件夹，在 qModel 所在服务器上完成依赖安装与运行环境构建，支持本地运行及 Docker 容器化运行。 | 准备模型代码、模型依赖文件（requirements.txt）、统一执行入口（predict.py）及相关模型资源文件，明确 Python 版本、输入输出参数和运行环境要求。 |
-| **SSH 远程接入** | 通过 SSH 连接外部服务器，远程执行已有算法模型的运行脚本并获取计算结果，无需迁移模型，也无需提前将模型封装为 API 服务。 | 准备远程服务器连接信息、SSH 认证信息、算法运行脚本、执行命令及输入输出参数，确保远程服务器具备完整的模型运行环境。 |
+| **API Integration** | Integrate algorithm models already deployed as services through APIs, regardless of their programming languages or technical frameworks. qModel centrally initiates requests and retrieves computation results without requiring migration of the models or their runtime environments. | Prepare the API service address, request method, input and output parameters, and authentication information. Verify service availability and network connectivity. |
+| **Local Python Integration** | Upload a Python model directory that complies with platform specifications. qModel installs dependencies and builds the runtime environment on its host server, supporting both local execution and Docker-based containerized execution. | Prepare the model code, dependency file (`requirements.txt`), standardized execution entry point (`predict.py`), and related model resource files. Specify the Python version, input and output parameters, and runtime environment requirements. |
+| **Remote SSH Integration** | Connect to external servers through SSH, remotely execute algorithms in various formats, including Python scripts, Java JAR files, and executable programs, and retrieve computation results without migrating models or exposing them as API services in advance. | Prepare remote server connection information, SSH authentication credentials, algorithm execution scripts, execution commands, and input and output parameters. Ensure that the remote server has the appropriate model runtime environment. |
 
-模型接入后，平台将模型基本信息、版本信息、输入输出定义及运行配置进行统一管理。用户可通过在线调试或计算任务验证模型的运行情况及计算结果，验证通过后可进一步供业务系统调用和团队复用，实现算法模型从分散部署、独立运行到统一管理、统一调用的转变。
+After model integration, the platform centrally manages model information, version information, input and output definitions, and runtime configurations. Users can validate model execution and computation results through online debugging or computation tasks. Once validated, models can be invoked by business systems and reused across teams, enabling unified management, unified invocation, and continuous reuse of algorithm models across different programming languages, formats, and deployment environments.
 
-## 开发与扩展
+## Development and Extension
 
-qModel 采用前后端分离与模块化设计，便于开发者理解模型管理流程、接入业务系统和扩展功能。
+qModel adopts a decoupled frontend and backend architecture with a modular design, making it easier for developers to understand model management workflows, integrate business systems, and extend platform capabilities.
 
-| 层次 | 主要技术 |
+| Layer | Main Technologies |
 | --- | --- |
-| 后端 | Java、Spring Boot、Spring Security、MyBatis-Plus |
-| 前端 | Vue 3、Element Plus、Vite、Pinia、ECharts |
-| 任务与数据存储 | Quartz、MySQL、Redis、本地文件存储 |
-| 部署 | Docker Compose 或自主部署，按模型类型准备相应运行环境 |
+| Backend | Java, Spring Boot, Spring Security, MyBatis-Plus |
+| Frontend | Vue 3, Element Plus, Vite, Pinia, ECharts |
+| Task Scheduling and Data Storage | Quartz, MySQL, Redis, Local File Storage |
+| Deployment | Docker Compose or manual deployment, with runtime environments configured according to model types |
 
-开发环境、初始化配置和启动步骤见[源码启动指南](https://community.qmodel.tech/docs/deploy/manual-deployment/)。依赖版本以所用发布版本的构建与配置文件为准。
+For development environment requirements, initialization configurations, and startup instructions, please refer to the [Source Code Startup Guide](https://community.qmodel.tech/docs/deploy/manual-deployment/).
 
-## QQ交流群
-欢迎加入 qModel 官方 QQ 交流群，获取最新动态、技术支持与使用交流。 👉 <a href="https://community.qmodel.tech/discuss.html">点击加入 QQ 交流群</a>
+Dependency versions are subject to the build and configuration files of the release being used.
+
+
+## QQ Community
+
+Welcome to the official qModel QQ community, where you can receive the latest updates, obtain technical support, and exchange ideas with other users.
+
+👉 <a href="https://community.qmodel.tech/discuss.html">Click to Join the QQ Community</a>
+
 
 <a id="license-and-services"></a>
 
-## 许可与商业服务
+## Licensing and Commercial Services
 
-qModel 按 **Apache License 2.0 及项目附加条件**提供，支持商业使用。使用时需遵守 [LICENSE](LICENSE)，保留其中要求的 Logo、版权、许可与署名信息。
+qModel is distributed under the **Apache License 2.0 with additional project terms** and supports commercial use.
 
-如需去除或修改相关标识、白标、OEM 或重新包装为其他产品，请取得相应商业授权。品牌定制授权、专业版与技术服务咨询，请查看[商业合作说明](https://community.qmodel.tech/business/policy.html)。
+Users must comply with the [LICENSE](LICENSE) requirements and retain the required logos, copyright notices, licensing information, and attribution information.
 
-## 我们的使命与愿景
+If you need to remove or modify relevant branding, white-label the platform, use it for OEM purposes, or repackage it as another product, please obtain the appropriate commercial authorization.
 
-**让每一位开发者、每一家企业，都能更容易地管理、使用和复用算法能力。**
+For brand customization authorization, Professional Edition inquiries, and technical services, please refer to our [Commercial Cooperation Policy](https://community.qmodel.tech/business/policy.html).
 
-我们希望算法成果能够被清楚地交付、持续地维护，并真正用到业务中。qModel 以开源连接算法作者、业务开发者与使用团队，让不同语言、不同来源的模型拥有清晰的版本、参数和调用方式，让一次算法研发的成果能够服务更多项目。
 
-我们期待与社区共同建设一个易用、开放、可持续扩展的算法模型平台，让个人的算法经验成为可复用的能力，让团队积累的模型持续创造价值。
+## Our Mission and Vision
+
+**Enable every developer and every enterprise to manage, use, and reuse algorithm capabilities more easily.**
+
+We believe that algorithm development outcomes should be clearly delivered, continuously maintained, and genuinely utilized in business scenarios.
+
+Through open source, qModel connects algorithm developers, business developers, and user teams, providing clear version information, parameter definitions, and invocation methods for models developed in different languages and from different sources, allowing the results of a single algorithm development effort to serve more projects.
+
+We look forward to working with the community to build an easy-to-use, open, and sustainably extensible algorithm and model platform, transforming individual algorithm expertise into reusable capabilities and enabling the models accumulated by teams to continuously create value.
