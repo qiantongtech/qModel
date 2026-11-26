@@ -26,9 +26,9 @@
 
 From individual algorithm validation and research deliverables to business system integration and team-wide model sharing, qModel brings distributed programs, interfaces, and usage documentation together. It helps algorithm developers deliver their work more clearly, business developers integrate algorithms more efficiently, and teams continuously benefit from their accumulated model assets.
 
-✨✨✨**Online Documentation**✨✨✨ <a href="https://community.qmodel.tech" target="_blank">https://community.qmodel.tech</a>
+✨✨✨**Documentation**✨✨✨ <a href="https://community.qmodel.tech" target="_blank">https://community.qmodel.tech</a>
 
-✨✨✨**Open Source Edition Demo**✨✨✨ <a href="https://demo.qmodel.tech" target="_blank">https://demo.qmodel.tech</a> (Username: `qModel`, Password: `qModel123`)
+✨✨✨**Open-Source Edition Demo**✨✨✨ <a href="https://demo.qmodel.tech" target="_blank">https://demo.qmodel.tech</a> (username: `qModel`, password: `qModel123`)
 
 ✨✨✨**Professional Edition Demo**✨✨✨ <a href="https://pro-demo.qmodel.tech" target="_blank">https://pro-demo.qmodel.tech</a> To obtain a demo account, please [contact our customer service team](https://community.qmodel.tech/business/policy.html).
 
