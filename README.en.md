@@ -103,35 +103,31 @@ Available operations in the demo environment depend on account permissions. To i
 ![qModel Open Source Edition Product Architecture](.gitee/qModel-architecture.jpg)
 
 
-## System Screenshots
+## Screenshots
 
-<table>
-    <tr>
-        <td><img alt="Login Page" src=".gitee/system/login.png"/></td>
-        <td><img alt="Workbench" src=".gitee/system/workbench.png"/></td>
-    </tr>
-    <tr>
-        <td><img alt="Model Center" src=".gitee/system/modelList.png"/></td>
-        <td><img alt="Model Classification" src=".gitee/system/modelCategory.png"/></td>
-    </tr>
-    <tr>
-        <td><img alt="Model Details" src=".gitee/system/modelDetail.png"/></td>
-        <td><img alt="Online Debugging" src=".gitee/system/modelDebug.png"/></td>
-    </tr>
-    <tr>
-        <td><img alt="Version Management" src=".gitee/system/modelVersion.png"/></td>
-        <td><img alt="Version Comparison" src=".gitee/system/modelVersionCompare.png"/></td>
-    </tr>
-    <tr>
-        <td><img alt="Computation Tasks" src=".gitee/system/taskList.png"/></td>
-        <td><img alt="Computation History" src=".gitee/system/taskExecDetail.png"/></td>
-    </tr>
-    <tr>
-        <td><img alt="Model Approval" src=".gitee/system/modelApproval.png"/></td>
-        <td><img alt="Credential Management" src=".gitee/system/password.png"/></td>
-    </tr>
-</table>
+![Login Page](.gitee/system/login.png)
 
+![Workbench](.gitee/system/workbench.png)
+
+![Model Center](.gitee/system/modelList.png)
+
+![Model Categories](.gitee/system/modelCategory.png)
+
+![Model Details](.gitee/system/modelDetail.png)
+
+![Online Debugging](.gitee/system/modelDebug.png)
+
+![Version Management](.gitee/system/modelVersion.png)
+
+![Version Comparison](.gitee/system/modelVersionCompare.png)
+
+![Computation Tasks](.gitee/system/taskList.png)
+
+![Computation History](.gitee/system/taskExecDetail.png)
+
+![Model Approval](.gitee/system/modelApproval.png)
+
+![Key Management](.gitee/system/password.png)
 
 ## Capabilities Overview
 
