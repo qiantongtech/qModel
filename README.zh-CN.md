@@ -26,7 +26,7 @@
 
 从个人算法验证、科研成果交付，到业务系统集成和团队模型共享，qModel 将分散的程序、接口与使用说明组织起来，让算法作者交付得更清楚，让业务开发者接入得更顺畅，让团队积累的模型持续发挥作用。
 
-✨✨✨**在线文档**✨✨✨ <a href="https://community.qmodel.tech" target="_blank">https://community.qmodel.tech</a>
+✨✨✨**在线文档**✨✨✨ <a href="https://docs.qmodel.tech" target="_blank">https://docs.qmodel.tech</a>
 
 ✨✨✨**开源版演示地址**✨✨✨ <a href="https://demo.qmodel.tech" target="_blank">https://demo.qmodel.tech</a> （账号：`qModel`，密码：`qModel123`）
 
